@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:anychat/components/locale.dart';
+
 
 import 'anychat_user.dart';
 
@@ -51,13 +53,15 @@ class AnyChatAuth {
       });
 
       final AnyChatUser user = AnyChatUser(googleSignInAccount.id, googleSignInAccount.displayName,
-          googleSignInAccount.email, googleSignInAccount.photoUrl);
+          googleSignInAccount.email, googleSignInAccount.photoUrl, locale.currentLocale, new List<String>());
       user.addUserToFirestore();
       return user;
       //googleSignInAccount = await _googleSignIn.signIn();
       //googleSignInAuthentication = await googleSignInAccount.authentication;
     }else{
       authResult = await _auth.signInWithPopup(GoogleAuthProvider());
+      await _googleSignIn.signInSilently();
+      print(_googleSignIn.currentUser?.id);
     }
 
     //final UserCredential authResult =
@@ -92,7 +96,7 @@ class AnyChatAuth {
       // TODO: use authResult user instead?
       var anyChatUser = new AnyChatUser(
           _user.providerData[0].uid, _user.displayName,
-          _user.email, _user.photoURL);
+          _user.email, _user.photoURL, locale.currentLocale, new List<String>());
       // var anyChatUser = new AnyChatUser(
       //     currentUser.uid,
       //     currentUser.displayName, currentUser.email, currentUser.photoURL);
@@ -109,11 +113,25 @@ class AnyChatAuth {
     print("User Signed Out");
   }
 
-  // static User getUser() {
-  //   return _user;
-  // }
-
   static GoogleSignIn getGoogleSignIn() {
     return _googleSignIn;
+  }
+
+  static Future<User> createAccount() async {
+    try {
+      UserCredential _userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+          email: "barray.allen@example.com",
+          password: "SuperSecretPassword!");
+      return _userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

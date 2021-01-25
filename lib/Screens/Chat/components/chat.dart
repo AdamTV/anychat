@@ -1,6 +1,7 @@
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/conversation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,70 +11,28 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:anychat/constants.dart';
 
-// final FirebaseAuth _auth = FirebaseAuth.instance;
-// GoogleSignIn _googleSignIn = GoogleSignIn(
-//   scopes: <String>[
-//     'email',
-//     //'https://www.googleapis.com/auth/contacts.readonly',
-//   ],
-// );
-
-class FriendlyChatApp extends StatefulWidget{
+class AnyChatApp extends StatefulWidget{
+  static AnyChatUser chatter;
   @override
-  State<StatefulWidget> createState() => _FriendlyChatAppState();
+  State<StatefulWidget> createState() => _AnyChatAppState();
 }
 
-class _FriendlyChatAppState extends State<FriendlyChatApp>{
-  static User _user;
+class _AnyChatAppState extends State<AnyChatApp>{
   @override
   Widget build(BuildContext context) {
-    //if (_user != null) {
       return MaterialApp(
-        title: 'AnyChat',
+        title: "AnyChat",
         theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
             ? kIOSTheme // NEW
             : kDefaultTheme,
         home: ChatWindow(),
       );
-    // } else {
-    //   return Scaffold(
-    //       body: ConstrainedBox(
-    //         constraints: const BoxConstraints.expand(),
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //           children: <Widget>[
-    //             const Text("You are not currently signed in."),
-    //             RaisedButton(
-    //               child: const Text('Sign in with Google'),
-    //               onPressed:() async {
-    //                 _ChatScreenState._user = await _ChatScreenState.signInWithGoogle();
-    //                 setState(() {
-    //                   _user = _ChatScreenState._user;
-    //                 });
-    //               },
-    //             ),
-    //             const Text('OR'),
-    //             RaisedButton(
-    //                 child: const Text('Create an account'),
-    //                 onPressed: () async{
-    //                   _ChatScreenState._user = await _ChatScreenState.createAccount();
-    //                   setState(() {
-    //                     _user = _ChatScreenState._user;
-    //                   });
-    //                 })
-    //           ],
-    //         ),
-    //       ));
-    // }
   }
 }
 
 class ChatMessage extends StatelessWidget {
   final String text;
   final AnimationController animationController;
-
-  //final GoogleSignInAccount user;
-
   ChatMessage({this.text, this.animationController});
 
   @override
@@ -121,31 +80,20 @@ class ChatMessage extends StatelessWidget {
 }
 
 class ChatWindow extends StatefulWidget {
+  static Conversation currentConversation;
   @override
   _ChatWindowState createState() => _ChatWindowState();
 }
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
-  //static GoogleSignInAccount currentUser;
 
-  //static User _user;
   final _textController = TextEditingController();
   final List<ChatMessage> _messages = [];
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
 
-  @override
-  void initState() {
-    super.initState();
-    AnyChatAuth.getGoogleSignIn().onCurrentUserChanged.listen((GoogleSignInAccount account) {
-
-      setState(() {
-
-        //currentUser = account;
-        //print(currentUser);
-      });
-    });
-    AnyChatAuth.getGoogleSignIn().signInSilently();
+  _ChatWindowState(){
+    _loadChatMessages();
   }
 
   Widget _buildTextComposer() {
@@ -193,13 +141,20 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     );
   }
 
+
   void _handleSubmitted(String text) {
     _textController.clear();
     setState(() {
       _isComposing = false;
     });
-    print(AnyChatAuth.getGoogleSignIn().currentUser);
-
+    // If conversation does not exist
+    if(ChatWindow.currentConversation == null){
+      AnyChatUser.createConversation().then((value) => {
+      AnyChatUser.addMessageToConversation(text)
+      });
+    }else{
+      AnyChatUser.addMessageToConversation(text);
+    }
     ChatMessage message = ChatMessage(
       //user: currentUser,
       text: text,
@@ -215,70 +170,25 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     message.animationController.forward();
   }
 
-//   static Future<User> signInWithGoogle() async {
-//     await Firebase.initializeApp();
-//
-//     final GoogleSignInAccount googleSignInAccount =
-//     await AnyChatAuth.getGoogleSignIn().signIn();
-//     final GoogleSignInAuthentication googleSignInAuthentication =
-//     await googleSignInAccount.authentication;
-//
-//     final AuthCredential credential = GoogleAuthProvider.credential(
-//       accessToken: googleSignInAuthentication.accessToken,
-//       idToken: googleSignInAuthentication.idToken,
-//     );
-//
-//     final UserCredential authResult =
-//     await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
-//
-//     // final UserCredential authResult =
-//     //     await FirebaseAuth.instance.signInWithCredential(credential);
-//     final User user = authResult.user;
-//
-// //    final User user = null;
-//
-//     if (_user != null) {
-//       assert(!_user.isAnonymous);
-//       assert(await _user.getIdToken() != null);
-//
-//       final User currentUser = AnyChatAuth.getUser();
-//       assert(_user.uid == currentUser.uid);
-//
-//       print('signInWithGoogle succeeded: $_user');
-//
-//       var anyChatUser = new AnyChatUser(currentUser.displayName,
-//           currentUser.email, currentUser.photoURL);
-//       anyChatUser.addUserToFirestore();
-//
-//       return _user;
-//     }
-//
-//     return null;
-//   }
-//
-//   Future<void> signOutGoogle() async {
-//     await AnyChatAuth.getGoogleSignIn().signOut();
-//     _FriendlyChatAppState._user = null;
-//     print("User Signed Out");
-//   }
-
-  static Future<User> createAccount() async {
-    try {
-      UserCredential _userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-          email: "barray.allen@example.com",
-          password: "SuperSecretPassword!");
-      return _userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+void _loadChatMessages(){
+    print('loading chat messages');
+    ChatWindow.currentConversation.messages.forEach((element) {
+      ChatMessage message = ChatMessage(
+        //user: currentUser,
+        text: element,
+        animationController: AnimationController(
+          duration: const Duration(milliseconds: 700),
+          vsync: this,
+        ),
+      );
+      //setState(() {
+        print('adding chat message: ' + element);
+        _messages.insert(0, message);
+      //});
+      //_focusNode.requestFocus();
+      message.animationController.forward();
+    });
+}
 
   // static Future<void> _handleSignIn() async {
   //   try {
@@ -313,7 +223,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('AnyChat'),
+          title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
           elevation:
           Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           //actions: <Widget>[

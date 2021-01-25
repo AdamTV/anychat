@@ -1,5 +1,8 @@
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/conversation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Login/components/background.dart';
@@ -12,6 +15,7 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -31,13 +35,13 @@ class Body extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            kIsWeb ?
-            Image.network("assets/icons/login.svg", height: size.height * 0.35)
-            :
-            SvgPicture.asset(
-              "assets/icons/login.svg",
-              height: size.height * 0.35,
-            ),
+            kIsWeb
+                ? Image.network("assets/icons/login.svg",
+                    height: size.height * 0.35)
+                : SvgPicture.asset(
+                    "assets/icons/login.svg",
+                    height: size.height * 0.35,
+                  ),
             SizedBox(height: size.height * 0.03),
             RoundedInputField(
               hintText: "Your Email",
@@ -49,8 +53,10 @@ class Body extends StatelessWidget {
             RoundedButton(
               text: "LOGIN",
               press: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ConversationsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ConversationsScreen()));
               },
             ),
             SizedBox(height: size.height * 0.03),
@@ -81,14 +87,39 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
+                    GoogleSignIn x;
                     AnyChatAuth.signInWithGoogle().then((value) => {
-                      if(value != null){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ConversationsScreen()))
-                      }
-                    });
+                          if (value != null)
+                            {
+                               x = AnyChatAuth.getGoogleSignIn(),
+                              // Check if user has conversations
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(AnyChatAuth.getGoogleSignIn()
+                                      .currentUser
+                                      .id)
+                                  .get()
+                                  .then((value) =>
+                                      AnyChatUser.fromSnapshot(value))
+                                  .then((AnyChatUser user) => {
+                                        if (user.conversations.isNotEmpty)
+                                          {
+                                            ConversationsScreen.conversations =
+                                                user.conversations.cast<String>(),
+                                          }
+                                        else
+                                          {
+                                            ConversationsScreen.conversations =
+                                                new List<String>()
+                                          },
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ConversationsScreen()))
+                                      }),
+                            }
+                        });
                   },
                 ),
               ],

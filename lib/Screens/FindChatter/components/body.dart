@@ -1,4 +1,5 @@
 import 'package:anychat/Screens/Chat/chat_screen.dart';
+import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
@@ -30,11 +31,13 @@ class Body extends StatelessWidget {
               child: Text(
                 'AnyChat',
                 style:
-                    // TODO: Color should be platform specific
-                    TextStyle(color: Colors.white),
+                // TODO: Color should be platform specific
+                TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
               ),
             ),
             ListTile(
@@ -64,11 +67,17 @@ class Body extends StatelessWidget {
             itemCount: FindChatterScreenState.users.length,
             itemBuilder: (BuildContext buildCtx, int index) {
               return new ListTile(
-                  onTap: () {},
-                  leading: Icon(Icons.person_add),
+                  onTap: () {
+                    AnyChatApp.chatter = FindChatterScreenState.users[index];
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) {
+                      return ChatScreen();
+                    }));
+                  },
+                  leading: Icon(Icons.chat),
                   title: RichText(
                       text: TextSpan(
-                          text: FindChatterScreenState.users[index],
+                          text: FindChatterScreenState.users[index].displayName,
                           style: TextStyle(color: Colors.grey))));
             },
           )),

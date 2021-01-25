@@ -18,7 +18,7 @@ class FindChatterScreen extends StatefulWidget {
 class FindChatterScreenState extends State<FindChatterScreen> {
   static String email;
   static Stream<QuerySnapshot> searchResults;
-  static List<String> users = new List<String>();
+  static List<AnyChatUser> users = new List<AnyChatUser>();
 
   FindChatterScreenState(String email) {
     FindChatterScreenState.email = email;
@@ -53,6 +53,7 @@ class FindChatterScreenState extends State<FindChatterScreen> {
   }
 
   void loadSearchResults() async {
+    users.clear();
     await FirebaseFirestore.instance
         .collection('users')
         .get()
@@ -60,7 +61,7 @@ class FindChatterScreenState extends State<FindChatterScreen> {
               querySnapshot.docs.forEach((doc) {
                 if (doc['email'] == email) {
                   //users.add(AnyChatUser(doc['id'], doc['displayName'], doc['email'], doc['photoUrl']));
-                  users.add(doc["displayName"]);
+                  users.add(AnyChatUser(doc.id, doc["displayName"], doc["email"], doc["photoUrl"], doc["language"], doc['conversations']));
                   print(doc["displayName"]);
                   setState(() {});
                 }
