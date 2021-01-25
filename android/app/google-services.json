@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "682283241991",
+    "firebase_url": "https://anychat-c414a-default-rtdb.firebaseio.com",
+    "project_id": "anychat-c414a",
+    "storage_bucket": "anychat-c414a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682283241991:android:2e4d2787e4712822abd0a2",
+        "android_client_info": {
+          "package_name": "ca.alphatech.anychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.alphatech.anychat",
+            "certificate_hash": "9486e53480eaa2264b805f1ed4b8e4552e0ff02b"
+          }
+        },
+        {
+          "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHVwxcshXvU9HtkM_Kk3uYcTsWHnDSLmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
