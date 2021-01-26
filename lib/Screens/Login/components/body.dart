@@ -63,7 +63,11 @@ class Body extends StatelessWidget {
                 AnyChatAuth.signInEmail(email, password).then((value) => {
                       if (value != null)
                         {initConversationScreen(context, value)}
-                    });
+                      else
+                        Utilities.showMyDialog(context, "Invalid Credentials")
+                    }).catchError((e)=>{
+                  Utilities.showMyDialog(context, e.message.toString())
+                });
               },
             ),
             SizedBox(height: size.height * 0.03),

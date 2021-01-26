@@ -54,13 +54,19 @@ class Body extends StatelessWidget {
                 ),
               ),
               ListTile(
+                  title: Text('Back'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }),
+              ListTile(
                   title: Text('Logout'),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => WelcomeScreen()));
-                    //_handleSignOut();
                   }),
             ],
           ),
@@ -86,7 +92,8 @@ class Body extends StatelessWidget {
                             fresh.language = language;
                             transaction.update(user, {'language': fresh.language});
                           });
-                        });                      }),
+                        });
+                      }),
                     ],
                   ),
                 ))));

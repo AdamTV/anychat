@@ -23,9 +23,9 @@ class AnyChatAuth {
     ],
   );
 
-  static Future<GoogleSignInAccount> signIn() {
-    return _googleSignIn.signIn();
-  }
+  // static Future<GoogleSignInAccount> signIn() {
+  //   return _googleSignIn.signIn();
+  // }
 
   static Future<AnyChatUser> signInWithGoogle() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -122,7 +122,7 @@ class AnyChatAuth {
   //   return _googleSignIn;
   // }
 
-  static Future<AnyChatUser> createAccount(String email, String password,
+  static Future<AnyChatUser> createAccountEmail(String email, String password,
       String language) async {
     try {
       UserCredential _userCredential = await FirebaseAuth.instance
@@ -139,12 +139,12 @@ class AnyChatAuth {
       return currentU;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        throw Exception('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      throw(e);
     }
     return null;
   }
@@ -165,12 +165,12 @@ class AnyChatAuth {
       return currentU;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        throw Exception('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      throw e;
     }
     return null;
   }
