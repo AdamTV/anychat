@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -13,22 +15,23 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:anychat/constants.dart';
 
-class AnyChatApp extends StatefulWidget{
+class AnyChatApp extends StatefulWidget {
   static AnyChatUser chatter;
+
   @override
   State<StatefulWidget> createState() => _AnyChatAppState();
 }
 
-class _AnyChatAppState extends State<AnyChatApp>{
+class _AnyChatAppState extends State<AnyChatApp> {
   @override
   Widget build(BuildContext context) {
-      return MaterialApp(
-        title: "AnyChat",
-        theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
-            ? kIOSTheme // NEW
-            : kDefaultTheme,
-        home: ChatWindow(),
-      );
+    return MaterialApp(
+      title: "AnyChat",
+      theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
+          ? kIOSTheme // NEW
+          : kDefaultTheme,
+      home: ChatWindow(),
+    );
   }
 }
 
@@ -36,13 +39,14 @@ class ChatMessage extends StatelessWidget {
   final AnyChatUser sender;
   final String text;
   final AnimationController animationController;
+
   ChatMessage({this.text, this.animationController, this.sender});
 
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor:
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Container(
         child: Row(
@@ -52,19 +56,17 @@ class ChatMessage extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 16.0),
                 child: sender.photoUrl != null
                     ? CircleAvatar(
-                  backgroundImage:
-                  NetworkImage(sender.photoUrl),
-                  backgroundColor: Colors.transparent,
-                )
+                        backgroundImage: NetworkImage(sender.photoUrl),
+                        backgroundColor: Colors.transparent,
+                      )
                     : CircleAvatar(
-                  child: Text(sender.displayName.substring(0,1)),
-                )),
+                        child: Text(sender.displayName.substring(0, 1)),
+                      )),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                      sender.displayName,
+                  Text(sender.displayName,
                       style: Theme.of(context).textTheme.headline4),
                   Container(
                     margin: EdgeInsets.only(top: 5.0),
@@ -82,19 +84,85 @@ class ChatMessage extends StatelessWidget {
 
 class ChatWindow extends StatefulWidget {
   static Conversation currentConversation;
+
   @override
   _ChatWindowState createState() => _ChatWindowState();
 }
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
-
   final _textController = TextEditingController();
   final List<ChatMessage> _messages = [];
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
+  StreamSubscription<QuerySnapshot> _currentReviewSubscription;
 
-  _ChatWindowState(){
+  List<Conversation> _conversations = <Conversation>[];
+
+  _ChatWindowState() {
     _loadChatMessages();
+    _currentReviewSubscription =
+        loadAllConversations().listen(_updateConversations);
+    // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
+    // {
+    // _currentReviewSubscription?.cancel(),
+    //     setState(() {
+    //    _currentReviewSubscription = ChatWindow.currentConversation.reference
+    //        .collection("messages")
+    //        .snapshots()
+    //        .listen((QuerySnapshot messageSnap) {
+    //      setState(() {
+    //        ChatMessage message;
+    //        AnyChatMessage msg;
+    //        messageSnap.docs.map((DocumentSnapshot doc) async => {
+    //          msg = AnyChatMessage.fromSnapshot(doc),
+    //          message = ChatMessage(
+    //            //user: currentUser,
+    //            text: msg.text,
+    //            animationController: AnimationController(
+    //              duration: const Duration(milliseconds: 700),
+    //              vsync: this,
+    //            ),
+    //            sender:
+    //            AnyChatUser.fromSnapshot(await FirebaseFirestore
+    //                .instance
+    //                .collection("users")
+    //                .doc(msg.sender.id)
+    //                .get()),
+    //          ),
+    //        });
+    //        print('subscription has been notified.');
+    //        _messages.insert(0, message);
+    //      });
+    //    });
+    //  })
+    // });
+  }
+
+  Stream<QuerySnapshot> loadAllConversations() {
+    return FirebaseFirestore.instance.collection('conversations').snapshots();
+  }
+
+  List<Conversation> getConversationsFromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return Conversation.fromSnapshot(doc);
+    }).toList();
+  }
+
+  void _updateConversations(QuerySnapshot snapshot) {
+    setState(() {
+      _conversations = getConversationsFromQuery(snapshot);
+      if(_conversations.last.messages.last['sender'] != AnyChatAuth.currentUser.id){
+        ChatMessage chatMessage = ChatMessage(
+            text: _conversations.last.messages.last['text'],
+            animationController: AnimationController(
+              duration: const Duration(milliseconds: 700),
+              vsync: this,
+            ),
+            sender: AnyChatApp.chatter);
+        _messages.insert(0, chatMessage);
+        chatMessage.animationController.forward();
+      }
+    });
   }
 
   Widget _buildTextComposer() {
@@ -114,7 +182,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
                 decoration:
-                InputDecoration.collapsed(hintText: 'Send a message'),
+                    InputDecoration.collapsed(hintText: 'Send a message'),
                 focusNode: _focusNode,
               ),
             ),
@@ -122,26 +190,25 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? // MODIFIED
-                CupertinoButton(
-                  // NEW
-                  child: Text('Send'), // NEW
-                  onPressed: _isComposing // NEW
-                      ? () =>
-                      _handleSubmitted(_textController.text) // NEW
-                      : null,
-                )
+                    CupertinoButton(
+                        // NEW
+                        child: Text('Send'), // NEW
+                        onPressed: _isComposing // NEW
+                            ? () =>
+                                _handleSubmitted(_textController.text) // NEW
+                            : null,
+                      )
                     : IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _isComposing
-                      ? () => _handleSubmitted(_textController.text)
-                      : null,
-                ))
+                        icon: const Icon(Icons.send),
+                        onPressed: _isComposing
+                            ? () => _handleSubmitted(_textController.text)
+                            : null,
+                      ))
           ],
         ),
       ),
     );
   }
-
 
   void _handleSubmitted(String text) {
     _textController.clear();
@@ -158,12 +225,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       sender: AnyChatAuth.currentUser,
     );
     // If conversation does not exist
-    if(ChatWindow.currentConversation == null){
+    if (ChatWindow.currentConversation == null) {
       AnyChatUser.createConversation().then((value) => {
-      AnyChatUser.addMessageToConversation(AnyChatMessage(AnyChatAuth.currentUser, message.text))
-      });
-    }else{
-      AnyChatUser.addMessageToConversation(AnyChatMessage(AnyChatAuth.currentUser, message.text));
+            AnyChatUser.addMessageToConversation(
+                AnyChatMessage(AnyChatAuth.currentUser, message.text))
+          });
+    } else {
+      AnyChatUser.addMessageToConversation(
+          AnyChatMessage(AnyChatAuth.currentUser, message.text));
     }
     setState(() {
       _messages.insert(0, message);
@@ -172,29 +241,66 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     message.animationController.forward();
   }
 
-void _loadChatMessages(){
+  void _loadChatMessages() {
     print('loading chat messages');
     Conversation convo;
-    FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
-    {
-      convo = Conversation.fromSnapshot(value),
-      convo.messages.reversed.forEach((element) async {
-      ChatMessage message = ChatMessage(
-        //user: currentUser,
-        text: element['text'],
-        animationController: AnimationController(
-          duration: const Duration(milliseconds: 700),
-          vsync: this,
-        ),
-        sender: AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(element['sender']).get()),
-      );
-      setState(() {
-        //print('adding chat message: ' + element);
-        _messages.insert(0, message);
-      });
-      //_focusNode.requestFocus();
-      message.animationController.forward();
-    })});
+    ChatMessage message;
+    FirebaseFirestore.instance
+        .collection("conversations")
+        .doc(ChatWindow.currentConversation.id)
+        .get()
+        .then((value) async => {
+              convo = Conversation.fromSnapshot(value),
+              // if (!kIsWeb)
+              //   {
+              //     convo.messages.reversed.forEach((element) async {
+              //       ChatMessage message = ChatMessage(
+              //         //user: currentUser,
+              //         text: element['text'],
+              //         animationController: AnimationController(
+              //           duration: const Duration(milliseconds: 700),
+              //           vsync: this,
+              //         ),
+              //         sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
+              //             .instance
+              //             .collection("users")
+              //             .doc(element['sender'])
+              //             .get()),
+              //       );
+              //       setState(() {
+              //         //print('adding chat message: ' + element);
+              //         _messages.insert(0, message);
+              //       });
+              //       //_focusNode.requestFocus();
+              //       message.animationController.forward();
+              //     })
+              //   }
+              // else
+                {
+                  for (var i = 0; i < convo.messages.length; i++)
+                    {
+                      message = ChatMessage(
+                        //user: currentUser,
+                        text: convo.messages[i]['text'],
+                        animationController: AnimationController(
+                          duration: const Duration(milliseconds: 700),
+                          vsync: this,
+                        ),
+                        sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
+                            .instance
+                            .collection("users")
+                            .doc(convo.messages[i]['sender'])
+                            .get()),
+                      ),
+                      setState(() {
+                        //print('adding chat message: ' + element);
+                        _messages.insert(0, message);
+                      }),
+                      //_focusNode.requestFocus();
+                      message.animationController.forward(),
+                    }
+                }
+            });
 
     // ChatWindow.currentConversation?.messages?.forEach((element) {
     //   ChatMessage message = ChatMessage(
@@ -213,7 +319,7 @@ void _loadChatMessages(){
     //   //_focusNode.requestFocus();
     //   message.animationController.forward();
     // });
-}
+  }
 
   // static Future<void> _handleSignIn() async {
   //   try {
@@ -248,28 +354,27 @@ void _loadChatMessages(){
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
-          elevation:
-          Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-          //actions: <Widget>[
-            // _user == null
-            //     ? IconButton(
-            //         icon: const Icon(Icons.login),
-            //         tooltip: 'Login',
-            //         onPressed: () {
-            //           signInWithGoogle();
-            //         },
-            //       )
-            //     :
-            // IconButton(
-            //   icon: const Icon(Icons.logout),
-            //   tooltip: 'Logout',
-            //   onPressed: () {
-            //     signOutGoogle();
-            //     Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
-            //   },
-            // ),
-          //]
+        title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
+        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        //actions: <Widget>[
+        // _user == null
+        //     ? IconButton(
+        //         icon: const Icon(Icons.login),
+        //         tooltip: 'Login',
+        //         onPressed: () {
+        //           signInWithGoogle();
+        //         },
+        //       )
+        //     :
+        // IconButton(
+        //   icon: const Icon(Icons.logout),
+        //   tooltip: 'Logout',
+        //   onPressed: () {
+        //     signOutGoogle();
+        //     Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
+        //   },
+        // ),
+        //]
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -280,28 +385,31 @@ void _loadChatMessages(){
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('AnyChat', style:
-              // TODO: Color should be platform specific
-              TextStyle(color: Colors.white),),
+              child: Text(
+                'AnyChat',
+                style:
+                    // TODO: Color should be platform specific
+                    TextStyle(color: Colors.white),
+              ),
               decoration: BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
                 title: Text('Return to conversations'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => ConversationsScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ConversationsScreen()));
                   //_handleSignOut();
                 }),
             ListTile(
                 title: Text('Logout'),
                 onTap: () {
                   AnyChatAuth.signOutGoogle();
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => WelcomeScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
                   //_handleSignOut();
                 }),
           ],
@@ -327,31 +435,32 @@ void _loadChatMessages(){
           ),
           decoration: Theme.of(context).platform == TargetPlatform.iOS // NEW
               ? BoxDecoration(
-            // NEW
-            border: Border(
-              // NEW
-              top: BorderSide(color: Colors.grey[200]), // NEW
-            ), // NEW
-          ) // NEW
+                  // NEW
+                  border: Border(
+                    // NEW
+                    top: BorderSide(color: Colors.grey[200]), // NEW
+                  ), // NEW
+                ) // NEW
               : null),
     );
   }
 
   @override
   void dispose() {
+    _currentReviewSubscription?.cancel();
     for (ChatMessage message in _messages)
       message.animationController.dispose();
     super.dispose();
   }
 
-  // AnyChatUser parseAnyChatUser(String elementId) {
-  //   AnyChatUser user;
-  //   FirebaseFirestore.instance.collection("users").doc(elementId).get().then((value) =>
-  //   {
-  //     user = AnyChatUser.fromSnapshot(value),
-  //
-  //   });
-  //   print('parseAnyChatUser -> displayName: ' + user.displayName);
-  //   return user;
-  // }
+// AnyChatUser parseAnyChatUser(String elementId) {
+//   AnyChatUser user;
+//   FirebaseFirestore.instance.collection("users").doc(elementId).get().then((value) =>
+//   {
+//     user = AnyChatUser.fromSnapshot(value),
+//
+//   });
+//   print('parseAnyChatUser -> displayName: ' + user.displayName);
+//   return user;
+// }
 }
