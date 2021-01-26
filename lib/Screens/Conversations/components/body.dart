@@ -73,10 +73,12 @@ class Body extends StatelessWidget {
             ],
           ),
         ),
-        body: Center(
+        body: Align(
+            alignment: ConversationsScreen.conversations.length > 0
+            ? Alignment.topCenter
+            : Alignment.center,
             child: Container(
                 constraints: BoxConstraints(maxWidth: 1280),
-                child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: ConversationsScreen.conversations.length > 0
@@ -95,7 +97,9 @@ class Body extends StatelessWidget {
                             ),
                           ],
                   ),
-                ))));
+                )
+        )
+    );
   }
 
 

@@ -80,7 +80,8 @@ class Body extends StatelessWidget {
                     children: <Widget>[
                       Text('Language'),
                       RoundedInputField(icon: Icons.language,onChanged:(value) {language = value;}),
-                      RoundedButton(text: "SAVE", press: () async {
+                      RoundedButton(
+                          text: "SAVE", press: () async {
                         final user = FirebaseFirestore.instance
                             .collection("users")
                             .doc(AnyChatAuth.currentUser.id);

@@ -1,20 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:anychat/constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
-  final Color color, textColor;
+  final Color textColor;
   const RoundedButton({
     Key key,
     this.text,
     this.press,
-    this.color = kPrimaryColor,
+    //this.color,
     this.textColor = Colors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var color = theme.primaryColor;
+    print(color);
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),

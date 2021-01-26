@@ -176,6 +176,8 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser> signInFacebook() async {
+    if(kIsWeb)
+      facebookSignIn.loginBehavior = FacebookLoginBehavior.webViewOnly;
     final FacebookLoginResult result =
     await facebookSignIn.logIn(['email']);
 

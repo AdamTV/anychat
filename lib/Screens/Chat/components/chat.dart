@@ -151,7 +151,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   void _updateConversations(QuerySnapshot snapshot) {
     setState(() {
       _conversations = getConversationsFromQuery(snapshot);
-      if(_conversations.last.messages.last['sender'] != AnyChatAuth.currentUser.id){
+      if (_conversations.last.messages.last['sender'] !=
+          AnyChatAuth.currentUser.id) {
         ChatMessage chatMessage = ChatMessage(
             text: _conversations.last.messages.last['text'],
             animationController: AnimationController(
@@ -276,32 +277,35 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               //     })
               //   }
               // else
-                {
-                  for (var i = 0; i < convo.messages.length; i++)
-                    {
-                      message = ChatMessage(
-                        //user: currentUser,
-                        text: convo.messages[i]['text'],
-                        animationController: AnimationController(
-                          duration: const Duration(milliseconds: 700),
-                          vsync: this,
-                        ),
-                        sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
-                            .instance
-                            .collection("users")
-                            .doc(convo.messages[i]['sender'])
-                            .get()),
+              {
+                for (var i = 0; i < convo.messages.length; i++)
+                  {
+                    message = ChatMessage(
+                      //user: currentUser,
+                      text: convo.messages[i]['text'],
+                      animationController: AnimationController(
+                        duration: const Duration(milliseconds: 0),
+                        vsync: this,
                       ),
-                      setState(() {
-                        //print('adding chat message: ' + element);
-                        _messages.insert(0, message);
-                      }),
-                      //_focusNode.requestFocus();
-                      message.animationController.forward(),
-                    }
-                }
+                      sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
+                          .instance
+                          .collection("users")
+                          .doc(convo.messages[i]['sender'])
+                          .get()),
+                    ),
+                    // setState(() {
+                    //print('adding chat message: ' + element);
+                    _messages.insert(0, message),
+                    // }),
+                    //_focusNode.requestFocus();
+                    message.animationController.forward(),
+                  }
+              },
+              setState(() {
+                _isLoading = false;
+              })
             });
-
+    //setState(() {});
     // ChatWindow.currentConversation?.messages?.forEach((element) {
     //   ChatMessage message = ChatMessage(
     //     //user: currentUser,
@@ -349,6 +353,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   //     _userCredential = temp;
   //   });
   // }
+  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -417,21 +422,35 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       ),
       body: Container(
           child: Column(
-            children: [
-              Flexible(
-                child: ListView.builder(
-                  padding: EdgeInsets.all(8.0),
-                  reverse: true,
-                  itemBuilder: (_, int index) => _messages[index],
-                  itemCount: _messages.length,
-                ),
-              ),
-              Divider(height: 5.0),
-              Container(
-                decoration: BoxDecoration(color: Theme.of(context).cardColor),
-                child: _buildTextComposer(), //MODIFIED
-              ),
-            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: _isLoading
+                ? [
+                    Center(
+                      child: CircularProgressIndicator(
+                          valueColor: ColorTween(
+                                  begin: Theme.of(context).accentColor,
+                                  end: Theme.of(context).accentColor)
+                              .animate(AnimationController(vsync: this)),
+                          backgroundColor: Theme.of(context).primaryColor),
+                    )
+                  ]
+                : [
+                    Flexible(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(8.0),
+                        reverse: true,
+                        itemBuilder: (_, int index) => _messages[index],
+                        itemCount: _messages.length,
+                      ),
+                    ),
+                    Divider(height: 5.0),
+                    Container(
+                      decoration:
+                          BoxDecoration(color: Theme.of(context).cardColor),
+                      child: _buildTextComposer(), //MODIFIED
+                    ),
+                  ],
           ),
           decoration: Theme.of(context).platform == TargetPlatform.iOS // NEW
               ? BoxDecoration(
