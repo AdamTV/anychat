@@ -2,6 +2,7 @@ import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,14 @@ class Body extends StatelessWidget {
               children: <Widget>[
                 SocalIcon(
                   iconSrc: "assets/icons/facebook.svg",
-                  press: () {},
+                  press: () {
+                      AnyChatAuth.signInFacebook().then((value) => {
+                        if (value != null)
+                          {initConversationScreen(context, value)}
+                      }).catchError((e)=>{
+                      Utilities.showMyDialog(context, e.message.toString())
+                      });
+                  },
                 ),
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
@@ -108,11 +116,10 @@ class Body extends StatelessWidget {
   }
 
   initConversationScreen(BuildContext context, AnyChatUser value) {
-    String id = AnyChatAuth.currentUser.id;
     // Check if user has conversations
     FirebaseFirestore.instance
         .collection("users")
-        .doc(AnyChatAuth.currentUser.id)
+        .doc(value.id)
         .get()
         .then((value) => AnyChatUser.fromSnapshot(value))
         .then((AnyChatUser user) => {

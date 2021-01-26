@@ -1,6 +1,7 @@
 import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
@@ -51,6 +52,15 @@ class Body extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
+              ListTile(
+                  title: Text('Settings'),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingsScreen()));
+                    //_handleSignOut();
+                  }),
               ListTile(
                   title: Text('Logout'),
                   onTap: () {
