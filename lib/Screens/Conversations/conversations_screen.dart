@@ -17,30 +17,37 @@ class ConversationsScreen extends StatefulWidget {
 
 class _ConversationsScreenState extends State<ConversationsScreen> {
   bool loaded = false;
+
   @override
   Widget build(BuildContext context) {
-    if(!loaded){
+    if (!loaded) {
       loadConversations();
     }
     return Scaffold(
       body: Body(),
     );
   }
+
   List<Widget> loadConversations() {
+    ConversationsScreen.testWidgets.clear();
     loaded = true;
     var widgets = <Widget>[];
     ConversationsScreen.conversations.forEach((conversationId) async {
       Conversation conversation;
-      conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance.collection("conversations").doc(conversationId).get());
+      conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance
+          .collection("conversations")
+          .doc(conversationId)
+          .get());
       String chatterName = "test";
       String chatterId;
       List<String> users = conversation.participants;
-      for(var i = 0; i < conversation.participants.length; i++){
-        if(users[i] != AnyChatAuth
-            .getGoogleSignIn()
-            .currentUser
-            .id) {
-          AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(users[i]).get());
+      for (var i = 0; i < conversation.participants.length; i++) {
+        if (users[i] != AnyChatAuth.currentUser.id) {
+          AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+              .instance
+              .collection("users")
+              .doc(users[i])
+              .get());
           chatterName = AnyChatApp.chatter.displayName;
           chatterId = AnyChatApp.chatter.id;
         }
@@ -56,18 +63,16 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       //   });
       setState(() {
         ConversationsScreen.testWidgets.add(new ListTile(
-                onTap: () {
-                  ChatWindow.currentConversation = conversation;
-                  Navigator.push(
-                          context, MaterialPageRoute(builder: (context) {
-                        return ChatScreen();
-                      }));
-                },
-                leading: Icon(Icons.chat),
-                title: RichText(
-                    text: TextSpan(
-                        text: chatterName,
-                        style: TextStyle(color: Colors.grey)))));
+            onTap: () {
+              ChatWindow.currentConversation = conversation;
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ChatScreen();
+              }));
+            },
+            leading: Icon(Icons.chat),
+            title: RichText(
+                text: TextSpan(
+                    text: chatterName, style: TextStyle(color: Colors.grey)))));
       });
       print('test widget added');
       // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
@@ -107,7 +112,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     return widgets;
   }
 }
-
 
 // class ConversationsScreen extends StatelessWidget {
 //   static List<String> conversations = new List<String>();

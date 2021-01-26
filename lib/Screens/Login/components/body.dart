@@ -91,13 +91,10 @@ class Body extends StatelessWidget {
                     AnyChatAuth.signInWithGoogle().then((value) => {
                           if (value != null)
                             {
-                               x = AnyChatAuth.getGoogleSignIn(),
                               // Check if user has conversations
                               FirebaseFirestore.instance
                                   .collection("users")
-                                  .doc(AnyChatAuth.getGoogleSignIn()
-                                      .currentUser
-                                      .id)
+                                  .doc(AnyChatAuth.currentUser.id)
                                   .get()
                                   .then((value) =>
                                       AnyChatUser.fromSnapshot(value))
@@ -105,7 +102,8 @@ class Body extends StatelessWidget {
                                         if (user.conversations.isNotEmpty)
                                           {
                                             ConversationsScreen.conversations =
-                                                user.conversations.cast<String>(),
+                                                user.conversations
+                                                    .cast<String>(),
                                           }
                                         else
                                           {

@@ -1,7 +1,9 @@
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,9 +33,10 @@ class _AnyChatAppState extends State<AnyChatApp>{
 }
 
 class ChatMessage extends StatelessWidget {
+  final AnyChatUser sender;
   final String text;
   final AnimationController animationController;
-  ChatMessage({this.text, this.animationController});
+  ChatMessage({this.text, this.animationController, this.sender});
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +50,21 @@ class ChatMessage extends StatelessWidget {
           children: [
             Container(
                 margin: const EdgeInsets.only(right: 16.0),
-                child: AnyChatAuth.getGoogleSignIn().currentUser.photoUrl != null
+                child: sender.photoUrl != null
                     ? CircleAvatar(
                   backgroundImage:
-                  NetworkImage(AnyChatAuth.getGoogleSignIn().currentUser.photoUrl),
+                  NetworkImage(sender.photoUrl),
                   backgroundColor: Colors.transparent,
                 )
                     : CircleAvatar(
-                  child: Text('A'),
+                  child: Text(sender.displayName.substring(0,1)),
                 )),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      AnyChatAuth.getGoogleSignIn().currentUser == null
-                          ? 'Anonymous'
-                          : AnyChatAuth.getGoogleSignIn().currentUser.displayName,
+                      sender.displayName,
                       style: Theme.of(context).textTheme.headline4),
                   Container(
                     margin: EdgeInsets.only(top: 5.0),
@@ -147,14 +148,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     setState(() {
       _isComposing = false;
     });
-    // If conversation does not exist
-    if(ChatWindow.currentConversation == null){
-      AnyChatUser.createConversation().then((value) => {
-      AnyChatUser.addMessageToConversation(text)
-      });
-    }else{
-      AnyChatUser.addMessageToConversation(text);
-    }
     ChatMessage message = ChatMessage(
       //user: currentUser,
       text: text,
@@ -162,7 +155,16 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 700),
         vsync: this,
       ),
+      sender: AnyChatAuth.currentUser,
     );
+    // If conversation does not exist
+    if(ChatWindow.currentConversation == null){
+      AnyChatUser.createConversation().then((value) => {
+      AnyChatUser.addMessageToConversation(AnyChatMessage(AnyChatAuth.currentUser, message.text))
+      });
+    }else{
+      AnyChatUser.addMessageToConversation(AnyChatMessage(AnyChatAuth.currentUser, message.text));
+    }
     setState(() {
       _messages.insert(0, message);
     });
@@ -172,22 +174,45 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
 void _loadChatMessages(){
     print('loading chat messages');
-    ChatWindow.currentConversation.messages.forEach((element) {
+    Conversation convo;
+    FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
+    {
+      convo = Conversation.fromSnapshot(value),
+      convo.messages.reversed.forEach((element) async {
       ChatMessage message = ChatMessage(
         //user: currentUser,
-        text: element,
+        text: element['text'],
         animationController: AnimationController(
           duration: const Duration(milliseconds: 700),
           vsync: this,
         ),
+        sender: AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(element['sender']).get()),
       );
-      //setState(() {
-        print('adding chat message: ' + element);
+      setState(() {
+        //print('adding chat message: ' + element);
         _messages.insert(0, message);
-      //});
+      });
       //_focusNode.requestFocus();
       message.animationController.forward();
-    });
+    })});
+
+    // ChatWindow.currentConversation?.messages?.forEach((element) {
+    //   ChatMessage message = ChatMessage(
+    //     //user: currentUser,
+    //     text: element.text,
+    //     animationController: AnimationController(
+    //       duration: const Duration(milliseconds: 700),
+    //       vsync: this,
+    //     ),
+    //     sender: element.sender,
+    //   );
+    //   //setState(() {
+    //     //print('adding chat message: ' + element);
+    //     _messages.insert(0, message);
+    //   //});
+    //   //_focusNode.requestFocus();
+    //   message.animationController.forward();
+    // });
 }
 
   // static Future<void> _handleSignIn() async {
@@ -318,4 +343,15 @@ void _loadChatMessages(){
       message.animationController.dispose();
     super.dispose();
   }
+
+  // AnyChatUser parseAnyChatUser(String elementId) {
+  //   AnyChatUser user;
+  //   FirebaseFirestore.instance.collection("users").doc(elementId).get().then((value) =>
+  //   {
+  //     user = AnyChatUser.fromSnapshot(value),
+  //
+  //   });
+  //   print('parseAnyChatUser -> displayName: ' + user.displayName);
+  //   return user;
+  // }
 }

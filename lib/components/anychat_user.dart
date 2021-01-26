@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'anychat_auth.dart';
+import 'anychat_message.dart';
 import 'conversation.dart';
 
 class AnyChatUser {
@@ -29,22 +30,20 @@ class AnyChatUser {
         conversations = snapshot.data()['conversations'];
 
   static Future<void> createConversation() async {
-    final convo = await FirebaseFirestore.instance.collection("conversations")
-        .add({
-      'participants': [AnyChatApp.chatter.id, AnyChatAuth
-          .getGoogleSignIn()
-          .currentUser
-          .id
+    final convo =
+        await FirebaseFirestore.instance.collection("conversations").add({
+      'participants': [
+        AnyChatApp.chatter.id,
+        AnyChatAuth.currentUser.id
       ],
       'messages': new List<String>()
     });
-    final user = await FirebaseFirestore.instance.collection("users").doc(
-        AnyChatAuth
-            .getGoogleSignIn()
-            .currentUser
-            .id);
-    final chatter = await FirebaseFirestore.instance.collection("users").doc(
-        AnyChatApp.chatter.id);
+    final user = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser.id);
+    final chatter = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatApp.chatter.id);
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
@@ -52,9 +51,7 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
         fresh.conversations.add(convo.id);
-        transaction.update(user, {
-          'conversations': fresh.conversations
-        });
+        transaction.update(user, {'conversations': fresh.conversations});
       });
     });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
@@ -63,14 +60,13 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
         fresh.conversations.add(convo.id);
-        transaction.update(chatter, {
-          'conversations': fresh.conversations
-        });
+        transaction.update(chatter, {'conversations': fresh.conversations});
       });
     });
     convo.get().then((value) => print(value.id));
     print(convo.id);
-    ChatWindow.currentConversation = Conversation.fromSnapshot(await convo.get());
+    ChatWindow.currentConversation =
+        Conversation.fromSnapshot(await convo.get());
     //ChatWindow.currentConversation = Conversation.fromSnapshot(await convo.get());
     // return FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
@@ -108,26 +104,28 @@ class AnyChatUser {
     FirebaseAuth.instance;
 
     final users = FirebaseFirestore.instance.collection("users").doc(this.id);
-    checkExist(this.id).then((value) =>
-    {
-      if(!value){
-        //print('!value')
+    checkExist(this.id).then((value) => {
+          if (!value)
+            {
+              //print('!value')
 
-        users.set({
-          'displayName': displayName,
-          'email': email,
-          'photoUrl': photoUrl,
-          'language': locale.currentLocale,
-          'conversations' : new List<String>()
-        })
-      }
-    });
+              users.set({
+                'displayName': displayName,
+                'email': email,
+                'photoUrl': photoUrl,
+                'language': locale.currentLocale,
+                'conversations': new List<String>()
+              })
+            }
+        });
   }
 
   static Future<bool> checkExist(String id) async {
     bool exists = false;
     try {
-      await FirebaseFirestore.instance.collection("users").doc(id)
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(id)
           .get()
           .then((doc) {
         if (doc.exists)
@@ -141,17 +139,25 @@ class AnyChatUser {
     }
   }
 
-  static Future<void> addMessageToConversation(String text) async {
-    final convo = FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id);
+  static Future<void> addMessageToConversation(AnyChatMessage message) async {
+    // final messages = FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).collection("messages").doc().get().then((DocumentSnapshot value) =>
+    // {
+    //
+    // });
+    final conversation = FirebaseFirestore.instance
+        .collection("conversations")
+        .doc(ChatWindow.currentConversation.id);
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
-          .get(convo)
+          .get(conversation)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
-        fresh.messages.add(text);
-        transaction.update(convo, {
-          'messages': fresh.messages
+        fresh.messages.add({
+          'sender' : message.sender.id,
+          'text' : message.text
         });
+        //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
+        transaction.update(conversation, {'messages': fresh.messages});
       });
     });
   }
@@ -159,6 +165,5 @@ class AnyChatUser {
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
 //     return ;
 // }
-
 
 }

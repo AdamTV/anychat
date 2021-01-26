@@ -74,7 +74,7 @@ class Body extends StatelessWidget {
                       return ChatScreen();
                     }));
                   },
-                  leading: Icon(Icons.chat),
+                  leading: Icon(Icons.person_add),
                   title: RichText(
                       text: TextSpan(
                           text: FindChatterScreenState.users[index].displayName,

@@ -8,6 +8,7 @@ import 'package:anychat/components/locale.dart';
 import 'anychat_user.dart';
 
 class AnyChatAuth {
+  static AnyChatUser currentUser;
   //static User _user;
 
   // SignInOption option = SignInOption;
@@ -52,10 +53,10 @@ class AnyChatAuth {
         print('error occurred');
       });
 
-      final AnyChatUser user = AnyChatUser(googleSignInAccount.id, googleSignInAccount.displayName,
+      currentUser = AnyChatUser(googleSignInAccount.id, googleSignInAccount.displayName,
           googleSignInAccount.email, googleSignInAccount.photoUrl, locale.currentLocale, new List<String>());
-      user.addUserToFirestore();
-      return user;
+      currentUser.addUserToFirestore();
+      return currentUser;
       //googleSignInAccount = await _googleSignIn.signIn();
       //googleSignInAuthentication = await googleSignInAccount.authentication;
     }else{
@@ -87,22 +88,22 @@ class AnyChatAuth {
       assert(!_user.isAnonymous);
       assert(await _user.getIdToken() != null);
 
-      final User currentUser = _auth.currentUser;
-      assert(_user.uid == currentUser.uid);
+      final User _authCurrentUser = _auth.currentUser;
+      assert(_user.uid == _authCurrentUser.uid);
 
       print('signInWithGoogle succeeded: $_user');
 
       // Using googleSignInAccount for consistency across platforms
       // TODO: use authResult user instead?
-      var anyChatUser = new AnyChatUser(
+      currentUser = new AnyChatUser(
           _user.providerData[0].uid, _user.displayName,
           _user.email, _user.photoURL, locale.currentLocale, new List<String>());
       // var anyChatUser = new AnyChatUser(
       //     currentUser.uid,
       //     currentUser.displayName, currentUser.email, currentUser.photoURL);
-      anyChatUser.addUserToFirestore();
+      currentUser.addUserToFirestore();
 
-      return anyChatUser;
+      return currentUser;
     }
 
     return null;
@@ -113,9 +114,9 @@ class AnyChatAuth {
     print("User Signed Out");
   }
 
-  static GoogleSignIn getGoogleSignIn() {
-    return _googleSignIn;
-  }
+  // static GoogleSignIn getGoogleSignIn() {
+  //   return _googleSignIn;
+  // }
 
   static Future<User> createAccount() async {
     try {
