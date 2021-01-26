@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/constants.dart';
@@ -5,6 +6,7 @@ import 'package:anychat/components/locale.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   locale.init();
   runApp(MyApp());
 }

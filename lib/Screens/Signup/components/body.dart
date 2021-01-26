@@ -1,3 +1,7 @@
+import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Login/login_screen.dart';
@@ -12,6 +16,9 @@ import 'package:anychat/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Body extends StatelessWidget {
+  String email;
+  String password;
+  String language;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -25,27 +32,42 @@ class Body extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            kIsWeb ?
-            Image.network("assets/icons/signup.svg", height: size.height * 0.35)
-                :
-            SvgPicture.asset(
-              "assets/icons/signup.svg",
-              height: size.height * 0.35,
-            ),
+            kIsWeb
+                ? Image.network("assets/icons/signup.svg",
+                    height: size.height * 0.35)
+                : SvgPicture.asset(
+                    "assets/icons/signup.svg",
+                    height: size.height * 0.35,
+                  ),
             RoundedInputField(
               hintText: "Your Email",
-              onChanged: (value) {},
+              onChanged: (value) {
+                email = value;
+              },
             ),
             RoundedPasswordField(
-              onChanged: (value) {},
+              onChanged: (value) {
+                password = value;
+              },
             ),
             RoundedInputField(
               icon: Icons.language,
               hintText: "Language: ${locale.humanReadable} detected",
+              onChanged: (value) {
+                language = value;
+              },
             ),
             RoundedButton(
               text: "SIGNUP",
-              press: () {},
+              press: () {
+                AnyChatAuth.createAccount(email, password, language).then((value) =>
+                {
+                  if (value != null)
+                    {
+                      initConversationScreen(context, value)
+                    }
+                });
+              },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
@@ -75,7 +97,14 @@ class Body extends StatelessWidget {
                 ),
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
-                  press: () {},
+                  press: () {
+                    AnyChatAuth.signInWithGoogle().then((value) => {
+                          if (value != null)
+                            {
+                             initConversationScreen(context, value)
+                            }
+                        });
+                  },
                 ),
               ],
             )
@@ -88,5 +117,33 @@ class Body extends StatelessWidget {
   Future<String> test() async {
     await locale.init();
     return locale.humanReadable;
+  }
+
+  initConversationScreen(BuildContext ctx, AnyChatUser value) {
+    // Check if user has conversations
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(value.id)
+        .get()
+        .then((value) =>
+        AnyChatUser.fromSnapshot(value))
+        .then((AnyChatUser user) => {
+      if (user.conversations.isNotEmpty)
+        {
+          ConversationsScreen.conversations =
+              user.conversations
+                  .cast<String>(),
+        }
+      else
+        {
+          ConversationsScreen.conversations =
+          new List<String>()
+        },
+      Navigator.push(
+          ctx,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ConversationsScreen()))
+    });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -20,12 +21,10 @@ class AnyChatAuth {
   );
 
   static Future<GoogleSignInAccount> signIn() {
-    Firebase.initializeApp();
     return _googleSignIn.signIn();
   }
 
   static Future<AnyChatUser> signInWithGoogle() async {
-    await Firebase.initializeApp();
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
     GoogleSignInAccount googleSignInAccount;
@@ -118,13 +117,18 @@ class AnyChatAuth {
   //   return _googleSignIn;
   // }
 
-  static Future<User> createAccount() async {
+  static Future<AnyChatUser> createAccount(String email, String password, String language) async {
     try {
       UserCredential _userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: "barray.allen@example.com",
-          password: "SuperSecretPassword!");
-      return _userCredential.user;
+          email: email,
+          password: password);
+      var result = _userCredential.user;
+      print('result: ' + result.toString());
+      AnyChatUser currentU = AnyChatUser(result.uid, result.displayName, result.email, result.photoURL, language, new List<dynamic>());
+      currentUser = currentU;
+      currentU.addUserToFirestore();
+      return currentU;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -134,5 +138,28 @@ class AnyChatAuth {
     } catch (e) {
       print(e);
     }
+    return null;
+  }
+  static Future<AnyChatUser> signInEmail(String email, String password) async {
+    try {
+      UserCredential _userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+          email: email,
+          password: password);
+      var result = _userCredential.user;
+      AnyChatUser currentU = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(result.uid).get());
+      currentUser = currentU;
+      currentU.addUserToFirestore();
+      return currentU;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }
