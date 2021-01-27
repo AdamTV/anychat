@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -17,6 +19,8 @@ class ConversationsScreen extends StatefulWidget {
 
 class _ConversationsScreenState extends State<ConversationsScreen> {
   bool loaded = false;
+  StreamSubscription<QuerySnapshot> _conversationSubscription;
+  List<String> addedConversations = <String>[];
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +34,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   List<Widget> loadConversations() {
     ConversationsScreen.testWidgets.clear();
+
+    _conversationSubscription?.cancel();
+    _conversationSubscription =
+        ChatWindow.loadAllConversations().listen(_updateConversations);
+
     loaded = true;
     var widgets = <Widget>[];
     ConversationsScreen.conversations.forEach((conversationId) async {
@@ -41,6 +50,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       String chatterName = "test";
       String chatterId;
       List<String> users = conversation.participants;
+      print(AnyChatAuth.currentUser.id);
       for (var i = 0; i < conversation.participants.length; i++) {
         if (users[i] != AnyChatAuth.currentUser.id) {
           AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
@@ -61,19 +71,24 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       //       chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
       //     }
       //   });
-      setState(() {
-        ConversationsScreen.testWidgets.add(new ListTile(
-            onTap: () {
-              ChatWindow.currentConversation = conversation;
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ChatScreen();
-              }));
-            },
-            leading: Icon(Icons.chat),
-            title: RichText(
-                text: TextSpan(
-                    text: chatterName, style: TextStyle(color: Colors.grey)))));
-      });
+      // if(chatterName == null)return;
+      if (!addedConversations.contains(conversation.id)) {
+        addedConversations.add(conversation.id);
+        setState(() {
+          ConversationsScreen.testWidgets.add(new ListTile(
+              onTap: () {
+                ChatWindow.currentConversation = conversation;
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ChatScreen();
+                }));
+              },
+              leading: Icon(Icons.chat),
+              title: RichText(
+                  text: TextSpan(
+                      text: chatterName,
+                      style: TextStyle(color: Colors.grey)))));
+        });
+      }
       print('test widget added');
       // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
       // {
@@ -111,7 +126,52 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     });
     return widgets;
   }
-}
+
+  List<Conversation> getConversationsFromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return Conversation.fromSnapshot(doc);
+    }).toList();
+  }
+
+  Future<void> _updateConversations(QuerySnapshot snapshot) async {
+    if (getConversationsFromQuery(snapshot).isEmpty) return;
+    Conversation conversation = getConversationsFromQuery(snapshot).last;
+
+    String chatterName;
+
+    List<String> users = conversation.participants;
+    for (var i = 0; i < conversation.participants.length; i++) {
+      print(AnyChatAuth.currentUser.id);
+      // This assumes the chatter is the first participant that is not the user
+      if (users[i] != AnyChatAuth.currentUser.id) {
+        AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+            .instance
+            .collection("users")
+            .doc(users[i])
+            .get());
+        setState(() {
+          chatterName = AnyChatApp.chatter.displayName;
+          if (!addedConversations.contains(conversation.id)) {
+            addedConversations.add(conversation.id);
+            ConversationsScreen.conversations.add(conversation.id);
+            ConversationsScreen.testWidgets.add(new ListTile(
+                onTap: () {
+                  ChatWindow.currentConversation = conversation;
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ChatScreen();
+                  }));
+                },
+                leading: Icon(Icons.chat),
+                title: RichText(
+                    text: TextSpan(
+                        text: chatterName,
+                        style: TextStyle(color: Colors.grey)))));
+          }
+        });
+        // chatterId = AnyChatApp.chatter.id;
+      }
+    }
+  }
 
 // class ConversationsScreen extends StatelessWidget {
 //   static List<String> conversations = new List<String>();
@@ -169,3 +229,4 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 //     return widgets;
 //   }
 // }
+}

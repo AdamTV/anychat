@@ -94,6 +94,10 @@ class ChatWindow extends StatefulWidget {
 
   @override
   _ChatWindowState createState() => _ChatWindowState();
+
+  static Stream<QuerySnapshot> loadAllConversations() {
+    return FirebaseFirestore.instance.collection('conversations').snapshots();
+  }
 }
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
@@ -101,14 +105,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   final List<ChatMessage> _messages = [];
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
-  StreamSubscription<QuerySnapshot> _currentReviewSubscription;
+  StreamSubscription<QuerySnapshot> _conversationSubscription;
 
   List<Conversation> _conversations = <Conversation>[];
 
   _ChatWindowState() {
     _loadChatMessages();
-    _currentReviewSubscription =
-        loadAllConversations().listen(_updateConversations);
+    _conversationSubscription =
+        ChatWindow.loadAllConversations().listen(_updateChatWindow);
     // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
     // {
     // _currentReviewSubscription?.cancel(),
@@ -145,32 +149,36 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     // });
   }
 
-  Stream<QuerySnapshot> loadAllConversations() {
-    return FirebaseFirestore.instance.collection('conversations').snapshots();
-  }
-
   List<Conversation> getConversationsFromQuery(QuerySnapshot snapshot) {
     return snapshot.docs.map((DocumentSnapshot doc) {
       return Conversation.fromSnapshot(doc);
     }).toList();
   }
 
-  void _updateConversations(QuerySnapshot snapshot) {
-    setState(() {
+  List<String> loadedMessages = <String>[];
+
+  Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
+    if (!_isLoading) {
       _conversations = getConversationsFromQuery(snapshot);
-      if (_conversations.last.messages.last['sender'] !=
-          AnyChatAuth.currentUser.id) {
+      dynamic lastMessage = _conversations.last.messages.last;
+      if (lastMessage['sender'] != AnyChatAuth.currentUser.id &&
+          !loadedMessages.contains(lastMessage['timeStamp'])) {
+        loadedMessages.add(lastMessage['timeStamp']);
         ChatMessage chatMessage = ChatMessage(
-            text: _conversations.last.messages.last['text'],
+            text: "Message:     ${lastMessage['text']}\n\n"
+                "Translation: ${await Utilities.getGoogleTranslation(lastMessage['text'])}",
             animationController: AnimationController(
               duration: const Duration(milliseconds: 700),
               vsync: this,
             ),
             sender: AnyChatApp.chatter);
-        _messages.insert(0, chatMessage);
-        chatMessage.animationController.forward();
+        setState(() {
+          _isLoading = false;
+          _messages.insert(0, chatMessage);
+          chatMessage.animationController.forward();
+        });
       }
-    });
+    }
   }
 
   Widget _buildTextComposer() {
@@ -218,14 +226,15 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     );
   }
 
-  void _handleSubmitted(String text) {
+  Future<void> _handleSubmitted(String text) async {
     _textController.clear();
     setState(() {
       _isComposing = false;
     });
     ChatMessage message = ChatMessage(
       //user: currentUser,
-      text: text,
+      text: "Message:     $text\n\n"
+          "Translation: ${await Utilities.getGoogleTranslation(text)}",
       animationController: AnimationController(
         duration: const Duration(milliseconds: 700),
         vsync: this,
@@ -233,15 +242,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       sender: AnyChatAuth.currentUser,
     );
     // If conversation does not exist
-    if (ChatWindow.currentConversation == null) {
-      AnyChatUser.createConversation().then((value) => {
-            AnyChatUser.addMessageToConversation(
-                AnyChatMessage(AnyChatAuth.currentUser, message.text))
-          });
-    } else {
-      AnyChatUser.addMessageToConversation(
-          AnyChatMessage(AnyChatAuth.currentUser, message.text));
-    }
+    // if (ChatWindow.currentConversation == null) {
+    //
+    // } else {
+    AnyChatUser.addMessageToConversation(
+        AnyChatMessage(AnyChatAuth.currentUser, text, DateTime.now()));
+    //}
     setState(() {
       _messages.insert(0, message);
     });
@@ -249,7 +255,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     message.animationController.forward();
   }
 
-  void _loadChatMessages() {
+  Future<void> _loadChatMessages() async {
+    _isLoading = true;
+    if (ChatWindow.currentConversation == null) {
+      await AnyChatUser.createConversation();
+    }
     print('loading chat messages');
     Conversation convo;
     ChatMessage message;
@@ -287,26 +297,30 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               {
                 for (var i = 0; i < convo.messages.length; i++)
                   {
-                    message = ChatMessage(
-                      //user: currentUser,
-                      text: "Message:     ${convo.messages[i]['text']}\n\n"
-                          "Translation: ${Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
-                      animationController: AnimationController(
-                        duration: const Duration(milliseconds: 0),
-                        vsync: this,
-                      ),
-                      sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
-                          .instance
-                          .collection("users")
-                          .doc(convo.messages[i]['sender'])
-                          .get()),
-                    ),
-                    // setState(() {
-                    //print('adding chat message: ' + element);
-                    _messages.insert(0, message),
-                    // }),
-                    //_focusNode.requestFocus();
-                    message.animationController.forward(),
+                    if (!loadedMessages
+                        .contains(convo.messages[i]['timeStamp']))
+                      {
+                        message = ChatMessage(
+                          //user: currentUser,
+                          text: "Message:     ${convo.messages[i]['text']}\n\n"
+                              "Translation: ${await Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
+                          animationController: AnimationController(
+                            duration: const Duration(milliseconds: 0),
+                            vsync: this,
+                          ),
+                          sender: AnyChatUser.fromSnapshot(
+                              await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(convo.messages[i]['sender'])
+                                  .get()),
+                        ),
+                        // setState(() {
+                        //print('adding chat message: ' + element);
+                        _messages.insert(0, message),
+                        // }),
+                        //_focusNode.requestFocus();
+                        message.animationController.forward(),
+                      },
                   }
               },
               setState(() {
@@ -474,7 +488,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _currentReviewSubscription?.cancel();
+    _conversationSubscription?.cancel();
     for (ChatMessage message in _messages)
       message.animationController.dispose();
     super.dispose();

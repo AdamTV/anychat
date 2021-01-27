@@ -100,10 +100,19 @@ class AnyChatUser {
     //});
   }
 
-  addUserToFirestore() async {
+  addUserToFirestore() {
     FirebaseAuth.instance;
 
     final users = FirebaseFirestore.instance.collection("users").doc(this.id);
+    // if(!checkExist(this.id)){
+    //   users.set({
+    //     'displayName': displayName,
+    //     'email': email,
+    //     'photoUrl': photoUrl,
+    //     'language': locale.currentLocale,
+    //     'conversations': new List<String>()
+    //   });
+    // }
     checkExist(this.id).then((value) => {
           if (!value)
             {
@@ -153,6 +162,7 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
         fresh.messages.add({
+          'timeStamp' : message.timeStamp.toString(),
           'sender' : message.sender.id,
           'text' : message.text
         });

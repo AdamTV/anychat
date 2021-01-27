@@ -17,8 +17,8 @@ class Body extends StatelessWidget {
   String language;
   @override
   Widget build(BuildContext context) {
-    print('loading conversations screen');
-    print(ConversationsScreen.testWidgets.length);
+    print('loading settings screen');
+    //print(ConversationsScreen.testWidgets.length);
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),

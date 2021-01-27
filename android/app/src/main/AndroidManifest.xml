@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.alphatech.anychat">
    <application
-        android:label="anychat"
+        android:label="AnyChat"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -56,4 +56,6 @@
            </intent-filter>
        </activity>
     </application>
+    <!-- Required to fetch data from the internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
