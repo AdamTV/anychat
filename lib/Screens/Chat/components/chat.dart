@@ -5,6 +5,7 @@ import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,6 +27,7 @@ class _AnyChatAppState extends State<AnyChatApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "AnyChat",
       theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
           ? kIOSTheme // NEW
@@ -49,6 +51,11 @@ class ChatMessage extends StatelessWidget {
           CurvedAnimation(parent: animationController, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Container(
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        // decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: Theme.of(context).accentColor)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -282,7 +289,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   {
                     message = ChatMessage(
                       //user: currentUser,
-                      text: convo.messages[i]['text'],
+                      text: "Message:     ${convo.messages[i]['text']}\n\n"
+                          "Translation: ${Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
                       animationController: AnimationController(
                         duration: const Duration(milliseconds: 0),
                         vsync: this,

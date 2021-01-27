@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Utilities{
+  static String getGoogleTranslation(String text){
+    return "TRANSLATION PLACEHOLDER!!!";
+  }
   static Future<void> showMyDialog(BuildContext context, String text) async {
     return showDialog<void>(
       context: context,

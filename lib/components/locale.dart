@@ -15,6 +15,7 @@ class locale {
       print("Error obtaining preferred languages");
     }
     try {
+      var locale = Devicelocale();
       currentLocale = await Devicelocale.currentLocale;
       LocaleToHumanReadable();
       print(currentLocale);
