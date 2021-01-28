@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anychat/Screens/Call/call_screen.dart';
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:anychat/constants.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class AnyChatApp extends StatefulWidget {
   static AnyChatUser chatter;
@@ -165,8 +168,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           !loadedMessages.contains(lastMessage['timeStamp'])) {
         loadedMessages.add(lastMessage['timeStamp']);
         ChatMessage chatMessage = ChatMessage(
-            text: "Message:     ${lastMessage['text']}\n\n"
-                "Translation: ${await Utilities.getGoogleTranslation(lastMessage['text'])}",
+            text: "${lastMessage['text']}\n\n"
+                "${await Utilities.getGoogleTranslation(lastMessage['text'])}",
             animationController: AnimationController(
               duration: const Duration(milliseconds: 700),
               vsync: this,
@@ -233,8 +236,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     });
     ChatMessage message = ChatMessage(
       //user: currentUser,
-      text: "Message:     $text\n\n"
-          "Translation: ${await Utilities.getGoogleTranslation(text)}",
+      text: "$text\n\n"
+          "${await Utilities.getGoogleTranslation(text)}",
       animationController: AnimationController(
         duration: const Duration(milliseconds: 700),
         vsync: this,
@@ -302,8 +305,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                       {
                         message = ChatMessage(
                           //user: currentUser,
-                          text: "Message:     ${convo.messages[i]['text']}\n\n"
-                              "Translation: ${await Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
+                          text: "${convo.messages[i]['text']}\n\n"
+                              "${await Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
                           animationController: AnimationController(
                             duration: const Duration(milliseconds: 0),
                             vsync: this,
@@ -376,23 +379,31 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   //   });
   // }
   bool _isLoading = true;
-
+  Future<void> _handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
         elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-        //actions: <Widget>[
-        // _user == null
-        //     ? IconButton(
-        //         icon: const Icon(Icons.login),
-        //         tooltip: 'Login',
-        //         onPressed: () {
-        //           signInWithGoogle();
-        //         },
-        //       )
-        //     :
+        actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.call),
+                tooltip: 'Call',
+                onPressed: () async {
+                  await _handleCameraAndMic(Permission.camera);
+                  await _handleCameraAndMic(Permission.microphone);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CallScreen(channelName: ChatWindow.currentConversation.id),
+                      ));
+                },
+              )
+            ]
         // IconButton(
         //   icon: const Icon(Icons.logout),
         //   tooltip: 'Logout',

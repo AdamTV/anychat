@@ -16,6 +16,8 @@ final ThemeData kDefaultTheme = ThemeData(
   accentColor: Colors.deepPurple[900],
 );
 
+var agoraAppId = '72559be0b8944a8fb70a772d196078ce';
+
 final Map<String,String> isoMap = {
 "Afrikaans":"af",
 "Albanian":"sq",
