@@ -33,13 +33,14 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   }
 
   List<Widget> loadConversations() {
+    loaded = true;
+
     ConversationsScreen.testWidgets.clear();
 
     _conversationSubscription?.cancel();
     _conversationSubscription =
         ChatWindow.loadAllConversations().listen(_updateConversations);
 
-    loaded = true;
     var widgets = <Widget>[];
     ConversationsScreen.conversations.forEach((conversationId) async {
       Conversation conversation;
