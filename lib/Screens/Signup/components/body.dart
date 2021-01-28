@@ -68,7 +68,7 @@ class Body extends StatelessWidget {
                             {initConversationScreen(context, value)}
                         })
                     .catchError((e) => {
-                          Utilities.showMyDialog(context, e.message.toString())
+                          Utilities.showMyDialog(context, "Error", e.message.toString())
                         });
               },
             ),
@@ -100,7 +100,7 @@ class Body extends StatelessWidget {
                             })
                         .catchError((e) => {
                               Utilities.showMyDialog(
-                                  context, e.message.toString())
+                                  context, "Error", e.message.toString())
                             });
                   },
                 ),
@@ -111,7 +111,7 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
-                    AnyChatAuth.signInWithGoogle().then((value) => {
+                    AnyChatAuth.signUpWithGoogle().then((value) => {
                           if (value != null)
                             {initConversationScreen(context, value)}
                         });

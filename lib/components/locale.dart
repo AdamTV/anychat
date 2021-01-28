@@ -17,26 +17,9 @@ class locale {
     try {
       // var locale = Devicelocale();
       currentLocale = await Devicelocale.currentLocale;
-      LocaleToHumanReadable();
       print(currentLocale);
     } on PlatformException {
       print("Error obtaining current locale");
     }
   }
-
-  static void LocaleToHumanReadable() {
-    switch (currentLocale) {
-      case "en_US":
-        {
-          humanReadable = "English";
-        }
-        break;
-      default:
-        {
-          humanReadable = currentLocale;
-        }
-        break;
-    }
-  }
-
 }

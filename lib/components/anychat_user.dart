@@ -122,7 +122,7 @@ class AnyChatUser {
                 'displayName': displayName,
                 'email': email,
                 'photoUrl': photoUrl,
-                'language': locale.currentLocale,
+                'language': locale.currentLocale.substring(0,2),
                 'conversations': new List<String>()
               })
             }

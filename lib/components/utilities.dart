@@ -1,3 +1,4 @@
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -10,7 +11,7 @@ class Utilities{
 
   static Future<String> getGoogleTranslation(String text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
-    queryParameters.update("target", (value) => "es", ifAbsent: () => "es");
+    queryParameters.update("target", (value) => AnyChatAuth.currentUser.language, ifAbsent: () => AnyChatAuth.currentUser.language);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
     var uri = Uri.https(authority, unencodedPath, queryParameters);
     Response x = await http.post(uri);
@@ -21,13 +22,13 @@ class Utilities{
       return matches.first.group(1);
     }
   }
-  static Future<void> showMyDialog(BuildContext context, String text) async {
+  static Future<void> showMyDialog(BuildContext context,String title,String text) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: Text(title),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[

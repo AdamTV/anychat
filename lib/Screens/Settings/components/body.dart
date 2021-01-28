@@ -7,14 +7,21 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:anychat/constants.dart';
 
-class Body extends StatelessWidget {
-  String language;
+class SettingsBody extends StatefulWidget {
+  @override
+  _SettingsBodyState createState() => _SettingsBodyState();
+}
+
+class _SettingsBodyState extends State<SettingsBody> {
+  String isoCode;
+  String dropdownValue = getDropDownValue();
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
@@ -78,27 +85,64 @@ class Body extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('Language'),
-                      RoundedInputField(icon: Icons.language,onChanged:(value) {language = value;}),
-                      RoundedButton(
-                          text: "SAVE", press: () async {
-                        final user = FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(AnyChatAuth.currentUser.id);
-                        await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-                          return transaction
-                              .get(user)
-                              .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
-                              .then((AnyChatUser fresh) async {
-                            fresh.language = language;
-                            transaction.update(user, {'language': fresh.language});
+                      // Text('Language'),
+                      DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: Icon(Icons.language),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue = newValue;
                           });
-                        });
-                      }),
+                          isoCode = isoMap[newValue];
+                          print(isoCode);
+                        },
+                        items: isoMap.keys
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      // RoundedInputField(icon: Icons.language,onChanged:(value) {language = value;}),
+                      RoundedButton(
+                          text: "SAVE",
+                          press: () async {
+                            final user = FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(AnyChatAuth.currentUser.id);
+                            await FirebaseFirestore.instance
+                                .runTransaction((Transaction transaction) {
+                              return transaction
+                                  .get(user)
+                                  .then((DocumentSnapshot doc) =>
+                                  AnyChatUser.fromSnapshot(doc))
+                                  .then((AnyChatUser fresh) {
+                                fresh.language = isoCode;
+                                transaction
+                                    .update(user, {'language': fresh.language});
+                                AnyChatAuth.currentUser.language = isoCode;
+                                Utilities.showMyDialog(context, "Success", "Your settings have been saved.");
+                              });
+                            });
+                          }),
                     ],
                   ),
-                ))));
+                ))
+        ));
   }
 
-
+  static String getDropDownValue() {
+    for(String key in isoMap.keys){
+      print(isoMap[key]);
+      print(AnyChatAuth.currentUser.language);
+      if(isoMap[key] == AnyChatAuth.currentUser.language){
+        return key;
+      }
+    }
+    return "Error";
+  }
 }

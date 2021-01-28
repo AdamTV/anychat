@@ -64,9 +64,9 @@ class Body extends StatelessWidget {
                       if (value != null)
                         {initConversationScreen(context, value)}
                       else
-                        Utilities.showMyDialog(context, "Invalid Credentials")
+                        Utilities.showMyDialog(context, "Error", "Invalid Credentials")
                     }).catchError((e)=>{
-                  Utilities.showMyDialog(context, e.message.toString())
+                  Utilities.showMyDialog(context, "Error", e.message.toString())
                 });
               },
             ),
@@ -94,7 +94,7 @@ class Body extends StatelessWidget {
                         if (value != null)
                           {initConversationScreen(context, value)}
                       }).catchError((e)=>{
-                      Utilities.showMyDialog(context, e.message.toString())
+                      Utilities.showMyDialog(context, "Error", e.message.toString())
                       });
                   },
                 ),
