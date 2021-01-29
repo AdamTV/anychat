@@ -69,7 +69,8 @@ class _SettingsBodyState extends State<SettingsBody> {
                   }),
               ListTile(
                   title: Text('Logout'),
-                  onTap: () {
+                  onTap: () async {
+                    await AnyChatAuth.signOut();
                     Navigator.push(
                         context,
                         MaterialPageRoute(

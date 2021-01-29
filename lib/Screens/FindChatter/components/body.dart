@@ -51,8 +51,8 @@ class Body extends StatelessWidget {
                 }),
             ListTile(
                 title: Text('Logout'),
-                onTap: () {
-                  AnyChatAuth.signOutGoogle();
+                onTap: () async {
+                  await AnyChatAuth.signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomeScreen()));
                   //_handleSignOut();

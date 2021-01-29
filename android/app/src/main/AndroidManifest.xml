@@ -54,6 +54,17 @@
                <category android:name="android.intent.category.BROWSABLE" />
                <data android:scheme="@string/fb_login_protocol_scheme" />
            </intent-filter>
+
+           <intent-filter>
+               <action android:name="android.intent.action.VIEW" />
+               <category android:name="android.intent.category.DEFAULT" />
+               <category android:name="android.intent.category.BROWSABLE" />
+               <!-- Accepts URIs that begin with "example://gizmos” -->
+               <!-- Registered Callback URLs in TwitterApp -->
+               <data android:scheme="https"
+                     android:host="anychat-c414a.firebaseapp.com/__/auth/handler"/>
+           </intent-filter>
+
        </activity>
     </application>
     <!-- Required to fetch data from the internet. -->

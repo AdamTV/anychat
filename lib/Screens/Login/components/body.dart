@@ -1,4 +1,5 @@
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
@@ -60,14 +61,18 @@ class Body extends StatelessWidget {
             RoundedButton(
               text: "LOGIN",
               press: () {
-                AnyChatAuth.signInEmail(email, password).then((value) => {
-                      if (value != null)
-                        {initConversationScreen(context, value)}
-                      else
-                        Utilities.showMyDialog(context, "Error", "Invalid Credentials")
-                    }).catchError((e)=>{
-                  Utilities.showMyDialog(context, "Error", e.message.toString())
-                });
+                AnyChatAuth.signInEmail(email, password, false)
+                    .then((value) => {
+                          if (value != null)
+                            {initConversationScreen(context, value)}
+                          else
+                            Utilities.showMyDialog(
+                                context, "Error", "Invalid Credentials")
+                        })
+                    .catchError((e) => {
+                          Utilities.showMyDialog(
+                              context, "Error", e.message.toString())
+                        });
               },
             ),
             SizedBox(height: size.height * 0.03),
@@ -90,32 +95,55 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/facebook.svg",
                   press: () {
-                      AnyChatAuth.signInFacebook().then((value) => {
-                        if (value != null)
-                          {initConversationScreen(context, value)}
-                      }).catchError((e)=>{
-                      Utilities.showMyDialog(context, "Error", e.message.toString())
-                      });
+                    AnyChatAuth.signInFacebook()
+                        .then((value) => {
+                              if (value != null)
+                                {initConversationScreen(context, value)}
+                            })
+                        .catchError((e) => {
+                              Utilities.showMyDialog(
+                                  context, "Error", e.message.toString())
+                            });
                   },
                 ),
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/google-plus.svg",
-                  press: () async {
-                    // AnyChatUser user = await AnyChatAuth.signInWithGoogle();
-                    // if(user != null){
-                    //   await user.addUserToFirestore();
-                    //   initConversationScreen(context, user);
-                    // }
-                    AnyChatAuth.signInWithGoogle().then((value) => {
-                          if (value != null)
-                            {initConversationScreen(context, value)}
-                        });
+                  press: () {
+                    AnyChatAuth.signInTwitter()
+                        .then((value) => {
+                      if (value != null)
+                        {initConversationScreen(context, value)}
+                    })
+                        .catchError((e) => {
+                      Utilities.showMyDialog(
+                          context, "Error", e.message.toString())
+                    });
                   },
                 ),
+                SocalIcon(
+                    iconSrc: "assets/icons/google-plus.svg",
+                    press: () {
+                      AnyChatAuth.signInGoogle()
+                          .then((value) => {
+                        if (value != null)
+                          {initConversationScreen(context, value)}
+                      })
+                          .catchError((e) => {
+                        Utilities.showMyDialog(
+                            context, "Error", e.message.toString())
+                      });
+                      // AnyChatUser user = await AnyChatAuth.signInGoogle();
+                      // if (user != null) {
+                      //   await user.addUserToFirestore();
+                      //   {
+                      //     initConversationScreen(context, user);
+                      //   }
+                      //   // AnyChatAuth.signInWithGoogle().then((value) => {
+                      //   //       if (value != null)
+                      //   //         {initConversationScreen(context, value)}
+                      //   //     });
+                      // }
+                    })
               ],
             )
           ],
@@ -143,6 +171,16 @@ class Body extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ConversationsScreen()))
+            })
+        .catchError((e) => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ConversationsScreen();
+                  },
+                ),
+              )
             });
   }
 }

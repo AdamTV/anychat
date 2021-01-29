@@ -13,7 +13,7 @@ class AnyChatUser {
   final String id;
   final String displayName;
   final String email;
-  final String photoUrl;
+  String photoUrl;
   final List<dynamic> conversations;
   String language;
 
@@ -32,10 +32,7 @@ class AnyChatUser {
   static Future<void> createConversation() async {
     final convo =
         await FirebaseFirestore.instance.collection("conversations").add({
-      'participants': [
-        AnyChatApp.chatter.id,
-        AnyChatAuth.currentUser.id
-      ],
+      'participants': [AnyChatApp.chatter.id, AnyChatAuth.currentUser.id],
       'messages': new List<String>()
     });
     final user = await FirebaseFirestore.instance
@@ -122,7 +119,7 @@ class AnyChatUser {
                 'displayName': displayName,
                 'email': email,
                 'photoUrl': photoUrl,
-                'language': locale.currentLocale.substring(0,2),
+                'language': locale.currentLocale.substring(0, 2),
                 'conversations': new List<String>()
               })
             }
@@ -162,9 +159,9 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
         fresh.messages.add({
-          'timeStamp' : message.timeStamp.toString(),
-          'sender' : message.sender.id,
-          'text' : message.text
+          'timeStamp': message.timeStamp.toString(),
+          'sender': message.sender.id,
+          'text': message.text
         });
         //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
         transaction.update(conversation, {'messages': fresh.messages});
@@ -172,6 +169,21 @@ class AnyChatUser {
     });
   }
 
+  static Future<void> updatePhotoUrl(String photoUrl) async {
+    AnyChatAuth.currentUser.photoUrl = photoUrl;
+    final user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
+        transaction.update(user, {'photoUrl': photoUrl});
+      });
+    });
+  }
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
 //     return ;
 // }

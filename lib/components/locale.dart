@@ -10,7 +10,7 @@ class locale {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       languages = await Devicelocale.preferredLanguages;
-      print(languages);
+      //print(languages);
     } on PlatformException {
       print("Error obtaining preferred languages");
     }

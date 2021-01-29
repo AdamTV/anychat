@@ -52,17 +52,17 @@ class Body extends StatelessWidget {
                 password = value;
               },
             ),
-            RoundedInputField(
-              icon: Icons.language,
-              hintText: "Language: ${locale.humanReadable} detected",
-              onChanged: (value) {
-                language = value;
-              },
-            ),
+            // RoundedInputField(
+            //   icon: Icons.language,
+            //   hintText: "Language: ${locale.humanReadable} detected",
+            //   onChanged: (value) {
+            //     language = value;
+            //   },
+            // ),
             RoundedButton(
               text: "SIGN-UP",
               press: () {
-                AnyChatAuth.createAccountEmail(email, password, language)
+                AnyChatAuth.signInEmail(email, password, true)
                     .then((value) => {
                           if (value != null)
                             {initConversationScreen(context, value)}
@@ -111,7 +111,7 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
-                    AnyChatAuth.signInWithGoogle().then((value) => {
+                    AnyChatAuth.signInGoogle().then((value) => {
                           if (value != null)
                             {initConversationScreen(context, value)}
                         });

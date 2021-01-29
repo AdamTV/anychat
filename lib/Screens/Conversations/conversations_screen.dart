@@ -75,6 +75,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       // if(chatterName == null)return;
       if (!addedConversations.contains(conversation.id)) {
         addedConversations.add(conversation.id);
+        ConversationsScreen.conversations.add(conversation.id);
         setState(() {
           ConversationsScreen.testWidgets.add(new ListTile(
               onTap: () {

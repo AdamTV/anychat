@@ -444,8 +444,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 }),
             ListTile(
                 title: Text('Logout'),
-                onTap: () {
-                  AnyChatAuth.signOutGoogle();
+                onTap: () async {
+                  await AnyChatAuth.signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomeScreen()));
                   //_handleSignOut();
