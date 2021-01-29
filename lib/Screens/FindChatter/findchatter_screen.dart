@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/Screens/FindChatter/components/body.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/Screens/FindChatter/components/body.dart';
 
 class FindChatterScreen extends StatefulWidget {
   final String email;
@@ -61,7 +60,13 @@ class FindChatterScreenState extends State<FindChatterScreen> {
               querySnapshot.docs.forEach((doc) {
                 if (doc['email'] == email) {
                   //users.add(AnyChatUser(doc['id'], doc['displayName'], doc['email'], doc['photoUrl']));
-                  users.add(AnyChatUser(doc.id, doc["displayName"], doc["email"], doc["photoUrl"], doc["language"], doc['conversations']));
+                  users.add(AnyChatUser(
+                      doc.id,
+                      doc["displayName"],
+                      doc["email"],
+                      doc["photoUrl"],
+                      doc["language"],
+                      doc['conversations']));
                   print(doc["displayName"]);
                   setState(() {});
                 }

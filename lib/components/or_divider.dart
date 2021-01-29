@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:anychat/constants.dart';
 
 class OrDivider extends StatelessWidget {
   @override

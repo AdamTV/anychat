@@ -1,13 +1,9 @@
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
-import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
+import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/constants.dart';
 
 import '../../../components/anychat_auth.dart';
 import '../../Conversations/conversations_screen.dart';
@@ -31,13 +27,11 @@ class Body extends StatelessWidget {
               child: Text(
                 'AnyChat',
                 style:
-                // TODO: Color should be platform specific
-                TextStyle(color: Colors.white),
+                    // TODO: Color should be platform specific
+                    TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -69,8 +63,8 @@ class Body extends StatelessWidget {
               return new ListTile(
                   onTap: () {
                     AnyChatApp.chatter = FindChatterScreenState.users[index];
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return ChatScreen();
                     }));
                   },

@@ -1,8 +1,8 @@
-import 'package:anychat/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:anychat/constants.dart';
+import 'package:flutter/material.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelName;
@@ -175,13 +175,14 @@ class _CallScreenState extends State<CallScreen> {
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
-    if(defaultTargetPlatform == TargetPlatform.iOS){
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       list.add(RtcLocalView.SurfaceView());
-      _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+      _users
+          .forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
     }
     // if(defaultTargetPlatform == TargetPlatform.android){
-      list.add(RtcLocalView.SurfaceView());
-      _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    list.add(RtcLocalView.SurfaceView());
+    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
     // }
     return list;
   }

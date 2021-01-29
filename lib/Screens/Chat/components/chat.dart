@@ -5,19 +5,15 @@ import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
+import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/components/anychat_user.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:anychat/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 
 class AnyChatApp extends StatefulWidget {
   static AnyChatUser chatter;
@@ -379,41 +375,45 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   //   });
   // }
   bool _isLoading = true;
+
   Future<void> _handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print(status);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-        actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.call),
-                tooltip: 'Call',
-                onPressed: () async {
-                  await _handleCameraAndMic(Permission.camera);
-                  await _handleCameraAndMic(Permission.microphone);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CallScreen(channelName: ChatWindow.currentConversation.id),
-                      ));
-                },
-              )
-            ]
-        // IconButton(
-        //   icon: const Icon(Icons.logout),
-        //   tooltip: 'Logout',
-        //   onPressed: () {
-        //     signOutGoogle();
-        //     Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
-        //   },
-        // ),
-        //]
-      ),
+          title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
+          elevation:
+              Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.call),
+              tooltip: 'Call',
+              onPressed: () async {
+                await _handleCameraAndMic(Permission.camera);
+                await _handleCameraAndMic(Permission.microphone);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CallScreen(
+                          channelName: ChatWindow.currentConversation.id),
+                    ));
+              },
+            )
+          ]
+          // IconButton(
+          //   icon: const Icon(Icons.logout),
+          //   tooltip: 'Logout',
+          //   onPressed: () {
+          //     signOutGoogle();
+          //     Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
+          //   },
+          // ),
+          //]
+          ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical

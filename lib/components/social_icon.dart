@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SocalIcon extends StatelessWidget {
   final String iconSrc;
   final Function press;
+
   const SocalIcon({
     Key key,
     this.iconSrc,
@@ -26,14 +26,17 @@ class SocalIcon extends StatelessWidget {
           ),
           shape: BoxShape.circle,
         ),
-        child:
-        kIsWeb ?
-        Image.network(iconSrc, height: 30, width: 30,)
+        child: kIsWeb
+            ? Image.network(
+                iconSrc,
+                height: 30,
+                width: 30,
+              )
             : SvgPicture.asset(
-          iconSrc,
-          height: 20,
-          width: 20,
-        ),
+                iconSrc,
+                height: 20,
+                width: 20,
+              ),
       ),
     );
   }

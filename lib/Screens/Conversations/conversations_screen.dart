@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:anychat/Screens/Conversations/components/body.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/Screens/Conversations/components/body.dart';
 
 class ConversationsScreen extends StatefulWidget {
   static List<String> conversations = new List<String>();

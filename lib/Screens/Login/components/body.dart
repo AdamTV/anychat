@@ -1,23 +1,19 @@
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
-import 'package:anychat/Screens/Settings/settings_screen.dart';
+import 'package:anychat/Screens/Login/components/background.dart';
+import 'package:anychat/Screens/Signup/signup_screen.dart';
+import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/or_divider.dart';
+import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/components/rounded_password_field.dart';
+import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/Screens/Login/components/background.dart';
-import 'package:anychat/components/social_icon.dart';
-import 'package:anychat/components/or_divider.dart';
-import 'package:anychat/Screens/Signup/signup_screen.dart';
-import 'package:anychat/components/already_have_an_account_acheck.dart';
-import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/rounded_input_field.dart';
-import 'package:anychat/components/rounded_password_field.dart';
-import 'package:anychat/components/anychat_auth.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -111,13 +107,13 @@ class Body extends StatelessWidget {
                   press: () {
                     AnyChatAuth.signInTwitter()
                         .then((value) => {
-                      if (value != null)
-                        {initConversationScreen(context, value)}
-                    })
+                              if (value != null)
+                                {initConversationScreen(context, value)}
+                            })
                         .catchError((e) => {
-                      Utilities.showMyDialog(
-                          context, "Error", e.message.toString())
-                    });
+                              Utilities.showMyDialog(
+                                  context, "Error", e.message.toString())
+                            });
                   },
                 ),
                 SocalIcon(
@@ -125,24 +121,13 @@ class Body extends StatelessWidget {
                     press: () {
                       AnyChatAuth.signInGoogle()
                           .then((value) => {
-                        if (value != null)
-                          {initConversationScreen(context, value)}
-                      })
+                                if (value != null)
+                                  {initConversationScreen(context, value)}
+                              })
                           .catchError((e) => {
-                        Utilities.showMyDialog(
-                            context, "Error", e.message.toString())
-                      });
-                      // AnyChatUser user = await AnyChatAuth.signInGoogle();
-                      // if (user != null) {
-                      //   await user.addUserToFirestore();
-                      //   {
-                      //     initConversationScreen(context, user);
-                      //   }
-                      //   // AnyChatAuth.signInWithGoogle().then((value) => {
-                      //   //       if (value != null)
-                      //   //         {initConversationScreen(context, value)}
-                      //   //     });
-                      // }
+                                Utilities.showMyDialog(
+                                    context, "Error", e.message.toString())
+                              });
                     })
               ],
             )

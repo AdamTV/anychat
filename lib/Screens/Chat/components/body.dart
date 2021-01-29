@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -8,6 +8,6 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return AnyChatApp();
+    return AnyChatApp();
   }
 }

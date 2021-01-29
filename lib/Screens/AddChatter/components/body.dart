@@ -1,18 +1,15 @@
-import 'package:anychat/Screens/Chat/chat_screen.dart';
+import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
-
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
-
 
 class Body extends StatelessWidget {
   String email;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,28 +36,33 @@ class Body extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: Text('AnyChat', style:
-                // TODO: Color should be platform specific
-                TextStyle(color: Colors.white),),
+                child: Text(
+                  'AnyChat',
+                  style:
+                      // TODO: Color should be platform specific
+                      TextStyle(color: Colors.white),
+                ),
                 decoration: BoxDecoration(
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               ListTile(
                   title: Text('Return to conversations'),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ConversationsScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ConversationsScreen()));
                     //_handleSignOut();
                   }),
               ListTile(
                   title: Text('Logout'),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => WelcomeScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelcomeScreen()));
                     //_handleSignOut();
                   }),
             ],
@@ -73,18 +75,22 @@ class Body extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      RoundedInputField(hintText: "Find chatter by e-mail", onChanged:(value){email = value;}),
+                      RoundedInputField(
+                          hintText: "Find chatter by e-mail",
+                          onChanged: (value) {
+                            email = value;
+                          }),
                       RoundedButton(
-                        text: "Search",
-                          press: (){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => FindChatterScreen(email: email)));
-                      }),
+                          text: "Search",
+                          press: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FindChatterScreen(email: email)));
+                          }),
                     ],
                   ),
-                )
-            )
-        )
-    );
+                ))));
   }
 }

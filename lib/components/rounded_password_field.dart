@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:anychat/components/text_field_container.dart';
-import 'package:anychat/constants.dart';
+import 'package:flutter/material.dart';
 
 class RoundedPasswordField extends StatelessWidget {
   final ValueChanged<String> onChanged;
+
   const RoundedPasswordField({
     Key key,
     this.onChanged,

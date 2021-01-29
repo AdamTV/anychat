@@ -1,15 +1,11 @@
-import 'package:anychat/components/utilities.dart';
+import 'package:anychat/components/locale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:anychat/components/locale.dart';
 // import 'package:twitter_login/twitter_login.dart';
 import 'package:flutter_twitter/flutter_twitter.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'anychat_user.dart';
 
@@ -368,7 +364,9 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser> signInTwitter() async {
-    TwitterLogin twitterLogin = TwitterLogin(consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH", consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii");
+    TwitterLogin twitterLogin = TwitterLogin(
+        consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",
+        consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii");
     final TwitterLoginResult result = await twitterLogin.authorize();
     String newMessage;
     if (result.status == TwitterLoginStatus.loggedIn) {
@@ -384,10 +382,13 @@ class AnyChatAuth {
     //   message = newMessage;
     // });
   }
-  static Future<AnyChatUser> _signInWithTwitter(String token, String secret) async {
-    final AuthCredential credential = TwitterAuthProvider.credential(
-        accessToken: token, secret: secret);
-    final userCred = await FirebaseAuth.instance.signInWithCredential(credential);
+
+  static Future<AnyChatUser> _signInWithTwitter(
+      String token, String secret) async {
+    final AuthCredential credential =
+        TwitterAuthProvider.credential(accessToken: token, secret: secret);
+    final userCred =
+        await FirebaseAuth.instance.signInWithCredential(credential);
     final user = userCred.user;
     var snapshot = await FirebaseFirestore.instance
         .collection("users")
@@ -411,35 +412,35 @@ class AnyChatAuth {
       return currentUser;
     }
   }
-  // static Future<AnyChatUser>signInTwitter() async {
-  //   final twitterLogin = TwitterLogin(
-  //     // Consumer API keys
-  //     apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-  //     // Consumer API Secret keys
-  //     apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
-  //     // Registered Callback URLs in TwitterApp
-  //     // Android is a deeplink
-  //     // iOS is a URLScheme
-  //     redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
-  //     // Forces the user to enter their credentials
-  //     // to ensure the correct users account is authorized.
-  //   );
-  //   // If you want to implement Twitter account switching, set [force_login] to true
-  //   // login(forceLogin: true);
-  //   final authResult = await twitterLogin.login();
-  //   switch (authResult.status) {
-  //     case TwitterLoginStatus.loggedIn:
-  //     // success
-  //       print('====== Login success ======');
-  //       break;
-  //     case TwitterLoginStatus.cancelledByUser:
-  //     // cancel
-  //       print('====== Login cancel ======');
-  //       break;
-  //     case TwitterLoginStatus.error:
-  //     // error
-  //       print('====== Login error ======');
-  //       break;
-  //   }
-  // }
+// static Future<AnyChatUser>signInTwitter() async {
+//   final twitterLogin = TwitterLogin(
+//     // Consumer API keys
+//     apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+//     // Consumer API Secret keys
+//     apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+//     // Registered Callback URLs in TwitterApp
+//     // Android is a deeplink
+//     // iOS is a URLScheme
+//     redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
+//     // Forces the user to enter their credentials
+//     // to ensure the correct users account is authorized.
+//   );
+//   // If you want to implement Twitter account switching, set [force_login] to true
+//   // login(forceLogin: true);
+//   final authResult = await twitterLogin.login();
+//   switch (authResult.status) {
+//     case TwitterLoginStatus.loggedIn:
+//     // success
+//       print('====== Login success ======');
+//       break;
+//     case TwitterLoginStatus.cancelledByUser:
+//     // cancel
+//       print('====== Login cancel ======');
+//       break;
+//     case TwitterLoginStatus.error:
+//     // error
+//       print('====== Login error ======');
+//       break;
+//   }
+// }
 }

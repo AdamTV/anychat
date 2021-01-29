@@ -1,11 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Login/login_screen.dart';
 import 'package:anychat/Screens/Signup/signup_screen.dart';
 import 'package:anychat/Screens/Welcome/components/background.dart';
 import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/constants.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Body extends StatelessWidget {

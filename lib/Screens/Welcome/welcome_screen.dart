@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:anychat/Screens/Welcome/components/body.dart';
+import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override

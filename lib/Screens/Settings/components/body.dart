@@ -1,18 +1,12 @@
-import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
-import 'package:anychat/Screens/Chat/chat_screen.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:anychat/constants.dart';
 
 class SettingsBody extends StatefulWidget {
   @override
@@ -22,6 +16,7 @@ class SettingsBody extends StatefulWidget {
 class _SettingsBodyState extends State<SettingsBody> {
   String isoCode;
   String dropdownValue = getDropDownValue();
+
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
@@ -53,8 +48,8 @@ class _SettingsBodyState extends State<SettingsBody> {
                 child: Text(
                   'AnyChat',
                   style:
-                  // TODO: Color should be platform specific
-                  TextStyle(color: Colors.white),
+                      // TODO: Color should be platform specific
+                      TextStyle(color: Colors.white),
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
@@ -120,27 +115,27 @@ class _SettingsBodyState extends State<SettingsBody> {
                               return transaction
                                   .get(user)
                                   .then((DocumentSnapshot doc) =>
-                                  AnyChatUser.fromSnapshot(doc))
+                                      AnyChatUser.fromSnapshot(doc))
                                   .then((AnyChatUser fresh) {
                                 fresh.language = isoCode;
                                 transaction
                                     .update(user, {'language': fresh.language});
                                 AnyChatAuth.currentUser.language = isoCode;
-                                Utilities.showMyDialog(context, "Success", "Your settings have been saved.");
+                                Utilities.showMyDialog(context, "Success",
+                                    "Your settings have been saved.");
                               });
                             });
                           }),
                     ],
                   ),
-                ))
-        ));
+                ))));
   }
 
   static String getDropDownValue() {
-    for(String key in isoMap.keys){
+    for (String key in isoMap.keys) {
       print(isoMap[key]);
       print(AnyChatAuth.currentUser.language);
-      if(isoMap[key] == AnyChatAuth.currentUser.language){
+      if (isoMap[key] == AnyChatAuth.currentUser.language) {
         return key;
       }
     }
