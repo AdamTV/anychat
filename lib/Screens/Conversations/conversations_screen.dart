@@ -137,6 +137,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   Future<void> _updateConversations(QuerySnapshot snapshot) async {
     if (getConversationsFromQuery(snapshot).isEmpty) return;
     Conversation conversation = getConversationsFromQuery(snapshot).last;
+    AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(AnyChatAuth.currentUser.id)
+        .get());
+    if (!AnyChatAuth.currentUser.conversations.contains(conversation.id))
+      return;
 
     String chatterName;
 

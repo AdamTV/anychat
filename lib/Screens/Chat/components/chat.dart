@@ -169,7 +169,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         loadedMessages.add(lastMessage['timeStamp']);
         ChatMessage chatMessage = ChatMessage(
             text: "${lastMessage['text']}\n\n"
-                "${await Utilities.getGoogleTranslation(lastMessage['text'])}",
+                "${await Utilities.getGoogleTranslation(lastMessage['sender'], lastMessage['text'])}",
             animationController: AnimationController(
               duration: const Duration(milliseconds: 700),
               vsync: this,
@@ -237,7 +237,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     ChatMessage message = ChatMessage(
       //user: currentUser,
       text: "$text\n\n"
-          "${await Utilities.getGoogleTranslation(text)}",
+          "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.id, text)}",
       animationController: AnimationController(
         duration: const Duration(milliseconds: 700),
         vsync: this,
@@ -306,7 +306,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                         message = ChatMessage(
                           //user: currentUser,
                           text: "${convo.messages[i]['text']}\n\n"
-                              "${await Utilities.getGoogleTranslation(convo.messages[i]['text'])}",
+                              "${await Utilities.getGoogleTranslation(convo.messages[i]['sender'], convo.messages[i]['text'])}",
                           animationController: AnimationController(
                             duration: const Duration(milliseconds: 0),
                             vsync: this,

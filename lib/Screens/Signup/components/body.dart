@@ -111,7 +111,7 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () {
-                    AnyChatAuth.signUpWithGoogle().then((value) => {
+                    AnyChatAuth.signInWithGoogle().then((value) => {
                           if (value != null)
                             {initConversationScreen(context, value)}
                         });

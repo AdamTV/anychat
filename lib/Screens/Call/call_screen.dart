@@ -19,6 +19,8 @@ class _CallScreenState extends State<CallScreen> {
   bool muted = false;
   RtcEngine _engine;
 
+  get defaultTargetPlatform => null;
+
   @override
   void dispose() {
     print(_infoStrings);
@@ -115,12 +117,12 @@ class _CallScreenState extends State<CallScreen> {
             onPressed: _onToggleMute,
             child: Icon(
               muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
+              color: muted ? Colors.white : Theme.of(context).accentColor,
               size: 20.0,
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
+            fillColor: muted ? Theme.of(context).accentColor : Colors.white,
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
@@ -139,7 +141,7 @@ class _CallScreenState extends State<CallScreen> {
             onPressed: _onSwitchCamera,
             child: Icon(
               Icons.switch_camera,
-              color: Colors.blueAccent,
+              color: Theme.of(context).accentColor,
               size: 20.0,
             ),
             shape: CircleBorder(),
@@ -173,8 +175,14 @@ class _CallScreenState extends State<CallScreen> {
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
-    list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    if(defaultTargetPlatform == TargetPlatform.iOS){
+      list.add(RtcLocalView.SurfaceView());
+      _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    }
+    // if(defaultTargetPlatform == TargetPlatform.android){
+      list.add(RtcLocalView.SurfaceView());
+      _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    // }
     return list;
   }
 

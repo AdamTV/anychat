@@ -27,91 +27,91 @@ class AnyChatAuth {
   //   return _googleSignIn.signIn();
   // }
 
-  static Future<AnyChatUser> signUpWithGoogle() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-
-    GoogleSignInAccount googleSignInAccount;
-    GoogleSignInAuthentication googleSignInAuthentication;
-    AuthCredential credential;
-    UserCredential authResult;
-
-    if (!kIsWeb) {
-      //_googleSignIn.signOut();
-      await _googleSignIn.signIn().then((result) async {
-        googleSignInAccount = result;
-        await result.authentication.then((googleKey) async {
-          print("accessToken: " + googleKey.accessToken.toString());
-          print("idToken: " + googleKey.idToken.toString());
-          print("displayName: " + googleSignInAccount.displayName.toString());
-          credential = GoogleAuthProvider.credential(
-            accessToken: googleKey.accessToken,
-            idToken: googleKey.idToken,
-          );
-          authResult = await _auth.signInWithCredential(credential);
-        }).catchError((err) {
-          print('inner error: ' + err.toString());
-        });
-      }).catchError((err) {
-        print('error occurred');
-      });
-
-      currentUser =
-          AnyChatUser(googleSignInAccount.id, googleSignInAccount.displayName,
-              googleSignInAccount.email, googleSignInAccount.photoUrl,
-              locale.currentLocale.substring(0,2), new List<String>());
-      currentUser.addUserToFirestore();
-      return currentUser;
-      //googleSignInAccount = await _googleSignIn.signIn();
-      //googleSignInAuthentication = await googleSignInAccount.authentication;
-    } else {
-      authResult = await _auth.signInWithPopup(GoogleAuthProvider());
-      await _googleSignIn.signInSilently();
-      print(_googleSignIn.currentUser?.id);
-    }
-
-    //final UserCredential authResult =
-    //await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
-    //     await FirebaseAuth.instance.signInWithCredential(credential);
-
-    if (kIsWeb) {} else {
-      // try{
-      // }catch(e){
-      // var anyChatUser = new AnyChatUser(_googleSignIn.currentUser.displayName,
-      //     _googleSignIn.currentUser.email, _googleSignIn.currentUser.photoUrl);
-      // anyChatUser.addUserToFirestore();
-      // return authResult.user;
-      // return null;
-      // }
-    }
-
-//    final User user = null;
-    final _user = authResult.user;
-
-    if (_user != null) {
-      assert(!_user.isAnonymous);
-      assert(await _user.getIdToken() != null);
-
-      final User _authCurrentUser = _auth.currentUser;
-      assert(_user.uid == _authCurrentUser.uid);
-
-      print('signInWithGoogle succeeded: $_user');
-
-      // Using googleSignInAccount for consistency across platforms
-      // TODO: use authResult user instead?
-      currentUser = new AnyChatUser(
-          _user.providerData[0].uid, _user.displayName,
-          _user.email, _user.photoURL, locale.currentLocale,
-          new List<String>());
-      // var anyChatUser = new AnyChatUser(
-      //     currentUser.uid,
-      //     currentUser.displayName, currentUser.email, currentUser.photoURL);
-      currentUser.addUserToFirestore();
-
-      return currentUser;
-    }
-
-    return null;
-  }
+//   static Future<AnyChatUser> signUpWithGoogle() async {
+//     final FirebaseAuth _auth = FirebaseAuth.instance;
+//
+//     GoogleSignInAccount googleSignInAccount;
+//     GoogleSignInAuthentication googleSignInAuthentication;
+//     AuthCredential credential;
+//     UserCredential authResult;
+//
+//     if (!kIsWeb) {
+//       //_googleSignIn.signOut();
+//       await _googleSignIn.signIn().then((result) async {
+//         googleSignInAccount = result;
+//         await result.authentication.then((googleKey) async {
+//           print("accessToken: " + googleKey.accessToken.toString());
+//           print("idToken: " + googleKey.idToken.toString());
+//           print("displayName: " + googleSignInAccount.displayName.toString());
+//           credential = GoogleAuthProvider.credential(
+//             accessToken: googleKey.accessToken,
+//             idToken: googleKey.idToken,
+//           );
+//           authResult = await _auth.signInWithCredential(credential);
+//         }).catchError((err) {
+//           print('inner error: ' + err.toString());
+//         });
+//       }).catchError((err) {
+//         print('error occurred');
+//       });
+//
+//       currentUser =
+//           AnyChatUser(googleSignInAccount.id, googleSignInAccount.displayName,
+//               googleSignInAccount.email, googleSignInAccount.photoUrl,
+//               locale.currentLocale.substring(0,2), new List<String>());
+//       currentUser.addUserToFirestore();
+//       return currentUser;
+//       //googleSignInAccount = await _googleSignIn.signIn();
+//       //googleSignInAuthentication = await googleSignInAccount.authentication;
+//     } else {
+//       authResult = await _auth.signInWithPopup(GoogleAuthProvider());
+//       await _googleSignIn.signInSilently();
+//       print(_googleSignIn.currentUser?.id);
+//     }
+//
+//     //final UserCredential authResult =
+//     //await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
+//     //     await FirebaseAuth.instance.signInWithCredential(credential);
+//
+//     if (kIsWeb) {} else {
+//       // try{
+//       // }catch(e){
+//       // var anyChatUser = new AnyChatUser(_googleSignIn.currentUser.displayName,
+//       //     _googleSignIn.currentUser.email, _googleSignIn.currentUser.photoUrl);
+//       // anyChatUser.addUserToFirestore();
+//       // return authResult.user;
+//       // return null;
+//       // }
+//     }
+//
+// //    final User user = null;
+//     final _user = authResult.user;
+//
+//     if (_user != null) {
+//       assert(!_user.isAnonymous);
+//       assert(await _user.getIdToken() != null);
+//
+//       final User _authCurrentUser = _auth.currentUser;
+//       assert(_user.uid == _authCurrentUser.uid);
+//
+//       print('signInWithGoogle succeeded: $_user');
+//
+//       // Using googleSignInAccount for consistency across platforms
+//       // TODO: use authResult user instead?
+//       currentUser = new AnyChatUser(
+//           _user.providerData[0].uid, _user.displayName,
+//           _user.email, _user.photoURL, locale.currentLocale,
+//           new List<String>());
+//       // var anyChatUser = new AnyChatUser(
+//       //     currentUser.uid,
+//       //     currentUser.displayName, currentUser.email, currentUser.photoURL);
+//       currentUser.addUserToFirestore();
+//
+//       return currentUser;
+//     }
+//
+//     return null;
+//   }
   static Future<AnyChatUser> signInWithGoogle() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -139,8 +139,19 @@ class AnyChatAuth {
       }).catchError((err) {
         print('error occurred');
       });
-      currentUser = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(googleSignInAccount.id).get());
-      return currentUser;
+      var snapshot = await FirebaseFirestore.instance.collection("users").doc(googleSignInAccount.id).get();
+      if(snapshot.exists){
+        currentUser = AnyChatUser.fromSnapshot(snapshot);
+        return currentUser;
+      }else{
+        currentUser = new AnyChatUser(
+            googleSignInAccount.id, googleSignInAccount.displayName,
+            googleSignInAccount.email, googleSignInAccount.photoUrl, locale.currentLocale.substring(0,2),
+            new List<String>());
+        currentUser.addUserToFirestore();
+
+        return currentUser;
+      }
       //googleSignInAccount = await _googleSignIn.signIn();
       //googleSignInAuthentication = await googleSignInAccount.authentication;
     } else {

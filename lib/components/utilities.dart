@@ -1,28 +1,37 @@
+import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-class Utilities{
+class Utilities {
   static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
   static final String authority = "translation.googleapis.com";
   static final String unencodedPath = "/language/translate/v2";
   static Map<String, String> queryParameters = Map();
 
-  static Future<String> getGoogleTranslation(String text) async {
+  static Future<String> getGoogleTranslation(
+      String senderId, String text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
-    queryParameters.update("target", (value) => AnyChatAuth.currentUser.language, ifAbsent: () => AnyChatAuth.currentUser.language);
+    String isoCode = senderId == AnyChatAuth.currentUser.id
+        ? AnyChatApp.chatter.language
+        : AnyChatAuth.currentUser.language;
+    queryParameters.update("target", (value) => isoCode,
+        ifAbsent: () => isoCode);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
     var uri = Uri.https(authority, unencodedPath, queryParameters);
     Response x = await http.post(uri);
     String body = x.body;
+    print(body);
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     Iterable<Match> matches = translatedTextRegex.allMatches(body);
-    if(matches.length == 1 && matches.first.groupCount == 1) {
-      return matches.first.group(1);
+    if (matches.length == 1 && matches.first.groupCount == 1) {
+      return matches.first.group(1).replaceAll("&#39;", "'");
     }
   }
-  static Future<void> showMyDialog(BuildContext context,String title,String text) async {
+
+  static Future<void> showMyDialog(
+      BuildContext context, String title, String text) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,

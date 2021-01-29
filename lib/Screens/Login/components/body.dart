@@ -105,15 +105,15 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/google-plus.svg",
                   press: () async {
-                    AnyChatUser user = await AnyChatAuth.signInWithGoogle();
-                    if(user != null){
-                      await user.addUserToFirestore();
-                      initConversationScreen(context, user);
-                    }
-                    // AnyChatAuth.signInWithGoogle().then((value) => {
-                    //       if (value != null)
-                    //         {initConversationScreen(context, value)}
-                    //     });
+                    // AnyChatUser user = await AnyChatAuth.signInWithGoogle();
+                    // if(user != null){
+                    //   await user.addUserToFirestore();
+                    //   initConversationScreen(context, user);
+                    // }
+                    AnyChatAuth.signInWithGoogle().then((value) => {
+                          if (value != null)
+                            {initConversationScreen(context, value)}
+                        });
                   },
                 ),
               ],
