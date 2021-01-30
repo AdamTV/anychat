@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.682283241991-iuarauj18pl568ftrhrduioqhpibp17a</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAnDcY37Zs5n3OPX23jOfRr_mmH1cRlgrU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>682283241991</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ca.alphatech.anychat</string>
+	<key>PROJECT_ID</key>
+	<string>anychat-c414a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>anychat-c414a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:682283241991:ios:f05d7495c93fd781abd0a2</string>
+	<key>DATABASE_URL</key>
+	<string>https://anychat-c414a-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
