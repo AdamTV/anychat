@@ -380,7 +380,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     final status = await permission.request();
     print(status);
   }
-
+  String displayName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

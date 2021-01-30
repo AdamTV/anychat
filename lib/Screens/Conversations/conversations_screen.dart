@@ -42,25 +42,54 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         ChatWindow.loadAllConversations().listen(_updateConversations);
 
     var widgets = <Widget>[];
+    var ids = <String>[];
     ConversationsScreen.conversations.forEach((conversationId) async {
       Conversation conversation;
       conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance
           .collection("conversations")
           .doc(conversationId)
           .get());
+
       String chatterName = "test";
       String chatterId;
-      List<String> users = conversation.participants;
-      print(AnyChatAuth.currentUser.id);
-      for (var i = 0; i < conversation.participants.length; i++) {
-        if (users[i] != AnyChatAuth.currentUser.id) {
-          AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-              .instance
-              .collection("users")
-              .doc(users[i])
-              .get());
-          chatterName = AnyChatApp.chatter.displayName;
-          chatterId = AnyChatApp.chatter.id;
+
+      if(!ids.contains(conversationId)){
+        print(conversationId);
+        ids.add(conversationId);
+        List<String> users = conversation.participants;
+        print(AnyChatAuth.currentUser.id);
+        for (var i = 0; i < conversation.participants.length; i++) {
+          if (users[i] != AnyChatAuth.currentUser.id) {
+            final chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+                .instance
+                .collection("users")
+                .doc(users[i])
+                .get());
+            chatterName = chatter.displayName;
+            chatterId = chatter.id;
+
+            if (!addedConversations.contains(conversation.id)) {
+              print('adding conversation: ' + conversation.id);
+              addedConversations.add(conversation.id);
+              ConversationsScreen.conversations.add(conversation.id);
+              setState(() {
+                ConversationsScreen.testWidgets.add(new ListTile(
+                    onTap: () {
+                      AnyChatApp.chatter = chatter;
+                      ChatWindow.currentConversation = conversation;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return ChatScreen();
+                      }));
+                    },
+                    leading: Icon(Icons.chat),
+                    title: RichText(
+                        text: TextSpan(
+                            text: chatterName,
+                            style: TextStyle(color: Colors.grey)))));
+              });
+            }
+            print('test widget added');
+          }
         }
       }
 
@@ -73,25 +102,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       //     }
       //   });
       // if(chatterName == null)return;
-      if (!addedConversations.contains(conversation.id)) {
-        addedConversations.add(conversation.id);
-        ConversationsScreen.conversations.add(conversation.id);
-        setState(() {
-          ConversationsScreen.testWidgets.add(new ListTile(
-              onTap: () {
-                ChatWindow.currentConversation = conversation;
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ChatScreen();
-                }));
-              },
-              leading: Icon(Icons.chat),
-              title: RichText(
-                  text: TextSpan(
-                      text: chatterName,
-                      style: TextStyle(color: Colors.grey)))));
-        });
-      }
-      print('test widget added');
+
       // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
       // {
       //   conversation = Conversation.fromSnapshot(value),
@@ -153,7 +164,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       print(AnyChatAuth.currentUser.id);
       // This assumes the chatter is the first participant that is not the user
       if (users[i] != AnyChatAuth.currentUser.id) {
-        AnyChatApp.chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+        final chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
             .instance
             .collection("users")
             .doc(users[i])
@@ -165,6 +176,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             ConversationsScreen.conversations.add(conversation.id);
             ConversationsScreen.testWidgets.add(new ListTile(
                 onTap: () {
+                  AnyChatApp.chatter = chatter;
                   ChatWindow.currentConversation = conversation;
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ChatScreen();
