@@ -145,10 +145,10 @@ class Body extends StatelessWidget {
         .get()
         .then((value) => AnyChatUser.fromSnapshot(value))
         .then((AnyChatUser user) => {
-              if (user.conversations?.isNotEmpty)
+              if (user.conversationIds?.isNotEmpty)
                 {
                   ConversationsScreen.conversations =
-                      user.conversations.cast<String>(),
+                      user.conversationIds.cast<String>(),
                 }
               else
                 {ConversationsScreen.conversations = new List<String>()},

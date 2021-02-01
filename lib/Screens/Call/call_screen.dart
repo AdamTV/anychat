@@ -1,8 +1,18 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_speech/config/recognition_config.dart';
+import 'package:google_speech/config/recognition_config_v1.dart';
+import 'package:google_speech/config/streaming_recognition_config.dart';
+import 'package:google_speech/speech_client_authenticator.dart';
+import 'package:google_speech/speech_to_text.dart';
+import 'package:mic_stream/mic_stream.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelName;
@@ -18,12 +28,15 @@ class _CallScreenState extends State<CallScreen> {
   final _infoStrings = <String>[];
   bool muted = false;
   RtcEngine _engine;
+  String text = "";
 
   get defaultTargetPlatform => null;
 
   @override
   void dispose() {
-    print(_infoStrings);
+    // clear transcribedMessages
+    AnyChatUser.clearTranscribedMessages();
+    // print(_infoStrings);
     // clear users
     _users.clear();
     // destroy sdk
@@ -52,6 +65,7 @@ class _CallScreenState extends State<CallScreen> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
+    await streamingRecognize();
     await _engine.joinChannel(null, widget.channelName, null, 0);
 
   }
@@ -105,6 +119,63 @@ class _CallScreenState extends State<CallScreen> {
       },
     ));
   }
+  Widget _translatedText() {
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.symmetric(vertical: 48),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+        Text(text,
+        style: TextStyle(
+            backgroundColor: Colors.white,
+            fontSize: 32))
+        ],
+      ),
+    );
+  }
+  bool recognizing, recognizeFinished;
+  void streamingRecognize() async {
+    setState(() {
+      recognizing = true;
+    });
+    final serviceAccount = ServiceAccount.fromString(
+        '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
+    final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+    final config = _getConfig();
+
+    final responseStream = speechToText.streamingRecognize(
+        StreamingRecognitionConfig(config: config, interimResults: true),
+        await _getAudioStream());
+
+    responseStream.listen((data) {
+      AnyChatUser.addTranscribedMessage(data.results.map((e) => e.alternatives.first.transcript).join('\n'));
+      // setState(() {
+      //   text =
+      //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      //   recognizeFinished = true;
+      // });
+    }, onDone: () {
+      setState(() {
+        recognizing = false;
+      });
+    });
+  }
+  Future<Stream<List<int>>> _getAudioStream() async {
+    const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+    final stream = await MicStream.microphone(
+        audioSource: AudioSource.DEFAULT,
+        sampleRate: 16000,
+        channelConfig: ChannelConfig.CHANNEL_IN_MONO,
+        audioFormat: AUDIO_FORMAT);
+    return stream;
+  }
+  RecognitionConfig _getConfig() => RecognitionConfig(
+      encoding: AudioEncoding.LINEAR16,
+      model: RecognitionModel.basic,
+      enableAutomaticPunctuation: true,
+      sampleRateHertz: 16000,
+      languageCode: AnyChatAuth.currentUser.language);
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -166,6 +237,7 @@ class _CallScreenState extends State<CallScreen> {
         child: Stack(
           children: <Widget>[
             _viewRows(),
+            // _translatedText(),
             _toolbar(),
           ],
         ),
@@ -179,11 +251,17 @@ class _CallScreenState extends State<CallScreen> {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       list.add(RtcLocalView.SurfaceView());
       _users
-          .forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+          .forEach((int uid) => {
+            list.add(RtcRemoteView.SurfaceView(uid: uid))
+          });
     }
     // if(defaultTargetPlatform == TargetPlatform.android){
+    // list.add(TextField());
     list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    _users.forEach((int uid) => {
+      _translatedText(),
+      list.add(RtcRemoteView.SurfaceView(uid: uid))
+    });
     // }
     return list;
   }
@@ -205,7 +283,8 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Video layout wrapper
   Widget _viewRows() {
-    final views = _getRenderViews();
+    var getRenderViews = _getRenderViews();
+    final views = getRenderViews;
     switch (views.length) {
       case 1:
         return Container(

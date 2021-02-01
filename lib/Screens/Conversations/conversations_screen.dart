@@ -21,11 +21,14 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<String> addedConversations = <String>[];
-
+  _ConversationsScreenState(){
+    _conversationSubscription =
+        ChatWindow.loadAllConversations().listen(_updateConversations);
+  }
   @override
   Widget build(BuildContext context) {
     if (!loaded) {
-      loadConversations();
+      //loadConversations();
     }
     return Scaffold(
       body: Body(),
@@ -154,7 +157,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         .collection('users')
         .doc(AnyChatAuth.currentUser.id)
         .get());
-    if (!AnyChatAuth.currentUser.conversations.contains(conversation.id))
+    if (!AnyChatAuth.currentUser.conversationIds?.contains(conversation.id))
       return;
 
     String chatterName;
@@ -169,26 +172,29 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             .collection("users")
             .doc(users[i])
             .get());
-        setState(() {
-          chatterName = AnyChatApp.chatter.displayName;
-          if (!addedConversations.contains(conversation.id)) {
-            addedConversations.add(conversation.id);
-            ConversationsScreen.conversations.add(conversation.id);
-            ConversationsScreen.testWidgets.add(new ListTile(
-                onTap: () {
-                  AnyChatApp.chatter = chatter;
-                  ChatWindow.currentConversation = conversation;
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ChatScreen();
-                  }));
-                },
-                leading: Icon(Icons.chat),
-                title: RichText(
-                    text: TextSpan(
-                        text: chatterName,
-                        style: TextStyle(color: Colors.grey)))));
-          }
-        });
+        final messages = await FirebaseFirestore.instance.collection('conversations').doc(conversation.id).collection('messages').doc().get();
+        if(messages.exists){
+          setState(() {
+            chatterName = chatter.displayName;
+            if (!addedConversations.contains(conversation.id)) {
+              addedConversations.add(conversation.id);
+              ConversationsScreen.conversations.add(conversation.id);
+              ConversationsScreen.testWidgets.add(new ListTile(
+                  onTap: () {
+                    AnyChatApp.chatter = chatter;
+                    ChatWindow.currentConversation = conversation;
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return ChatScreen();
+                    }));
+                  },
+                  leading: Icon(Icons.chat),
+                  title: RichText(
+                      text: TextSpan(
+                          text: chatterName,
+                          style: TextStyle(color: Colors.grey)))));
+            }
+          });
+        }
         // chatterId = AnyChatApp.chatter.id;
       }
     }

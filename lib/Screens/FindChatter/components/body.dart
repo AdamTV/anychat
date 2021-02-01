@@ -63,6 +63,7 @@ class Body extends StatelessWidget {
               return new ListTile(
                   onTap: () {
                     AnyChatApp.chatter = FindChatterScreenState.users[index];
+
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return ChatScreen();

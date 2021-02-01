@@ -12,11 +12,11 @@ class AnyChatUser {
   final String displayName;
   final String email;
   String photoUrl;
-  final List<dynamic> conversations;
+  final List<dynamic> conversationIds;
   String language;
 
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
-      this.language, this.conversations);
+      this.language, this.conversationIds);
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
@@ -25,7 +25,7 @@ class AnyChatUser {
         email = snapshot.data()['email'],
         photoUrl = snapshot.data()['photoUrl'],
         language = snapshot.data()['language'],
-        conversations = snapshot.data()['conversations'];
+        conversationIds = snapshot.data()['conversationIds'];
 
   static Future<void> createConversation() async {
     final convo =
@@ -45,8 +45,8 @@ class AnyChatUser {
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversations.add(convo.id);
-        transaction.update(user, {'conversations': fresh.conversations});
+        fresh.conversationIds.add(convo.id);
+        transaction.update(user, {'conversationIds': fresh.conversationIds});
       });
     });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
@@ -54,8 +54,8 @@ class AnyChatUser {
           .get(chatter)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversations.add(convo.id);
-        transaction.update(chatter, {'conversations': fresh.conversations});
+        fresh.conversationIds.add(convo.id);
+        transaction.update(chatter, {'conversationIds': fresh.conversationIds});
       });
     });
     convo.get().then((value) => print(value.id));
@@ -105,7 +105,7 @@ class AnyChatUser {
     //     'email': email,
     //     'photoUrl': photoUrl,
     //     'language': locale.currentLocale,
-    //     'conversations': new List<String>()
+    //     'conversationIds': new List<String>()
     //   });
     // }
     checkExist(this.id).then((value) => {
@@ -118,7 +118,7 @@ class AnyChatUser {
                 'email': email,
                 'photoUrl': photoUrl,
                 'language': locale.currentLocale.substring(0, 2),
-                'conversations': new List<String>()
+                'conversationIds': <String>[],
               })
             }
         });
@@ -143,26 +143,33 @@ class AnyChatUser {
     }
   }
 
-  static Future<void> addMessageToConversation(AnyChatMessage message) async {
-    // final messages = FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).collection("messages").doc().get().then((DocumentSnapshot value) =>
+  static Future<void> addMessageToConversation(String text) async {
+    // final messages = FirebaseFirestore.instance.collection("conversationIds").doc(ChatWindow.currentConversation.id).collection("messages").doc().get().then((DocumentSnapshot value) =>
     // {
     //
     // });
     final conversation = FirebaseFirestore.instance
-        .collection("conversations")
+        .collection("conversationIds")
         .doc(ChatWindow.currentConversation.id);
+    final newMessage = conversation.collection('messages').doc();
+
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(conversation)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
-        fresh.messages.add({
-          'timeStamp': message.timeStamp.toString(),
-          'sender': message.sender.id,
-          'text': message.text
-        });
-        //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
-        transaction.update(conversation, {'messages': fresh.messages});
+            transaction.set(newMessage, {
+              'timestamp': FieldValue.serverTimestamp(),
+              'senderId': AnyChatAuth.currentUser.id,
+              'text': text,
+            });
+        // fresh.messages.add({
+        //   'timeStamp': message.timestamp.toString(),
+        //   'sender': message.sender.id,
+        //   'text': message.text
+        // });
+        // //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
+        // transaction.update(conversation, {'messages': fresh.messages});
       });
     });
   }
@@ -179,6 +186,48 @@ class AnyChatUser {
           .then((AnyChatUser fresh) {
         //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
         transaction.update(user, {'photoUrl': photoUrl});
+      });
+    });
+  }
+
+  static Future<void> addTranscribedMessage(String text) async {
+    // final conversation = FirebaseFirestore.instance
+    //     .collection("conversations")
+    //     .doc(ChatWindow.currentConversation.id);
+    // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+    //   return transaction
+    //       .get(conversation)
+    //       .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+    //       .then((Conversation fresh) async {
+    //     final transcribedMessages = fresh.transcribedMessages == null
+    //         ? <dynamic>[]
+    //         : fresh.transcribedMessages;
+    //     transcribedMessages.add({
+    //       'timeStamp': DateTime.now(),
+    //       'sender': AnyChatAuth.currentUser.id,
+    //       'text': text
+    //     });
+    //     //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
+    //     transaction
+    //         .update(conversation, {'transcribedMessages': transcribedMessages});
+    //   });
+    // });
+  }
+
+  static Future<void> clearTranscribedMessages() async {
+    final conversation = FirebaseFirestore.instance
+        .collection("conversations")
+        .doc(ChatWindow.currentConversation.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(conversation)
+          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+          .then((Conversation fresh) async {
+        final transcribedMessages = <dynamic>[];
+
+        //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
+        transaction
+            .update(conversation, {'transcribedMessages': transcribedMessages});
       });
     });
   }
