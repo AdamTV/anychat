@@ -19,5 +19,9 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "functions": {
+    "predeploy": [
+    ]
   }
 }

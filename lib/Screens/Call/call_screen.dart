@@ -53,6 +53,7 @@ class _CallScreenState extends State<CallScreen> {
     _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
     await _engine.joinChannel(null, widget.channelName, null, 0);
+
   }
 
   /// Create agora sdk instance and initialize
