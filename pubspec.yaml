@@ -36,7 +36,9 @@ dependencies:
   http: ^0.12.2
   agora_rtc_engine: ^3.2.1
   permission_handler: ^5.0.1
-
+  google_speech: ^1.2.1
+  path_provider: ^1.6.27
+  mic_stream: ^0.4.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -65,6 +67,9 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/anychat-c414a-7669166c30f5.json
+    - assets/test.wav
+    - assets/test_mono.wav
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

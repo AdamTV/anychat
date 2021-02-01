@@ -66,7 +66,7 @@ class FindChatterScreenState extends State<FindChatterScreen> {
                       doc["email"],
                       doc["photoUrl"],
                       doc["language"],
-                      doc['conversations']));
+                      doc['conversationIds']));
                   print(doc["displayName"]);
                   setState(() {});
                 }
