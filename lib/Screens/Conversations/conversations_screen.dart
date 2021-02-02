@@ -21,10 +21,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<String> addedConversations = <String>[];
-  _ConversationsScreenState(){
+
+  _ConversationsScreenState() {
+    ConversationsScreen.testWidgets.clear();
     _conversationSubscription =
         ChatWindow.loadAllConversations().listen(_updateConversations);
   }
+
   @override
   Widget build(BuildContext context) {
     if (!loaded) {
@@ -36,13 +39,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   }
 
   List<Widget> loadConversations() {
-    loaded = true;
+    // loaded = true;
 
-    ConversationsScreen.testWidgets.clear();
+    // ConversationsScreen.testWidgets.clear();
 
-    _conversationSubscription?.cancel();
-    _conversationSubscription =
-        ChatWindow.loadAllConversations().listen(_updateConversations);
+    // _conversationSubscription?.cancel();
+    // _conversationSubscription =
+    //     ChatWindow.loadAllConversations().listen(_updateConversations);
 
     var widgets = <Widget>[];
     var ids = <String>[];
@@ -56,7 +59,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       String chatterName = "test";
       String chatterId;
 
-      if(!ids.contains(conversationId)){
+      if (!ids.contains(conversationId)) {
         print(conversationId);
         ids.add(conversationId);
         List<String> users = conversation.participants;
@@ -71,7 +74,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             chatterName = chatter.displayName;
             chatterId = chatter.id;
 
-            if (!addedConversations.contains(conversation.id)) {
+            if (!addedConversations.contains(conversation.id) && mounted) {
               print('adding conversation: ' + conversation.id);
               addedConversations.add(conversation.id);
               ConversationsScreen.conversations.add(conversation.id);
@@ -80,7 +83,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                     onTap: () {
                       AnyChatApp.chatter = chatter;
                       ChatWindow.currentConversation = conversation;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
                         return ChatScreen();
                       }));
                     },
@@ -95,50 +99,50 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           }
         }
       }
-
-      // conversation.participants.forEach((AnyChatUser participant) async {
-      //     if(participant.id != AnyChatAuth
-      //         .getGoogleSignIn()
-      //         .currentUser
-      //         .id) {
-      //       chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
-      //     }
-      //   });
-      // if(chatterName == null)return;
-
-      // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
-      // {
-      //   conversation = Conversation.fromSnapshot(value),
-      //   print('test'),
-      //   testWidgets.add(Text("test"))
-      // });
-
-      // var conversation = Conversation.fromSnapshot((
-      //     element).get());
-      //String chatterName = "Sf";
-      // conversation.participants.forEach((AnyChatUser participant) async {
-      //   if(participant.id != AnyChatAuth
-      //       .getGoogleSignIn()
-      //       .currentUser
-      //       .id) {
-      //     chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
-      //   }
-      // });
-
-      // print("adding widget");
-      // widgets.add(new ListTile(
-      //     onTap: () {
-      //       // AnyChatApp.user = FindChatterScreenState.users[index];
-      //       // Navigator.push(
-      //       //     context, MaterialPageRoute(builder: (context) {
-      //       //   return ChatScreen();
-      //       // }));
-      //     },
-      //     leading: Icon(Icons.person_add),
-      //     title: RichText(
-      //         text: TextSpan(
-      //             text: chatterName,
-      //             style: TextStyle(color: Colors.grey)))));
+      //
+      //     // conversation.participants.forEach((AnyChatUser participant) async {
+      //     //     if(participant.id != AnyChatAuth
+      //     //         .getGoogleSignIn()
+      //     //         .currentUser
+      //     //         .id) {
+      //     //       chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
+      //     //     }
+      //     //   });
+      //     // if(chatterName == null)return;
+      //
+      //     // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
+      //     // {
+      //     //   conversation = Conversation.fromSnapshot(value),
+      //     //   print('test'),
+      //     //   testWidgets.add(Text("test"))
+      //     // });
+      //
+      //     // var conversation = Conversation.fromSnapshot((
+      //     //     element).get());
+      //     //String chatterName = "Sf";
+      //     // conversation.participants.forEach((AnyChatUser participant) async {
+      //     //   if(participant.id != AnyChatAuth
+      //     //       .getGoogleSignIn()
+      //     //       .currentUser
+      //     //       .id) {
+      //     //     chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
+      //     //   }
+      //     // });
+      //
+      //     // print("adding widget");
+      //     // widgets.add(new ListTile(
+      //     //     onTap: () {
+      //     //       // AnyChatApp.user = FindChatterScreenState.users[index];
+      //     //       // Navigator.push(
+      //     //       //     context, MaterialPageRoute(builder: (context) {
+      //     //       //   return ChatScreen();
+      //     //       // }));
+      //     //     },
+      //     //     leading: Icon(Icons.person_add),
+      //     //     title: RichText(
+      //     //         text: TextSpan(
+      //     //             text: chatterName,
+      //     //             style: TextStyle(color: Colors.grey)))));
     });
     return widgets;
   }
@@ -151,13 +155,21 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   Future<void> _updateConversations(QuerySnapshot snapshot) async {
     if (getConversationsFromQuery(snapshot).isEmpty) return;
+    if (ConversationsScreen.testWidgets.isEmpty) {
+      setState(() {
+        ConversationsScreen.conversations = getConversationsFromQuery(snapshot).map((e) => e.id).toList();
+        ConversationsScreen.testWidgets = loadConversations();
+      });
+      return;
+    }
     Conversation conversation = getConversationsFromQuery(snapshot).last;
     AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(await FirebaseFirestore
         .instance
         .collection('users')
         .doc(AnyChatAuth.currentUser.id)
         .get());
-    if (!AnyChatAuth.currentUser.conversationIds?.contains(conversation.id))
+    if (AnyChatAuth.currentUser.conversationIds == null ||
+        !AnyChatAuth.currentUser.conversationIds.contains(conversation.id))
       return;
 
     String chatterName;
@@ -172,32 +184,35 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             .collection("users")
             .doc(users[i])
             .get());
-        final messages = await FirebaseFirestore.instance.collection('conversations').doc(conversation.id).collection('messages').doc().get();
-        if(messages.exists){
-          setState(() {
-            chatterName = chatter.displayName;
-            if (!addedConversations.contains(conversation.id)) {
-              addedConversations.add(conversation.id);
-              ConversationsScreen.conversations.add(conversation.id);
-              ConversationsScreen.testWidgets.add(new ListTile(
-                  onTap: () {
-                    AnyChatApp.chatter = chatter;
-                    ChatWindow.currentConversation = conversation;
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return ChatScreen();
-                    }));
-                  },
-                  leading: Icon(Icons.chat),
-                  title: RichText(
-                      text: TextSpan(
-                          text: chatterName,
-                          style: TextStyle(color: Colors.grey)))));
-            }
-          });
-        }
+        setState(() {
+          chatterName = chatter.displayName;
+          if (!addedConversations.contains(conversation.id)) {
+            addedConversations.add(conversation.id);
+            ConversationsScreen.conversations.add(conversation.id);
+            ConversationsScreen.testWidgets.add(new ListTile(
+                onTap: () {
+                  AnyChatApp.chatter = chatter;
+                  ChatWindow.currentConversation = conversation;
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ChatScreen();
+                  }));
+                },
+                leading: Icon(Icons.chat),
+                title: RichText(
+                    text: TextSpan(
+                        text: chatterName,
+                        style: TextStyle(color: Colors.grey)))));
+          }
+        });
         // chatterId = AnyChatApp.chatter.id;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _conversationSubscription?.cancel();
+    super.dispose();
   }
 
 // class ConversationsScreen extends StatelessWidget {
