@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/utilities.dart';
 import 'package:anychat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +15,9 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:anychat/components/utilities.dart';
+
 
 class CallScreen extends StatefulWidget {
   final String channelName;
@@ -29,11 +34,18 @@ class _CallScreenState extends State<CallScreen> {
   bool muted = false;
   RtcEngine _engine;
   String text = "";
+  StreamSubscription<QuerySnapshot> _transcribedChatMessageSubscription;
 
   get defaultTargetPlatform => null;
 
+  _CallScreenState(){
+    _transcribedChatMessageSubscription = loadAllTranscribedMessages().listen(_updateCallScreen);
+  }
+
   @override
   void dispose() {
+    _transcribedChatMessageSubscription?.cancel();
+    speechToText.dispose();
     // clear transcribedMessages
     AnyChatUser.clearTranscribedMessages();
     // print(_infoStrings);
@@ -67,7 +79,6 @@ class _CallScreenState extends State<CallScreen> {
     // await _engine.enableWebSdkInteroperability(true);
     await streamingRecognize();
     await _engine.joinChannel(null, widget.channelName, null, 0);
-
   }
 
   /// Create agora sdk instance and initialize
@@ -119,37 +130,41 @@ class _CallScreenState extends State<CallScreen> {
       },
     ));
   }
+
   Widget _translatedText() {
-    return Container(
-      alignment: Alignment.topCenter,
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
         children: <Widget>[
-        Text(text,
-        style: TextStyle(
-            backgroundColor: Colors.white,
-            fontSize: 32))
+          Text(text,
+              style: TextStyle(backgroundColor: Colors.white, fontSize: 32))
         ],
-      ),
-    );
+      );
   }
+
+  SpeechToText speechToText;
   bool recognizing, recognizeFinished;
+
   void streamingRecognize() async {
     setState(() {
       recognizing = true;
     });
     final serviceAccount = ServiceAccount.fromString(
         '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
-    final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+    speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+
     final config = _getConfig();
 
     final responseStream = speechToText.streamingRecognize(
         StreamingRecognitionConfig(config: config, interimResults: true),
         await _getAudioStream());
-
+    String lastMessage = "";
     responseStream.listen((data) {
-      AnyChatUser.addTranscribedMessage(data.results.map((e) => e.alternatives.first.transcript).join('\n'));
+      String transcribedText =
+          data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      if (lastMessage.compareTo(transcribedText) != 0 &&
+          transcribedText.isNotEmpty) {
+        lastMessage = transcribedText;
+        AnyChatUser.addTranscribedMessage(lastMessage);
+      }
       // setState(() {
       //   text =
       //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
@@ -161,6 +176,7 @@ class _CallScreenState extends State<CallScreen> {
       });
     });
   }
+
   Future<Stream<List<int>>> _getAudioStream() async {
     const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     final stream = await MicStream.microphone(
@@ -170,6 +186,7 @@ class _CallScreenState extends State<CallScreen> {
         audioFormat: AUDIO_FORMAT);
     return stream;
   }
+
   RecognitionConfig _getConfig() => RecognitionConfig(
       encoding: AudioEncoding.LINEAR16,
       model: RecognitionModel.basic,
@@ -237,7 +254,7 @@ class _CallScreenState extends State<CallScreen> {
         child: Stack(
           children: <Widget>[
             _viewRows(),
-            // _translatedText(),
+            _translatedText(),
             _toolbar(),
           ],
         ),
@@ -247,21 +264,18 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
-    final List<StatefulWidget> list = [];
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      list.add(RtcLocalView.SurfaceView());
-      _users
-          .forEach((int uid) => {
-            list.add(RtcRemoteView.SurfaceView(uid: uid))
-          });
-    }
+    final List<Widget> list = [];
+    // if (defaultTargetPlatform == TargetPlatform.iOS) {
+    //   list.add(RtcLocalView.SurfaceView());
+    //   _users.forEach(
+    //       (int uid) => {list.add(RtcRemoteView.SurfaceView(uid: uid))});
+    // }
     // if(defaultTargetPlatform == TargetPlatform.android){
     // list.add(TextField());
     list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => {
-      _translatedText(),
-      list.add(RtcRemoteView.SurfaceView(uid: uid))
-    });
+    _users.forEach((int uid) =>
+    // {list.add(_translatedText()), list.add(RtcRemoteView.SurfaceView(uid: uid))});
+    {list.add(RtcRemoteView.SurfaceView(uid: uid))});
     // }
     return list;
   }
@@ -333,5 +347,30 @@ class _CallScreenState extends State<CallScreen> {
 
   void _onSwitchCamera() {
     _engine.switchCamera();
+  }
+
+  Stream<QuerySnapshot> loadAllTranscribedMessages() {
+    return FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(ChatWindow.currentConversation.id)
+        .collection('transcribedMessages')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+  }
+
+  Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
+    final message = getMessageFromQuery(snapshot);
+    if(message.senderId != AnyChatAuth.currentUser.id){
+      final translatedText = await Utilities.getGoogleTranslation(message.senderId, message.text);
+      setState(() {
+        text = translatedText;
+      });
+    }
+  }
+
+  AnyChatMessage getMessageFromQuery(QuerySnapshot snapshot) {
+    return snapshot.docs.map((DocumentSnapshot doc) {
+      return AnyChatMessage.fromSnapshot(doc);
+    }).last;
   }
 }
