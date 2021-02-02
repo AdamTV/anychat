@@ -143,13 +143,13 @@ class AnyChatUser {
     }
   }
 
-  static Future<void> addMessageToConversation(String text) async {
+  static Future<String> addMessageToConversation(String text) async {
     // final messages = FirebaseFirestore.instance.collection("conversationIds").doc(ChatWindow.currentConversation.id).collection("messages").doc().get().then((DocumentSnapshot value) =>
     // {
     //
     // });
     final conversation = FirebaseFirestore.instance
-        .collection("conversationIds")
+        .collection("conversations")
         .doc(ChatWindow.currentConversation.id);
     final newMessage = conversation.collection('messages').doc();
 
@@ -172,6 +172,7 @@ class AnyChatUser {
         // transaction.update(conversation, {'messages': fresh.messages});
       });
     });
+    return newMessage.id;
   }
 
   static Future<void> updatePhotoUrl(String photoUrl) async {

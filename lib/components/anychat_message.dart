@@ -18,4 +18,8 @@ class AnyChatMessage {
         senderId = snapshot.data()['senderId'],
         text = snapshot.data()['text'],
         reference = snapshot.reference;
+
+  compareTo(AnyChatMessage b) {
+    return timestamp.compareTo(b.timestamp);
+  }
 }

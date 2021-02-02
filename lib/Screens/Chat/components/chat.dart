@@ -37,11 +37,12 @@ class _AnyChatAppState extends State<AnyChatApp> {
 }
 
 class ChatMessage extends StatelessWidget {
+  final String id;
   final AnyChatUser sender;
   final String text;
   final AnimationController animationController;
 
-  ChatMessage({this.text, this.animationController, this.sender});
+  ChatMessage({this.text, this.animationController, this.sender, this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +100,7 @@ class ChatWindow extends StatefulWidget {
         .collection('conversations')
         .doc(currentConversation.id)
         .collection('messages')
+        .orderBy('timestamp', descending: false)
         .snapshots();
   }
 
@@ -122,7 +124,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             _chatMessageSubscription =
                 ChatWindow.loadAllChatMessages().listen(_updateChatWindow)
           });
+    }else{
+      _chatMessageSubscription =
+          ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
     }
+      _isLoading = false;
     // _loadChatMessages();
 
     // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
@@ -169,30 +175,68 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   List<Timestamp> loadedMessages = <Timestamp>[];
 
-  void _updateChatWindow(QuerySnapshot snapshot) {
+  Future<void> _updateChatWindow(QuerySnapshot snapshot)  async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
-    _messages.clear();
-    _chatMessages.forEach((element) async {
+    if(_messages.isEmpty){
+      // _chatMessages.sort((a,b)=>a.compareTo(b));
+      for(int i = 0; i < _chatMessages.length; i++){
+        final chatMessage = ChatMessage(
+          text: "${_chatMessages[i].text}\n\n"
+              "${await Utilities.getGoogleTranslation(
+              _chatMessages[i].senderId, _chatMessages[i].text)}",
+          animationController: AnimationController(
+            duration: const Duration(milliseconds: 700),
+            vsync: this,
+          ),
+          sender: _chatMessages[i].senderId == AnyChatAuth.currentUser.id
+              ? AnyChatAuth.currentUser
+              : AnyChatApp.chatter,
+        );
+        setState(() {
+          _messages.insert(0, chatMessage);
+          chatMessage.animationController.forward();
+        });
+      }
+      // _chatMessages.forEach((element) async {
+      //   final chatMessage = ChatMessage(
+      //     text: "${element.text}\n\n"
+      //         "${await Utilities.getGoogleTranslation(
+      //         element.senderId, element.text)}",
+      //     animationController: AnimationController(
+      //       duration: const Duration(milliseconds: 700),
+      //       vsync: this,
+      //     ),
+      //     sender: element.senderId == AnyChatAuth.currentUser.id
+      //         ? AnyChatAuth.currentUser
+      //         : AnyChatApp.chatter,
+      //   );
+      //   setState(() {
+      //     _messages.insert(0, chatMessage);
+      //     chatMessage.animationController.forward();
+      //   });
+      // });
+      setState(() {
+        _isLoading = false;
+      });
+    }else if(!_messages.any((element) => element.id == _chatMessages.last.id)){
+      final message = _chatMessages.last;
       final chatMessage = ChatMessage(
-        text: "${element.text}\n\n"
-            "${await Utilities.getGoogleTranslation(element.senderId, element.text)}",
+        text: "${message.text}\n\n"
+            "${await Utilities.getGoogleTranslation(message.senderId, message.text)}",
         animationController: AnimationController(
           duration: const Duration(milliseconds: 700),
           vsync: this,
         ),
-        sender: element.senderId == AnyChatAuth.currentUser.id
+        sender: message.senderId == AnyChatAuth.currentUser.id
             ? AnyChatAuth.currentUser
             : AnyChatApp.chatter,
       );
       setState(() {
-        _isLoading = false;
-        _messages.add(chatMessage);
+        _messages.insert(0,chatMessage);
         chatMessage.animationController.forward();
       });
-    });
-    setState(() {
-      _isLoading = false;
-    });
+    }
+
     // if (true) {
     //   _chatMessages = getChatMessagesFromQuery(snapshot);
     //   if(_chatMessages.length == 0) {
@@ -272,29 +316,31 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     setState(() {
       _isComposing = false;
     });
-    ChatMessage message = ChatMessage(
-      //user: currentUser,
-      text: "$text\n\n"
-          "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.id, text)}",
-      animationController: AnimationController(
-        duration: const Duration(milliseconds: 700),
-        vsync: this,
-      ),
-      sender: AnyChatAuth.currentUser,
-    );
+    final id = await AnyChatUser.addMessageToConversation(text);
+    // ChatMessage message = ChatMessage(
+    //   id: id,
+    //   //user: currentUser,
+    //   text: "$text\n\n"
+    //       "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.id, text)}",
+    //   animationController: AnimationController(
+    //     duration: const Duration(milliseconds: 700),
+    //     vsync: this,
+    //   ),
+    //   sender: AnyChatAuth.currentUser,
+    // );
+
     // If conversation does not exist
     // if (ChatWindow.currentConversation == null) {
     //
     // } else {
-    AnyChatUser.addMessageToConversation(text);
     // AnyChatUser.addMessageToConversation(
     //     AnyChatMessage(AnyChatAuth.currentUser, text, DateTime.now()));
     //}
-    setState(() {
-      _messages.insert(0, message);
-    });
+    // setState(() {
+    //   _messages.insert(0, message);
+    // });
     _focusNode.requestFocus();
-    message.animationController.forward();
+    // message.animationController.forward();
   }
 
   // Future<void> _loadChatMessages() async {

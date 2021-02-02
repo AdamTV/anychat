@@ -126,7 +126,7 @@ class Body extends StatelessWidget {
                               })
                           .catchError((e) => {
                                 Utilities.showMyDialog(
-                                    context, "Error", e.message.toString())
+                                    context, "Error", e.toString())
                               });
                     })
               ],
