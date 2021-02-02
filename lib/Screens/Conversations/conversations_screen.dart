@@ -157,7 +157,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     if (getConversationsFromQuery(snapshot).isEmpty) return;
     if (ConversationsScreen.testWidgets.isEmpty) {
       setState(() {
-        ConversationsScreen.conversations = getConversationsFromQuery(snapshot).map((e) => e.id).toList();
+        ConversationsScreen.conversations = AnyChatAuth.currentUser.conversationIds;
         ConversationsScreen.testWidgets = loadConversations();
       });
       return;

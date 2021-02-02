@@ -66,7 +66,7 @@ class FindChatterScreenState extends State<FindChatterScreen> {
                       doc["email"],
                       doc["photoUrl"],
                       doc["language"],
-                      doc['conversationIds']));
+                      List.castFrom<dynamic,String>(doc['conversationIds'])));
                   print(doc["displayName"]);
                   setState(() {});
                 }
