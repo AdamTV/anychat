@@ -1,17 +1,21 @@
 import 'dart:async';
+import 'dart:typed_data';
 
+import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/Conversations/components/body.dart';
+import 'package:anychat/Screens/Settings/settings_screen.dart';
+import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ConversationsScreen extends StatefulWidget {
-  static List<String> conversations = new List<String>();
-  static List<Widget> testWidgets = new List<Widget>();
 
   @override
   _ConversationsScreenState createState() => _ConversationsScreenState();
@@ -21,20 +25,109 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<String> addedConversations = <String>[];
+  List<Widget> conversationWidgets = new List<Widget>();
 
   _ConversationsScreenState() {
-    ConversationsScreen.testWidgets.clear();
+    conversationWidgets.clear();
     _conversationSubscription =
         ChatWindow.loadAllConversations().listen(_updateConversations);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('AnyChatAuth.currentUser.conversationIds.length: ${AnyChatAuth.currentUser.conversationIds.length}');
+    print('in build -> conversationWidgets.length: ${conversationWidgets.length}');
     if (!loaded) {
       //loadConversations();
     }
     return Scaffold(
-      body: Body(),
+      appBar: AppBar(
+        //leading: Icon(Icons.restaurant),
+        title: Text('AnyChat'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add Chatter',
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddChatterScreen()));
+            },
+          ),
+        ],
+        // bottom: PreferredSize(
+        //   preferredSize: Size(320, 48),
+        //   child: Padding(
+        //     padding: EdgeInsets.fromLTRB(6, 0, 6, 4),
+        //     child: FilterBar(
+        //       filter: _filter,
+        //       onPressed: _onFilterBarPressed,
+        //     ),
+        //   ),
+        // ),
+      ),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                'AnyChat',
+                style:
+                    // TODO: Color should be platform specific
+                    TextStyle(color: Colors.white),
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            ListTile(
+                title: Text('Settings'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen()));
+                  //_handleSignOut();
+                }),
+            ListTile(
+                title: Text('Logout'),
+                onTap: () async {
+                  await AnyChatAuth.signOut();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  //_handleSignOut();
+                }),
+          ],
+        ),
+      ),
+      body: Align(
+          alignment: AnyChatAuth.currentUser.conversationIds.length > 0
+              ? Alignment.topCenter
+              : Alignment.center,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 1280),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: AnyChatAuth.currentUser.conversationIds.length > 0
+                  ? conversationWidgets
+                  : <Widget>[
+                      Text('Conversations will appear here.'),
+                      RoundedButton(
+                        text: "Start Chatting",
+                        press: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddChatterScreen()));
+                        },
+                      ),
+                    ],
+            ),
+          )),
     );
   }
 
@@ -49,7 +142,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
     var widgets = <Widget>[];
     var ids = <String>[];
-    ConversationsScreen.conversations.forEach((conversationId) async {
+    AnyChatAuth.currentUser.conversationIds.forEach((conversationId) async {
       Conversation conversation;
       conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance
           .collection("conversations")
@@ -77,9 +170,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             if (!addedConversations.contains(conversation.id) && mounted) {
               print('adding conversation: ' + conversation.id);
               addedConversations.add(conversation.id);
-              ConversationsScreen.conversations.add(conversation.id);
+              // ConversationsScreen.conversations.add(conversation.id);
               setState(() {
-                ConversationsScreen.testWidgets.add(new ListTile(
+                conversationWidgets.add(new ListTile(
                     onTap: () {
                       AnyChatApp.chatter = chatter;
                       ChatWindow.currentConversation = conversation;
@@ -154,12 +247,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   }
 
   Future<void> _updateConversations(QuerySnapshot snapshot) async {
-    if (getConversationsFromQuery(snapshot).isEmpty) return;
-    if (ConversationsScreen.testWidgets.isEmpty) {
-      setState(() {
-        ConversationsScreen.conversations = AnyChatAuth.currentUser.conversationIds;
-        ConversationsScreen.testWidgets = loadConversations();
-      });
+    print('in _updateConversations');
+    if (getConversationsFromQuery(snapshot).isEmpty) {
+      print('conversation snapshot was empty');
       return;
     }
     Conversation conversation = getConversationsFromQuery(snapshot).last;
@@ -168,10 +258,23 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         .collection('users')
         .doc(AnyChatAuth.currentUser.id)
         .get());
-    if (AnyChatAuth.currentUser.conversationIds == null ||
-        !AnyChatAuth.currentUser.conversationIds.contains(conversation.id))
+    if (AnyChatAuth.currentUser.conversationIds == null) {
+      print('user conversationIds was null');
       return;
-
+    }
+    if(!conversation.participants.contains(AnyChatAuth.currentUser.id)){
+      print('conversation participants does not contain ${AnyChatAuth.currentUser.id}');
+    }
+    // if(!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)){
+    //   print('user conversationIds does not contain ${conversation.id}');
+    //   return;
+    // }
+    // if (conversationWidgets.isEmpty) {
+    //   setState(() {
+    //     conversationWidgets = loadConversations();
+    //   });
+      // return;
+    // }
     String chatterName;
 
     List<String> users = conversation.participants;
@@ -188,8 +291,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           chatterName = chatter.displayName;
           if (!addedConversations.contains(conversation.id)) {
             addedConversations.add(conversation.id);
-            ConversationsScreen.conversations.add(conversation.id);
-            ConversationsScreen.testWidgets.add(new ListTile(
+            // ConversationsScreen.conversations.add(conversation.id);
+            conversationWidgets.add(new ListTile(
                 onTap: () {
                   AnyChatApp.chatter = chatter;
                   ChatWindow.currentConversation = conversation;
@@ -202,6 +305,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                     text: TextSpan(
                         text: chatterName,
                         style: TextStyle(color: Colors.grey)))));
+            if(!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)){
+              AnyChatAuth.currentUser.conversationIds.add(conversation.id);
+            }
+            print('added conversation widget');
+            print(conversationWidgets);
           }
         });
         // chatterId = AnyChatApp.chatter.id;

@@ -60,7 +60,7 @@ class Body extends StatelessWidget {
                 AnyChatAuth.signInEmail(email, password, false)
                     .then((value) => {
                           if (value != null)
-                            {initConversationScreen(context, value)}
+                            {Utilities.initConversationScreen(context, value)}
                           else
                             Utilities.showMyDialog(
                                 context, "Error", "Invalid Credentials")
@@ -94,7 +94,10 @@ class Body extends StatelessWidget {
                     AnyChatAuth.signInFacebook()
                         .then((value) => {
                               if (value != null)
-                                {initConversationScreen(context, value)}
+                                {
+                                  Utilities.initConversationScreen(
+                                      context, value)
+                                }
                             })
                         .catchError((e) => {
                               Utilities.showMyDialog(
@@ -108,7 +111,10 @@ class Body extends StatelessWidget {
                     AnyChatAuth.signInTwitter()
                         .then((value) => {
                               if (value != null)
-                                {initConversationScreen(context, value)}
+                                {
+                                  Utilities.initConversationScreen(
+                                      context, value)
+                                }
                             })
                         .catchError((e) => {
                               Utilities.showMyDialog(
@@ -122,7 +128,10 @@ class Body extends StatelessWidget {
                       AnyChatAuth.signInGoogle()
                           .then((value) => {
                                 if (value != null)
-                                  {initConversationScreen(context, value)}
+                                  {
+                                    Utilities.initConversationScreen(
+                                        context, value)
+                                  }
                               })
                           .catchError((e) => {
                                 Utilities.showMyDialog(
@@ -135,37 +144,5 @@ class Body extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  initConversationScreen(BuildContext context, AnyChatUser value) {
-    // Check if user has conversations
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(value.id)
-        .get()
-        .then((value) => AnyChatUser.fromSnapshot(value))
-        .then((AnyChatUser user) => {
-              if (user.conversationIds?.isNotEmpty)
-                {
-                  ConversationsScreen.conversations =
-                      user.conversationIds.cast<String>(),
-                }
-              else
-                {ConversationsScreen.conversations = new List<String>()},
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ConversationsScreen()))
-            })
-        .catchError((e) => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ConversationsScreen();
-                  },
-                ),
-              )
-            });
   }
 }
