@@ -31,7 +31,6 @@ class AnyChatUser {
     final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
       'participants': [AnyChatApp.chatter.id, AnyChatAuth.currentUser.id],
-      'messages': <String>[],
       'timestamp': FieldValue.serverTimestamp()
     });
     final user = await FirebaseFirestore.instance
