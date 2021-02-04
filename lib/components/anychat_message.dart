@@ -9,7 +9,8 @@ class AnyChatMessage {
 
   final DocumentReference reference;
 
-  AnyChatMessage(this.id, this.timestamp, this.senderId, this.text, this.reference);
+  AnyChatMessage(
+      this.id, this.timestamp, this.senderId, this.text, this.reference);
 
   AnyChatMessage.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),

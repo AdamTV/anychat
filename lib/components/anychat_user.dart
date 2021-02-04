@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'anychat_auth.dart';
-import 'anychat_message.dart';
 import 'conversation.dart';
 
 class AnyChatUser {
@@ -25,13 +24,15 @@ class AnyChatUser {
         email = snapshot.data()['email'],
         photoUrl = snapshot.data()['photoUrl'],
         language = snapshot.data()['language'],
-        conversationIds = List.castFrom<dynamic, String>(snapshot.data()['conversationIds']);
+        conversationIds =
+            List.castFrom<dynamic, String>(snapshot.data()['conversationIds']);
 
   static Future<void> createConversation() async {
-    final convo =
+    final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
       'participants': [AnyChatApp.chatter.id, AnyChatAuth.currentUser.id],
-      'messages': new List<String>()
+      'messages': <String>[],
+      'timestamp': FieldValue.serverTimestamp()
     });
     final user = await FirebaseFirestore.instance
         .collection("users")
@@ -45,7 +46,7 @@ class AnyChatUser {
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversationIds.add(convo.id);
+        fresh.conversationIds.add(conversation.id);
         transaction.update(user, {'conversationIds': fresh.conversationIds});
       });
     });
@@ -54,14 +55,14 @@ class AnyChatUser {
           .get(chatter)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversationIds.add(convo.id);
+        fresh.conversationIds.add(conversation.id);
         transaction.update(chatter, {'conversationIds': fresh.conversationIds});
       });
     });
-    convo.get().then((value) => print(value.id));
-    print(convo.id);
+    conversation.get().then((value) => print(value.id));
+    print(conversation.id);
     ChatWindow.currentConversation =
-        Conversation.fromSnapshot(await convo.get());
+        Conversation.fromSnapshot(await conversation.get());
     //ChatWindow.currentConversation = Conversation.fromSnapshot(await convo.get());
     // return FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
@@ -158,11 +159,11 @@ class AnyChatUser {
           .get(conversation)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
-            transaction.set(newMessage, {
-              'timestamp': FieldValue.serverTimestamp(),
-              'senderId': AnyChatAuth.currentUser.id,
-              'text': text,
-            });
+        transaction.set(newMessage, {
+          'timestamp': FieldValue.serverTimestamp(),
+          'senderId': AnyChatAuth.currentUser.id,
+          'text': text,
+        });
         // fresh.messages.add({
         //   'timeStamp': message.timestamp.toString(),
         //   'sender': message.sender.id,
@@ -229,11 +230,12 @@ class AnyChatUser {
   }
 
   static Future<void> clearTranscribedMessages() {
-    final messages = FirebaseFirestore.instance.collection('conversations')
-    .doc(ChatWindow.currentConversation.id)
-    .collection('transcribedMessages');
+    final messages = FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(ChatWindow.currentConversation.id)
+        .collection('transcribedMessages');
     WriteBatch batch = FirebaseFirestore.instance.batch();
-    return messages.get().then((querySnapshot){
+    return messages.get().then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         batch.delete(doc.reference);
       });

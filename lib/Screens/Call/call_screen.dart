@@ -18,7 +18,6 @@ import 'package:mic_stream/mic_stream.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:anychat/components/utilities.dart';
 
-
 class CallScreen extends StatefulWidget {
   final String channelName;
 
@@ -38,8 +37,9 @@ class _CallScreenState extends State<CallScreen> {
 
   get defaultTargetPlatform => null;
 
-  _CallScreenState(){
-    _transcribedChatMessageSubscription = loadAllTranscribedMessages().listen(_updateCallScreen);
+  _CallScreenState() {
+    _transcribedChatMessageSubscription =
+        loadAllTranscribedMessages().listen(_updateCallScreen);
   }
 
   @override
@@ -133,11 +133,11 @@ class _CallScreenState extends State<CallScreen> {
 
   Widget _translatedText() {
     return Wrap(
-        children: <Widget>[
-          Text(text,
-              style: TextStyle(backgroundColor: Colors.white, fontSize: 32))
-        ],
-      );
+      children: <Widget>[
+        Text(text,
+            style: TextStyle(backgroundColor: Colors.white, fontSize: 32))
+      ],
+    );
   }
 
   SpeechToText speechToText;
@@ -274,8 +274,8 @@ class _CallScreenState extends State<CallScreen> {
     // list.add(TextField());
     list.add(RtcLocalView.SurfaceView());
     _users.forEach((int uid) =>
-    // {list.add(_translatedText()), list.add(RtcRemoteView.SurfaceView(uid: uid))});
-    {list.add(RtcRemoteView.SurfaceView(uid: uid))});
+        // {list.add(_translatedText()), list.add(RtcRemoteView.SurfaceView(uid: uid))});
+        {list.add(RtcRemoteView.SurfaceView(uid: uid))});
     // }
     return list;
   }
@@ -360,8 +360,9 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
-    if(message.senderId != AnyChatAuth.currentUser.id){
-      final translatedText = await Utilities.getGoogleTranslation(message.senderId, message.text);
+    if (message.senderId != AnyChatAuth.currentUser.id) {
+      final translatedText =
+          await Utilities.getGoogleTranslation(message.senderId, message.text);
       setState(() {
         text = translatedText;
       });

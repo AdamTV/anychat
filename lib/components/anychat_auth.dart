@@ -365,35 +365,35 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser> signInTwitter() async {
-final twitterLogin = TwitterLogin(
-                // Consumer API keys
-                apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-                // Consumer API Secret keys
-                apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
-                // Registered Callback URLs in TwitterApp
-                // Android is a deeplink
-                // iOS is a URLScheme
-                redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
-                // Forces the user to enter their credentials
-                // to ensure the correct users account is authorized.
-              );
-              // If you want to implement Twitter account switching, set [force_login] to true
-              // login(forceLogin: true);
-              final authResult = await twitterLogin.login();
-              switch (authResult.status) {
-                case TwitterLoginStatus.loggedIn:
-                  // success
-                  print('====== Login success ======');
-                  break;
-                case TwitterLoginStatus.cancelledByUser:
-                  // cancel
-                  print('====== Login cancel ======');
-                  break;
-                case TwitterLoginStatus.error:
-                  // error
-                  print('====== Login error ======');
-                  break;
-              }
+    final twitterLogin = TwitterLogin(
+      // Consumer API keys
+      apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+      // Consumer API Secret keys
+      apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+      // Registered Callback URLs in TwitterApp
+      // Android is a deeplink
+      // iOS is a URLScheme
+      redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
+      // Forces the user to enter their credentials
+      // to ensure the correct users account is authorized.
+    );
+    // If you want to implement Twitter account switching, set [force_login] to true
+    // login(forceLogin: true);
+    final authResult = await twitterLogin.login();
+    switch (authResult.status) {
+      case TwitterLoginStatus.loggedIn:
+        // success
+        print('====== Login success ======');
+        break;
+      case TwitterLoginStatus.cancelledByUser:
+        // cancel
+        print('====== Login cancel ======');
+        break;
+      case TwitterLoginStatus.error:
+        // error
+        print('====== Login error ======');
+        break;
+    }
 
     // TwitterLogin twitterLogin = TwitterLogin(
     //     consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",

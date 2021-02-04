@@ -5,9 +5,11 @@ class Conversation {
   final List<String> participants;
   // final List<dynamic> messages;
   final List<dynamic> transcribedMessages;
+  final Timestamp timestamp;
   final DocumentReference reference;
 
-  Conversation._(this.id, this.participants, this.reference, this.transcribedMessages);
+  Conversation._(
+      this.id, this.participants, this.reference, this.transcribedMessages, this.timestamp);
 
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
@@ -16,5 +18,6 @@ class Conversation {
             List.castFrom<dynamic, String>(snapshot.data()['participants']),
         // messages = (snapshot.data()['messages']),
         transcribedMessages = (snapshot.data()['transcribedMessages']),
+        timestamp = snapshot.data()['timestamp'],
         reference = snapshot.reference;
 }

@@ -1,8 +1,17 @@
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+
+import 'anychat_user.dart';
 
 class Utilities {
   static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
@@ -56,5 +65,34 @@ class Utilities {
         );
       },
     );
+  }
+
+  static initConversationScreen(BuildContext context, AnyChatUser value) {
+    // Check if user has conversations
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(value.id)
+        .get()
+        .then((value) => AnyChatUser.fromSnapshot(value))
+        .then((AnyChatUser user) => {
+              // if (user.conversationIds?.isEmpty)
+              //   {
+              //     user.conversationIds = <String>[]
+              //   },
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConversationsScreen()))
+            })
+        .catchError((e) => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ConversationsScreen();
+                  },
+                ),
+              )
+            });
   }
 }

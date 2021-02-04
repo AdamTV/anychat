@@ -47,12 +47,12 @@ Future<Widget> getWelcomeScreen() async {
             .then((value) => AnyChatUser.fromSnapshot(value))
             .then((AnyChatUser user) {
           AnyChatAuth.currentUser = user;
-          if (AnyChatAuth.currentUser.conversationIds?.isNotEmpty ?? false) {
-            ConversationsScreen.conversations =
-                user.conversationIds.cast<String>();
-          } else {
-            ConversationsScreen.conversations = <String>[];
-          }
+          // if (AnyChatAuth.currentUser.conversationIds?.isNotEmpty ?? false) {
+          //   ConversationsScreen.conversations =
+          //       user.conversationIds.cast<String>();
+          // } else {
+          //   ConversationsScreen.conversations = <String>[];
+          // }
           print('returning ConversationsScreen');
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => ConversationsScreen()));

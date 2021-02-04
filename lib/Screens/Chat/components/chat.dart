@@ -105,7 +105,10 @@ class ChatWindow extends StatefulWidget {
   }
 
   static Stream<QuerySnapshot> loadAllConversations() {
-    return FirebaseFirestore.instance.collection('conversations').snapshots();
+    return FirebaseFirestore.instance
+        .collection('conversations')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
   }
 }
 
@@ -124,11 +127,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             _chatMessageSubscription =
                 ChatWindow.loadAllChatMessages().listen(_updateChatWindow)
           });
-    }else{
+    } else {
       _chatMessageSubscription =
           ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
     }
-      _isLoading = false;
+    _isLoading = false;
     // _loadChatMessages();
 
     // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
@@ -175,15 +178,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   List<Timestamp> loadedMessages = <Timestamp>[];
 
-  Future<void> _updateChatWindow(QuerySnapshot snapshot)  async {
+  Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
-    if(_messages.isEmpty){
+    if (_messages.isEmpty) {
       // _chatMessages.sort((a,b)=>a.compareTo(b));
-      for(int i = 0; i < _chatMessages.length; i++){
+      for (int i = 0; i < _chatMessages.length; i++) {
         final chatMessage = ChatMessage(
           text: "${_chatMessages[i].text}\n\n"
-              "${await Utilities.getGoogleTranslation(
-              _chatMessages[i].senderId, _chatMessages[i].text)}",
+              "${await Utilities.getGoogleTranslation(_chatMessages[i].senderId, _chatMessages[i].text)}",
           animationController: AnimationController(
             duration: const Duration(milliseconds: 700),
             vsync: this,
@@ -218,7 +220,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       setState(() {
         _isLoading = false;
       });
-    }else if(!_messages.any((element) => element.id == _chatMessages.last.id)){
+    } else if (!_messages
+        .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
       final chatMessage = ChatMessage(
         text: "${message.text}\n\n"
@@ -232,7 +235,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             : AnyChatApp.chatter,
       );
       setState(() {
-        _messages.insert(0,chatMessage);
+        _messages.insert(0, chatMessage);
         chatMessage.animationController.forward();
       });
     }
