@@ -1,22 +1,18 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/Conversations/components/body.dart';
 import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ConversationsScreen extends StatefulWidget {
-
   @override
   _ConversationsScreenState createState() => _ConversationsScreenState();
 }
@@ -35,8 +31,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('AnyChatAuth.currentUser.conversationIds.length: ${AnyChatAuth.currentUser.conversationIds.length}');
-    print('in build -> conversationWidgets.length: ${conversationWidgets.length}');
+    print(
+        'AnyChatAuth.currentUser.conversationIds.length: ${AnyChatAuth.currentUser.conversationIds.length}');
+    print(
+        'in build -> conversationWidgets.length: ${conversationWidgets.length}');
     if (!loaded) {
       //loadConversations();
     }
@@ -262,8 +260,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       print('user conversationIds was null');
       return;
     }
-    if(!conversation.participants.contains(AnyChatAuth.currentUser.id)){
-      print('conversation participants does not contain ${AnyChatAuth.currentUser.id}');
+    if (!conversation.participants.contains(AnyChatAuth.currentUser.id)) {
+      print(
+          'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
+      return;
     }
     // if(!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)){
     //   print('user conversationIds does not contain ${conversation.id}');
@@ -273,7 +273,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     //   setState(() {
     //     conversationWidgets = loadConversations();
     //   });
-      // return;
+    // return;
     // }
     String chatterName;
 
@@ -305,7 +305,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                     text: TextSpan(
                         text: chatterName,
                         style: TextStyle(color: Colors.grey)))));
-            if(!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)){
+            if (!AnyChatAuth.currentUser.conversationIds
+                .contains(conversation.id)) {
               AnyChatAuth.currentUser.conversationIds.add(conversation.id);
             }
             print('added conversation widget');
