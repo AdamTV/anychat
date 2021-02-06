@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+
+// import 'package:twitter_login/twitter_login.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+
 // import 'package:twitter_login/twitter_login.dart';
 // import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:twitter_login/twitter_login.dart';
 
 import 'anychat_user.dart';
 
@@ -364,54 +367,99 @@ class AnyChatAuth {
     return null;
   }
 
-  static Future<AnyChatUser> signInTwitter() async {
-    final twitterLogin = TwitterLogin(
-      // Consumer API keys
-      apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-      // Consumer API Secret keys
-      apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
-      // Registered Callback URLs in TwitterApp
-      // Android is a deeplink
-      // iOS is a URLScheme
-      redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
-      // Forces the user to enter their credentials
-      // to ensure the correct users account is authorized.
-    );
-    // If you want to implement Twitter account switching, set [force_login] to true
-    // login(forceLogin: true);
-    final authResult = await twitterLogin.login();
-    switch (authResult.status) {
-      case TwitterLoginStatus.loggedIn:
-        // success
-        print('====== Login success ======');
-        break;
-      case TwitterLoginStatus.cancelledByUser:
-        // cancel
-        print('====== Login cancel ======');
-        break;
-      case TwitterLoginStatus.error:
-        // error
-        print('====== Login error ======');
-        break;
-    }
+  // // static Future<AnyChatUser> signInTwitter() async {
+  // //   FirebaseAuth.instance.signInWithCredential(TwitterAuthProvider.credential(accessToken: "DsqHohkyPJCjhdDByCLwZZYGH", secret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii"));
+  // //   final twitterLogin = TwitterLogin(
+  // //     // Consumer API keys
+  // //     apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+  // //     // Consumer API Secret keys
+  // //     apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+  // //     // Registered Callback URLs in TwitterApp
+  // //     // Android is a deeplink
+  // //     // iOS is a URLScheme
+  // //     // redirectURI: 'https://anychat-c414a.firebaseapp.com/__/auth/handler',
+  // //     // Forces the user to enter their credentials
+  // //     // to ensure the correct users account is authorized.
+  // //   );
+  // //   // If you want to implement Twitter account switching, set [force_login] to true
+  // //   // login(forceLogin: true);
+  // //   final authResult = await twitterLogin.login();
+  // //   switch (authResult.status) {
+  // //     case TwitterLoginStatus.loggedIn:
+  // //       // success
+  // //       print('====== Login success ======');
+  // //       break;
+  // //     case TwitterLoginStatus.cancelledByUser:
+  // //       // cancel
+  // //       print('====== Login cancel ======');
+  // //       break;
+  // //     case TwitterLoginStatus.error:
+  // //       // error
+  // //       print('====== Login error ======');
+  // //       break;
+  // //   }
+  //
+  //   // TwitterLogin twitterLogin = TwitterLogin(
+  //   //     consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",
+  //   //     consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii");
+  //   // final TwitterLoginResult result = await twitterLogin.authorize();
+  //   // String newMessage;
+  //   // if (result.status == TwitterLoginStatus.loggedIn) {
+  //   //   return _signInWithTwitter(result.session.token, result.session.secret);
+  //   // } else if (result.status == TwitterLoginStatus.cancelledByUser) {
+  //   //   newMessage = 'Login cancelled by user.';
+  //   // } else {
+  //   //   newMessage = "Error: " + result.errorMessage;
+  //   // }
+  //   // print(newMessage);
+  //   // return null;
+  //   // // setState(() {
+  //   // //   message = newMessage;
+  //   // // });
+  // }
 
-    // TwitterLogin twitterLogin = TwitterLogin(
-    //     consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",
-    //     consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii");
-    // final TwitterLoginResult result = await twitterLogin.authorize();
-    // String newMessage;
-    // if (result.status == TwitterLoginStatus.loggedIn) {
-    //   return _signInWithTwitter(result.session.token, result.session.secret);
-    // } else if (result.status == TwitterLoginStatus.cancelledByUser) {
-    //   newMessage = 'Login cancelled by user.';
-    // } else {
-    //   newMessage = "Error: " + result.errorMessage;
-    // }
-    // print(newMessage);
-    // return null;
-    // // setState(() {
-    // //   message = newMessage;
-    // // });
+  static Future<AnyChatUser> signInTwitter() async {
+    // Create a TwitterLogin instance
+    final TwitterLogin twitterLogin = new TwitterLogin(
+      consumerKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+      consumerSecret: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+    );
+
+    // Trigger the sign-in flow
+    final TwitterLoginResult loginResult = await twitterLogin.authorize();
+
+    // Get the Logged In session
+    final TwitterSession twitterSession = loginResult.session;
+
+    // Create a credential from the access token
+    final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
+        accessToken: twitterSession.token, secret: twitterSession.secret);
+
+    final userCred =
+    await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+    final user = userCred.user;
+
+    var snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    if (snapshot.exists) {
+      currentUser = AnyChatUser.fromSnapshot(snapshot);
+      if (currentUser.photoUrl != user.photoURL) {
+        AnyChatUser.updatePhotoUrl(user.photoURL);
+      }
+      return currentUser;
+    } else {
+      currentUser = new AnyChatUser(
+          user.uid,
+          user.displayName,
+          user.email,
+          user.photoURL,
+          locale.currentLocale.substring(0, 2),
+          <String>[]);
+      currentUser.addUserToFirestore();
+      return currentUser;
+    }
   }
 
   static Future<AnyChatUser> _signInWithTwitter(
