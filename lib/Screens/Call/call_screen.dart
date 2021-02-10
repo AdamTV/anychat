@@ -77,7 +77,7 @@ class _CallScreenState extends State<CallScreen> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
-    await streamingRecognize();
+    streamingRecognize();
     await _engine.joinChannel(null, widget.channelName, null, 0);
   }
 

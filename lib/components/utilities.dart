@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import '../constants.dart';
 import 'anychat_user.dart';
 
 class Utilities {
@@ -94,5 +96,19 @@ class Utilities {
                 ),
               )
             });
+  }
+  static String getDropDownValue() {
+    for (String key in isoMap.keys) {
+      print(isoMap[key]);
+      print(AnyChatAuth.currentUser.language);
+      if (isoMap[key] == AnyChatAuth.currentUser.language) {
+        return key;
+      }
+    }
+    return "Error";
+  }
+  static Future<void> handleCameraAndMic(Permission permission) async {
+    final status = await permission.request();
+    print(status);
   }
 }
