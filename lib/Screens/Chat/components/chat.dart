@@ -473,11 +473,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   // }
   bool _isLoading = true;
 
-  Future<void> _handleCameraAndMic(Permission permission) async {
-    final status = await permission.request();
-    print(status);
-  }
-
   String displayName;
 
   @override
@@ -492,8 +487,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               icon: const Icon(Icons.call),
               tooltip: 'Call',
               onPressed: () async {
-                await _handleCameraAndMic(Permission.camera);
-                await _handleCameraAndMic(Permission.microphone);
+                await Utilities.handleCameraAndMic(Permission.camera);
+                await Utilities.handleCameraAndMic(Permission.microphone);
                 Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -3,14 +3,17 @@ import 'dart:async';
 import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:anychat/Screens/LiveTranslator/live_translator_screen.dart';
 import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
   @override
@@ -82,6 +85,16 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                 color: Theme.of(context).primaryColor,
               ),
             ),
+            ListTile(
+                title: Text('Live Translator'),
+                onTap: () async {
+                  await Utilities.handleCameraAndMic(Permission.microphone);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LiveTranslatorScreen()));
+                  //_handleSignOut();
+                }),
             ListTile(
                 title: Text('Settings'),
                 onTap: () {

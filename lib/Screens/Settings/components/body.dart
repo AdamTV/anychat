@@ -15,7 +15,7 @@ class SettingsBody extends StatefulWidget {
 
 class _SettingsBodyState extends State<SettingsBody> {
   String isoCode;
-  String dropdownValue = getDropDownValue();
+  String dropdownValue = Utilities.getDropDownValue();
 
   @override
   Widget build(BuildContext context) {
@@ -129,16 +129,5 @@ class _SettingsBodyState extends State<SettingsBody> {
                     ],
                   ),
                 ))));
-  }
-
-  static String getDropDownValue() {
-    for (String key in isoMap.keys) {
-      print(isoMap[key]);
-      print(AnyChatAuth.currentUser.language);
-      if (isoMap[key] == AnyChatAuth.currentUser.language) {
-        return key;
-      }
-    }
-    return "Error";
   }
 }

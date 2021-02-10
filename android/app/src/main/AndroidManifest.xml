@@ -2,7 +2,7 @@
     package="ca.alphatech.anychat">
 
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="AnyChat">
         <activity
             android:name=".MainActivity"
