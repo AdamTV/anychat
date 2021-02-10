@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "682283241991-pod3a1vm20eslnic6h1rtk1cs282a905.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.alphatech.anychat",
+            "certificate_hash": "49c2e125145fcf18fb51d50e76bff389dfba0a9c"
+          }
+        },
+        {
           "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -38,6 +46,13 @@
             {
               "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ca.alphatech.anychat"
+              }
             }
           ]
         }

@@ -111,6 +111,14 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => TwitterLoginScreen(
+                    //             consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",
+                    //             consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii",
+                    //             oauthCallbackHandler:
+                    //                 "https://twitterkit-DsqHohkyPJCjhdDByCLwZZYGH")));
                     AnyChatAuth.signInTwitter()
                         .then((value) => {
                               if (value != null)

@@ -3,12 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-
+// import 'package:flutter_twitter/flutter_twitter.dart';
 // import 'package:twitter_login/twitter_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
-
-// import 'package:twitter_login/twitter_login.dart';
-// import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'anychat_user.dart';
@@ -426,6 +423,12 @@ class AnyChatAuth {
     );
 
     // Trigger the sign-in flow
+    // TwitterLoginResult result;
+    // await twitterLogin.authorize().then((value) => {
+    //   result = value,
+    //   if(result.status != TwitterLoginStatus.loggedIn)
+    //     throw "error"
+    // });
     final TwitterLoginResult loginResult = await twitterLogin.authorize();
 
     // Get the Logged In session

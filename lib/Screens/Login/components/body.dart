@@ -15,6 +15,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../twitter_login.dart';
+
 class Body extends StatelessWidget {
   const Body({
     Key key,
@@ -108,6 +110,14 @@ class Body extends StatelessWidget {
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => TwitterLoginScreen(
+                    //             consumerKey: "DsqHohkyPJCjhdDByCLwZZYGH",
+                    //             consumerSecret: "NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii",
+                    //             oauthCallbackHandler:
+                    //             "https://anychat-c414a.firebaseapp.com/__/auth/handler")));
                     AnyChatAuth.signInTwitter()
                         .then((value) => {
                               if (value != null)
@@ -118,7 +128,7 @@ class Body extends StatelessWidget {
                             })
                         .catchError((e) => {
                               Utilities.showMyDialog(
-                                  context, "Error", e.message.toString())
+                                  context, "Error", e.toString())
                             });
                   },
                 ),
