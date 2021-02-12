@@ -169,6 +169,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.3.3"
+  firebase_admob:
+    dependency: "direct main"
+    description:
+      name: firebase_admob
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.0+1"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -257,7 +264,7 @@ packages:
     source: hosted
     version: "3.0.0"
   flutter_launcher_icons:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
@@ -451,13 +458,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  oauth1:
-    dependency: "direct main"
-    description:
-      name: oauth1
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
   package_config:
     dependency: transitive
     description:

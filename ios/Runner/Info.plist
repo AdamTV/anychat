@@ -40,6 +40,8 @@
 	<string>463424718375996</string>
 	<key>FacebookDisplayName</key>
 	<string>AnyChat</string>
+	<key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-4494853791237895~4335658619</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

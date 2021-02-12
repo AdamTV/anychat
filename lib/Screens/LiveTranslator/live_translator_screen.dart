@@ -47,8 +47,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               },
             ),
             IconButton(
-                icon: const Icon(Icons.clear),
-                tooltip: 'Clear',
+                icon: const Icon(Icons.delete),
+                tooltip: 'Delete',
                 onPressed: () {
                   setState(() {
                     text = "";

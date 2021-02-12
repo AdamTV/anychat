@@ -2,6 +2,8 @@ import 'package:anychat/Screens/Login/login_screen.dart';
 import 'package:anychat/Screens/Signup/signup_screen.dart';
 import 'package:anychat/Screens/Welcome/components/background.dart';
 import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/ads.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +13,14 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
+    Ads.myBanner.show(
+      // Positions the banner ad 60 pixels from the bottom of the screen
+      anchorOffset: 60.0,
+      // Positions the banner ad 10 pixels from the center of the screen to the right
+      horizontalCenterOffset: 10.0,
+      // Banner Position
+      anchorType: AnchorType.bottom,
+    );
     return Background(
       child: SingleChildScrollView(
         child: Column(

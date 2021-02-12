@@ -5,16 +5,21 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/locale.dart';
 import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:anychat/components/ads.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
+  Ads();
+  Ads.myBanner.load();
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {
       print('User is currently signed out!');
