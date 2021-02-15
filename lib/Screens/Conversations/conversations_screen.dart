@@ -6,12 +6,14 @@ import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/LiveTranslator/live_translator_screen.dart';
 import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -34,6 +36,14 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Ads.myBanner.show(
+      // Positions the banner ad 0 pixels from the bottom of the screen
+      anchorOffset: 0.0,
+      // Positions the banner ad 0 pixels from the center of the screen to the right
+      horizontalCenterOffset: 0.0,
+      // Banner Position
+      anchorType: AnchorType.bottom,
+    );
     print(
         'AnyChatAuth.currentUser.conversationIds.length: ${AnyChatAuth.currentUser.conversationIds.length}');
     print(
@@ -334,6 +344,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   @override
   void dispose() {
     _conversationSubscription?.cancel();
+    Ads.myBanner.dispose();
+    Ads.myInterstitial.dispose();
     super.dispose();
   }
 

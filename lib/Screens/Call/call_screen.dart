@@ -3,6 +3,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
@@ -335,6 +336,7 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   void _onCallEnd(BuildContext context) {
+    Ads.myInterstitial.show();
     Navigator.pop(context);
   }
 

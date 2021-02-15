@@ -19,7 +19,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
   Ads();
-  Ads.myBanner.load();
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {
       print('User is currently signed out!');
