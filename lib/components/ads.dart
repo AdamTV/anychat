@@ -1,4 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/foundation.dart';
 
 class Ads{
   static BannerAd myBanner;
@@ -19,7 +20,9 @@ Ads(){
     // Replace the testAdUnitId with an ad unit id from the AdMob dash.
     // https://developers.google.com/admob/android/test-ads
     // https://developers.google.com/admob/ios/test-ads
-    adUnitId: "ca-app-pub-4494853791237895/3946336873",
+    adUnitId: defaultTargetPlatform == TargetPlatform.iOS ?
+    "ca-app-pub-4494853791237895/9609705015" :
+    "ca-app-pub-4494853791237895/3946336873",
     size: AdSize.smartBanner,
     targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
@@ -34,7 +37,9 @@ Ads(){
     // Replace the testAdUnitId with an ad unit id from the AdMob dash.
     // https://developers.google.com/admob/android/test-ads
     // https://developers.google.com/admob/ios/test-ads
-    adUnitId: "ca-app-pub-4494853791237895/1975328398",
+    adUnitId: defaultTargetPlatform == TargetPlatform.iOS ?
+    "ca-app-pub-4494853791237895/8261798477" :
+    "ca-app-pub-4494853791237895/1975328398",
     targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
       print("InterstitialAd event is $event");
