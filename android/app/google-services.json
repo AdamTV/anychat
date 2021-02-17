@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "682283241991-66ppllvrdhm1f1li74v35et4mdop865s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ca.alphatech.anychat",
-            "certificate_hash": "6999af44dc441e4350524e9738a55cc1df029fe1"
-          }
-        },
-        {
           "client_id": "682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ca.alphatech.anychat",
             "certificate_hash": "9486e53480eaa2264b805f1ed4b8e4552e0ff02b"
+          }
+        },
+        {
+          "client_id": "682283241991-cvcjrlu6mt9f8cqagr0ndq7r0mlgqte2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.alphatech.anychat",
+            "certificate_hash": "de982cf983b8e5c5049bdf5a5fec8eda46b86fad"
           }
         },
         {
