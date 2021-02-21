@@ -27,9 +27,10 @@ Ads(){
     targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
       print("BannerAd event is $event");
-      // if (event == MobileAdEvent.opened){
-      //   myBanner.dispose();
-      // }
+      if (event == MobileAdEvent.opened){
+        myBanner.dispose();
+        Ads();
+      }
     },
   );
 
@@ -43,6 +44,10 @@ Ads(){
     targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
       print("InterstitialAd event is $event");
+      if (event == MobileAdEvent.opened){
+        myInterstitial.dispose();
+        Ads();
+      }
     },
   );
 
