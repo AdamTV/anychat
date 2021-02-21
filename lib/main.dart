@@ -2,6 +2,7 @@ import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/database.dart' as db;
 import 'package:anychat/components/locale.dart';
 import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,27 +16,28 @@ import 'package:anychat/components/ads.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
-  Ads();
-  FirebaseAuth.instance.authStateChanges().listen((User user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });
-  locale.init();
-  // test();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'AnyChat',
-    theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
-        ? kIOSTheme // NEW
-        : kDefaultTheme,
-    home: await getWelcomeScreen(),
-  ));
+  db.main();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
+  // Ads();
+  // FirebaseAuth.instance.authStateChanges().listen((User user) {
+  //   if (user == null) {
+  //     print('User is currently signed out!');
+  //   } else {
+  //     print('User is signed in!');
+  //   }
+  // });
+  // locale.init();
+  // // test();
+  // runApp(MaterialApp(
+  //   debugShowCheckedModeBanner: false,
+  //   title: 'AnyChat',
+  //   theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
+  //       ? kIOSTheme // NEW
+  //       : kDefaultTheme,
+  //   home: await getWelcomeScreen(),
+  // ));
 }
 
 Future<Widget> getWelcomeScreen() async {
