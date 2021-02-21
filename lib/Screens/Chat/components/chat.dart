@@ -239,9 +239,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         _messages.insert(0, chatMessage);
         chatMessage.animationController.forward();
       });
-      if (message.senderId != AnyChatAuth.currentUser.id) {
-        await showNotification(chatMessage.sender.displayName, chatMessage.text);
-      }
     }
 
     // if (true) {

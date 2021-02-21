@@ -17,7 +17,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initNotifications();
+  await Notifications().init();
   await Firebase.initializeApp();
   FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
   Ads();

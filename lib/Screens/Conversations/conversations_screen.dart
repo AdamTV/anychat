@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Chat/chat_screen.dart';
@@ -8,8 +9,10 @@ import 'package:anychat/Screens/Settings/settings_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,9 +25,27 @@ class ConversationsScreen extends StatefulWidget {
   _ConversationsScreenState createState() => _ConversationsScreenState();
 }
 
-class _ConversationsScreenState extends State<ConversationsScreen> {
+class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsBindingObserver{
+  AppLifecycleState _notification = AppLifecycleState.resumed;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+
+      _notification = state;
+      print(_notification);
+
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
+  List<StreamSubscription<QuerySnapshot>> _chatMessageSubscriptions = [];
   List<String> addedConversations = <String>[];
   List<Widget> conversationWidgets = new List<Widget>();
 
@@ -32,6 +53,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     conversationWidgets.clear();
     _conversationSubscription =
         ChatWindow.loadAllConversations().listen(_updateConversations);
+    for(var conversationId in AnyChatAuth.currentUser.conversationIds){
+      _chatMessageSubscriptions.add(loadAllChatMessages(conversationId).listen(_sendNotification));
+    }
   }
 
   @override
@@ -343,9 +367,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   @override
   void dispose() {
+    for(var sub in _chatMessageSubscriptions){
+      sub?.cancel();
+    }
     _conversationSubscription?.cancel();
     Ads.myBanner.dispose();
     Ads.myInterstitial.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -405,4 +433,27 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 //     return widgets;
 //   }
 // }
+
+  Future<void> _sendNotification(QuerySnapshot snapshot) async {
+    var message = snapshot.docs.map((DocumentSnapshot doc) {
+      return AnyChatMessage.fromSnapshot(doc);
+    }).toList().last;
+    print("_notification");
+    print(_notification);
+    if (message.senderId != AnyChatAuth.currentUser.id && _notification != AppLifecycleState.resumed) {
+    var user = await AnyChatUser.findUserById(message.senderId);
+    var text = "${message.text}\n\n"
+        "${await Utilities.getGoogleTranslation(message.senderId, message.text)}";
+      await Notifications().showNotification(user.displayName, text);
+    }
+  }
+
+  loadAllChatMessages(String conversationId) {
+    return FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+  }
 }

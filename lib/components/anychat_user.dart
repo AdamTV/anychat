@@ -2,6 +2,7 @@ import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/components/locale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'anychat_auth.dart';
 import 'conversation.dart';
@@ -26,6 +27,12 @@ class AnyChatUser {
         language = snapshot.data()['language'],
         conversationIds =
             List.castFrom<dynamic, String>(snapshot.data()['conversationIds']);
+
+  static Future<AnyChatUser> findUserById(String id) async {
+    return AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id).get());
+  }
 
   static Future<void> createConversation() async {
     final conversation =
