@@ -19,8 +19,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Notifications().init();
   await Firebase.initializeApp();
-  FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
-  Ads();
+  await FirebaseAdMob.instance.initialize(appId: "ca-app-pub-4494853791237895~4335658619");
+  await Ads.init();
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {
       print('User is currently signed out!');

@@ -18,6 +18,7 @@ import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
@@ -25,15 +26,15 @@ class ConversationsScreen extends StatefulWidget {
   _ConversationsScreenState createState() => _ConversationsScreenState();
 }
 
-class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsBindingObserver{
+class _ConversationsScreenState extends State<ConversationsScreen>
+    with WidgetsBindingObserver {
   AppLifecycleState _notification = AppLifecycleState.resumed;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
-
       _notification = state;
       print(_notification);
-
     });
   }
 
@@ -41,6 +42,14 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
   initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Ads.myBanner.show(
+      // Positions the banner ad 0 pixels from the bottom of the screen
+      anchorOffset: 0.0,
+      // Positions the banner ad 0 pixels from the center of the screen to the right
+      horizontalCenterOffset: 0.0,
+      // Banner Position
+      anchorType: AnchorType.bottom,
+    );
   }
 
   bool loaded = false;
@@ -53,21 +62,14 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
     conversationWidgets.clear();
     _conversationSubscription =
         ChatWindow.loadAllConversations().listen(_updateConversations);
-    for(var conversationId in AnyChatAuth.currentUser.conversationIds){
-      _chatMessageSubscriptions.add(loadAllChatMessages(conversationId).listen(_sendNotification));
+    for (var conversationId in AnyChatAuth.currentUser.conversationIds) {
+      _chatMessageSubscriptions
+          .add(loadAllChatMessages(conversationId).listen(_sendNotification));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Ads.myBanner.show(
-      // Positions the banner ad 0 pixels from the bottom of the screen
-      anchorOffset: 0.0,
-      // Positions the banner ad 0 pixels from the center of the screen to the right
-      horizontalCenterOffset: 0.0,
-      // Banner Position
-      anchorType: AnchorType.bottom,
-    );
     print(
         'AnyChatAuth.currentUser.conversationIds.length: ${AnyChatAuth.currentUser.conversationIds.length}');
     print(
@@ -217,20 +219,64 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
               addedConversations.add(conversation.id);
               // ConversationsScreen.conversations.add(conversation.id);
               setState(() {
-                conversationWidgets.add(new ListTile(
-                    onTap: () {
-                      AnyChatApp.chatter = chatter;
-                      ChatWindow.currentConversation = conversation;
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return ChatScreen();
-                      }));
-                    },
-                    leading: Icon(Icons.chat),
-                    title: RichText(
-                        text: TextSpan(
-                            text: chatterName,
-                            style: TextStyle(color: Colors.grey)))));
+                conversationWidgets.add(new Slidable(
+                  // delegate: new SlidableDrawerDelegate(),
+                  actionExtentRatio: 0.25,
+                  child: new Container(
+                    color: Colors.white,
+                    child: new ListTile(
+                      leading: new CircleAvatar(
+                        backgroundColor: Colors.indigoAccent,
+                        child: new Text('test'),
+                        foregroundColor: Colors.white,
+                      ),
+                      title: new Text(chatterName),
+                      subtitle: new Text('SlidableDrawerDelegate'),
+                    ),
+                  ),
+                  actions: <Widget>[
+                    new IconSlideAction(
+                      caption: 'Archive',
+                      color: Colors.blue,
+                      icon: Icons.archive,
+                      onTap: () => print('Archive'),
+                    ),
+                    new IconSlideAction(
+                      caption: 'Share',
+                      color: Colors.indigo,
+                      icon: Icons.share,
+                      onTap: () => print('Share'),
+                    ),
+                  ],
+                  secondaryActions: <Widget>[
+                    new IconSlideAction(
+                      caption: 'More',
+                      color: Colors.black45,
+                      icon: Icons.more_horiz,
+                      onTap: () => print('More'),
+                    ),
+                    new IconSlideAction(
+                      caption: 'Delete',
+                      color: Colors.red,
+                      icon: Icons.delete,
+                      onTap: () => print('Delete'),
+                    ),
+                  ],
+                ));
+                // conversationWidgets.add(new ListTile(
+                //     onTap: () {
+                //       AnyChatApp.chatter = chatter;
+                //       ChatWindow.currentConversation = conversation;
+                //       Navigator.push(context,
+                //           MaterialPageRoute(builder: (context) {
+                //         return ChatScreen();
+                //       }));
+                //     },
+                //     leading: Icon(Icons.chat),
+                //     title: RichText(
+                //         text: TextSpan(
+                //             text: chatterName,
+                //             style: TextStyle(color: Colors.grey)))));
               });
             }
             print('test widget added');
@@ -334,24 +380,87 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
             .collection("users")
             .doc(users[i])
             .get());
+        var snapshot = await FirebaseFirestore.instance
+            .collection("conversations")
+            .doc(conversation.id)
+            .collection("messages")
+            .orderBy('timestamp', descending: false)
+            .get();
+        var message = snapshot.docs.map((DocumentSnapshot doc) {
+          return AnyChatMessage.fromSnapshot(doc);
+        }).last;
+        var text = "${message.text}\n\n"
+            "${await Utilities.getGoogleTranslation(message.senderId, message.text)}";
         setState(() {
           chatterName = chatter.displayName;
           if (!addedConversations.contains(conversation.id)) {
             addedConversations.add(conversation.id);
             // ConversationsScreen.conversations.add(conversation.id);
-            conversationWidgets.add(new ListTile(
-                onTap: () {
-                  AnyChatApp.chatter = chatter;
-                  ChatWindow.currentConversation = conversation;
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ChatScreen();
-                  }));
-                },
-                leading: Icon(Icons.chat),
-                title: RichText(
-                    text: TextSpan(
-                        text: chatterName,
-                        style: TextStyle(color: Colors.grey)))));
+            // conversationWidgets.add(new ListTile(
+            //     onTap: () {
+            //       AnyChatApp.chatter = chatter;
+            //       ChatWindow.currentConversation = conversation;
+            //       Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //         return ChatScreen();
+            //       }));
+            //     },
+            //     leading: Icon(Icons.chat),
+            //     title: RichText(
+            //         text: TextSpan(
+            //             text: chatterName,
+            //             style: TextStyle(color: Colors.grey)))));
+            conversationWidgets.add(new Slidable(
+              actionExtentRatio: 0.25,
+              child: new Container(
+                color: Colors.white,
+                child: new ListTile(
+                  onTap: () {
+                    AnyChatApp.chatter = chatter;
+                    ChatWindow.currentConversation = conversation;
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return ChatScreen();
+                    }));
+                  },
+                  leading: new CircleAvatar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundImage: NetworkImage(chatter.photoUrl),
+                    foregroundColor: Colors.white,
+                  ),
+                  title: new Text(chatterName),
+                  subtitle: new Text(text),
+                ),
+              ),
+              actions: <Widget>[
+                new IconSlideAction(
+                  caption: 'Archive',
+                  color: Colors.blue,
+                  icon: Icons.archive,
+                  onTap: () => print('Archive'),
+                ),
+                new IconSlideAction(
+                  caption: 'Share',
+                  color: Colors.indigo,
+                  icon: Icons.share,
+                  onTap: () => print('Share'),
+                ),
+              ],
+              secondaryActions: <Widget>[
+                new IconSlideAction(
+                  caption: 'More',
+                  color: Colors.black45,
+                  icon: Icons.more_horiz,
+                  onTap: () => print('More'),
+                ),
+                new IconSlideAction(
+                  caption: 'Delete',
+                  color: Colors.red,
+                  icon: Icons.delete,
+                  onTap: () => print('Delete'),
+                ),
+              ],
+              actionPane: SlidableDrawerActionPane(),
+            ));
             if (!AnyChatAuth.currentUser.conversationIds
                 .contains(conversation.id)) {
               AnyChatAuth.currentUser.conversationIds.add(conversation.id);
@@ -367,7 +476,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
 
   @override
   void dispose() {
-    for(var sub in _chatMessageSubscriptions){
+    for (var sub in _chatMessageSubscriptions) {
       sub?.cancel();
     }
     _conversationSubscription?.cancel();
@@ -435,15 +544,19 @@ class _ConversationsScreenState extends State<ConversationsScreen> with WidgetsB
 // }
 
   Future<void> _sendNotification(QuerySnapshot snapshot) async {
-    var message = snapshot.docs.map((DocumentSnapshot doc) {
-      return AnyChatMessage.fromSnapshot(doc);
-    }).toList().last;
+    var message = snapshot.docs
+        .map((DocumentSnapshot doc) {
+          return AnyChatMessage.fromSnapshot(doc);
+        })
+        .toList()
+        .last;
     print("_notification");
     print(_notification);
-    if (message.senderId != AnyChatAuth.currentUser.id && _notification != AppLifecycleState.resumed) {
-    var user = await AnyChatUser.findUserById(message.senderId);
-    var text = "${message.text}\n\n"
-        "${await Utilities.getGoogleTranslation(message.senderId, message.text)}";
+    if (message.senderId != AnyChatAuth.currentUser.id &&
+        _notification != AppLifecycleState.resumed) {
+      var user = await AnyChatUser.findUserById(message.senderId);
+      var text = "${message.text}\n\n"
+          "${await Utilities.getGoogleTranslation(message.senderId, message.text)}";
       await Notifications().showNotification(user.displayName, text);
     }
   }
