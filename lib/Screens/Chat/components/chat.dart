@@ -7,7 +7,6 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
-import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -188,18 +187,17 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           text: "${_chatMessages[i].text}\n\n"
               "${await Utilities.getGoogleTranslation(_chatMessages[i].senderId, _chatMessages[i].text)}",
           animationController: AnimationController(
-            duration: const Duration(milliseconds: 700),
+            duration: const Duration(milliseconds: 0),
             vsync: this,
           ),
           sender: _chatMessages[i].senderId == AnyChatAuth.currentUser.id
               ? AnyChatAuth.currentUser
               : AnyChatApp.chatter,
         );
-        setState(() {
-          _messages.insert(0, chatMessage);
-          chatMessage.animationController.forward();
-        });
+        _messages.insert(0, chatMessage);
+        chatMessage.animationController.forward();
       }
+      // setState(() {});
       // _chatMessages.forEach((element) async {
       //   final chatMessage = ChatMessage(
       //     text: "${element.text}\n\n"
@@ -564,20 +562,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     )
                   ]
                 : [
-                    Flexible(
-                      child: ListView.builder(
-                        padding: EdgeInsets.all(8.0),
-                        reverse: true,
-                        itemBuilder: (_, int index) => _messages[index],
-                        itemCount: _messages.length,
-                      ),
-                    ),
-                    Divider(height: 5.0),
-                    Container(
-                      decoration:
-                          BoxDecoration(color: Theme.of(context).cardColor),
-                      child: _buildTextComposer(), //MODIFIED
-                    ),
+              Center(
+                child: CircularProgressIndicator(
+                    valueColor: ColorTween(
+                        begin: Theme.of(context).accentColor,
+                        end: Theme.of(context).accentColor)
+                        .animate(AnimationController(vsync: this)),
+                    backgroundColor: Theme.of(context).primaryColor),
+              )
                   ],
           ),
           decoration: Theme.of(context).platform == TargetPlatform.iOS // NEW
