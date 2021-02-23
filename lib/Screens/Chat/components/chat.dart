@@ -131,7 +131,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       _chatMessageSubscription =
           ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
     }
-    _isLoading = false;
+    // _isLoading = false;
     // _loadChatMessages();
 
     // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
@@ -562,14 +562,20 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     )
                   ]
                 : [
-              Center(
-                child: CircularProgressIndicator(
-                    valueColor: ColorTween(
-                        begin: Theme.of(context).accentColor,
-                        end: Theme.of(context).accentColor)
-                        .animate(AnimationController(vsync: this)),
-                    backgroundColor: Theme.of(context).primaryColor),
-              )
+                    Flexible(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(8.0),
+                        reverse: true,
+                        itemBuilder: (_, int index) => _messages[index],
+                        itemCount: _messages.length,
+                      ),
+                    ),
+                    Divider(height: 5.0),
+                    Container(
+                      decoration:
+                          BoxDecoration(color: Theme.of(context).cardColor),
+                      child: _buildTextComposer(), //MODIFIED
+                    ),
                   ],
           ),
           decoration: Theme.of(context).platform == TargetPlatform.iOS // NEW
