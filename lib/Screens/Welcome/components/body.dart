@@ -2,8 +2,6 @@ import 'package:anychat/Screens/Login/login_screen.dart';
 import 'package:anychat/Screens/Signup/signup_screen.dart';
 import 'package:anychat/Screens/Welcome/components/background.dart';
 import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/ads.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

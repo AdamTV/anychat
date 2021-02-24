@@ -1,16 +1,13 @@
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Login/components/background.dart';
 import 'package:anychat/Screens/Signup/signup_screen.dart';
 import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

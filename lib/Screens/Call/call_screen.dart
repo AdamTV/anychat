@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -7,7 +8,9 @@ import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_speech/config/recognition_config.dart';
@@ -16,8 +19,6 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:anychat/components/utilities.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelName;
@@ -136,7 +137,9 @@ class _CallScreenState extends State<CallScreen> {
     return Wrap(
       children: <Widget>[
         Text(text,
-            style: TextStyle(backgroundColor: Theme.of(context).primaryColorLight, fontSize: 32))
+            style: TextStyle(
+                backgroundColor: Theme.of(context).primaryColorLight,
+                fontSize: 32))
       ],
     );
   }
@@ -207,12 +210,16 @@ class _CallScreenState extends State<CallScreen> {
             onPressed: _onToggleMute,
             child: Icon(
               muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Theme.of(context).primaryColorLight : Theme.of(context).accentColor,
+              color: muted
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).accentColor,
               size: 20.0,
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: muted ? Theme.of(context).accentColor : Theme.of(context).primaryColorLight,
+            fillColor: muted
+                ? Theme.of(context).accentColor
+                : Theme.of(context).primaryColorLight,
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
@@ -362,7 +369,9 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
-    final language = message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
+    final language = message.senderId == AnyChatAuth.currentUser.id
+        ? AnyChatApp.chatter.language
+        : AnyChatAuth.currentUser.language;
     if (message.senderId != AnyChatAuth.currentUser.id) {
       final translatedText =
           await Utilities.getGoogleTranslation(language, message.text);

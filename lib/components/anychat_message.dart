@@ -1,4 +1,3 @@
-import 'package:anychat/components/anychat_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AnyChatMessage {
