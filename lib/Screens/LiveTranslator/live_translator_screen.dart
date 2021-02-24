@@ -82,7 +82,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   'AnyChat',
                   style:
                       // TODO: Color should be platform specific
-                      TextStyle(color: Colors.white),
+                      TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
@@ -203,7 +203,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
         // AnyChatUser.addTranscribedMessage(lastMessage);
-        var newText = await Utilities.getGoogleTranslation(null, lastMessage);
+        var newText = await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, lastMessage);
         setState(() {
           text += newText + " ";
         });

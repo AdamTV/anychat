@@ -22,11 +22,9 @@ class Utilities {
   static Map<String, String> queryParameters = Map();
 
   static Future<String> getGoogleTranslation(
-      String senderId, String text) async {
+      String language, String text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
-    String isoCode = senderId == AnyChatAuth.currentUser.id
-        ? AnyChatApp.chatter.language
-        : AnyChatAuth.currentUser.language;
+    String isoCode = language;
     queryParameters.update("target", (value) => isoCode,
         ifAbsent: () => isoCode);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
@@ -41,7 +39,7 @@ class Utilities {
     }
   }
 
-  static Future<void> showMyDialog(
+  static Future<void> showAlertDialog(
       BuildContext context, String title, String text) async {
     return showDialog<void>(
       context: context,

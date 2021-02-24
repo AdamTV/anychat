@@ -28,7 +28,7 @@ class Body extends StatelessWidget {
                 'AnyChat',
                 style:
                     // TODO: Color should be platform specific
-                    TextStyle(color: Colors.white),
+                    TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,

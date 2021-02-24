@@ -8,6 +8,7 @@ final ThemeData kIOSTheme = ThemeData(
   primaryColor: Colors.deepPurple,
   primarySwatch: Colors.purple,
   accentColor: Colors.deepPurple[900],
+  primaryColorLight: Colors.white,
 );
 
 final ThemeData kDefaultTheme = ThemeData(
@@ -15,6 +16,7 @@ final ThemeData kDefaultTheme = ThemeData(
   primaryColor: Colors.deepPurple,
   primarySwatch: Colors.purple,
   accentColor: Colors.deepPurple[900],
+  primaryColorLight: Colors.white,
 );
 
 var agoraAppId = '72559be0b8944a8fb70a772d196078ce';

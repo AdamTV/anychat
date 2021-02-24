@@ -68,7 +68,7 @@ class Body extends StatelessWidget {
                             {Utilities.initConversationScreen(context, value)}
                         })
                     .catchError((e) => {
-                          Utilities.showMyDialog(
+                          Utilities.showAlertDialog(
                               context, "Error", e.message.toString())
                         });
               },
@@ -103,7 +103,7 @@ class Body extends StatelessWidget {
                                 }
                             })
                         .catchError((e) => {
-                              Utilities.showMyDialog(
+                              Utilities.showAlertDialog(
                                   context, "Error", e.message.toString())
                             });
                   },
@@ -128,7 +128,7 @@ class Body extends StatelessWidget {
                                 }
                             })
                         .catchError((e) => {
-                              Utilities.showMyDialog(
+                              Utilities.showAlertDialog(
                                   context, "Error", e.message.toString())
                             });
                   },
@@ -145,7 +145,7 @@ class Body extends StatelessWidget {
                                   }
                               })
                           .catchError((e) => {
-                                Utilities.showMyDialog(
+                                Utilities.showAlertDialog(
                                     context, "Error", e.message.toString())
                               });
                     })
