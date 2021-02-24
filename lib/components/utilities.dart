@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
-import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -36,6 +32,8 @@ class Utilities {
     Iterable<Match> matches = translatedTextRegex.allMatches(body);
     if (matches.length == 1 && matches.first.groupCount == 1) {
       return matches.first.group(1).replaceAll("&#39;", "'");
+    } else {
+      throw new Exception("Could not getGoogleTranslation -> uri: $uri");
     }
   }
 
@@ -95,6 +93,7 @@ class Utilities {
               )
             });
   }
+
   static String getDropDownValue() {
     for (String key in isoMap.keys) {
       print(isoMap[key]);
@@ -105,6 +104,7 @@ class Utilities {
     }
     return "Error";
   }
+
   static Future<void> handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print(status);

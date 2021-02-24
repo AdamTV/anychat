@@ -56,7 +56,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<StreamSubscription<QuerySnapshot>> _chatMessageSubscriptions = [];
+
   // List<String> addedConversations = <String>[];
+  // ignore: deprecated_member_use
   List<Widget> conversationWidgets = new List<Widget>();
 
   _ConversationsScreenState() {
@@ -114,9 +116,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             DrawerHeader(
               child: Text(
                 'AnyChat',
-                style:
-                    // TODO: Color should be platform specific
-                    TextStyle(color: Theme.of(context).primaryColorLight),
+                style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
@@ -180,15 +180,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   }
 
   void loadConversations() {
-    // loaded = true;
-
-    // ConversationsScreen.testWidgets.clear();
-
-    // _conversationSubscription?.cancel();
-    // _conversationSubscription =
-    //     ChatWindow.loadAllConversations().listen(_updateConversations);
-
-    var widgets = <Widget>[];
     var ids = <String>[];
     AnyChatAuth.currentUser.conversationIds.forEach((conversationId) async {
       Conversation conversation;
@@ -198,7 +189,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           .get());
 
       String chatterName = "test";
-      String chatterId;
 
       if (!ids.contains(conversationId)) {
         print(conversationId);
@@ -213,9 +203,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .doc(users[i])
                 .get());
             chatterName = chatter.displayName;
-            chatterId = chatter.id;
 
-            if (!conversationWidgets.any((element) => element.key == Key(conversation.id)) && mounted) {
+            if (!conversationWidgets
+                    .any((element) => element.key == Key(conversation.id)) &&
+                mounted) {
               var snapshot = await FirebaseFirestore.instance
                   .collection("conversations")
                   .doc(conversation.id)
@@ -230,189 +221,23 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 }).last;
                 text = "${message.text}\n\n"
                     "${await Utilities.getGoogleTranslation(message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language, message.text)}";
-                chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(message.senderId).get());
+                chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+                    .instance
+                    .collection("users")
+                    .doc(message.senderId)
+                    .get());
               } catch (e) {
                 throw e;
               }
               print('adding conversation: ' + conversation.id);
-              // addedConversations.add(conversation.id);
-              // ConversationsScreen.conversations.add(conversation.id);
               setState(() {
-                conversationWidgets.add(new Slidable(
-                  key: new Key(conversation.id),
-                  actionExtentRatio: 0.25,
-                  child: new Container(
-                    color: Theme.of(context).primaryColorLight,
-                    child: new ListTile(
-                      onTap: () {
-                        AnyChatApp.chatter = chatter;
-                        ChatWindow.currentConversation = conversation;
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return ChatScreen();
-                        }));
-                      },
-                      leading: new CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        backgroundImage: NetworkImage(chatter.photoUrl),
-                        foregroundColor: Theme.of(context).primaryColorLight,
-                      ),
-                      title: new Text(chatterName),
-                      subtitle: new Text(text),
-                    ),
-                  ),
-                  actions: <Widget>[
-                    new IconSlideAction(
-                      caption: 'Archive',
-                      color: Colors.blue,
-                      icon: Icons.archive,
-                      onTap: () => print('Archive'),
-                    ),
-                    new IconSlideAction(
-                      caption: 'Share',
-                      color: Colors.indigo,
-                      icon: Icons.share,
-                      onTap: () => print('Share'),
-                    ),
-                  ],
-                  secondaryActions: <Widget>[
-                    new IconSlideAction(
-                      caption: 'More',
-                      color: Colors.black45,
-                      icon: Icons.more_horiz,
-                      onTap: () => print('More'),
-                    ),
-                    new IconSlideAction(
-                      caption: 'Delete',
-                      color: Colors.red,
-                      icon: Icons.delete,
-                      onTap: () => {
-                        showDialog<void>(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Delete Conversation"),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: <Widget>[
-                                    Text(
-                                        "Are you sure you want to leave this conversation? "
-                                        "You will not be able to join back unless somebody "
-                                        "invites you."),
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Fluttertoast.showToast(
-                                        msg: "Cancelled",
-                                        toastLength: Toast.LENGTH_LONG,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 3,
-                                        backgroundColor: Colors.red,
-                                        textColor: Theme.of(context).primaryColorLight,
-                                        fontSize: 16.0);
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text('Approve'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      AnyChatAuth.currentUser.conversationIds
-                                          .removeWhere((element) =>
-                                              element == conversation.id);
-                                    });
-                                    AnyChatAuth.currentUser
-                                        .leaveConversation(conversation.id);
-                                    Fluttertoast.showToast(
-                                        msg: "Successfully left conversation",
-                                        toastLength: Toast.LENGTH_LONG,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 3,
-                                        backgroundColor: Colors.red,
-                                        textColor: Theme.of(context).primaryColorLight,
-                                        fontSize: 16.0);
-                                    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        )
-                      },
-                    ),
-                  ],
-                  actionPane: SlidableDrawerActionPane(),
-                ));
-                // conversationWidgets.add(new ListTile(
-                //     onTap: () {
-                //       AnyChatApp.chatter = chatter;
-                //       ChatWindow.currentConversation = conversation;
-                //       Navigator.push(context,
-                //           MaterialPageRoute(builder: (context) {
-                //         return ChatScreen();
-                //       }));
-                //     },
-                //     leading: Icon(Icons.chat),
-                //     title: RichText(
-                //         text: TextSpan(
-                //             text: chatterName,
-                //             style: TextStyle(color: Colors.grey)))));
+                conversationWidgets.add(slidable(chatter, conversation, text));
               });
             }
             print('test widget added');
           }
         }
       }
-      //
-      //     // conversation.participants.forEach((AnyChatUser participant) async {
-      //     //     if(participant.id != AnyChatAuth
-      //     //         .getGoogleSignIn()
-      //     //         .currentUser
-      //     //         .id) {
-      //     //       chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
-      //     //     }
-      //     //   });
-      //     // if(chatterName == null)return;
-      //
-      //     // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
-      //     // {
-      //     //   conversation = Conversation.fromSnapshot(value),
-      //     //   print('test'),
-      //     //   testWidgets.add(Text("test"))
-      //     // });
-      //
-      //     // var conversation = Conversation.fromSnapshot((
-      //     //     element).get());
-      //     //String chatterName = "Sf";
-      //     // conversation.participants.forEach((AnyChatUser participant) async {
-      //     //   if(participant.id != AnyChatAuth
-      //     //       .getGoogleSignIn()
-      //     //       .currentUser
-      //     //       .id) {
-      //     //     chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
-      //     //   }
-      //     // });
-      //
-      //     // print("adding widget");
-      //     // widgets.add(new ListTile(
-      //     //     onTap: () {
-      //     //       // AnyChatApp.user = FindChatterScreenState.users[index];
-      //     //       // Navigator.push(
-      //     //       //     context, MaterialPageRoute(builder: (context) {
-      //     //       //   return ChatScreen();
-      //     //       // }));
-      //     //     },
-      //     //     leading: Icon(Icons.person_add),
-      //     //     title: RichText(
-      //     //         text: TextSpan(
-      //     //             text: chatterName,
-      //     //             style: TextStyle(color: Colors.grey)))));
     });
   }
 
@@ -443,25 +268,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
       return;
     }
-    // if(!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)){
-    //   print('user conversationIds does not contain ${conversation.id}');
-    //   return;
-    // }
-    // if (conversationWidgets.isEmpty) {
-    //   setState(() {
-    //     conversationWidgets = loadConversations();
-    //   });
-    // return;
-    // }
-    String chatterName;
 
     List<String> users = conversation.participants;
     for (var i = 0; i < conversation.participants.length; i++) {
       print(AnyChatAuth.currentUser.id);
       // This assumes the chatter is the first participant that is not the user
       if (users[i] != AnyChatAuth.currentUser.id) {
-        var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-            .instance
+        var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
             .collection("users")
             .doc(users[i])
             .get());
@@ -474,144 +287,29 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         String text;
         AnyChatMessage message;
         try {
-          message = snapshot.docs.map((DocumentSnapshot doc) {
-            return AnyChatMessage.fromSnapshot(doc);
-          }).last;
+          if (snapshot.docs.isNotEmpty) {
+            message = snapshot.docs.map((DocumentSnapshot doc) {
+              return AnyChatMessage.fromSnapshot(doc);
+            }).last;
+          } else {
+            message = AnyChatMessage(
+                "", Timestamp.now(), chatter.id, "New Conversation", null);
+          }
+          chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+              .collection("users")
+              .doc(message.senderId)
+              .get());
           text = "${message.text}\n\n"
-              "${await Utilities.getGoogleTranslation(message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language, message.text)}";
-          chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(message.senderId).get());
+              "${await Utilities.getGoogleTranslation(message.senderId == AnyChatAuth.currentUser.id ? chatter.language : AnyChatAuth.currentUser.language, message.text)}";
         } catch (e) {
           throw e;
         }
         setState(() {
-          chatterName = chatter.displayName;
-          if (!conversationWidgets.any((element) => element.key == Key(conversation.id))) {
-            // addedConversations.add(conversation.id);
-            // ConversationsScreen.conversations.add(conversation.id);
-            // conversationWidgets.add(new ListTile(
-            //     onTap: () {
-            //       AnyChatApp.chatter = chatter;
-            //       ChatWindow.currentConversation = conversation;
-            //       Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //         return ChatScreen();
-            //       }));
-            //     },
-            //     leading: Icon(Icons.chat),
-            //     title: RichText(
-            //         text: TextSpan(
-            //             text: chatterName,
-            //             style: TextStyle(color: Colors.grey)))));
-            conversationWidgets.add(new Slidable(
-              key: new Key(conversation.id),
-              actionExtentRatio: 0.25,
-              child: new Container(
-                color: Theme.of(context).primaryColorLight,
-                child: new ListTile(
-                  onTap: () {
-                    AnyChatApp.chatter = chatter;
-                    ChatWindow.currentConversation = conversation;
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return ChatScreen();
-                    }));
-                  },
-                  leading: new CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    backgroundImage: NetworkImage(chatter.photoUrl),
-                    foregroundColor: Theme.of(context).primaryColorLight,
-                  ),
-                  title: new Text(chatterName),
-                  subtitle: new Text(text),
-                ),
-              ),
-              actions: <Widget>[
-                new IconSlideAction(
-                  caption: 'Archive',
-                  color: Colors.blue,
-                  icon: Icons.archive,
-                  onTap: () => print('Archive'),
-                ),
-                new IconSlideAction(
-                  caption: 'Share',
-                  color: Colors.indigo,
-                  icon: Icons.share,
-                  onTap: () => print('Share'),
-                ),
-              ],
-              secondaryActions: <Widget>[
-                new IconSlideAction(
-                  caption: 'More',
-                  color: Colors.black45,
-                  icon: Icons.more_horiz,
-                  onTap: () => print('More'),
-                ),
-                new IconSlideAction(
-                  caption: 'Delete',
-                  color: Colors.red,
-                  icon: Icons.delete,
-                  onTap: () => {
-                    showDialog<void>(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Delete Conversation"),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text(
-                                    "Are you sure you want to leave this conversation? "
-                                    "You will not be able to join back unless somebody "
-                                    "invites you."),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Fluttertoast.showToast(
-                                    msg: "Cancelled",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 3,
-                                    backgroundColor: Colors.red,
-                                    textColor: Theme.of(context).primaryColorLight,
-                                    fontSize: 16.0);
-                              },
-                            ),
-                            TextButton(
-                              child: Text('Approve'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                setState(() {
-                                  AnyChatAuth.currentUser.conversationIds
-                                      .removeWhere((element) =>
-                                          element == conversation.id);
-                                });
-                                AnyChatAuth.currentUser
-                                    .leaveConversation(conversation.id);
-                                Fluttertoast.showToast(
-                                    msg: "Successfully left conversation",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 3,
-                                    backgroundColor: Colors.red,
-                                    textColor: Theme.of(context).primaryColorLight,
-                                    fontSize: 16.0);
-                                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    )
-                  },
-                ),
-              ],
-              actionPane: SlidableDrawerActionPane(),
-            ));
+          if (!conversationWidgets
+              .any((element) => element.key == Key(conversation.id))) {
+            _chatMessageSubscriptions
+                .add(loadAllChatMessages(conversation.id).listen(_sendNotification));
+            conversationWidgets.add(slidable(chatter, conversation, text));
             if (!AnyChatAuth.currentUser.conversationIds
                 .contains(conversation.id)) {
               AnyChatAuth.currentUser.conversationIds.add(conversation.id);
@@ -619,123 +317,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             print('added conversation widget');
             print(conversationWidgets);
           }
-          // } else {
-          //   conversationWidgets
-          //       .removeWhere((element) => element.key == Key(conversation.id));
-          //   conversationWidgets.add(new Slidable(
-          //     key: new Key(conversation.id),
-          //     actionExtentRatio: 0.25,
-          //     child: new Container(
-          //       color: Theme.of(context).primaryColorLight,
-          //       child: new ListTile(
-          //         onTap: () {
-          //           AnyChatApp.chatter = chatter;
-          //           ChatWindow.currentConversation = conversation;
-          //           Navigator.push(context,
-          //               MaterialPageRoute(builder: (context) {
-          //             return ChatScreen();
-          //           }));
-          //         },
-          //         leading: new CircleAvatar(
-          //           backgroundColor: Theme.of(context).primaryColor,
-          //           backgroundImage: NetworkImage(chatter.photoUrl),
-          //           foregroundColor: Theme.of(context).primaryColorLight,
-          //         ),
-          //         title: new Text(chatterName),
-          //         subtitle: new Text(text),
-          //       ),
-          //     ),
-          //     actions: <Widget>[
-          //       new IconSlideAction(
-          //         caption: 'Archive',
-          //         color: Colors.blue,
-          //         icon: Icons.archive,
-          //         onTap: () => print('Archive'),
-          //       ),
-          //       new IconSlideAction(
-          //         caption: 'Share',
-          //         color: Colors.indigo,
-          //         icon: Icons.share,
-          //         onTap: () => print('Share'),
-          //       ),
-          //     ],
-          //     secondaryActions: <Widget>[
-          //       new IconSlideAction(
-          //         caption: 'More',
-          //         color: Colors.black45,
-          //         icon: Icons.more_horiz,
-          //         onTap: () => print('More'),
-          //       ),
-          //       new IconSlideAction(
-          //         caption: 'Delete',
-          //         color: Colors.red,
-          //         icon: Icons.delete,
-          //         onTap: () => {
-          //           showDialog<void>(
-          //             context: context,
-          //             barrierDismissible: true,
-          //             builder: (BuildContext context) {
-          //               return AlertDialog(
-          //                 title: Text("Delete Conversation"),
-          //                 content: SingleChildScrollView(
-          //                   child: ListBody(
-          //                     children: <Widget>[
-          //                       Text(
-          //                           "Are you sure you want to leave this conversation? "
-          //                           "You will not be able to join back unless somebody "
-          //                           "invites you."),
-          //                     ],
-          //                   ),
-          //                 ),
-          //                 actions: <Widget>[
-          //                   TextButton(
-          //                     child: Text('Cancel'),
-          //                     onPressed: () {
-          //                       Navigator.of(context).pop();
-          //                       Fluttertoast.showToast(
-          //                           msg: "Cancelled",
-          //                           toastLength: Toast.LENGTH_LONG,
-          //                           gravity: ToastGravity.CENTER,
-          //                           timeInSecForIosWeb: 3,
-          //                           backgroundColor: Colors.red,
-          //                           textColor: Theme.of(context).primaryColorLight,
-          //                           fontSize: 16.0);
-          //                     },
-          //                   ),
-          //                   TextButton(
-          //                     child: Text('Approve'),
-          //                     onPressed: () {
-          //                       Navigator.of(context).pop();
-          //                       setState(() {
-          //                         AnyChatAuth.currentUser.conversationIds
-          //                             .removeWhere((element) =>
-          //                                 element == conversation.id);
-          //                       });
-          //                       AnyChatAuth.currentUser
-          //                           .leaveConversation(conversation.id);
-          //                       Fluttertoast.showToast(
-          //                           msg: "Successfully left conversation",
-          //                           toastLength: Toast.LENGTH_LONG,
-          //                           gravity: ToastGravity.CENTER,
-          //                           timeInSecForIosWeb: 3,
-          //                           backgroundColor: Colors.red,
-          //                           textColor: Theme.of(context).primaryColorLight,
-          //                           fontSize: 16.0);
-          //                       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-          //                     },
-          //                   ),
-          //                 ],
-          //               );
-          //             },
-          //           )
-          //         },
-          //       ),
-          //     ],
-          //     actionPane: SlidableDrawerActionPane(),
-          //   ));
-          // }
         });
-        // chatterId = AnyChatApp.chatter.id;
       }
     }
   }
@@ -752,63 +334,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     super.dispose();
   }
 
-// class ConversationsScreen extends StatelessWidget {
-//   static List<String> conversations = new List<String>();
-//   static List<Widget> testWidgets = new List<Widget>();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     loadConversations();
-//     print('conversations loaded');
-//     return Scaffold(
-//       body: Body(),
-//     );
-//   }
-//   static List<Widget> loadConversations() {
-//     var widgets = <Widget>[];
-//     ConversationsScreen.conversations.forEach((element) async {
-//       Conversation conversation;
-//       conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance.collection("conversations").doc(element).get());
-//       testWidgets.add(Text('test'));
-//       print('test widget added');
-//       // FirebaseFirestore.instance.collection("conversations").doc(element).get().then((value) =>
-//       // {
-//       //   conversation = Conversation.fromSnapshot(value),
-//       //   print('test'),
-//       //   testWidgets.add(Text("test"))
-//       // });
-//
-//       // var conversation = Conversation.fromSnapshot((
-//       //     element).get());
-//       //String chatterName = "Sf";
-//       // conversation.participants.forEach((AnyChatUser participant) async {
-//       //   if(participant.id != AnyChatAuth
-//       //       .getGoogleSignIn()
-//       //       .currentUser
-//       //       .id) {
-//       //     chatterName = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(participant.id).get()).displayName;
-//       //   }
-//       // });
-//
-//       // print("adding widget");
-//       // widgets.add(new ListTile(
-//       //     onTap: () {
-//       //       // AnyChatApp.user = FindChatterScreenState.users[index];
-//       //       // Navigator.push(
-//       //       //     context, MaterialPageRoute(builder: (context) {
-//       //       //   return ChatScreen();
-//       //       // }));
-//       //     },
-//       //     leading: Icon(Icons.person_add),
-//       //     title: RichText(
-//       //         text: TextSpan(
-//       //             text: chatterName,
-//       //             style: TextStyle(color: Colors.grey)))));
-//     });
-//     return widgets;
-//   }
-// }
-
   Future<void> _sendNotification(QuerySnapshot snapshot) async {
     print('in _sendNotification');
     var message = snapshot.docs
@@ -818,254 +343,22 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .toList()
         .last;
     if (mounted) {
-      // snapshot.docs.last.reference.parent.parent
-      var conversation = Conversation.fromSnapshot(await snapshot.docs.last.reference.parent.parent.get());
-      var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(message.senderId).get());
-      final language = message.senderId == AnyChatAuth.currentUser.id ? chatter.language : AnyChatAuth.currentUser.language;
+      var conversation = Conversation.fromSnapshot(
+          await snapshot.docs.last.reference.parent.parent.get());
+      var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+          .collection("users")
+          .doc(message.senderId)
+          .get());
+      final language = message.senderId == AnyChatAuth.currentUser.id
+          ? chatter.language
+          : AnyChatAuth.currentUser.language;
       final text = "${message.text}\n\n"
           "${await Utilities.getGoogleTranslation(language, message.text)}";
       setState(() {
-        conversationWidgets.removeWhere((element) => element.key == Key(conversation.id));
-        conversationWidgets.insert(0, new Slidable(
-          key: new Key(conversation.id),
-          actionExtentRatio: 0.25,
-          child: new Container(
-            color: Theme.of(context).primaryColorLight,
-            child: new ListTile(
-              onTap: () {
-                AnyChatApp.chatter = chatter;
-                ChatWindow.currentConversation = conversation;
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                      return ChatScreen();
-                    }));
-              },
-              leading: new CircleAvatar(
-                backgroundColor: Theme
-                    .of(context)
-                    .primaryColor,
-                backgroundImage: NetworkImage(chatter.photoUrl),
-                foregroundColor: Theme.of(context).primaryColorLight,
-              ),
-              title: new Text(chatter.displayName),
-              subtitle: new Text(text),
-            ),
-          ),
-          actions: <Widget>[
-            new IconSlideAction(
-              caption: 'Archive',
-              color: Colors.blue,
-              icon: Icons.archive,
-              onTap: () => print('Archive'),
-            ),
-            new IconSlideAction(
-              caption: 'Share',
-              color: Colors.indigo,
-              icon: Icons.share,
-              onTap: () => print('Share'),
-            ),
-          ],
-          secondaryActions: <Widget>[
-            new IconSlideAction(
-              caption: 'More',
-              color: Colors.black45,
-              icon: Icons.more_horiz,
-              onTap: () => print('More'),
-            ),
-            new IconSlideAction(
-              caption: 'Delete',
-              color: Colors.red,
-              icon: Icons.delete,
-              onTap: () =>
-              {
-                showDialog<void>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Delete Conversation"),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text(
-                                "Are you sure you want to leave this conversation? "
-                                    "You will not be able to join back unless somebody "
-                                    "invites you."),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('Cancel'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Fluttertoast.showToast(
-                                msg: "Cancelled",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 3,
-                                backgroundColor: Colors.red,
-                                textColor: Theme.of(context).primaryColorLight,
-                                fontSize: 16.0);
-                          },
-                        ),
-                        TextButton(
-                          child: Text('Approve'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              AnyChatAuth.currentUser.conversationIds
-                                  .removeWhere((element) =>
-                              element == conversation.id);
-                            });
-                            AnyChatAuth.currentUser
-                                .leaveConversation(conversation.id);
-                            Fluttertoast.showToast(
-                                msg: "Successfully left conversation",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 3,
-                                backgroundColor: Colors.red,
-                                textColor: Theme.of(context).primaryColorLight,
-                                fontSize: 16.0);
-                            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                )
-              },
-            ),
-          ],
-          actionPane: SlidableDrawerActionPane(),
-        ));
-      // conversationWidgets.clear();
-      // loadConversations();
+        conversationWidgets
+            .removeWhere((element) => element.key == Key(conversation.id));
+        conversationWidgets.insert(0, slidable(chatter, conversation, text));
       });
-      // setState(() {
-      //   final wid = Slidable(
-      //     key: new Key(convoId),
-      //     actionExtentRatio: 0.25,
-      //     child: new Container(
-      //       color: Theme.of(context).primaryColorLight,
-      //       child: new ListTile(
-      //         onTap: () {
-      //           AnyChatApp.chatter = chatter;
-      //           ChatWindow.currentConversation = conversation;
-      //           Navigator.push(context,
-      //               MaterialPageRoute(builder: (context) {
-      //                 return ChatScreen();
-      //               }));
-      //         },
-      //         leading: new CircleAvatar(
-      //           backgroundColor: Theme
-      //               .of(context)
-      //               .primaryColor,
-      //           backgroundImage: NetworkImage(chatter.photoUrl),
-      //           foregroundColor: Theme.of(context).primaryColorLight,
-      //         ),
-      //         title: new Text(chatterName),
-      //         subtitle: new Text(text),
-      //       ),
-      //     ),
-      //     actions: <Widget>[
-      //       new IconSlideAction(
-      //         caption: 'Archive',
-      //         color: Colors.blue,
-      //         icon: Icons.archive,
-      //         onTap: () => print('Archive'),
-      //       ),
-      //       new IconSlideAction(
-      //         caption: 'Share',
-      //         color: Colors.indigo,
-      //         icon: Icons.share,
-      //         onTap: () => print('Share'),
-      //       ),
-      //     ],
-      //     secondaryActions: <Widget>[
-      //       new IconSlideAction(
-      //         caption: 'More',
-      //         color: Colors.black45,
-      //         icon: Icons.more_horiz,
-      //         onTap: () => print('More'),
-      //       ),
-      //       new IconSlideAction(
-      //         caption: 'Delete',
-      //         color: Colors.red,
-      //         icon: Icons.delete,
-      //         onTap: () =>
-      //         {
-      //           showDialog<void>(
-      //             context: context,
-      //             barrierDismissible: true,
-      //             builder: (BuildContext context) {
-      //               return AlertDialog(
-      //                 title: Text("Delete Conversation"),
-      //                 content: SingleChildScrollView(
-      //                   child: ListBody(
-      //                     children: <Widget>[
-      //                       Text(
-      //                           "Are you sure you want to leave this conversation? "
-      //                               "You will not be able to join back unless somebody "
-      //                               "invites you."),
-      //                     ],
-      //                   ),
-      //                 ),
-      //                 actions: <Widget>[
-      //                   TextButton(
-      //                     child: Text('Cancel'),
-      //                     onPressed: () {
-      //                       Navigator.of(context).pop();
-      //                       Fluttertoast.showToast(
-      //                           msg: "Cancelled",
-      //                           toastLength: Toast.LENGTH_LONG,
-      //                           gravity: ToastGravity.CENTER,
-      //                           timeInSecForIosWeb: 3,
-      //                           backgroundColor: Colors.red,
-      //                           textColor: Theme.of(context).primaryColorLight,
-      //                           fontSize: 16.0);
-      //                     },
-      //                   ),
-      //                   TextButton(
-      //                     child: Text('Approve'),
-      //                     onPressed: () {
-      //                       Navigator.of(context).pop();
-      //                       setState(() {
-      //                         AnyChatAuth.currentUser.conversationIds
-      //                             .removeWhere((element) =>
-      //                         element == conversation.id);
-      //                       });
-      //                       AnyChatAuth.currentUser
-      //                           .leaveConversation(conversation.id);
-      //                       Fluttertoast.showToast(
-      //                           msg: "Successfully left conversation",
-      //                           toastLength: Toast.LENGTH_LONG,
-      //                           gravity: ToastGravity.CENTER,
-      //                           timeInSecForIosWeb: 3,
-      //                           backgroundColor: Colors.red,
-      //                           textColor: Theme.of(context).primaryColorLight,
-      //                           fontSize: 16.0);
-      //                       // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-      //                     },
-      //                   ),
-      //                 ],
-      //               );
-      //             },
-      //           )
-      //         },
-      //       ),
-      //     ],
-      //     actionPane: SlidableDrawerActionPane(),
-      //   ));
-
-      // conversationWidgets.removeWhere((element) => element.key == Key());
-      // conversationWidgets.insert(0, Text("yted"));
-      // c
-      // await _updateConversations(await FirebaseFirestore.instance
-      //     .collection('conversations')
-      //     .orderBy('timestamp', descending: false)
-      //     .snapshots().last);
     }
     print("_notification");
     print(_notification);
@@ -1085,5 +378,117 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
+  }
+
+  Widget slidable(AnyChatUser chatter, Conversation conversation, String text) {
+    return new Slidable(
+      key: new Key(conversation.id),
+      actionExtentRatio: 0.25,
+      child: new Container(
+        color: Theme.of(context).primaryColorLight,
+        child: new ListTile(
+          onTap: () {
+            AnyChatApp.chatter = chatter;
+            ChatWindow.currentConversation = conversation;
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ChatScreen();
+            }));
+          },
+          leading: new CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor,
+            backgroundImage: NetworkImage(chatter.photoUrl),
+            foregroundColor: Theme.of(context).primaryColorLight,
+          ),
+          title: new Text(chatter.displayName),
+          subtitle: new Text(text),
+        ),
+      ),
+      actions: <Widget>[
+        new IconSlideAction(
+          caption: 'Archive',
+          color: Colors.blue,
+          icon: Icons.archive,
+          onTap: () => print('Archive'),
+        ),
+        new IconSlideAction(
+          caption: 'Share',
+          color: Colors.indigo,
+          icon: Icons.share,
+          onTap: () => print('Share'),
+        ),
+      ],
+      secondaryActions: <Widget>[
+        new IconSlideAction(
+          caption: 'More',
+          color: Colors.black45,
+          icon: Icons.more_horiz,
+          onTap: () => print('More'),
+        ),
+        new IconSlideAction(
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.delete,
+          onTap: () => {
+            showDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Delete Conversation"),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(
+                            "Are you sure you want to leave this conversation? "
+                            "You will not be able to join back unless somebody "
+                            "invites you."),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Fluttertoast.showToast(
+                            msg: "Cancelled",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 3,
+                            backgroundColor: Colors.red,
+                            textColor: Theme.of(context).primaryColorLight,
+                            fontSize: 16.0);
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Approve'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          AnyChatAuth.currentUser.conversationIds.removeWhere(
+                              (element) => element == conversation.id);
+                        });
+                        AnyChatAuth.currentUser
+                            .leaveConversation(conversation.id);
+                        Fluttertoast.showToast(
+                            msg: "Successfully left conversation",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 3,
+                            backgroundColor: Colors.red,
+                            textColor: Theme.of(context).primaryColorLight,
+                            fontSize: 16.0);
+                        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
+                      },
+                    ),
+                  ],
+                );
+              },
+            )
+          },
+        ),
+      ],
+      actionPane: SlidableDrawerActionPane(),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/services.dart';
 
-class locale {
+class Locale {
   static List languages;
   static String currentLocale;
   static String humanReadable;

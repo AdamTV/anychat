@@ -1,9 +1,3 @@
-import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
-import 'package:anychat/Screens/Settings/settings_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -28,8 +28,8 @@ class _AnyChatAppState extends State<AnyChatApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "AnyChat",
-      theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
-          ? kIOSTheme // NEW
+      theme: defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
           : kDefaultTheme,
       home: ChatWindow(),
     );
@@ -183,7 +183,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     if (_messages.isEmpty) {
       // _chatMessages.sort((a,b)=>a.compareTo(b));
       for (int i = 0; i < _chatMessages.length; i++) {
-        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
+        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
+            ? AnyChatApp.chatter.language
+            : AnyChatAuth.currentUser.language;
         final chatMessage = ChatMessage(
           text: "${_chatMessages[i].text}\n\n"
               "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}",
@@ -223,7 +225,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
-      final language = message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
+      final language = message.senderId == AnyChatAuth.currentUser.id
+          ? AnyChatApp.chatter.language
+          : AnyChatAuth.currentUser.language;
       final chatMessage = ChatMessage(
         text: "${message.text}\n\n"
             "${await Utilities.getGoogleTranslation(language, message.text)}",
@@ -240,34 +244,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         chatMessage.animationController.forward();
       });
     }
-
-    // if (true) {
-    //   _chatMessages = getChatMessagesFromQuery(snapshot);
-    //   if(_chatMessages.length == 0) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //     return;
-    //   }
-    //   AnyChatMessage lastMessage = _chatMessages.last;
-    //   // if (lastMessage.senderId != AnyChatAuth.currentUser.id &&
-    //   //     !loadedMessages.contains(lastMessage.timestamp)) {
-    //     loadedMessages.add(lastMessage.timestamp);
-    //     ChatMessage chatMessage = ChatMessage(
-    //         text: "${lastMessage.text}\n\n"
-    //             "${await Utilities.getGoogleTranslation(lastMessage.senderId, lastMessage.text)}",
-    //         animationController: AnimationController(
-    //           duration: const Duration(milliseconds: 700),
-    //           vsync: this,
-    //         ),
-    //         sender: lastMessage.senderId == AnyChatAuth.currentUser.id ? AnyChatAuth.currentUser : AnyChatApp.chatter);
-    //     setState(() {
-    //       _isLoading = false;
-    //       _messages.insert(0, chatMessage);
-    //       chatMessage.animationController.forward();
-    //     });
-    //   // }
-    // }
   }
 
   Widget _buildTextComposer() {
@@ -296,11 +272,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? // MODIFIED
                     CupertinoButton(
-                        // NEW
-                        child: Text('Send'), // NEW
-                        onPressed: _isComposing // NEW
-                            ? () =>
-                                _handleSubmitted(_textController.text) // NEW
+                        child: Text('Send'),
+                        onPressed: _isComposing
+                            ? () => _handleSubmitted(_textController.text)
                             : null,
                       )
                     : IconButton(
@@ -320,158 +294,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     setState(() {
       _isComposing = false;
     });
-    final id = await AnyChatUser.addMessageToConversation(text);
-    // ChatMessage message = ChatMessage(
-    //   id: id,
-    //   //user: currentUser,
-    //   text: "$text\n\n"
-    //       "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.id, text)}",
-    //   animationController: AnimationController(
-    //     duration: const Duration(milliseconds: 700),
-    //     vsync: this,
-    //   ),
-    //   sender: AnyChatAuth.currentUser,
-    // );
-
-    // If conversation does not exist
-    // if (ChatWindow.currentConversation == null) {
-    //
-    // } else {
-    // AnyChatUser.addMessageToConversation(
-    //     AnyChatMessage(AnyChatAuth.currentUser, text, DateTime.now()));
-    //}
-    // setState(() {
-    //   _messages.insert(0, message);
-    // });
+    await AnyChatUser.addMessageToConversation(text);
     _focusNode.requestFocus();
-    // message.animationController.forward();
   }
 
-  // Future<void> _loadChatMessages() async {
-  //   _isLoading = true;
-  //   if (ChatWindow.currentConversation == null) {
-  //     await AnyChatUser.createConversation();
-  //   }
-  //
-  //   // _isLoading = true;
-  //   // if (ChatWindow.currentConversation == null) {
-  //   //   await AnyChatUser.createConversation();
-  //   // }
-  //   // print('loading chat messages');
-  //   // Conversation convo;
-  //   // ChatMessage message;
-  //   // FirebaseFirestore.instance
-  //   //     .collection("conversations")
-  //   //     .doc(ChatWindow.currentConversation.id)
-  //   //     .get()
-  //   //     .then((value) async => {
-  //   //           convo = Conversation.fromSnapshot(value),
-  //   //           // if (!kIsWeb)
-  //   //           //   {
-  //   //           //     convo.messages.reversed.forEach((element) async {
-  //   //           //       ChatMessage message = ChatMessage(
-  //   //           //         //user: currentUser,
-  //   //           //         text: element['text'],
-  //   //           //         animationController: AnimationController(
-  //   //           //           duration: const Duration(milliseconds: 700),
-  //   //           //           vsync: this,
-  //   //           //         ),
-  //   //           //         sender: AnyChatUser.fromSnapshot(await FirebaseFirestore
-  //   //           //             .instance
-  //   //           //             .collection("users")
-  //   //           //             .doc(element['sender'])
-  //   //           //             .get()),
-  //   //           //       );
-  //   //           //       setState(() {
-  //   //           //         //print('adding chat message: ' + element);
-  //   //           //         _messages.insert(0, message);
-  //   //           //       });
-  //   //           //       //_focusNode.requestFocus();
-  //   //           //       message.animationController.forward();
-  //   //           //     })
-  //   //           //   }
-  //   //           // else
-  //   //           {
-  //   //             for (var i = 0; i < convo.messages.length; i++)
-  //   //               {
-  //   //                 if (!loadedMessages
-  //   //                     .contains(convo.messages[i]['timeStamp']))
-  //   //                   {
-  //   //                     message = ChatMessage(
-  //   //                       //user: currentUser,
-  //   //                       text: "${convo.messages[i]['text']}\n\n"
-  //   //                           "${await Utilities.getGoogleTranslation(convo.messages[i]['sender'], convo.messages[i]['text'])}",
-  //   //                       animationController: AnimationController(
-  //   //                         duration: const Duration(milliseconds: 0),
-  //   //                         vsync: this,
-  //   //                       ),
-  //   //                       sender: AnyChatUser.fromSnapshot(
-  //   //                           await FirebaseFirestore.instance
-  //   //                               .collection("users")
-  //   //                               .doc(convo.messages[i]['sender'])
-  //   //                               .get()),
-  //   //                     ),
-  //   //                     // setState(() {
-  //   //                     //print('adding chat message: ' + element);
-  //   //                     _messages.insert(0, message),
-  //   //                     // }),
-  //   //                     //_focusNode.requestFocus();
-  //   //                     message.animationController.forward(),
-  //   //                   },
-  //   //               }
-  //   //           },
-  //   //           setState(() {
-  //   //             _isLoading = false;
-  //   //           })
-  //   //         });
-  //   // //setState(() {});
-  //   // // ChatWindow.currentConversation?.messages?.forEach((element) {
-  //   // //   ChatMessage message = ChatMessage(
-  //   // //     //user: currentUser,
-  //   // //     text: element.text,
-  //   // //     animationController: AnimationController(
-  //   // //       duration: const Duration(milliseconds: 700),
-  //   // //       vsync: this,
-  //   // //     ),
-  //   // //     sender: element.sender,
-  //   // //   );
-  //   // //   //setState(() {
-  //   // //     //print('adding chat message: ' + element);
-  //   // //     _messages.insert(0, message);
-  //   // //   //});
-  //   // //   //_focusNode.requestFocus();
-  //   // //   message.animationController.forward();
-  //   // // });
-  // }
-
-  // static Future<void> _handleSignIn() async {
-  //   try {
-  //     await AnyChatAuth.getGoogleSignIn().signIn();
-  //   } catch (error) {
-  //     print(error);
-  //   }
-  // }
-
-  //
-  // Future<void> _handleSignOut() async {
-  //   await AnyChatAuth.getGoogleSignIn().disconnect();
-  //   setState(() {
-  //     currentUser = null;
-  //   });
-  //   //Navigator.pop(context);
-  // }
-
-  // Future<void> _signInAnonymously() async {
-  //   UserCredential temp;
-  //   await FirebaseAuth.instance
-  //       .signInAnonymously()
-  //       .then((UserCredential userCredential) {
-  //     temp = userCredential;
-  //   });
-  //   setState(() {
-  //     _userCredential = temp;
-  //   });
-  // }
   bool _isLoading = true;
 
   String displayName;
@@ -498,17 +324,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     ));
               },
             )
-          ]
-          // IconButton(
-          //   icon: const Icon(Icons.logout),
-          //   tooltip: 'Logout',
-          //   onPressed: () {
-          //     signOutGoogle();
-          //     Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
-          //   },
-          // ),
-          //]
-          ),
+          ]),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
@@ -520,9 +336,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             DrawerHeader(
               child: Text(
                 'AnyChat',
-                style:
-                    // TODO: Color should be platform specific
-                    TextStyle(color: Theme.of(context).primaryColorLight),
+                style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
@@ -580,14 +394,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     ),
                   ],
           ),
-          decoration: Theme.of(context).platform == TargetPlatform.iOS // NEW
+          decoration: Theme.of(context).platform == TargetPlatform.iOS
               ? BoxDecoration(
-                  // NEW
                   border: Border(
-                    // NEW
-                    top: BorderSide(color: Colors.grey[200]), // NEW
-                  ), // NEW
-                ) // NEW
+                    top: BorderSide(color: Colors.grey[200]),
+                  ),
+                )
               : null),
     );
   }
@@ -599,15 +411,4 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       message.animationController.dispose();
     super.dispose();
   }
-
-// AnyChatUser parseAnyChatUser(String elementId) {
-//   AnyChatUser user;
-//   FirebaseFirestore.instance.collection("users").doc(elementId).get().then((value) =>
-//   {
-//     user = AnyChatUser.fromSnapshot(value),
-//
-//   });
-//   print('parseAnyChatUser -> displayName: ' + user.displayName);
-//   return user;
-// }
 }
