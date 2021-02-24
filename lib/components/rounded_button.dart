@@ -1,17 +1,15 @@
+import 'package:anychat/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
-  final Color textColor;
 
   const RoundedButton({
     Key key,
     this.text,
     this.press,
-    //this.color,
-    this.textColor = Colors.white,
   }) : super(key: key);
 
   @override
@@ -37,4 +35,8 @@ class RoundedButton extends StatelessWidget {
       ),
     );
   }
+
+  Color get textColor => defaultTargetPlatform == TargetPlatform.iOS
+      ? kIOSTheme.primaryColorLight
+      : kDefaultTheme.primaryColorLight;
 }

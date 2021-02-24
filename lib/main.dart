@@ -30,14 +30,14 @@ Future<void> main() async {
   });
   locale.init();
   // test();
-  runApp(MaterialApp(
+  runApp(WillPopScope(child: MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'AnyChat',
     theme: defaultTargetPlatform == TargetPlatform.iOS // NEW
         ? kIOSTheme // NEW
         : kDefaultTheme,
     home: await getWelcomeScreen(),
-  ));
+  ), onWillPop: onWillPop));
 }
 
 Future<Widget> getWelcomeScreen() async {
@@ -114,3 +114,7 @@ Future<Widget> getWelcomeScreen() async {
 //     );
 //   }
 // }
+
+Future<bool> onWillPop() {
+  print('onWIllPop');
+}

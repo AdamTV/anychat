@@ -183,9 +183,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     if (_messages.isEmpty) {
       // _chatMessages.sort((a,b)=>a.compareTo(b));
       for (int i = 0; i < _chatMessages.length; i++) {
+        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
         final chatMessage = ChatMessage(
           text: "${_chatMessages[i].text}\n\n"
-              "${await Utilities.getGoogleTranslation(_chatMessages[i].senderId, _chatMessages[i].text)}",
+              "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}",
           animationController: AnimationController(
             duration: const Duration(milliseconds: 0),
             vsync: this,
@@ -222,9 +223,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
+      final language = message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
       final chatMessage = ChatMessage(
         text: "${message.text}\n\n"
-            "${await Utilities.getGoogleTranslation(message.senderId, message.text)}",
+            "${await Utilities.getGoogleTranslation(language, message.text)}",
         animationController: AnimationController(
           duration: const Duration(milliseconds: 700),
           vsync: this,
@@ -520,7 +522,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 'AnyChat',
                 style:
                     // TODO: Color should be platform specific
-                    TextStyle(color: Colors.white),
+                    TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,

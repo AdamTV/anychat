@@ -49,7 +49,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                   'AnyChat',
                   style:
                       // TODO: Color should be platform specific
-                      TextStyle(color: Colors.white),
+                      TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
@@ -121,7 +121,7 @@ class _SettingsBodyState extends State<SettingsBody> {
                                 transaction
                                     .update(user, {'language': fresh.language});
                                 AnyChatAuth.currentUser.language = isoCode;
-                                Utilities.showMyDialog(context, "Success",
+                                Utilities.showAlertDialog(context, "Success",
                                     "Your settings have been saved.");
                               });
                             });

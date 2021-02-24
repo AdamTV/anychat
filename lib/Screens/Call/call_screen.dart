@@ -136,7 +136,7 @@ class _CallScreenState extends State<CallScreen> {
     return Wrap(
       children: <Widget>[
         Text(text,
-            style: TextStyle(backgroundColor: Colors.white, fontSize: 32))
+            style: TextStyle(backgroundColor: Theme.of(context).primaryColorLight, fontSize: 32))
       ],
     );
   }
@@ -207,19 +207,19 @@ class _CallScreenState extends State<CallScreen> {
             onPressed: _onToggleMute,
             child: Icon(
               muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Theme.of(context).accentColor,
+              color: muted ? Theme.of(context).primaryColorLight : Theme.of(context).accentColor,
               size: 20.0,
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: muted ? Theme.of(context).accentColor : Colors.white,
+            fillColor: muted ? Theme.of(context).accentColor : Theme.of(context).primaryColorLight,
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
             onPressed: () => _onCallEnd(context),
             child: Icon(
               Icons.call_end,
-              color: Colors.white,
+              color: Theme.of(context).primaryColorLight,
               size: 35.0,
             ),
             shape: CircleBorder(),
@@ -236,7 +236,7 @@ class _CallScreenState extends State<CallScreen> {
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: Colors.white,
+            fillColor: Theme.of(context).primaryColorLight,
             padding: const EdgeInsets.all(12.0),
           )
         ],
@@ -362,9 +362,10 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
+    final language = message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language;
     if (message.senderId != AnyChatAuth.currentUser.id) {
       final translatedText =
-          await Utilities.getGoogleTranslation(message.senderId, message.text);
+          await Utilities.getGoogleTranslation(language, message.text);
       setState(() {
         text = translatedText;
       });
