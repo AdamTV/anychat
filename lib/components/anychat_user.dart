@@ -182,25 +182,12 @@ class AnyChatUser {
     //       .get(message)
     //       .then((DocumentSnapshot doc) => AnyChatMessage.fromSnapshot(doc))
     //       .then((AnyChatMessage fresh) {
+    //       .then((AnyChatMessage fresh) {
     //
     //     // AnyChatMessage msg = AnyChatMessage(message.id, FieldValue.serverTimestamp(), id, "This person has left the conversation.", ref.reference);
     //     transaction.update(message, {'participants': fresh.participants});
     //   });
     // });
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-      return transaction
-          .get(conversation)
-          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
-          .then((Conversation fresh) {
-        fresh.participants.removeWhere((element) => element == id);
-        transaction.update(conversation, {'participants': fresh.participants});
-        transaction.set(newMessage, {
-          'timestamp': FieldValue.serverTimestamp(),
-          'senderId': AnyChatAuth.currentUser.id,
-          'text': "This person has left the conversation.",
-        });
-      });
-    });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(user)
@@ -209,6 +196,25 @@ class AnyChatUser {
         fresh.conversationIds
             .removeWhere((element) => element == conversationId);
         transaction.update(user, {'conversationIds': fresh.conversationIds});
+      });
+    });
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(conversation)
+          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+          .then((Conversation fresh) async {
+        fresh.participants.removeWhere((element) => element == id);
+        if (fresh.participants.isEmpty) {
+          transaction.delete(conversation);
+          await conversation.delete();
+          return;
+        }
+        transaction.update(conversation, {'participants': fresh.participants});
+        transaction.set(newMessage, {
+          'timestamp': FieldValue.serverTimestamp(),
+          'senderId': AnyChatAuth.currentUser.id,
+          'text': "This person has left the conversation.",
+        });
       });
     });
   }

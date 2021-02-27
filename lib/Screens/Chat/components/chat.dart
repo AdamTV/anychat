@@ -122,6 +122,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
+    // clearMessages(){
+      _chatMessages.clear();
+      _messages.clear();
+    // }
     if (ChatWindow.currentConversation == null) {
       AnyChatUser.createConversation().then((value) => {
             _chatMessageSubscription =
