@@ -263,6 +263,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       print('user conversationIds was null');
       return;
     }
+    if (!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)) {
+      print(
+          'currentUser conversationIds does not contain this conversation id.');
+      return;
+    }
     if (!conversation.participants.contains(AnyChatAuth.currentUser.id)) {
       print(
           'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
@@ -307,8 +312,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         setState(() {
           if (!conversationWidgets
               .any((element) => element.key == Key(conversation.id))) {
-            _chatMessageSubscriptions
-                .add(loadAllChatMessages(conversation.id).listen(_sendNotification));
+            _chatMessageSubscriptions.add(
+                loadAllChatMessages(conversation.id).listen(_sendNotification));
             conversationWidgets.add(slidable(chatter, conversation, text));
             if (!AnyChatAuth.currentUser.conversationIds
                 .contains(conversation.id)) {
@@ -345,20 +350,22 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     if (mounted) {
       var conversation = Conversation.fromSnapshot(
           await snapshot.docs.last.reference.parent.parent.get());
-      var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-          .collection("users")
-          .doc(message.senderId)
-          .get());
-      final language = message.senderId == AnyChatAuth.currentUser.id
-          ? chatter.language
-          : AnyChatAuth.currentUser.language;
-      final text = "${message.text}\n\n"
-          "${await Utilities.getGoogleTranslation(language, message.text)}";
-      setState(() {
-        conversationWidgets
-            .removeWhere((element) => element.key == Key(conversation.id));
-        conversationWidgets.insert(0, slidable(chatter, conversation, text));
-      });
+      if (AnyChatAuth.currentUser.conversationIds.contains(conversation.id)) {
+        var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+            .collection("users")
+            .doc(message.senderId)
+            .get());
+        final language = message.senderId == AnyChatAuth.currentUser.id
+            ? chatter.language
+            : AnyChatAuth.currentUser.language;
+        final text = "${message.text}\n\n"
+            "${await Utilities.getGoogleTranslation(language, message.text)}";
+        setState(() {
+          conversationWidgets
+              .removeWhere((element) => element.key == Key(conversation.id));
+          conversationWidgets.insert(0, slidable(chatter, conversation, text));
+        });
+      }
     }
     print("_notification");
     print(_notification);
@@ -463,11 +470,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     TextButton(
                       child: Text('Approve'),
                       onPressed: () {
-                        Navigator.of(context).pop();
                         setState(() {
                           AnyChatAuth.currentUser.conversationIds.removeWhere(
                               (element) => element == conversation.id);
                         });
+                        Navigator.of(context).pop();
+                        ChatWindow.currentConversation = null;
                         AnyChatAuth.currentUser
                             .leaveConversation(conversation.id);
                         Fluttertoast.showToast(
