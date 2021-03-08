@@ -19,8 +19,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Notifications().init();
   await Firebase.initializeApp();
-  await FirebaseAdMob.instance
-      .initialize(appId: "ca-app-pub-4494853791237895~4335658619");
+  if (defaultTargetPlatform == TargetPlatform.iOS){
+    await FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-4494853791237895~6652191578");
+  }else{
+    await FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-4494853791237895~4335658619");
+  }
   await Ads.init();
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {

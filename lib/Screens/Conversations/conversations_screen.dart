@@ -221,11 +221,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 }).last;
                 text = "${message.text}\n\n"
                     "${await Utilities.getGoogleTranslation(message.senderId == AnyChatAuth.currentUser.id ? AnyChatApp.chatter.language : AnyChatAuth.currentUser.language, message.text)}";
-                chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-                    .instance
-                    .collection("users")
-                    .doc(message.senderId)
-                    .get());
+                // chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+                //     .instance
+                //     .collection("users")
+                //     .doc(message.senderId)
+                //     .get());
               } catch (e) {
                 throw e;
               }
@@ -264,9 +264,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       return;
     }
     if (!AnyChatAuth.currentUser.conversationIds.contains(conversation.id)) {
-      print(
-          'currentUser conversationIds does not contain this conversation id.');
-      return;
+      if (conversation.participants.contains(AnyChatAuth.currentUser.id)){
+        AnyChatAuth.currentUser.conversationIds.add(conversation.id);
+      }else {
+        print(
+            'currentUser conversationIds does not contain this conversation id.');
+        return;
+      }
     }
     if (!conversation.participants.contains(AnyChatAuth.currentUser.id)) {
       print(
@@ -300,10 +304,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             message = AnyChatMessage(
                 "", Timestamp.now(), chatter.id, "New Conversation", null);
           }
-          chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-              .collection("users")
-              .doc(message.senderId)
-              .get());
+          // chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+          //     .collection("users")
+          //     .doc(message.senderId)
+          //     .get());
           text = "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(message.senderId == AnyChatAuth.currentUser.id ? chatter.language : AnyChatAuth.currentUser.language, message.text)}";
         } catch (e) {
@@ -341,20 +345,35 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   Future<void> _sendNotification(QuerySnapshot snapshot) async {
     print('in _sendNotification');
-    var message = snapshot.docs
-        .map((DocumentSnapshot doc) {
-          return AnyChatMessage.fromSnapshot(doc);
-        })
-        .toList()
-        .last;
+    var messages = snapshot.docs.map((DocumentSnapshot doc) {
+      return AnyChatMessage.fromSnapshot(doc);
+    }).toList();
+    AnyChatMessage message;
+    if (messages.isNotEmpty) {
+      message = messages.last;
+    } else {
+      print("messages are empty");
+      return;
+    }
     if (mounted) {
       var conversation = Conversation.fromSnapshot(
           await snapshot.docs.last.reference.parent.parent.get());
       if (AnyChatAuth.currentUser.conversationIds.contains(conversation.id)) {
-        var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-            .collection("users")
-            .doc(message.senderId)
-            .get());
+        AnyChatUser chatter;
+        if (conversation.participants.length == 1) {
+          chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+              .instance
+              .collection("users")
+              .doc(message.senderId)
+              .get());
+        }else{
+          chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+              .collection("users")
+              .doc(conversation.participants
+              .firstWhere((element) => element != AnyChatAuth.currentUser.id))
+              .get());
+        }
+
         final language = message.senderId == AnyChatAuth.currentUser.id
             ? chatter.language
             : AnyChatAuth.currentUser.language;
