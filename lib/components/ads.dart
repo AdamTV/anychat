@@ -13,7 +13,7 @@ class Ads {
       childDirected: false,
       // designedForFamilies: false,
       // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-      testDevices: <String>[], // Android emulators are considered test devices
+      // testDevices: <String>[], // Android emulators are considered test devices
     );
 
     myBanner = BannerAd(

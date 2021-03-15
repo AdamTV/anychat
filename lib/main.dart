@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-Future<void> main() async {
+Future<Widget> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Notifications().init();
   await Firebase.initializeApp();
@@ -35,13 +35,15 @@ Future<void> main() async {
     }
   });
   Locale.init();
-  runApp(MaterialApp(
+  var app = MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AnyChat',
       theme: defaultTargetPlatform == TargetPlatform.iOS
           ? kIOSTheme
           : kDefaultTheme,
-      home: await getWelcomeScreen()));
+      home: await getWelcomeScreen());
+  runApp(app);
+  return app;
 }
 
 Future<Widget> getWelcomeScreen() async {
