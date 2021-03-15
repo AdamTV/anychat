@@ -17,7 +17,7 @@ class FindChatterScreen extends StatefulWidget {
 class FindChatterScreenState extends State<FindChatterScreen> {
   static String email;
   static Stream<QuerySnapshot> searchResults;
-  static List<AnyChatUser> users = new List<AnyChatUser>();
+  static List<AnyChatUser> users = <AnyChatUser>[];
 
   FindChatterScreenState(String email) {
     FindChatterScreenState.email = email;

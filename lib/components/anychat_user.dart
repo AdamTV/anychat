@@ -27,16 +27,21 @@ class AnyChatUser {
         conversationIds =
             List.castFrom<dynamic, String>(snapshot.data()['conversationIds']);
 
+  static Future<AnyChatUser> findUserById(String id) async {
+    return AnyChatUser.fromSnapshot(
+        await FirebaseFirestore.instance.collection("users").doc(id).get());
+  }
+
   static Future<void> createConversation() async {
     final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
       'participants': [AnyChatApp.chatter.id, AnyChatAuth.currentUser.id],
       'timestamp': FieldValue.serverTimestamp()
     });
-    final user = await FirebaseFirestore.instance
+    final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
-    final chatter = await FirebaseFirestore.instance
+    final chatter = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatApp.chatter.id);
 
@@ -105,7 +110,7 @@ class AnyChatUser {
     //     'email': email,
     //     'photoUrl': photoUrl,
     //     'language': locale.currentLocale,
-    //     'conversationIds': new List<String>()
+    //     'conversationIds': <String>[]
     //   });
     // }
     checkExist(this.id).then((value) => {
@@ -117,7 +122,7 @@ class AnyChatUser {
                 'displayName': displayName,
                 'email': email,
                 'photoUrl': photoUrl,
-                'language': locale.currentLocale.substring(0, 2),
+                'language': Locale.currentLocale.substring(0, 2),
                 'conversationIds': <String>[],
               })
             }
@@ -144,10 +149,6 @@ class AnyChatUser {
   }
 
   static Future<String> addMessageToConversation(String text) async {
-    // final messages = FirebaseFirestore.instance.collection("conversationIds").doc(ChatWindow.currentConversation.id).collection("messages").doc().get().then((DocumentSnapshot value) =>
-    // {
-    //
-    // });
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
         .doc(ChatWindow.currentConversation.id);
@@ -163,16 +164,59 @@ class AnyChatUser {
           'senderId': AnyChatAuth.currentUser.id,
           'text': text,
         });
-        // fresh.messages.add({
-        //   'timeStamp': message.timestamp.toString(),
-        //   'sender': message.sender.id,
-        //   'text': message.text
-        // });
-        // //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
-        // transaction.update(conversation, {'messages': fresh.messages});
       });
     });
     return newMessage.id;
+  }
+
+  Future<void> leaveConversation(String conversationId) async {
+    final conversation = FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId);
+    final newMessage = conversation.collection('messages').doc();
+    // final message = conversation.collection("messages").doc();
+    // final ref = await message.get();
+    final user = FirebaseFirestore.instance.collection('users').doc(id);
+    // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+    //   return transaction
+    //       .get(message)
+    //       .then((DocumentSnapshot doc) => AnyChatMessage.fromSnapshot(doc))
+    //       .then((AnyChatMessage fresh) {
+    //       .then((AnyChatMessage fresh) {
+    //
+    //     // AnyChatMessage msg = AnyChatMessage(message.id, FieldValue.serverTimestamp(), id, "This person has left the conversation.", ref.reference);
+    //     transaction.update(message, {'participants': fresh.participants});
+    //   });
+    // });
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        fresh.conversationIds
+            .removeWhere((element) => element == conversationId);
+        transaction.update(user, {'conversationIds': fresh.conversationIds});
+      });
+    });
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(conversation)
+          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+          .then((Conversation fresh) async {
+        fresh.participants.removeWhere((element) => element == id);
+        if (fresh.participants.isEmpty) {
+          transaction.delete(conversation);
+          await conversation.delete();
+          return;
+        }
+        transaction.update(conversation, {'participants': fresh.participants});
+        transaction.set(newMessage, {
+          'timestamp': FieldValue.serverTimestamp(),
+          'senderId': AnyChatAuth.currentUser.id,
+          'text': "This person has left the conversation.",
+        });
+      });
+    });
   }
 
   static Future<void> updatePhotoUrl(String photoUrl) async {
@@ -267,6 +311,7 @@ class AnyChatUser {
     //   });
     // });
   }
+
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
 //     return ;
 // }

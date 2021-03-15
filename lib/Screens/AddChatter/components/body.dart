@@ -8,10 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
-  String email;
-
   @override
   Widget build(BuildContext context) {
+    String email;
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
@@ -38,9 +37,7 @@ class Body extends StatelessWidget {
               DrawerHeader(
                 child: Text(
                   'AnyChat',
-                  style:
-                      // TODO: Color should be platform specific
-                      TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
