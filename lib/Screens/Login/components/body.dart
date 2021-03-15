@@ -85,23 +85,7 @@ class Body extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {
-                    AnyChatAuth.signInFacebook()
-                        .then((value) => {
-                              if (value != null)
-                                {
-                                  Utilities.initConversationScreen(
-                                      context, value)
-                                }
-                            })
-                        .catchError((e) => {
-                              Utilities.showAlertDialog(
-                                  context, "Error", e.message.toString())
-                            });
-                  },
-                ),
+                facebookIcon(context),
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () {
@@ -148,6 +132,27 @@ class Body extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  SocalIcon facebookIcon(BuildContext context) {
+    return SocalIcon(
+      key: Key("facebookIcon"),
+      iconSrc: "assets/icons/facebook.svg",
+      press: () {
+        AnyChatAuth.signInFacebook()
+            .then((value) => {
+          if (value != null)
+            {
+              Utilities.initConversationScreen(
+                  context, value)
+            }
+        })
+            .catchError((e) => {
+          Utilities.showAlertDialog(
+              context, "Error", e.message.toString())
+        });
+      },
     );
   }
 }
