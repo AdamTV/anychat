@@ -66,50 +66,6 @@
         }
       },
       "admob_app_id": "ca-app-pub-4494853791237895~4335658619"
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:682283241991:android:40c9a346005a811dabd0a2",
-        "android_client_info": {
-          "package_name": "com.example.flutter_firebase_messaging_test"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "682283241991-b8sfsa5q1l31a8vm96lvt13elqh3bhop.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.flutter_firebase_messaging_test",
-            "certificate_hash": "9486e53480eaa2264b805f1ed4b8e4552e0ff02b"
-          }
-        },
-        {
-          "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDHVwxcshXvU9HtkM_Kk3uYcTsWHnDSLmM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "ca.alphatech.anychat"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"

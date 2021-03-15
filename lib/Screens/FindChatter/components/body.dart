@@ -26,9 +26,7 @@ class Body extends StatelessWidget {
             DrawerHeader(
               child: Text(
                 'AnyChat',
-                style:
-                    // TODO: Color should be platform specific
-                    TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,

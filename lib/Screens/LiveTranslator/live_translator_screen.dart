@@ -80,9 +80,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               DrawerHeader(
                 child: Text(
                   'AnyChat',
-                  style:
-                      // TODO: Color should be platform specific
-                      TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
@@ -107,11 +105,10 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             ],
           ),
         ),
-        body:
-            SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: Text(text, style: TextStyle(fontSize: 32)),
-            )
+        body: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+          child: Text(text, style: TextStyle(fontSize: 32)),
+        )
         // Expanded(
         //   flex: 1,
         //   child: SingleChildScrollView(
@@ -131,7 +128,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
         //     ),
         //   )
         // )
-    );
+        );
   }
 
   Widget _buildPopupDialog(BuildContext context) {
@@ -203,7 +200,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
         // AnyChatUser.addTranscribedMessage(lastMessage);
-        var newText = await Utilities.getGoogleTranslation(null, lastMessage);
+        var newText = await Utilities.getGoogleTranslation(
+            AnyChatAuth.currentUser.language, lastMessage);
         setState(() {
           text += newText + " ";
         });

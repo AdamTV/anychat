@@ -1,16 +1,13 @@
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Login/components/background.dart';
 import 'package:anychat/Screens/Signup/signup_screen.dart';
 import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -62,11 +59,11 @@ class Body extends StatelessWidget {
                           if (value != null)
                             {Utilities.initConversationScreen(context, value)}
                           else
-                            Utilities.showMyDialog(
+                            Utilities.showAlertDialog(
                                 context, "Error", "Invalid Credentials")
                         })
                     .catchError((e) => {
-                          Utilities.showMyDialog(
+                          Utilities.showAlertDialog(
                               context, "Error", e.message.toString())
                         });
               },
@@ -88,23 +85,7 @@ class Body extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {
-                    AnyChatAuth.signInFacebook()
-                        .then((value) => {
-                              if (value != null)
-                                {
-                                  Utilities.initConversationScreen(
-                                      context, value)
-                                }
-                            })
-                        .catchError((e) => {
-                              Utilities.showMyDialog(
-                                  context, "Error", e.message.toString())
-                            });
-                  },
-                ),
+                facebookIcon(context),
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () {
@@ -125,7 +106,7 @@ class Body extends StatelessWidget {
                                 }
                             })
                         .catchError((e) => {
-                              Utilities.showMyDialog(
+                              Utilities.showAlertDialog(
                                   context, "Error", e.toString())
                             });
                   },
@@ -142,7 +123,7 @@ class Body extends StatelessWidget {
                                   }
                               })
                           .catchError((e) => {
-                                Utilities.showMyDialog(
+                                Utilities.showAlertDialog(
                                     context, "Error", e.toString())
                               });
                     })
@@ -151,6 +132,27 @@ class Body extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  SocalIcon facebookIcon(BuildContext context) {
+    return SocalIcon(
+      key: Key("facebookIcon"),
+      iconSrc: "assets/icons/facebook.svg",
+      press: () {
+        AnyChatAuth.signInFacebook()
+            .then((value) => {
+          if (value != null)
+            {
+              Utilities.initConversationScreen(
+                  context, value)
+            }
+        })
+            .catchError((e) => {
+          Utilities.showAlertDialog(
+              context, "Error", e.message.toString())
+        });
+      },
     );
   }
 }

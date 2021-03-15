@@ -3,13 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Conversation {
   final String id;
   final List<String> participants;
+
   // final List<dynamic> messages;
   final List<dynamic> transcribedMessages;
   final Timestamp timestamp;
   final DocumentReference reference;
 
-  Conversation._(
-      this.id, this.participants, this.reference, this.transcribedMessages, this.timestamp);
+  // Conversation._(
+  //     this.id, this.participants, this.reference, this.transcribedMessages, this.timestamp);
 
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
