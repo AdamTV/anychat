@@ -255,7 +255,7 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agora Group Video Calling'),
+        title: Text('AnyChat'),
       ),
       backgroundColor: Colors.black,
       body: Center(

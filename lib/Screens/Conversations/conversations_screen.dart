@@ -84,7 +84,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       appBar: AppBar(
         //leading: Icon(Icons.restaurant),
         title: Text('AnyChat'),
-        actions: <Widget>[
+        actions: AnyChatAuth.currentUser.conversationIds.length == 0 ?
+        <Widget>[] : <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Add Chatter',
