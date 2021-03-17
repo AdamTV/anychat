@@ -96,10 +96,13 @@ class AnyChatAuth {
   }
 
   static Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await _googleSignIn.signOut();
-    await facebookSignIn.logOut();
-    print("User Signed Out");
+    try {
+      await FirebaseAuth.instance.signOut();
+      await _googleSignIn.signOut();
+      await facebookSignIn.logOut();
+    } catch (e) {
+      print("User Signed Out");
+    }
   }
 
   static Future<AnyChatUser> signInEmail(

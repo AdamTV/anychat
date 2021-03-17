@@ -8,6 +8,8 @@ final ThemeData kIOSTheme = ThemeData(
   primaryColor: Colors.deepPurple,
   primarySwatch: Colors.purple,
   accentColor: Colors.deepPurple[900],
+  focusColor: Colors.black12,
+  primaryColorDark:  Colors.deepPurple[900],
   primaryColorLight: Colors.white,
 );
 
@@ -16,6 +18,8 @@ final ThemeData kDefaultTheme = ThemeData(
   primaryColor: Colors.deepPurple,
   primarySwatch: Colors.purple,
   accentColor: Colors.deepPurple[900],
+  focusColor: Colors.black12,
+  primaryColorDark:  Colors.deepPurple[900],
   primaryColorLight: Colors.white,
 );
 

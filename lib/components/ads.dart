@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Ads {
-  // static AdmobBanner banner;
   static AdmobInterstitial interstitial;
 
   static init() async {
-    Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf']);
+    Admob.initialize();
+    // Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf']);
 
     interstitial = AdmobInterstitial(
       adUnitId: getInterstitialAdUnitId(),
@@ -85,16 +85,19 @@ class Ads {
   }
 
   static String getBannerAdUnitId() {
-    return AdmobBanner.testAdUnitId;
-    // return defaultTargetPlatform == TargetPlatform.iOS
-    //     ? "ca-app-pub-4494853791237895/9609705015"
-    //     : "ca-app-pub-4494853791237895/3946336873";
+    // return AdmobBanner.testAdUnitId;
+    return defaultTargetPlatform == TargetPlatform.iOS
+        ? "ca-app-pub-4494853791237895/9609705015"
+        : "ca-app-pub-4494853791237895/9276436590";
+        // : "ca-app-pub-4494853791237895/1975328398";
   }
 
   static String getInterstitialAdUnitId() {
-    return AdmobInterstitial.testAdUnitId;
-    // return defaultTargetPlatform == TargetPlatform.iOS
-    //     ? "ca-app-pub-4494853791237895/8261798477"
-    //     : "ca-app-pub-4494853791237895/1975328398";
+    // return AdmobInterstitial.testAdUnitId;
+    return defaultTargetPlatform == TargetPlatform.iOS
+        ? "ca-app-pub-4494853791237895/8261798477"
+        : "ca-app-pub-4494853791237895/4091843930";
+        // : "ca-app-pub-4494853791237895/1975328398";
+
   }
 }

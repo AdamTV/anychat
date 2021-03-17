@@ -32,10 +32,7 @@ class Body extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            kIsWeb
-                ? Image.network("assets/icons/login.svg",
-                    height: size.height * 0.35)
-                : SvgPicture.asset(
+                SvgPicture.asset(
                     "assets/icons/login.svg",
                     height: size.height * 0.35,
                   ),

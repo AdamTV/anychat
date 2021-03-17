@@ -22,17 +22,11 @@ class SocalIcon extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,
-            color: Theme.of(context).primaryColorLight,
+            color: Theme.of(context).primaryColorDark,
           ),
           shape: BoxShape.circle,
         ),
-        child: kIsWeb
-            ? Image.network(
-                iconSrc,
-                height: 30,
-                width: 30,
-              )
-            : SvgPicture.asset(
+        child: SvgPicture.asset(
                 iconSrc,
                 height: 20,
                 width: 20,
