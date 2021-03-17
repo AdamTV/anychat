@@ -7,7 +7,6 @@ import 'package:anychat/components/locale.dart';
 import 'package:anychat/components/notifications.dart';
 import 'package:anychat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -19,13 +18,6 @@ Future<Widget> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Notifications().init();
   await Firebase.initializeApp();
-  if (defaultTargetPlatform == TargetPlatform.iOS){
-    await FirebaseAdMob.instance
-        .initialize(appId: "ca-app-pub-4494853791237895~6652191578");
-  }else{
-    await FirebaseAdMob.instance
-        .initialize(appId: "ca-app-pub-4494853791237895~4335658619");
-  }
   await Ads.init();
   FirebaseAuth.instance.authStateChanges().listen((User user) {
     if (user == null) {

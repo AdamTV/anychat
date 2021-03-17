@@ -16,7 +16,6 @@ import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -43,14 +42,15 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Ads.myBanner.show(
-      // Positions the banner ad 0 pixels from the bottom of the screen
-      anchorOffset: 0.0,
-      // Positions the banner ad 0 pixels from the center of the screen to the right
-      horizontalCenterOffset: 0.0,
-      // Banner Position
-      anchorType: AnchorType.bottom,
-    );
+    conversationWidgets.add(Expanded(
+      child: Align(
+        alignment: FractionalOffset.bottomCenter,
+        child: MaterialButton(
+          onPressed: () => {},
+          child: Ads.getBanner(),
+        ),
+      ),
+    ));
   }
 
   bool loaded = false;
@@ -156,7 +156,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           alignment: AnyChatAuth.currentUser.conversationIds.length > 0
               ? Alignment.topCenter
               : Alignment.center,
-          child: Container(
+          child:
+          Container(
             constraints: BoxConstraints(maxWidth: 1280),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -175,7 +176,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                       ),
                     ],
             ),
-          )),
+          )
+      ),
     );
   }
 
@@ -337,8 +339,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       sub?.cancel();
     }
     _conversationSubscription?.cancel();
-    Ads.myBanner.dispose();
-    Ads.myInterstitial.dispose();
+    Ads.interstitial.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

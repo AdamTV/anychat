@@ -1,62 +1,100 @@
-import 'package:firebase_admob/firebase_admob.dart';
+import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Ads {
-  static BannerAd myBanner;
-  static InterstitialAd myInterstitial;
+  // static AdmobBanner banner;
+  static AdmobInterstitial interstitial;
 
   static init() async {
-    MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-      keywords: <String>['flutterio', 'beautiful apps'],
-      contentUrl: 'https://flutter.io',
-      // birthday: DateTime.now(),
-      childDirected: false,
-      // designedForFamilies: false,
-      // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-      // testDevices: <String>[], // Android emulators are considered test devices
-    );
+    Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf']);
 
-    myBanner = BannerAd(
-      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-      // https://developers.google.com/admob/android/test-ads
-      // https://developers.google.com/admob/ios/test-ads
-      adUnitId: defaultTargetPlatform == TargetPlatform.iOS
-          ? "ca-app-pub-4494853791237895/9609705015"
-          : "ca-app-pub-4494853791237895/3946336873",
-      // adUnitId: "ca-app-pub-4494853791237895/3946336873",
-      // adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.smartBanner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("BannerAd event is $event");
-        if (event == MobileAdEvent.opened) {
-          myBanner.dispose();
-          init();
-          // Ads();
-        }
+    interstitial = AdmobInterstitial(
+      adUnitId: getInterstitialAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        handleEvent(event, args, 'Interstitial');
       },
     );
 
-    myInterstitial = InterstitialAd(
-      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-      // https://developers.google.com/admob/android/test-ads
-      // https://developers.google.com/admob/ios/test-ads
-      adUnitId: defaultTargetPlatform == TargetPlatform.iOS
-          ? "ca-app-pub-4494853791237895/8261798477"
-          : "ca-app-pub-4494853791237895/1975328398",
-      // adUnitId: InterstitialAd.testAdUnitId,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("InterstitialAd event is $event");
-        if (event == MobileAdEvent.opened) {
-          myInterstitial.dispose();
-          init();
-          // Ads();
-        }
-      },
-    );
+    interstitial.load();
+  }
 
-    myBanner.load();
-    myInterstitial.load();
+  static AdmobBannerController controller;
+  static AdmobBanner getBanner() {
+    return AdmobBanner(
+        adUnitId: getBannerAdUnitId(),
+        adSize: AdmobBannerSize.BANNER,
+        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+          handleEvent(event, args, 'Banner');
+          if (event == AdmobAdEvent.opened){
+            controller.dispose();
+          }
+        },
+        onBannerCreated: (AdmobBannerController controller) {
+          // Dispose is called automatically for you when Flutter removes the banner from the widget tree.
+          // Normally you don't need to worry about disposing this yourself, it's handled.
+          // If you need direct access to dispose, this is your guy!
+          // controller.dispose();
+          Ads.controller = controller;
+        });
+  }
+
+  static void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        print('Admob $adType Ad closed!');
+        if (adType == "Interstitial"){
+          interstitial.load();
+        }
+        break;
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType failed to load. :(');
+        break;
+      // case AdmobAdEvent.rewarded:
+      //   showDialog(
+      //     context: scaffoldState.currentContext,
+      //     builder: (BuildContext context) {
+      //       return WillPopScope(
+      //         child: AlertDialog(
+      //           content: Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             children: <Widget>[
+      //               Text('Reward callback fired. Thanks Andrew!'),
+      //               Text('Type: ${args['type']}'),
+      //               Text('Amount: ${args['amount']}'),
+      //             ],
+      //           ),
+      //         ),
+      //         onWillPop: () async {
+      //           scaffoldState.currentState.hideCurrentSnackBar();
+      //           return true;
+      //         },
+      //       );
+      //     },
+      //   );
+      //   break;
+      default:
+    }
+  }
+
+  static String getBannerAdUnitId() {
+    return AdmobBanner.testAdUnitId;
+    // return defaultTargetPlatform == TargetPlatform.iOS
+    //     ? "ca-app-pub-4494853791237895/9609705015"
+    //     : "ca-app-pub-4494853791237895/3946336873";
+  }
+
+  static String getInterstitialAdUnitId() {
+    return AdmobInterstitial.testAdUnitId;
+    // return defaultTargetPlatform == TargetPlatform.iOS
+    //     ? "ca-app-pub-4494853791237895/8261798477"
+    //     : "ca-app-pub-4494853791237895/1975328398";
   }
 }

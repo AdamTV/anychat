@@ -223,7 +223,7 @@ class _CallScreenState extends State<CallScreen> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
+            onPressed: () async => _onCallEnd(context),
             child: Icon(
               Icons.call_end,
               color: Theme.of(context).primaryColorLight,
@@ -342,8 +342,12 @@ class _CallScreenState extends State<CallScreen> {
     return Container();
   }
 
-  void _onCallEnd(BuildContext context) {
-    Ads.myInterstitial.show();
+  Future<void> _onCallEnd(BuildContext context) async {
+    if (await Ads.interstitial.isLoaded){
+      Ads.interstitial.show();
+    }else{
+      print('Interstitial ad is still laoding...');
+    }
     Navigator.pop(context);
   }
 
