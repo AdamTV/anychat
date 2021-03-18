@@ -6,8 +6,13 @@ class Ads {
   static AdmobInterstitial interstitial;
 
   static init() async {
-    Admob.initialize();
-    // Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf']);
+    // Admob.initialize();
+    Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf', // Pexel 3a
+    '6cc2ce0e-3a4f-41a7-9295-550e91e1a85e', // Nexus 5
+      'f9fb4813-3745-489e-b55c-4c3adb59b3f5', // Nexus 7
+      'c3f51604-1258-4021-948a-e2818e7a91b4' // Nexus 10
+     'eea7bfde-2c6f-489b-930e-c98b498f424f' // OP 5T
+    ]);
 
     interstitial = AdmobInterstitial(
       adUnitId: getInterstitialAdUnitId(),
