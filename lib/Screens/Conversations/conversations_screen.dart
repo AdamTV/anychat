@@ -432,26 +432,26 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         ),
       ),
       actions: <Widget>[
-        new IconSlideAction(
-          caption: 'Archive',
-          color: Colors.blue,
-          icon: Icons.archive,
-          onTap: () => print('Archive'),
-        ),
-        new IconSlideAction(
-          caption: 'Share',
-          color: Colors.indigo,
-          icon: Icons.share,
-          onTap: () => print('Share'),
-        ),
-      ],
-      secondaryActions: <Widget>[
-        new IconSlideAction(
-          caption: 'More',
-          color: Colors.black45,
-          icon: Icons.more_horiz,
-          onTap: () => print('More'),
-        ),
+      //   new IconSlideAction(
+      //     caption: 'Archive',
+      //     color: Colors.blue,
+      //     icon: Icons.archive,
+      //     onTap: () => print('Archive'),
+      //   ),
+      //   new IconSlideAction(
+      //     caption: 'Share',
+      //     color: Colors.indigo,
+      //     icon: Icons.share,
+      //     onTap: () => print('Share'),
+      //   ),
+      // ],
+      // secondaryActions: <Widget>[
+      //   new IconSlideAction(
+      //     caption: 'More',
+      //     color: Colors.black45,
+      //     icon: Icons.more_horiz,
+      //     onTap: () => print('More'),
+      //   ),
         new IconSlideAction(
           caption: 'Delete',
           color: Colors.red,
