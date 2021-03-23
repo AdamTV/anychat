@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,7 +74,7 @@ class Utilities {
         .get()
         .then((value) => AnyChatUser.fromSnapshot(value))
         .then((AnyChatUser user) => {
-              // if (user.conversationIds?.isEmpty)
+              // if (userconversationIds?.isEmpty)
               //   {
               //     user.conversationIds = <String>[]
               //   },
@@ -94,11 +95,11 @@ class Utilities {
             });
   }
 
-  static String getDropDownValue() {
+  static String getDropDownValue(String language) {
     for (String key in isoMap.keys) {
-      print(isoMap[key]);
-      print(AnyChatAuth.currentUser.language);
-      if (isoMap[key] == AnyChatAuth.currentUser.language) {
+      // print(isoMap[key]);
+      // print(AnyChatAuth.currentUser.language);
+      if (isoMap[key] == language) {
         return key;
       }
     }
@@ -108,5 +109,15 @@ class Utilities {
   static Future<void> handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print(status);
+  }
+
+  static getChatterDisplayNameString(List<AnyChatUser> chatters) {
+    var ret = "";
+    for (var chatter in chatters){
+      ret += chatter.displayName;
+      ret += ", ";
+    }
+    ret = ret.substring(0, ret.length - 2);
+    return ret;
   }
 }

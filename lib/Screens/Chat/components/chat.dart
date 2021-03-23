@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
 import 'package:anychat/Screens/Call/call_screen.dart';
 import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'package:anychat/components/ConversationInfo.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
@@ -15,8 +17,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../chat_screen.dart';
+
 class AnyChatApp extends StatefulWidget {
-  static AnyChatUser chatter;
+  static List<AnyChatUser> chatters = <AnyChatUser>[];
 
   @override
   State<StatefulWidget> createState() => _AnyChatAppState();
@@ -123,8 +127,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   _ChatWindowState() {
     // clearMessages(){
-      _chatMessages.clear();
-      _messages.clear();
+    _chatMessages.clear();
+    _messages.clear();
     // }
     if (ChatWindow.currentConversation == null) {
       AnyChatUser.createConversation().then((value) => {
@@ -132,6 +136,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 ChatWindow.loadAllChatMessages().listen(_updateChatWindow)
           });
     } else {
+      if (!ChatWindow.currentConversation.participants
+          .contains(AnyChatApp.chatters.last.id)) {
+        AnyChatUser.addUserToConversation(AnyChatApp.chatters.last);
+      }
       _chatMessageSubscription =
           ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
     }
@@ -187,9 +195,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     if (_messages.isEmpty) {
       // _chatMessages.sort((a,b)=>a.compareTo(b));
       for (int i = 0; i < _chatMessages.length; i++) {
+        final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+            .collection("users")
+            .doc(_chatMessages[i].senderId)
+            .get());
+        if (AnyChatAuth.currentUser.conversations == null) {
+          AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(
+              AnyChatAuth.currentUser.id);
+        }
+        var info = AnyChatAuth.currentUser.conversations.firstWhere(
+            (element) => element.id == ChatWindow.currentConversation.id);
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
-            ? AnyChatApp.chatter.language
-            : AnyChatAuth.currentUser.language;
+            ? info.outgoingLanguage
+            : info.incomingLanguage;
         final chatMessage = ChatMessage(
           text: "${_chatMessages[i].text}\n\n"
               "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}",
@@ -197,9 +215,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             duration: const Duration(milliseconds: 0),
             vsync: this,
           ),
-          sender: _chatMessages[i].senderId == AnyChatAuth.currentUser.id
-              ? AnyChatAuth.currentUser
-              : AnyChatApp.chatter,
+          sender: sender,
         );
         _messages.insert(0, chatMessage);
         chatMessage.animationController.forward();
@@ -229,9 +245,15 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
-      final language = message.senderId == AnyChatAuth.currentUser.id
-          ? AnyChatApp.chatter.language
-          : AnyChatAuth.currentUser.language;
+      final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+          .collection("users")
+          .doc(_chatMessages.last.senderId)
+          .get());
+      var info = AnyChatAuth.currentUser.conversations.firstWhere(
+              (element) => element.id == ChatWindow.currentConversation.id);
+      final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
+          ? info.outgoingLanguage
+          : info.incomingLanguage;
       final chatMessage = ChatMessage(
         text: "${message.text}\n\n"
             "${await Utilities.getGoogleTranslation(language, message.text)}",
@@ -239,9 +261,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           duration: const Duration(milliseconds: 700),
           vsync: this,
         ),
-        sender: message.senderId == AnyChatAuth.currentUser.id
-            ? AnyChatAuth.currentUser
-            : AnyChatApp.chatter,
+        sender: sender,
       );
       setState(() {
         _messages.insert(0, chatMessage);
@@ -308,27 +328,38 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var widgets = <Widget>[];
+    if (AnyChatApp.chatters.length > 0) {
+      widgets.add(IconButton(
+          icon: const Icon(Icons.language),
+          tooltip: 'Language',
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => _buildPopupDialog(context));
+          }));
+    }
+    widgets.add(IconButton(
+      icon: const Icon(Icons.call),
+      tooltip: 'Call',
+      onPressed: () async {
+        await Utilities.handleCameraAndMic(Permission.camera);
+        await Utilities.handleCameraAndMic(Permission.microphone);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CallScreen(channelName: ChatWindow.currentConversation.id),
+            ));
+      },
+    ));
     return Scaffold(
       appBar: AppBar(
-          title: Text("Chat with ${AnyChatApp.chatter.displayName}"),
+          title: Text(
+              "Chat with ${Utilities.getChatterDisplayNameString(AnyChatApp.chatters)}"),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.call),
-              tooltip: 'Call',
-              onPressed: () async {
-                await Utilities.handleCameraAndMic(Permission.camera);
-                await Utilities.handleCameraAndMic(Permission.microphone);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CallScreen(
-                          channelName: ChatWindow.currentConversation.id),
-                    ));
-              },
-            )
-          ]),
+          actions: widgets),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
@@ -347,7 +378,23 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-                title: Text('Return to conversations'),
+                title: Text('Add Someone to Conversation'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddChatterScreen()));
+                }),
+            ListTile(
+                title: Text('Leave Conversation'),
+                onTap: () {
+                  // setState(() {
+                  AnyChatUser.deleteConversation(
+                      context, ChatWindow.currentConversation.id);
+                  // });
+                }),
+            ListTile(
+                title: Text('Back to Conversations'),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -414,5 +461,93 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     for (ChatMessage message in _messages)
       message.animationController.dispose();
     super.dispose();
+  }
+
+  _buildPopupDialog(BuildContext context) {
+    var info = AnyChatAuth.currentUser.conversations.firstWhere(
+            (element) => element.id == ChatWindow.currentConversation.id);
+    String incomingDropdownValue =
+    Utilities.getDropDownValue(info.incomingLanguage);
+    String outgoingDropdownValue =
+    Utilities.getDropDownValue(info.outgoingLanguage);
+    print(incomingDropdownValue);
+    return new AlertDialog(
+      title: const Text('Select Language'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Incoming Messages'),
+          DropdownButton<String>(
+            value: incomingDropdownValue,
+            icon: Icon(Icons.language),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+            onChanged: (String newValue) async {
+              await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+                var user = FirebaseFirestore.instance.collection('users').doc(AnyChatAuth.currentUser.id);
+                var userConversationInfo = user.collection('conversations').doc(ChatWindow.currentConversation.id);
+                return transaction
+                    .get(user)
+                    .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+                    .then((AnyChatUser fresh) async {
+                  transaction.update(userConversationInfo, {
+                    'incomingLanguage': isoMap[newValue],
+                  });
+                });
+              });
+              setState(() {
+                info.incomingLanguage = isoMap[newValue];
+                incomingDropdownValue = newValue;
+              });
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChatScreen()));
+              },
+            items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          Divider(height: 25),
+          Text('Outgoing Messges'),
+          DropdownButton<String>(
+            value: outgoingDropdownValue,
+            icon: Icon(Icons.language),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+            onChanged: (String newValue) async {
+              await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+                var user = FirebaseFirestore.instance.collection('users').doc(AnyChatAuth.currentUser.id);
+                var userConversationInfo = user.collection('conversations').doc(ChatWindow.currentConversation.id);
+                return transaction
+                    .get(user)
+                    .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+                    .then((AnyChatUser fresh) async {
+                  transaction.update(userConversationInfo, {
+                    'outgoingLanguage': isoMap[newValue],
+                  });
+                });
+              });
+              setState(() {
+                info.outgoingLanguage = isoMap[newValue];
+                outgoingDropdownValue = newValue;
+              });
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ChatScreen()));
+            },
+            items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
   }
 }

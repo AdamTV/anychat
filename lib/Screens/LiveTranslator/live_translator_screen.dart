@@ -22,7 +22,7 @@ class LiveTranslatorScreen extends StatefulWidget {
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String isoCode = AnyChatAuth.currentUser.language;
-  String dropdownValue = Utilities.getDropDownValue();
+  String dropdownValue = Utilities.getDropDownValue(AnyChatAuth.currentUser.language);
   bool recognizing;
   SpeechToText speechToText;
   String text = "";

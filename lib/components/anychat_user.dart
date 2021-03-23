@@ -1,8 +1,12 @@
 import 'package:anychat/Screens/Chat/components/chat.dart';
+import 'package:anychat/Screens/Conversations/conversations_screen.dart';
 import 'package:anychat/components/locale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import 'ConversationInfo.dart';
 import 'anychat_auth.dart';
 import 'conversation.dart';
 
@@ -10,12 +14,12 @@ class AnyChatUser {
   final String id;
   final String displayName;
   final String email;
-  String photoUrl;
-  final List<String> conversationIds;
-  String language;
+  final String photoUrl;
+  final String language;
+  List<ConversationInfo> conversations;
 
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
-      this.language, this.conversationIds);
+      this.language);
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
@@ -23,9 +27,7 @@ class AnyChatUser {
         displayName = snapshot.data()['displayName'],
         email = snapshot.data()['email'],
         photoUrl = snapshot.data()['photoUrl'],
-        language = snapshot.data()['language'],
-        conversationIds =
-            List.castFrom<dynamic, String>(snapshot.data()['conversationIds']);
+        language = snapshot.data()['language'];
 
   static Future<AnyChatUser> findUserById(String id) async {
     return AnyChatUser.fromSnapshot(
@@ -35,23 +37,27 @@ class AnyChatUser {
   static Future<void> createConversation() async {
     final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
-      'participants': [AnyChatApp.chatter.id, AnyChatAuth.currentUser.id],
+      'participants': [AnyChatApp.chatters.first.id, AnyChatAuth.currentUser.id],
       'timestamp': FieldValue.serverTimestamp()
     });
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
+    final userConversationInfo = user.collection("conversations").doc(conversation.id);
     final chatter = FirebaseFirestore.instance
         .collection("users")
-        .doc(AnyChatApp.chatter.id);
+        .doc(AnyChatApp.chatters.first.id);
+    final chatterConversationInfo = chatter.collection("conversations").doc(conversation.id);
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversationIds.add(conversation.id);
-        transaction.update(user, {'conversationIds': fresh.conversationIds});
+        transaction.set(userConversationInfo, {
+          'incomingLanguage': AnyChatAuth.currentUser.language,
+          'outgoingLanguage': AnyChatApp.chatters.first.language,
+        });
       });
     });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
@@ -59,8 +65,10 @@ class AnyChatUser {
           .get(chatter)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
-        fresh.conversationIds.add(conversation.id);
-        transaction.update(chatter, {'conversationIds': fresh.conversationIds});
+        transaction.set(chatterConversationInfo, {
+          'incomingLanguage': AnyChatApp.chatters.first.language,
+          'outgoingLanguage': AnyChatAuth.currentUser.language,
+        });
       });
     });
     conversation.get().then((value) => print(value.id));
@@ -104,15 +112,6 @@ class AnyChatUser {
     FirebaseAuth.instance;
 
     final users = FirebaseFirestore.instance.collection("users").doc(this.id);
-    // if(!checkExist(this.id)){
-    //   users.set({
-    //     'displayName': displayName,
-    //     'email': email,
-    //     'photoUrl': photoUrl,
-    //     'language': locale.currentLocale,
-    //     'conversationIds': <String>[]
-    //   });
-    // }
     checkExist(this.id).then((value) => {
           if (!value)
             {
@@ -123,7 +122,6 @@ class AnyChatUser {
                 'email': email,
                 'photoUrl': photoUrl,
                 'language': Locale.currentLocale.substring(0, 2),
-                'conversationIds': <String>[],
               })
             }
         });
@@ -176,7 +174,8 @@ class AnyChatUser {
     final newMessage = conversation.collection('messages').doc();
     // final message = conversation.collection("messages").doc();
     // final ref = await message.get();
-    final user = FirebaseFirestore.instance.collection('users').doc(id);
+    final userConversation = FirebaseFirestore.instance.collection('users').doc(id)
+        .collection("conversations").doc(conversationId);
     // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
     //       .get(message)
@@ -189,14 +188,8 @@ class AnyChatUser {
     //   });
     // });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-      return transaction
-          .get(user)
-          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
-          .then((AnyChatUser fresh) {
-        fresh.conversationIds
-            .removeWhere((element) => element == conversationId);
-        transaction.update(user, {'conversationIds': fresh.conversationIds});
-      });
+      transaction.delete(userConversation);
+      return;
     });
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
@@ -220,7 +213,6 @@ class AnyChatUser {
   }
 
   static Future<void> updatePhotoUrl(String photoUrl) async {
-    AnyChatAuth.currentUser.photoUrl = photoUrl;
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
@@ -229,10 +221,10 @@ class AnyChatUser {
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) {
-        //fresh.messages.putIfAbsent(message.sender.id, message.text.toString);
         transaction.update(user, {'photoUrl': photoUrl});
       });
     });
+    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
   }
 
   static Future<void> addTranscribedMessage(String text) async {
@@ -310,6 +302,101 @@ class AnyChatUser {
     //         .update(conversation, {'transcribedMessages': transcribedMessages});
     //   });
     // });
+  }
+
+  static Future<void> addUserToConversation(AnyChatUser user) async {
+    final conversation = FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(ChatWindow.currentConversation.id);
+    final newMessage = conversation.collection('messages').doc();
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(conversation)
+          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+          .then((Conversation fresh) {
+        fresh.participants.add(user.id);
+        transaction.update(conversation, {'participants': fresh.participants});
+        transaction.set(newMessage, {
+          'timestamp': FieldValue.serverTimestamp(),
+          'senderId': AnyChatAuth.currentUser.id,
+          'text': "${AnyChatAuth.currentUser.displayName} has added ${user.displayName} to the conversation.",
+        });
+      });
+    });
+    final ref = FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.id).collection("conversations").doc(conversation.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(ref)
+          .then((DocumentSnapshot doc) => ConversationInfo.fromSnapshot(doc))
+          .then((ConversationInfo fresh) {
+        transaction.set(ref, {'incomingLanguage': user.language,
+                              'outgoingLanguage': AnyChatAuth.currentUser.language});
+      });
+    });
+  }
+
+  static deleteConversation(BuildContext context, String id) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Conversation"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    "Are you sure you want to leave this conversation? "
+                        "You will not be able to join back unless somebody "
+                        "invites you."),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Fluttertoast.showToast(
+                    msg: "Cancelled",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: Colors.red,
+                    textColor: Theme.of(context).primaryColorLight,
+                    fontSize: 16.0);
+              },
+            ),
+            TextButton(
+              child: Text('Approve'),
+              onPressed: () {
+                  AnyChatAuth.currentUser.conversations.removeWhere(
+                          (element) => element.id == id);
+                Navigator.of(context).pop();
+                ChatWindow.currentConversation = null;
+                AnyChatAuth.currentUser
+                    .leaveConversation(id);
+                Fluttertoast.showToast(
+                    msg: "Successfully left conversation",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 3,
+                    backgroundColor: Colors.red,
+                    textColor: Theme.of(context).primaryColorLight,
+                    fontSize: 16.0);
+                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ConversationsScreen()));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

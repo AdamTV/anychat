@@ -60,12 +60,18 @@ class Body extends StatelessWidget {
             itemBuilder: (BuildContext buildCtx, int index) {
               return new ListTile(
                   onTap: () {
-                    AnyChatApp.chatter = FindChatterScreenState.users[index];
 
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return ChatScreen();
-                    }));
+                    // if (FindChatterScreen.addToConvo){
+                    //
+                    // }else{
+                    if (FindChatterScreenState.users[index].id != AnyChatAuth.currentUser.id){
+                      AnyChatApp.chatters.add(FindChatterScreenState.users[index]);
+                    }
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return ChatScreen();
+                          }));
+                    // }
                   },
                   leading: Icon(Icons.person_add),
                   title: RichText(
