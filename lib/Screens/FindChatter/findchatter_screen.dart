@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class FindChatterScreen extends StatefulWidget {
   final String email;
+  static bool addToConvo;
 
   const FindChatterScreen({Key key, this.email}) : super(key: key);
 
@@ -65,8 +66,7 @@ class FindChatterScreenState extends State<FindChatterScreen> {
                       doc["displayName"],
                       doc["email"],
                       doc["photoUrl"],
-                      doc["language"],
-                      List.castFrom<dynamic, String>(doc['conversationIds'])));
+                      doc["language"]));
                   print(doc["displayName"]);
                   setState(() {});
                 }

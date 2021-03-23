@@ -373,9 +373,9 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
-    final language = message.senderId == AnyChatAuth.currentUser.id
-        ? AnyChatApp.chatter.language
-        : AnyChatAuth.currentUser.language;
+    final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(message.senderId).get());
+
+    final language = AnyChatAuth.currentUser.language;
     if (message.senderId != AnyChatAuth.currentUser.id) {
       final translatedText =
           await Utilities.getGoogleTranslation(language, message.text);

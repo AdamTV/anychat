@@ -15,7 +15,7 @@ class SettingsBody extends StatefulWidget {
 
 class _SettingsBodyState extends State<SettingsBody> {
   String isoCode;
-  String dropdownValue = Utilities.getDropDownValue();
+  String dropdownValue = Utilities.getDropDownValue(AnyChatAuth.currentUser.language);
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +114,10 @@ class _SettingsBodyState extends State<SettingsBody> {
                                   .get(user)
                                   .then((DocumentSnapshot doc) =>
                                       AnyChatUser.fromSnapshot(doc))
-                                  .then((AnyChatUser fresh) {
-                                fresh.language = isoCode;
+                                  .then((AnyChatUser fresh) async {
                                 transaction
-                                    .update(user, {'language': fresh.language});
-                                AnyChatAuth.currentUser.language = isoCode;
+                                    .update(user, {'language': isoCode});
+                                AnyChatAuth.currentUser = await AnyChatUser.findUserById(AnyChatAuth.currentUser.id);
                                 Utilities.showAlertDialog(context, "Success",
                                     "Your settings have been saved.");
                               });

@@ -45,7 +45,7 @@ class Notifications {
     print('showNotification');
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'your channel id',
+      'AnyChat',
       'your channel name',
       'your channel description',
       importance: Importance.max,

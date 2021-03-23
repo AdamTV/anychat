@@ -60,7 +60,7 @@ class AnyChatAuth {
             googleSignInAccount.displayName,
             googleSignInAccount.email,
             googleSignInAccount.photoUrl,
-            Locale.currentLocale.substring(0, 2), <String>[]);
+            Locale.currentLocale.substring(0, 2));
         currentUser.addUserToFirestore();
         return currentUser;
       }
@@ -86,7 +86,7 @@ class AnyChatAuth {
           _user.displayName,
           _user.email,
           _user.photoURL,
-          Locale.currentLocale, <String>[]);
+          Locale.currentLocale);
       currentUser.addUserToFirestore();
 
       return currentUser;
@@ -131,7 +131,7 @@ class AnyChatAuth {
             result.displayName,
             result.email,
             result.photoURL,
-            Locale.currentLocale.substring(0, 2), <String>[]);
+            Locale.currentLocale.substring(0, 2));
         currentUser.addUserToFirestore();
         return currentUser;
       }
@@ -189,7 +189,7 @@ class AnyChatAuth {
           return currentUser;
         } else {
           currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, Locale.currentLocale.substring(0, 2), <String>[]);
+              user.photoURL, Locale.currentLocale.substring(0, 2));
           currentUser.addUserToFirestore();
           return currentUser;
         }
@@ -237,7 +237,7 @@ class AnyChatAuth {
       return currentUser;
     } else {
       currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-          user.photoURL, Locale.currentLocale.substring(0, 2), <String>[]);
+          user.photoURL, Locale.currentLocale.substring(0, 2));
       currentUser.addUserToFirestore();
       return currentUser;
     }
