@@ -2,10 +2,14 @@ import 'package:anychat/Screens/Chat/chat_screen.dart';
 import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
 import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/conversation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/anychat_auth.dart';
+import '../../../components/anychat_user.dart';
 import '../../Conversations/conversations_screen.dart';
 
 class Body extends StatelessWidget {
@@ -39,7 +43,6 @@ class Body extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ConversationsScreen()));
-                  //_handleSignOut();
                 }),
             ListTile(
                 title: Text('Logout'),
@@ -47,7 +50,6 @@ class Body extends StatelessWidget {
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                  //_handleSignOut();
                 }),
           ],
         ),
@@ -59,19 +61,49 @@ class Body extends StatelessWidget {
             itemCount: FindChatterScreenState.users.length,
             itemBuilder: (BuildContext buildCtx, int index) {
               return new ListTile(
-                  onTap: () {
-
-                    // if (FindChatterScreen.addToConvo){
-                    //
-                    // }else{
-                    if (FindChatterScreenState.users[index].id != AnyChatAuth.currentUser.id){
-                      AnyChatApp.chatters.add(FindChatterScreenState.users[index]);
+                  onTap: () async {
+                    if (ChatWindow.currentConversation == null) {
+                      var convo = await AnyChatUser.createConversation(
+                          FindChatterScreenState.users[index].id);
+                      ChatWindow.currentConversation = convo;
+                      List<AnyChatUser> users = <AnyChatUser>[];
+                      for (var id in convo.participants) {
+                        if (id != AnyChatAuth.currentUser.id) {
+                          users.add(AnyChatUser.fromSnapshot(
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(id)
+                                  .get()));
+                        }
+                      }
+                      ChatWindow.currentChatters = users;
+                    } else {
+                      AnyChatUser.addUserToConversation(FindChatterScreenState.users[index]);
+                      ChatWindow.currentConversation.participants
+                          .add(FindChatterScreenState.users[index].id);
+                      await FirebaseFirestore.instance
+                          .runTransaction((Transaction transaction) async {
+                        var convoDoc = FirebaseFirestore.instance
+                            .collection('conversations')
+                            .doc(ChatWindow.currentConversation.id);
+                        return transaction
+                            .get(convoDoc)
+                            .then((DocumentSnapshot doc) =>
+                                Conversation.fromSnapshot(doc))
+                            .then((Conversation fresh) async {
+                          transaction.update(convoDoc, {
+                            'participants':
+                                ChatWindow.currentConversation.participants,
+                          });
+                        });
+                      });
+                      ChatWindow.currentChatters
+                          .add(FindChatterScreenState.users[index]);
                     }
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                            return ChatScreen();
-                          }));
-                    // }
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return ChatScreen();
+                    }));
                   },
                   leading: Icon(Icons.person_add),
                   title: RichText(

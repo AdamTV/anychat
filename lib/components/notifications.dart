@@ -55,6 +55,9 @@ class Notifications {
     );
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
+    if (flutterLocalNotificationsPlugin == null) {
+      await init();
+    }
     await flutterLocalNotificationsPlugin
         .show(0, title, body, platformChannelSpecifics, payload: 'item x');
   }
