@@ -111,11 +111,13 @@ class Utilities {
     print(status);
   }
 
-  static getChatterDisplayNameString(List<AnyChatUser> chatters) {
+  static String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
-    for (var chatter in chatters){
-      ret += chatter.displayName;
-      ret += ", ";
+    for (var user in users){
+      if (user.id != AnyChatAuth.currentUser.id){
+        ret += user.displayName;
+        ret += ", ";
+      }
     }
     ret = ret.substring(0, ret.length - 2);
     return ret;

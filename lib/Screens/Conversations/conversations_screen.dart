@@ -21,6 +21,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../components/ConversationInfo.dart';
+import '../../components/anychat_auth.dart';
+
 class ConversationsScreen extends StatefulWidget {
   @override
   _ConversationsScreenState createState() => _ConversationsScreenState();
@@ -42,24 +45,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // Expanded(
-    //   child: Align(
-    //     alignment: FractionalOffset.bottomCenter,
-    //     child: MaterialButton(
-    //       onPressed: () => {},
-    //       child: Ads.getBanner(),
-    //     ),
-    //   ),
-    // )
   }
 
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<StreamSubscription<QuerySnapshot>> _chatMessageSubscriptions = [];
-
-  // List<String> addedConversations = <String>[];
-  // ignore: deprecated_member_use
   List<Widget> conversationWidgets = new List<Widget>();
 
   _ConversationsScreenState() {
@@ -75,7 +65,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         'in build -> conversationWidgets.length: ${conversationWidgets.length}');
     return Scaffold(
       appBar: AppBar(
-        //leading: Icon(Icons.restaurant),
         title: Text('AnyChat'),
         actions: conversationWidgets.length == 0
             ? <Widget>[]
@@ -91,16 +80,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   },
                 ),
               ],
-        // bottom: PreferredSize(
-        //   preferredSize: Size(320, 48),
-        //   child: Padding(
-        //     padding: EdgeInsets.fromLTRB(6, 0, 6, 4),
-        //     child: FilterBar(
-        //       filter: _filter,
-        //       onPressed: _onFilterBarPressed,
-        //     ),
-        //   ),
-        // ),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -127,7 +106,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                       context,
                       MaterialPageRoute(
                           builder: (context) => LiveTranslatorScreen()));
-                  //_handleSignOut();
                 }),
             ListTile(
                 title: Text('Settings'),
@@ -136,7 +114,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                       context,
                       MaterialPageRoute(
                           builder: (context) => SettingsScreen()));
-                  //_handleSignOut();
                 }),
             ListTile(
                 title: Text('Logout'),
@@ -144,7 +121,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                  //_handleSignOut();
                 }),
           ],
         ),
@@ -225,11 +201,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     : info.incomingLanguage;
                 text = "${message.text}\n\n"
                     "${await Utilities.getGoogleTranslation(language, message.text)}";
-                // chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-                //     .instance
-                //     .collection("users")
-                //     .doc(message.senderId)
-                //     .get());
               } catch (e) {
                 throw e;
               }
@@ -239,9 +210,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           }
         }
         if (chatters.isNotEmpty) {
-          setState(() {
-            conversationWidgets.add(slidable(chatters, conversation, text));
-          });
+          conversationWidgets.add(await slidable(chatters, conversation, text));
+          setState(() {});
         }
       }
     });
@@ -265,20 +235,17 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .collection('users')
         .doc(AnyChatAuth.currentUser.id)
         .get());
-    var firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-        .instance
+    var firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
         .collection('users')
-        .doc(conversation.participants.firstWhere((element) => element != AnyChatAuth.currentUser.id))
+        .doc(conversation.participants
+            .firstWhere((element) => element != AnyChatAuth.currentUser.id))
         .get());
 
     await initConvoInfo();
-    if (!AnyChatAuth.currentUser.conversations
-        .any((element) => element.id == conversation.id)) {
+    if (AnyChatAuth.currentUser.conversations != null &&
+        !AnyChatAuth.currentUser.conversations
+            .any((element) => element.id == conversation.id)) {
       if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
-        // AnyChatAuth.currentUser.conversations.add(ConversationInfo.fromSnapshot(
-        //     await FirebaseFirestore.instance
-        //         .collection("users").doc(AnyChatAuth.currentUser.id)
-        //         .collection('conversations').doc(conversation.id).get()));
         AnyChatAuth.currentUser.conversations.add(ConversationInfo(
             conversation.id,
             AnyChatAuth.currentUser.language,
@@ -312,33 +279,35 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             .orderBy('timestamp', descending: false)
             .get();
         AnyChatMessage message;
-        try {
-          if (snapshot.docs.isNotEmpty) {
-            message = snapshot.docs.map((DocumentSnapshot doc) {
-              return AnyChatMessage.fromSnapshot(doc);
-            }).last;
-          } else {
-            message = AnyChatMessage(
-                "", Timestamp.now(), chatter.id, "New Conversation", null);
-          }
-          // chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-          //     .collection("users")
-          //     .doc(message.senderId)
-          //     .get());
-          var info = AnyChatAuth.currentUser.conversations
-              .firstWhere((element) => element.id == conversation.id);
-          final language = message.senderId == AnyChatAuth.currentUser.id
-              ? info.outgoingLanguage
-              : info.incomingLanguage;
-          text = "${message.text}\n\n"
-              "${await Utilities.getGoogleTranslation(language, message.text)}";
-        } catch (e) {
-          throw e;
+        // try {
+        if (snapshot.docs.isNotEmpty) {
+          message = snapshot.docs.map((DocumentSnapshot doc) {
+            return AnyChatMessage.fromSnapshot(doc);
+          }).last;
+        } else {
+          AnyChatAuth.currentUser.conversations =
+              await ConversationInfo.getAllConversationInfo(
+                  AnyChatAuth.currentUser.id);
+          _chatMessageSubscriptions.add(
+              loadAllChatMessages(conversation.id).listen(_sendNotification));
+          message = AnyChatMessage(
+              "", Timestamp.now(), chatter.id, "New Conversation", null);
         }
+        var info = AnyChatAuth.currentUser.conversations
+            .firstWhere((element) => element.id == conversation.id);
+        final language = message.senderId == AnyChatAuth.currentUser.id
+            ? info.outgoingLanguage
+            : info.incomingLanguage;
+        text = "${message.text}\n\n"
+            "${await Utilities.getGoogleTranslation(language, message.text)}";
+        // } catch (e) {
+        //   throw e;
+        // }
       }
     }
-    if (!AnyChatAuth.currentUser.conversations
-        .any((element) => element.id == conversation.id)) {
+    if (AnyChatAuth.currentUser.conversations != null &&
+        !AnyChatAuth.currentUser.conversations
+            .any((element) => element.id == conversation.id)) {
       if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
         AnyChatAuth.currentUser.conversations.add(ConversationInfo.fromSnapshot(
             await FirebaseFirestore.instance
@@ -349,14 +318,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .get()));
       }
     }
+    if (chatters.isNotEmpty) {
+      conversationWidgets.add(await slidable(chatters, conversation, text));
+    }
     setState(() {
       if (!conversationWidgets
           .any((element) => element.key == Key(conversation.id))) {
         _chatMessageSubscriptions.add(
             loadAllChatMessages(conversation.id).listen(_sendNotification));
-        if (chatters.isNotEmpty) {
-          conversationWidgets.add(slidable(chatters, conversation, text));
-        }
         print('added conversation widget');
         print(conversationWidgets);
       }
@@ -398,10 +367,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               .doc(message.senderId)
               .get()));
         } else {
-          // chatters.addAll(iterable) = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-          //     .collection("users")
-          //     .doc())
-          //     .get());
           var chatterIds = conversation.participants
               .where((element) => element != AnyChatAuth.currentUser.id);
           for (var id in chatterIds) {
@@ -412,21 +377,24 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .get()));
           }
         }
-        var info = AnyChatAuth.currentUser.conversations
-            .firstWhere((element) => element.id == conversation.id);
-        final language = message.senderId == AnyChatAuth.currentUser.id
-            ? info.outgoingLanguage
-            : info.incomingLanguage;
-        final text = "${message.text}\n\n"
-            "${await Utilities.getGoogleTranslation(language, message.text)}";
-        setState(() {
-          conversationWidgets
-              .removeWhere((element) => element.key == Key(conversation.id));
+        if (AnyChatAuth.currentUser.conversations != null &&
+            AnyChatAuth.currentUser.conversations
+                .any((element) => element.id == conversation.id)) {
+          var info = AnyChatAuth.currentUser.conversations
+              .firstWhere((element) => element.id == conversation.id);
+          final language = message.senderId == AnyChatAuth.currentUser.id
+              ? info.outgoingLanguage
+              : info.incomingLanguage;
+          final text = "${message.text}\n\n"
+              "${await Utilities.getGoogleTranslation(language, message.text)}";
           if (chatters.isNotEmpty) {
+            conversationWidgets
+                .removeWhere((element) => element.key == Key(conversation.id));
             conversationWidgets.insert(
-                0, slidable(chatters, conversation, text));
+                0, await slidable(chatters, conversation, text));
+            setState(() {});
           }
-        });
+        }
       }
     }
     print("_notification");
@@ -449,8 +417,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .snapshots();
   }
 
-  Widget slidable(
-      List<AnyChatUser> chatters, Conversation conversation, String text) {
+  Future<Widget> slidable(List<AnyChatUser> chatters, Conversation conversation,
+      String text) async {
     return new Slidable(
       key: new Key(conversation.id),
       actionExtentRatio: 0.25,
@@ -458,8 +426,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         color: Theme.of(context).primaryColorLight,
         child: new ListTile(
           onTap: () {
-            AnyChatApp.chatters = chatters;
             ChatWindow.currentConversation = conversation;
+            ChatWindow.currentChatters = chatters;
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return ChatScreen();
             }));
@@ -517,14 +485,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     var widgets = <Positioned>[];
     double top = 15;
     for (var chatter in chatters) {
-      if (chatters.first == chatter){
+      if (chatters.first == chatter) {
         widgets.add(Positioned(
           child: new CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
               backgroundImage: NetworkImage(chatter.photoUrl),
               foregroundColor: Theme.of(context).primaryColorLight),
         ));
-      }else{
+      } else {
         widgets.add(Positioned(
           top: top,
           child: new CircleAvatar(

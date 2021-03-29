@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'ConversationInfo.dart';
 import 'anychat_auth.dart';
+import 'anychat_auth.dart';
 import 'conversation.dart';
 
 class AnyChatUser {
@@ -18,8 +19,8 @@ class AnyChatUser {
   final String language;
   List<ConversationInfo> conversations;
 
-  AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
-      this.language);
+  AnyChatUser(
+      this.id, this.displayName, this.email, this.photoUrl, this.language);
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : assert(snapshot != null),
@@ -34,29 +35,32 @@ class AnyChatUser {
         await FirebaseFirestore.instance.collection("users").doc(id).get());
   }
 
-  static Future<void> createConversation() async {
+  static Future<Conversation> createConversation(String id) async {
     final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
-      'participants': [AnyChatApp.chatters.first.id, AnyChatAuth.currentUser.id],
+      'participants': [id, AnyChatAuth.currentUser.id],
       'timestamp': FieldValue.serverTimestamp()
     });
-    final user = FirebaseFirestore.instance
+    ChatWindow.currentConversation =
+        Conversation.fromSnapshot(await conversation.get());
+    final currentUser = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
-    final userConversationInfo = user.collection("conversations").doc(conversation.id);
-    final chatter = FirebaseFirestore.instance
-        .collection("users")
-        .doc(AnyChatApp.chatters.first.id);
-    final chatterConversationInfo = chatter.collection("conversations").doc(conversation.id);
+    final userConversationInfo =
+        currentUser.collection("conversations").doc(conversation.id);
+    final chatter = FirebaseFirestore.instance.collection("users").doc(id);
+    var user = AnyChatUser.fromSnapshot(await chatter.get());
+    final chatterConversationInfo =
+        chatter.collection("conversations").doc(conversation.id);
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
-          .get(user)
+          .get(currentUser)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
         transaction.set(userConversationInfo, {
           'incomingLanguage': AnyChatAuth.currentUser.language,
-          'outgoingLanguage': AnyChatApp.chatters.first.language,
+          'outgoingLanguage': user.language,
         });
       });
     });
@@ -66,46 +70,16 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) async {
         transaction.set(chatterConversationInfo, {
-          'incomingLanguage': AnyChatApp.chatters.first.language,
+          'incomingLanguage': user.language,
           'outgoingLanguage': AnyChatAuth.currentUser.language,
         });
       });
     });
+    AnyChatAuth.currentUser.conversations
+        .add(ConversationInfo.fromSnapshot(await userConversationInfo.get()));
     conversation.get().then((value) => print(value.id));
     print(conversation.id);
-    ChatWindow.currentConversation =
-        Conversation.fromSnapshot(await conversation.get());
-    //ChatWindow.currentConversation = Conversation.fromSnapshot(await convo.get());
-    // return FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-    //   return transaction
-    //       .get(convo)
-    //       .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
-    //       .then((Conversation fresh) async {
-    //         fresh.messages.add(message);
-    //         transaction.update(convo, {
-    //           'messages' : fresh.messages
-    //         });
-    //         //return Conversation.fromSnapshot(await convo.get());
-    //
-    //     // final newRatings = fresh.numRatings + 1;
-    //     // final newAverage =
-    //     //     ((fresh.numRatings * fresh.avgRating) + review.rating) / newRatings;
-    //
-    //     // transaction.update(convo, {
-    //     //   'numRatings': newRatings,
-    //     //   'avgRating': newAverage,
-    //     // });
-    //
-    //     // transaction.set(newReview, {
-    //     //   'rating': review.rating,
-    //     //   'text': review.text,
-    //     //   'userName': review.userName,
-    //     //   'timestamp': review.timestamp ?? FieldValue.serverTimestamp(),
-    //     //   'userId': review.userId,
-    //     // });
-    //
-    //   });
-    //});
+    return Conversation.fromSnapshot(await conversation.get());
   }
 
   addUserToFirestore() {
@@ -174,8 +148,11 @@ class AnyChatUser {
     final newMessage = conversation.collection('messages').doc();
     // final message = conversation.collection("messages").doc();
     // final ref = await message.get();
-    final userConversation = FirebaseFirestore.instance.collection('users').doc(id)
-        .collection("conversations").doc(conversationId);
+    final userConversation = FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .collection("conversations")
+        .doc(conversationId);
     // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
     //       .get(message)
@@ -319,20 +296,25 @@ class AnyChatUser {
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
-          'text': "${AnyChatAuth.currentUser.displayName} has added ${user.displayName} to the conversation.",
+          'text':
+              "${AnyChatAuth.currentUser.displayName} has added ${user.displayName} to the conversation.",
         });
       });
     });
     final ref = FirebaseFirestore.instance
         .collection("users")
-        .doc(user.id).collection("conversations").doc(conversation.id);
+        .doc(user.id)
+        .collection("conversations")
+        .doc(conversation.id);
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(ref)
           .then((DocumentSnapshot doc) => ConversationInfo.fromSnapshot(doc))
           .then((ConversationInfo fresh) {
-        transaction.set(ref, {'incomingLanguage': user.language,
-                              'outgoingLanguage': AnyChatAuth.currentUser.language});
+        transaction.set(ref, {
+          'incomingLanguage': user.language,
+          'outgoingLanguage': AnyChatAuth.currentUser.language
+        });
       });
     });
   }
@@ -347,10 +329,9 @@ class AnyChatUser {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    "Are you sure you want to leave this conversation? "
-                        "You will not be able to join back unless somebody "
-                        "invites you."),
+                Text("Are you sure you want to leave this conversation? "
+                    "You will not be able to join back unless somebody "
+                    "invites you."),
               ],
             ),
           ),
@@ -372,12 +353,13 @@ class AnyChatUser {
             TextButton(
               child: Text('Approve'),
               onPressed: () {
-                  AnyChatAuth.currentUser.conversations.removeWhere(
-                          (element) => element.id == id);
+                if (AnyChatAuth.currentUser.conversations != null) {
+                  AnyChatAuth.currentUser.conversations
+                      .removeWhere((element) => element.id == id);
+                }
                 Navigator.of(context).pop();
                 ChatWindow.currentConversation = null;
-                AnyChatAuth.currentUser
-                    .leaveConversation(id);
+                AnyChatAuth.currentUser.leaveConversation(id);
                 Fluttertoast.showToast(
                     msg: "Successfully left conversation",
                     toastLength: Toast.LENGTH_LONG,
@@ -387,10 +369,10 @@ class AnyChatUser {
                     textColor: Theme.of(context).primaryColorLight,
                     fontSize: 16.0);
                 // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConversationsScreen()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ConversationsScreen()));
               },
             ),
           ],

@@ -20,8 +20,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../chat_screen.dart';
 
 class AnyChatApp extends StatefulWidget {
-  static List<AnyChatUser> chatters = <AnyChatUser>[];
-
   @override
   State<StatefulWidget> createState() => _AnyChatAppState();
 }
@@ -57,9 +55,6 @@ class ChatMessage extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
-        // decoration: BoxDecoration(
-        //     border: Border.all(
-        //         color: Theme.of(context).accentColor)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,6 +91,8 @@ class ChatMessage extends StatelessWidget {
 class ChatWindow extends StatefulWidget {
   static Conversation currentConversation;
 
+  static List<AnyChatUser> currentChatters = <AnyChatUser>[];
+
   @override
   _ChatWindowState createState() => _ChatWindowState();
 
@@ -126,60 +123,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
-    // clearMessages(){
+
     _chatMessages.clear();
     _messages.clear();
-    // }
-    if (ChatWindow.currentConversation == null) {
-      AnyChatUser.createConversation().then((value) => {
-            _chatMessageSubscription =
-                ChatWindow.loadAllChatMessages().listen(_updateChatWindow)
-          });
-    } else {
-      if (!ChatWindow.currentConversation.participants
-          .contains(AnyChatApp.chatters.last.id)) {
-        AnyChatUser.addUserToConversation(AnyChatApp.chatters.last);
-      }
-      _chatMessageSubscription =
-          ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
-    }
-    // _isLoading = false;
-    // _loadChatMessages();
-
-    // FirebaseFirestore.instance.collection("conversations").doc(ChatWindow.currentConversation.id).get().then((value) =>
-    // {
-    // _currentReviewSubscription?.cancel(),
-    //     setState(() {
-    //    _currentReviewSubscription = ChatWindow.currentConversation.reference
-    //        .collection("messages")
-    //        .snapshots()
-    //        .listen((QuerySnapshot messageSnap) {
-    //      setState(() {
-    //        ChatMessage message;
-    //        AnyChatMessage msg;
-    //        messageSnap.docs.map((DocumentSnapshot doc) async => {
-    //          msg = AnyChatMessage.fromSnapshot(doc),
-    //          message = ChatMessage(
-    //            //user: currentUser,
-    //            text: msg.text,
-    //            animationController: AnimationController(
-    //              duration: const Duration(milliseconds: 700),
-    //              vsync: this,
-    //            ),
-    //            sender:
-    //            AnyChatUser.fromSnapshot(await FirebaseFirestore
-    //                .instance
-    //                .collection("users")
-    //                .doc(msg.sender.id)
-    //                .get()),
-    //          ),
-    //        });
-    //        print('subscription has been notified.');
-    //        _messages.insert(0, message);
-    //      });
-    //    });
-    //  })
-    // });
+    _chatMessageSubscription =
+        ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
 
   List<AnyChatMessage> getChatMessagesFromQuery(QuerySnapshot snapshot) {
@@ -193,15 +141,15 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
     if (_messages.isEmpty) {
-      // _chatMessages.sort((a,b)=>a.compareTo(b));
       for (int i = 0; i < _chatMessages.length; i++) {
         final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
             .collection("users")
             .doc(_chatMessages[i].senderId)
             .get());
         if (AnyChatAuth.currentUser.conversations == null) {
-          AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(
-              AnyChatAuth.currentUser.id);
+          AnyChatAuth.currentUser.conversations =
+              await ConversationInfo.getAllConversationInfo(
+                  AnyChatAuth.currentUser.id);
         }
         var info = AnyChatAuth.currentUser.conversations.firstWhere(
             (element) => element.id == ChatWindow.currentConversation.id);
@@ -220,25 +168,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         _messages.insert(0, chatMessage);
         chatMessage.animationController.forward();
       }
-      // setState(() {});
-      // _chatMessages.forEach((element) async {
-      //   final chatMessage = ChatMessage(
-      //     text: "${element.text}\n\n"
-      //         "${await Utilities.getGoogleTranslation(
-      //         element.senderId, element.text)}",
-      //     animationController: AnimationController(
-      //       duration: const Duration(milliseconds: 700),
-      //       vsync: this,
-      //     ),
-      //     sender: element.senderId == AnyChatAuth.currentUser.id
-      //         ? AnyChatAuth.currentUser
-      //         : AnyChatApp.chatter,
-      //   );
-      //   setState(() {
-      //     _messages.insert(0, chatMessage);
-      //     chatMessage.animationController.forward();
-      //   });
-      // });
       setState(() {
         _isLoading = false;
       });
@@ -250,7 +179,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           .doc(_chatMessages.last.senderId)
           .get());
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
-              (element) => element.id == ChatWindow.currentConversation.id);
+          (element) => element.id == ChatWindow.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
           ? info.outgoingLanguage
           : info.incomingLanguage;
@@ -294,8 +223,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             Container(
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
-                    ? // MODIFIED
-                    CupertinoButton(
+                    ? CupertinoButton(
                         child: Text('Send'),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
@@ -329,16 +257,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var widgets = <Widget>[];
-    if (AnyChatApp.chatters.length > 0) {
-      widgets.add(IconButton(
-          icon: const Icon(Icons.language),
-          tooltip: 'Language',
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => _buildPopupDialog(context));
-          }));
-    }
+    widgets.add(IconButton(
+        icon: const Icon(Icons.language),
+        tooltip: 'Language',
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => _buildPopupDialog(context));
+        }));
     widgets.add(IconButton(
       icon: const Icon(Icons.call),
       tooltip: 'Call',
@@ -356,7 +282,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-              "Chat with ${Utilities.getChatterDisplayNameString(AnyChatApp.chatters)}"),
+              "Chat with ${Utilities.getChatterDisplayNameString(ChatWindow.currentChatters)}"),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           actions: widgets),
@@ -388,19 +314,16 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text('Leave Conversation'),
                 onTap: () {
-                  // setState(() {
                   AnyChatUser.deleteConversation(
                       context, ChatWindow.currentConversation.id);
-                  // });
                 }),
             ListTile(
-                title: Text('Back to Conversations'),
+                title: Text('Back'),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ConversationsScreen()));
-                  //_handleSignOut();
                 }),
             ListTile(
                 title: Text('Logout'),
@@ -408,7 +331,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                  //_handleSignOut();
                 }),
           ],
         ),
@@ -441,7 +363,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     Container(
                       decoration:
                           BoxDecoration(color: Theme.of(context).cardColor),
-                      child: _buildTextComposer(), //MODIFIED
+                      child: _buildTextComposer(),
                     ),
                   ],
           ),
@@ -465,11 +387,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   _buildPopupDialog(BuildContext context) {
     var info = AnyChatAuth.currentUser.conversations.firstWhere(
-            (element) => element.id == ChatWindow.currentConversation.id);
+        (element) => element.id == ChatWindow.currentConversation.id);
     String incomingDropdownValue =
-    Utilities.getDropDownValue(info.incomingLanguage);
+        Utilities.getDropDownValue(info.incomingLanguage);
     String outgoingDropdownValue =
-    Utilities.getDropDownValue(info.outgoingLanguage);
+        Utilities.getDropDownValue(info.outgoingLanguage);
     print(incomingDropdownValue);
     return new AlertDialog(
       title: const Text('Select Language'),
@@ -485,12 +407,18 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             elevation: 16,
             style: TextStyle(color: Theme.of(context).primaryColor),
             onChanged: (String newValue) async {
-              await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-                var user = FirebaseFirestore.instance.collection('users').doc(AnyChatAuth.currentUser.id);
-                var userConversationInfo = user.collection('conversations').doc(ChatWindow.currentConversation.id);
+              await FirebaseFirestore.instance
+                  .runTransaction((Transaction transaction) {
+                var user = FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(AnyChatAuth.currentUser.id);
+                var userConversationInfo = user
+                    .collection('conversations')
+                    .doc(ChatWindow.currentConversation.id);
                 return transaction
                     .get(user)
-                    .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+                    .then(
+                        (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
                   transaction.update(userConversationInfo, {
                     'incomingLanguage': isoMap[newValue],
@@ -503,7 +431,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               });
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ChatScreen()));
-              },
+            },
             items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -520,12 +448,18 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             elevation: 16,
             style: TextStyle(color: Theme.of(context).primaryColor),
             onChanged: (String newValue) async {
-              await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-                var user = FirebaseFirestore.instance.collection('users').doc(AnyChatAuth.currentUser.id);
-                var userConversationInfo = user.collection('conversations').doc(ChatWindow.currentConversation.id);
+              await FirebaseFirestore.instance
+                  .runTransaction((Transaction transaction) {
+                var user = FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(AnyChatAuth.currentUser.id);
+                var userConversationInfo = user
+                    .collection('conversations')
+                    .doc(ChatWindow.currentConversation.id);
                 return transaction
                     .get(user)
-                    .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+                    .then(
+                        (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
                   transaction.update(userConversationInfo, {
                     'outgoingLanguage': isoMap[newValue],
