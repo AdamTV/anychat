@@ -13,7 +13,7 @@ import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
 
-import '../constants.dart';
+import '../Components/constants.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   @override

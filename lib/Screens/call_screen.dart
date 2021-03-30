@@ -8,7 +8,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/constants.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

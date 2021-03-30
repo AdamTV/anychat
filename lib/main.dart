@@ -4,7 +4,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/locale.dart';
 import 'package:anychat/components/notifications.dart';
-import 'package:anychat/constants.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,9 +31,7 @@ Future<Widget> main() async {
   var app = MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AnyChat',
-      theme: defaultTargetPlatform == TargetPlatform.iOS
-          ? kIOSTheme
-          : kDefaultTheme,
+      theme: kDefaultTheme,
       darkTheme: kDarkTheme,
       home: await getWelcomeScreen());
   runApp(app);

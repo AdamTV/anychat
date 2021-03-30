@@ -5,12 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
-
-import 'ConversationInfo.dart';
-import 'anychat_auth.dart';
-import 'anychat_auth.dart';
 import 'conversation.dart';
+import 'conversation_info.dart';
+import 'anychat_auth.dart';
+import 'anychat_auth.dart';
 
 class AnyChatUser {
   final String id;

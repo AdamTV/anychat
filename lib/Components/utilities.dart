@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../constants.dart';
+import 'constants.dart';
 import 'anychat_user.dart';
 
 class Utilities {

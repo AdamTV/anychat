@@ -4,7 +4,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-import '../constants.dart';
+import '../Components/constants.dart';
 
 class LanguagesScreen extends StatefulWidget {
   @override

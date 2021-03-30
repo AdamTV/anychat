@@ -1,4 +1,4 @@
-import 'package:anychat/components/AnyChatContact.dart';
+import 'package:anychat/components/anychat_contact.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';

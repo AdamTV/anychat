@@ -1,5 +1,4 @@
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/login_screen.dart';
-import 'package:anychat/Screens/Signup/components/background.dart';
 import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/locale.dart';
