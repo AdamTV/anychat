@@ -1,17 +1,17 @@
-import 'package:anychat/Screens/Login/login_screen.dart';
-import 'package:anychat/Screens/Signup/signup_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/login_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/signup_screen.dart';
 import 'package:anychat/Screens/Welcome/components/background.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Body extends StatelessWidget {
+class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
-    return Background(
+    return WelcomeBackground(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -22,9 +22,9 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.05),
             SvgPicture.asset(
-                    "assets/icons/chat.svg",
-                    height: size.height * 0.45,
-                  ),
+              "assets/icons/chat.svg",
+              height: size.height * 0.45,
+            ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
               text: "LOGIN",
@@ -54,6 +54,46 @@ class Body extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class WelcomeBackground extends StatelessWidget {
+  final Widget child;
+
+  const WelcomeBackground({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height,
+      width: double.infinity,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/main_top.png",
+              width: size.width * 0.3,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/main_bottom.png",
+              width: size.width * 0.2,
+            ),
+          ),
+          child,
+        ],
       ),
     );
   }

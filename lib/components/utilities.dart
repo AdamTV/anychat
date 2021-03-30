@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -95,10 +94,8 @@ class Utilities {
             });
   }
 
-  static String getDropDownValue(String language) {
+  static String getLanguageFromIsoCode(String language) {
     for (String key in isoMap.keys) {
-      // print(isoMap[key]);
-      // print(AnyChatAuth.currentUser.language);
       if (isoMap[key] == language) {
         return key;
       }

@@ -1,13 +1,15 @@
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
-import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/search_chatter_by_email_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Body extends StatelessWidget {
+import 'contacts_screen.dart';
+import 'conversations_screen.dart';
+
+class AddChatterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String email;
@@ -84,7 +86,17 @@ class Body extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        FindChatterScreen(email: email)));
+                                        SearchChatterByEmailScreen(email: email)));
+                          }),
+                      Divider(height: 100),
+                      RoundedButton(
+                          text: "Search contacts",
+                          press: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ContactsScreen()));
                           }),
                     ],
                   ),

@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
-import 'package:anychat/Screens/Chat/chat_screen.dart';
-import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/LiveTranslator/live_translator_screen.dart';
-import 'package:anychat/Screens/Settings/settings_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/add_chatter_screen.dart';
+import 'package:anychat/Screens/chat_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/live_translator_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
+import 'package:anychat/Screens/settings_screen.dart';
 import 'package:anychat/components/ConversationInfo.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -20,9 +19,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../components/ConversationInfo.dart';
-import '../../components/anychat_auth.dart';
 
 class ConversationsScreen extends StatefulWidget {
   @override

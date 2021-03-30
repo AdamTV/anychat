@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/AddChatter/addchatter_screen.dart';
-import 'package:anychat/Screens/Call/call_screen.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/add_chatter_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/call_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/components/ConversationInfo.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
@@ -17,14 +16,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../chat_screen.dart';
+import 'conversations_screen.dart';
+import 'chat_screen.dart';
 
-class AnyChatApp extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _AnyChatAppState();
+  State<StatefulWidget> createState() => _ChatScreenState();
 }
 
-class _AnyChatAppState extends State<AnyChatApp> {
+class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -389,9 +389,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     var info = AnyChatAuth.currentUser.conversations.firstWhere(
         (element) => element.id == ChatWindow.currentConversation.id);
     String incomingDropdownValue =
-        Utilities.getDropDownValue(info.incomingLanguage);
+        Utilities.getLanguageFromIsoCode(info.incomingLanguage);
     String outgoingDropdownValue =
-        Utilities.getDropDownValue(info.outgoingLanguage);
+        Utilities.getLanguageFromIsoCode(info.outgoingLanguage);
     print(incomingDropdownValue);
     return new AlertDialog(
       title: const Text('Select Language'),

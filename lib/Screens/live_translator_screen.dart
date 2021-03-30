@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +13,7 @@ import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
 
-import '../../constants.dart';
+import '../constants.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class LiveTranslatorScreen extends StatefulWidget {
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String isoCode = AnyChatAuth.currentUser.language;
-  String dropdownValue = Utilities.getDropDownValue(AnyChatAuth.currentUser.language);
+  String dropdownValue = Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
   bool recognizing;
   SpeechToText speechToText;
   String text = "";

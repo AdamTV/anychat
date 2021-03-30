@@ -196,10 +196,12 @@ class AnyChatAuth {
         break;
       case FacebookLoginStatus.cancelledByUser:
         print('Login cancelled by the user.');
+        throw Exception();
         break;
       case FacebookLoginStatus.error:
         print('Something went wrong with the login process.\n'
             'Here\'s the error Facebook gave us: ${result.errorMessage}');
+        throw Exception();
         break;
     }
     return null;
