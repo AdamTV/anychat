@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/add_chatter_screen.dart';
+import 'package:anychat/Screens/add_chatter_screen.dart';
 import 'package:anychat/Screens/chat_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/live_translator_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
+import 'package:anychat/Screens/live_translator_screen.dart';
 import 'package:anychat/Screens/settings_screen.dart';
-import 'package:anychat/components/conversation_info.dart';
+import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
@@ -60,6 +60,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     print(
         'in build -> conversationWidgets.length: ${conversationWidgets.length}');
     return Scaffold(
+      // bottomSheet: Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
+      bottomSheet: Ads.getBanner(context),
       appBar: AppBar(
         title: Text('AnyChat'),
         actions: conversationWidgets.length == 0

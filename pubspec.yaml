@@ -35,6 +35,7 @@ dependencies:
   firebase_analytics: ^7.0.1
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
+  firebase_storage: ^7.0.0
   cloud_firestore: ^0.16.0
   http: ^0.12.2
   agora_rtc_engine: ^4.0.0-rc.2
@@ -53,6 +54,7 @@ dependencies:
   contacts_service: ^0.4.6
   url_launcher: ^6.0.3
   settings_ui: ^0.6.0
+  image_picker: ^0.6.7+11
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

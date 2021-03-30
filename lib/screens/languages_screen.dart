@@ -4,7 +4,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-import '../Components/constants.dart';
+import '../components/constants.dart';
 
 class LanguagesScreen extends StatefulWidget {
   @override
@@ -53,7 +53,8 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
         onWillPop: () => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (BuildContext context) {
               return SettingsScreen();
-            })));
+            }))
+    );
   }
 
   Widget trailingWidget(int index) {

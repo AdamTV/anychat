@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
+
 import 'package:anychat/Screens/chat_screen.dart';
+import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';

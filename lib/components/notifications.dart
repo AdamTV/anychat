@@ -1,3 +1,4 @@
+import 'package:anychat/components/utilities.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Notifications {
@@ -42,6 +43,9 @@ class Notifications {
   }
 
   Future<void> showNotification(String title, String body) async {
+    if (!Utilities.prefs.getBool('notifications')){
+      return;
+    }
     print('showNotification');
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(

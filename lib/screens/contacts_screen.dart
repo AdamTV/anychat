@@ -1,5 +1,5 @@
-import 'package:anychat/components/anychat_contact.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_contact.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';

@@ -1,5 +1,3 @@
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/login_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/social_icon.dart';
@@ -13,7 +11,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets("ensure no auth shows login screen", (WidgetTester tester) async {
-    await tester.pumpWidget(await app.main());
+    // await tester.pumpWidget(await app.main());
     await FirebaseAuth.instance.signOut();
     expect(find.text("LOGIN"), findsOneWidget);
   });

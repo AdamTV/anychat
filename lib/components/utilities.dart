@@ -7,15 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart';
 import 'anychat_user.dart';
+import 'constants.dart';
 
 class Utilities {
+  static SharedPreferences prefs;
   static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
   static final String authority = "translation.googleapis.com";
   static final String unencodedPath = "/language/translate/v2";
   static Map<String, String> queryParameters = Map();
+
+  static Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   static Future<String> getGoogleTranslation(
       String language, String text) async {
@@ -118,5 +124,21 @@ class Utilities {
     }
     ret = ret.substring(0, ret.length - 2);
     return ret;
+  }
+
+  static ThemeMode getThemeMode() {
+    switch (prefs.getString('theme')?.toLowerCase() ?? 'system'){
+      case 'system' :
+        return ThemeMode.system;
+        break;
+      case 'dark' :
+        return ThemeMode.dark;
+        break;
+      case 'light' :
+        return ThemeMode.light;
+        break;
+      default:
+        return ThemeMode.system;
+    }
   }
 }

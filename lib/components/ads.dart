@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class Ads {
   static AdmobInterstitial interstitial;
 
-  static init() async {
+  static init() {
     // Admob.initialize();
     Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf', // Pexel 3a
     '6cc2ce0e-3a4f-41a7-9295-550e91e1a85e', // Nexus 5
@@ -26,10 +26,10 @@ class Ads {
   }
 
   static AdmobBannerController controller;
-  static AdmobBanner getBanner() {
+  static AdmobBanner getBanner(BuildContext context) {
     return AdmobBanner(
         adUnitId: getBannerAdUnitId(),
-        adSize: AdmobBannerSize.BANNER,
+        adSize: AdmobBannerSize.SMART_BANNER(context),
         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
           handleEvent(event, args, 'Banner');
           if (event == AdmobAdEvent.opened){
