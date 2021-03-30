@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:anychat/Screens/Chat/components/chat.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
@@ -19,6 +18,8 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
+
+import 'chat_screen.dart';
 
 class CallScreen extends StatefulWidget {
   final String channelName;

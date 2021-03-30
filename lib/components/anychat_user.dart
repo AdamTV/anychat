@@ -1,10 +1,11 @@
-import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/Conversations/conversations_screen.dart';
+import 'package:anychat/Screens/chat_screen.dart';
+import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/locale.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 
 import 'ConversationInfo.dart';
 import 'anychat_auth.dart';
@@ -17,7 +18,7 @@ class AnyChatUser {
   final String email;
   final String photoUrl;
   final String language;
-  List<ConversationInfo> conversations;
+  List<ConversationInfo> conversations = [];
 
   AnyChatUser(
       this.id, this.displayName, this.email, this.photoUrl, this.language);
@@ -204,6 +205,21 @@ class AnyChatUser {
     AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
   }
 
+  static Future<void> updateLanguage(String language) async {
+    final user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        transaction.update(user, {'language': language});
+      });
+    });
+    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+  }
+
   static Future<void> addTranscribedMessage(String text) async {
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
@@ -379,6 +395,27 @@ class AnyChatUser {
         );
       },
     );
+  }
+
+  static Future<AnyChatUser> findUserByEmail(String email) async {
+    AnyChatUser user;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.docs.forEach((doc) {
+        if (doc['email'] == email) {
+          user = AnyChatUser(
+              doc.id,
+              doc["displayName"],
+              doc["email"],
+              doc["photoUrl"],
+              doc["language"]);
+          print(doc["displayName"]);
+        }
+      }),
+    });
+    return user;
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

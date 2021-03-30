@@ -23,6 +23,14 @@ final ThemeData kDefaultTheme = ThemeData(
   primaryColorLight: Colors.white,
 );
 
+final ThemeData kDarkTheme = ThemeData(
+  primaryColor: Colors.deepPurple,
+  primarySwatch: Colors.purple,
+  accentColor: Colors.deepPurple[900],
+  primaryColorDark:  Colors.deepPurple[900],
+  brightness: Brightness.dark,
+);
+
 var agoraAppId = '72559be0b8944a8fb70a772d196078ce';
 
 final Map<String, String> isoMap = {

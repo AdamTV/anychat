@@ -1,5 +1,5 @@
-import 'package:anychat/Screens/Login/login_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/login_screen.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/social_icon.dart';

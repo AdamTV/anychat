@@ -1,18 +1,34 @@
-import 'package:anychat/Screens/Chat/chat_screen.dart';
-import 'package:anychat/Screens/Chat/components/chat.dart';
-import 'package:anychat/Screens/FindChatter/findchatter_screen.dart';
-import 'package:anychat/Screens/Welcome/welcome_screen.dart';
+import 'dart:async';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
+import 'package:anychat/Screens/chat_screen.dart';
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../components/anychat_auth.dart';
-import '../../../components/anychat_user.dart';
-import '../../Conversations/conversations_screen.dart';
+import 'conversations_screen.dart';
 
-class Body extends StatelessWidget {
+class SearchChatterByEmailScreen extends StatefulWidget {
+  final String email;
+  static bool addToConvo;
+
+  const SearchChatterByEmailScreen({Key key, this.email}) : super(key: key);
+
+  @override
+  SearchChatterByEmailScreenState createState() => SearchChatterByEmailScreenState(email);
+}
+
+class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> {
+  static String email;
+  static Stream<QuerySnapshot> searchResults;
+  static List<AnyChatUser> users = <AnyChatUser>[];
+
+  SearchChatterByEmailScreenState(String email) {
+    SearchChatterByEmailScreenState.email = email;
+    loadSearchResults();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,15 +72,22 @@ class Body extends StatelessWidget {
       ),
       body: Container(
           constraints: BoxConstraints(maxWidth: 1280),
-          child: ListView.builder(
+          child: SearchChatterByEmailScreenState.users.length == 0
+              ? ListTile(
+              title: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: "No Results Found",
+                      style: TextStyle(color: Colors.grey))))
+              : ListView.builder(
             padding: EdgeInsets.all(8.0),
-            itemCount: FindChatterScreenState.users.length,
+            itemCount: SearchChatterByEmailScreenState.users.length,
             itemBuilder: (BuildContext buildCtx, int index) {
               return new ListTile(
                   onTap: () async {
                     if (ChatWindow.currentConversation == null) {
                       var convo = await AnyChatUser.createConversation(
-                          FindChatterScreenState.users[index].id);
+                          SearchChatterByEmailScreenState.users[index].id);
                       ChatWindow.currentConversation = convo;
                       List<AnyChatUser> users = <AnyChatUser>[];
                       for (var id in convo.participants) {
@@ -78,40 +101,52 @@ class Body extends StatelessWidget {
                       }
                       ChatWindow.currentChatters = users;
                     } else {
-                      AnyChatUser.addUserToConversation(FindChatterScreenState.users[index]);
+                      AnyChatUser.addUserToConversation(
+                          SearchChatterByEmailScreenState.users[index]);
                       ChatWindow.currentConversation.participants
-                          .add(FindChatterScreenState.users[index].id);
-                      await FirebaseFirestore.instance
-                          .runTransaction((Transaction transaction) async {
-                        var convoDoc = FirebaseFirestore.instance
-                            .collection('conversations')
-                            .doc(ChatWindow.currentConversation.id);
-                        return transaction
-                            .get(convoDoc)
-                            .then((DocumentSnapshot doc) =>
+                          .add(SearchChatterByEmailScreenState.users[index].id);
+                      await FirebaseFirestore.instance.runTransaction(
+                              (Transaction transaction) async {
+                            var convoDoc = FirebaseFirestore.instance
+                                .collection('conversations')
+                                .doc(ChatWindow.currentConversation.id);
+                            return transaction
+                                .get(convoDoc)
+                                .then((DocumentSnapshot doc) =>
                                 Conversation.fromSnapshot(doc))
-                            .then((Conversation fresh) async {
-                          transaction.update(convoDoc, {
-                            'participants':
-                                ChatWindow.currentConversation.participants,
+                                .then((Conversation fresh) async {
+                              transaction.update(convoDoc, {
+                                'participants': ChatWindow
+                                    .currentConversation.participants,
+                              });
+                            });
                           });
-                        });
-                      });
                       ChatWindow.currentChatters
-                          .add(FindChatterScreenState.users[index]);
+                          .add(SearchChatterByEmailScreenState.users[index]);
                     }
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return ChatScreen();
-                    }));
+                          return ChatScreen();
+                        }));
                   },
-                  leading: Icon(Icons.person_add),
+                  leading: new CircleAvatar(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundImage: NetworkImage(
+                          SearchChatterByEmailScreenState.users[index].photoUrl)),
                   title: RichText(
                       text: TextSpan(
-                          text: FindChatterScreenState.users[index].displayName,
+                          text: SearchChatterByEmailScreenState
+                              .users[index].displayName,
                           style: TextStyle(color: Colors.grey))));
             },
           )),
     );
+  }
+
+  void loadSearchResults() async {
+    users.clear();
+    var user = await AnyChatUser.findUserByEmail(email);
+    if (user != null) users.add(user);
+    setState(() {});
   }
 }
