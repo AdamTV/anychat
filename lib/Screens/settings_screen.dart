@@ -1,6 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/constants.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -13,15 +13,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String isoCode;
-
   bool useLinkedPicture = true;
   bool changeProfilePictureEnabled = false;
-  // String dropdownValue = Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
-  //                   Text('Name'),
-  //                   RoundedInputField(hintText: "Name",),
-  //                   Text('Picture'),
-  //                   Text('E-mail'),
-  //                   Text('Color Theme'),
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
@@ -74,7 +67,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   });
                 },
               ),
-              SettingsTile(title: 'Change Picture', enabled: changeProfilePictureEnabled, leading: Icon(Icons.photo)),
+              SettingsTile(title: 'Change Picture', enabled: changeProfilePictureEnabled, leading: Icon(Icons.photo), trailing: CircleAvatar(
+                  backgroundImage: NetworkImage(AnyChatAuth.currentUser.photoUrl))),
             ],
           ),
           SettingsSection(

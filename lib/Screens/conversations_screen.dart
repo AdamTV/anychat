@@ -6,7 +6,7 @@ import 'package:anychat/Screens/chat_screen.dart';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/live_translator_screen.dart';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
 import 'package:anychat/Screens/settings_screen.dart';
-import 'package:anychat/components/ConversationInfo.dart';
+import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';

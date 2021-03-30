@@ -1,4 +1,3 @@
-import 'package:anychat/Screens/Login/components/body.dart';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/signup_screen.dart';
 import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -10,8 +9,6 @@ import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'Login/components/login_screen_background.dart';
 
 class LoginScreen extends StatelessWidget {
   @override

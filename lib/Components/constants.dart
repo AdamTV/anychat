@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 
-// const kPrimaryColor = Colors.deepPurple;
-// const kPrimaryLightColor = Color(0xFFF1E6FF);
-
-final ThemeData kIOSTheme = ThemeData(
-  backgroundColor: Color(0x00008B),
-  primaryColor: Colors.deepPurple,
-  primarySwatch: Colors.purple,
-  accentColor: Colors.deepPurple[900],
-  focusColor: Colors.black12,
-  primaryColorDark:  Colors.deepPurple[900],
-  primaryColorLight: Colors.white,
-);
-
 final ThemeData kDefaultTheme = ThemeData(
   backgroundColor: Color(0x00008B),
   primaryColor: Colors.deepPurple,

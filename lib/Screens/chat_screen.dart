@@ -3,13 +3,13 @@ import 'dart:async';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/add_chatter_screen.dart';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/call_screen.dart';
 import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
-import 'package:anychat/components/ConversationInfo.dart';
+import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/constants.dart';
+import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -30,9 +30,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "AnyChat",
-      theme: defaultTargetPlatform == TargetPlatform.iOS
-          ? kIOSTheme
-          : kDefaultTheme,
+      theme: kDefaultTheme,
+      darkTheme: kDarkTheme,
       home: ChatWindow(),
     );
   }
