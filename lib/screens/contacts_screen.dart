@@ -301,25 +301,27 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 }
                 ChatWindow.currentChatters = users;
               } else {
-                AnyChatUser.addUserToConversation(user);
-                ChatWindow.currentConversation.participants.add(user.id);
-                await FirebaseFirestore.instance
-                    .runTransaction((Transaction transaction) async {
-                  var convoDoc = FirebaseFirestore.instance
-                      .collection('conversations')
-                      .doc(ChatWindow.currentConversation.id);
-                  return transaction
-                      .get(convoDoc)
-                      .then((DocumentSnapshot doc) =>
-                          Conversation.fromSnapshot(doc))
-                      .then((Conversation fresh) async {
-                    transaction.update(convoDoc, {
-                      'participants':
-                          ChatWindow.currentConversation.participants,
+                if (await AnyChatUser.addUserToConversation(user)){
+                  ChatWindow.currentConversation.participants.add(user.id);
+                  await FirebaseFirestore.instance
+                      .runTransaction((Transaction transaction) async {
+                    var convoDoc = FirebaseFirestore.instance
+                        .collection('conversations')
+                        .doc(ChatWindow.currentConversation.id);
+                    return transaction
+                        .get(convoDoc)
+                        .then((DocumentSnapshot doc) =>
+                        Conversation.fromSnapshot(doc))
+                        .then((Conversation fresh) async {
+                      transaction.update(convoDoc, {
+                        'participants':
+                        ChatWindow.currentConversation.participants,
+                      });
                     });
                   });
-                });
-                ChatWindow.currentChatters.add(user);
+                  ChatWindow.currentChatters.add(user);
+                }
+
               }
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ChatScreen();

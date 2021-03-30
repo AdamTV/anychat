@@ -1,6 +1,7 @@
 import 'package:anychat/Screens/chat_screen.dart';
 import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/locale.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -325,19 +326,23 @@ class AnyChatUser {
     // });
   }
 
-  static Future<void> addUserToConversation(AnyChatUser user) async {
-
-    final conversation = FirebaseFirestore.instance
+  static Future<bool> addUserToConversation(AnyChatUser user) async {
+    final conversationRef = FirebaseFirestore.instance
         .collection('conversations')
         .doc(ChatWindow.currentConversation.id);
-    final newMessage = conversation.collection('messages').doc();
+    final conversation = Conversation.fromSnapshot(await conversationRef.get());
+    if (conversation.participants.contains(user.id)){
+      Utilities.showToast("${user.displayName} is already in this conversation!");
+      return false;
+    }
+    final newMessage = conversationRef.collection('messages').doc();
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
-          .get(conversation)
+          .get(conversationRef)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) {
         fresh.participants.add(user.id);
-        transaction.update(conversation, {'participants': fresh.participants});
+        transaction.update(conversationRef, {'participants': fresh.participants});
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
@@ -350,7 +355,7 @@ class AnyChatUser {
         .collection("users")
         .doc(user.id)
         .collection("conversations")
-        .doc(conversation.id);
+        .doc(conversationRef.id);
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(ref)
@@ -362,6 +367,7 @@ class AnyChatUser {
         });
       });
     });
+    return true;
   }
 
   static deleteConversation(BuildContext context, String id) {
@@ -385,14 +391,7 @@ class AnyChatUser {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
-                Fluttertoast.showToast(
-                    msg: "Cancelled",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 3,
-                    backgroundColor: Colors.red,
-                    textColor: Theme.of(context).primaryColorLight,
-                    fontSize: 16.0);
+                Utilities.showToast("Cancelled");
               },
             ),
             TextButton(
@@ -405,15 +404,7 @@ class AnyChatUser {
                 Navigator.of(context).pop();
                 ChatWindow.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
-                Fluttertoast.showToast(
-                    msg: "Successfully left conversation",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 3,
-                    backgroundColor: Colors.red,
-                    textColor: Theme.of(context).primaryColorLight,
-                    fontSize: 16.0);
-                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ConversationsScreen()));
+                Utilities.showToast("Successfully left conversation");
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

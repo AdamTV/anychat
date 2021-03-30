@@ -4,6 +4,7 @@ import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -140,5 +141,14 @@ class Utilities {
       default:
         return ThemeMode.system;
     }
+  }
+
+  static void showToast(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 3,
+        fontSize: 16.0);
   }
 }
