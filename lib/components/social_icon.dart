@@ -30,7 +30,8 @@ class SocalIcon extends StatelessWidget {
                 iconSrc,
                 height: 20,
                 width: 20,
-              ),
+          color: Theme.of(context).primaryColor,
+        ),
       ),
     );
   }

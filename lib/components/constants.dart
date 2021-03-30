@@ -8,6 +8,7 @@ final ThemeData kDefaultTheme = ThemeData(
   focusColor: Colors.black12,
   primaryColorDark:  Colors.deepPurple[900],
   primaryColorLight: Colors.white,
+  brightness: Brightness.light
 );
 
 final ThemeData kDarkTheme = ThemeData(

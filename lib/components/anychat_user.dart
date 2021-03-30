@@ -5,10 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'anychat_auth.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
-import 'anychat_auth.dart';
-import 'anychat_auth.dart';
 
 class AnyChatUser {
   final String id;
@@ -218,6 +218,36 @@ class AnyChatUser {
     AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
   }
 
+  static Future<void> updateDisplayName(String displayName) async {
+    final user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        transaction.update(user, {'displayName': displayName});
+      });
+    });
+    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+  }
+
+  static Future<void> updateEmail(String email) async {
+    final user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser.id);
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        transaction.update(user, {'email': email});
+      });
+    });
+    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+  }
+
   static Future<void> addTranscribedMessage(String text) async {
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
@@ -296,6 +326,7 @@ class AnyChatUser {
   }
 
   static Future<void> addUserToConversation(AnyChatUser user) async {
+
     final conversation = FirebaseFirestore.instance
         .collection('conversations')
         .doc(ChatWindow.currentConversation.id);

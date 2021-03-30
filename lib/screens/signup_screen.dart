@@ -1,4 +1,4 @@
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/signup_screen.dart';
+import 'package:anychat/Screens/login_screen.dart';
 import 'package:anychat/components/already_have_an_account_acheck.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/or_divider.dart';
@@ -7,30 +7,33 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class LoginScreen extends StatelessWidget {
+class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String email;
     String password;
     Size size = MediaQuery.of(context).size;
-    return LoginBackground(
+    return Scaffold(body: SignupBackground(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "LOGIN",
+              "SIGN-UP",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              "assets/icons/login.svg",
+            kIsWeb
+                ? Image.network("assets/icons/signup.svg",
+                height: size.height * 0.35)
+                : SvgPicture.asset(
+              "assets/icons/signup.svg",
               height: size.height * 0.35,
             ),
-            SizedBox(height: size.height * 0.03),
             RoundedInputField(
               hintText: "Your Email",
               onChanged: (value) {
@@ -43,30 +46,28 @@ class LoginScreen extends StatelessWidget {
               },
             ),
             RoundedButton(
-              text: "LOGIN",
-              press: () {
-                AnyChatAuth.signInEmail(email, password, false)
-                    .then((value) => {
-                  if (value != null)
-                    {Utilities.initConversationScreen(context, value)}
-                  else
-                    Utilities.showAlertDialog(
-                        context, "Error", "Invalid Credentials")
-                })
-                    .catchError((e) => {
-                  Utilities.showAlertDialog(
-                      context, "Error", "There was an error logging in.")
-                });
+              text: "SIGN-UP",
+              press: () async {
+                try {
+                  var user = await AnyChatAuth.signInEmail(email, password, true);
+                  if (user != null) {
+                    Utilities.initConversationScreen(context, user);
+                  }
+                } catch (e) {
+                  Utilities.showAlertDialog(context, "Error",
+                      "Unable to register to AnyChat. Please try again.");
+                }
               },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
+              login: false,
               press: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return SignUpScreen();
+                      return LoginScreen();
                     },
                   ),
                 );
@@ -76,7 +77,20 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                facebookIcon(context),
+                SocalIcon(
+                  iconSrc: "assets/icons/facebook.svg",
+                  press: () async {
+                    try {
+                      var user = await AnyChatAuth.signInFacebook();
+                      if (user != null) {
+                        Utilities.initConversationScreen(context, user);
+                      }
+                    } catch (e) {
+                      Utilities.showAlertDialog(context, "Error",
+                          "Unable to register though Facebook. Please try again.");
+                    }
+                  },
+                ),
                 SocalIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () async {
@@ -87,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                       }
                     } catch (e) {
                       Utilities.showAlertDialog(context, "Error",
-                          "Unable to sign in though Twitter. Please try again.");
+                          "Unable to register though Twitter. Please try again.");
                     }
                   },
                 ),
@@ -101,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                         }
                       } catch (e) {
                         Utilities.showAlertDialog(context, "Error",
-                            "Unable to sign in though Google. Please try again.");
+                            "Unable to register though Google. Please try again.");
                       }
                     })
               ],
@@ -109,31 +123,14 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-  SocalIcon facebookIcon(BuildContext context) {
-    return SocalIcon(
-      key: Key("facebookIcon"),
-      iconSrc: "assets/icons/facebook.svg",
-      press: () async {
-        try {
-          var user = await AnyChatAuth.signInFacebook();
-          if (user != null) {
-            Utilities.initConversationScreen(context, user);
-          }
-        } catch (e) {
-          Utilities.showAlertDialog(context, "Error",
-              "Unable to sign in though Facebook. Please try again.");
-        }
-      },
-    );
+    ));
   }
 }
 
-class LoginBackground extends StatelessWidget {
+class SignupBackground extends StatelessWidget {
   final Widget child;
 
-  const LoginBackground({
+  const SignupBackground({
     Key key,
     @required this.child,
   }) : super(key: key);
@@ -142,8 +139,9 @@ class LoginBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      width: double.infinity,
       height: size.height,
+      width: double.infinity,
+      // Here i can use size.width but use double.infinity because both work as a same
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
@@ -151,16 +149,16 @@ class LoginBackground extends StatelessWidget {
             top: 0,
             left: 0,
             child: Image.asset(
-              "assets/images/main_top.png",
+              "assets/images/signup_top.png",
               width: size.width * 0.35,
             ),
           ),
           Positioned(
             bottom: 0,
-            right: 0,
+            left: 0,
             child: Image.asset(
-              "assets/images/login_bottom.png",
-              width: size.width * 0.4,
+              "assets/images/main_bottom.png",
+              width: size.width * 0.25,
             ),
           ),
           child,

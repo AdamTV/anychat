@@ -1,4 +1,5 @@
 import 'package:anychat/components/locale.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'anychat_user.dart';
 
 class AnyChatAuth {
   static AnyChatUser currentUser;
+  static String linkedAccountPhotoUrl;
 
   static final FacebookLogin facebookSignIn = new FacebookLogin();
   static GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -50,9 +52,7 @@ class AnyChatAuth {
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
-        if (currentUser.photoUrl != googleSignInAccount.photoUrl) {
-          AnyChatUser.updatePhotoUrl(googleSignInAccount.photoUrl);
-        }
+        linkedAccountPhotoUrl = googleSignInAccount.photoUrl;
         return currentUser;
       } else {
         currentUser = new AnyChatUser(
@@ -121,9 +121,7 @@ class AnyChatAuth {
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
-        if (currentUser.photoUrl != result.photoURL) {
-          AnyChatUser.updatePhotoUrl(result.photoURL);
-        }
+        linkedAccountPhotoUrl = result.photoURL;
         return currentUser;
       } else {
         currentUser = new AnyChatUser(
@@ -183,9 +181,7 @@ class AnyChatAuth {
             .get();
         if (snapshot.exists) {
           currentUser = AnyChatUser.fromSnapshot(snapshot);
-          if (currentUser.photoUrl != user.photoURL) {
-            AnyChatUser.updatePhotoUrl(user.photoURL);
-          }
+          linkedAccountPhotoUrl = user.photoURL;
           return currentUser;
         } else {
           currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
@@ -233,9 +229,7 @@ class AnyChatAuth {
         .get();
     if (snapshot.exists) {
       currentUser = AnyChatUser.fromSnapshot(snapshot);
-      if (currentUser.photoUrl != user.photoURL) {
-        AnyChatUser.updatePhotoUrl(user.photoURL);
-      }
+      linkedAccountPhotoUrl = user.photoURL;
       return currentUser;
     } else {
       currentUser = new AnyChatUser(user.uid, user.displayName, user.email,

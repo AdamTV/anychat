@@ -1,23 +1,22 @@
 import 'dart:async';
 
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/add_chatter_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/call_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
-import 'package:anychat/components/conversation_info.dart';
+import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/conversation.dart';
+import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'add_chatter_screen.dart';
+import 'call_screen.dart';
 import 'conversations_screen.dart';
-import 'chat_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -27,13 +26,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "AnyChat",
-      theme: kDefaultTheme,
-      darkTheme: kDarkTheme,
-      home: ChatWindow(),
-    );
+    return ChatWindow();
   }
 }
 

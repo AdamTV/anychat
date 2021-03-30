@@ -1,5 +1,5 @@
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/login_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/signup_screen.dart';
+import 'package:anychat/Screens/login_screen.dart';
+import 'package:anychat/Screens/signup_screen.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +10,13 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
-    return WelcomeBackground(
+    return Scaffold(body: WelcomeBackground(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Welcome to AnyChat",
+              "AnyChat",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.05),
@@ -54,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

@@ -1,6 +1,5 @@
 // For each conversation of each user, an instance of this class must be
 // persisted
-import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ConversationInfo {

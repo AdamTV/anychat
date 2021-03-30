@@ -1,5 +1,5 @@
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/search_chatter_by_email_screen.dart';
-import 'file:///C:/Users/adams/source/repos/flutter/anychat/lib/Screens/welcome_screen.dart';
+import 'package:anychat/Screens/search_chatter_by_email_screen.dart';
+import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
@@ -89,8 +89,9 @@ class AddChatterScreen extends StatelessWidget {
                                         SearchChatterByEmailScreen(email: email)));
                           }),
                       Divider(height: 100),
+                      Text('See who is already on AnyChat!'),
                       RoundedButton(
-                          text: "Search contacts",
+                          text: "Contacts",
                           press: () {
                             Navigator.push(
                                 context,
