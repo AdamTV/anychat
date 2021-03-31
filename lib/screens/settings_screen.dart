@@ -132,6 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile(
                   title: 'Theme',
                   subtitle: dropdownValue,
+                  leading: Icon(Icons.palette),
                   onPressed: (BuildContext context) {
                     showDialog(
                         context: context,
