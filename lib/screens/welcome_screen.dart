@@ -1,9 +1,10 @@
 import 'package:anychat/Screens/login_screen.dart';
-import 'package:anychat/Screens/signup_screen.dart';
+import 'package:anychat/Screens/register_screen.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "AnyChat",
+              AppLocalizations.of(context).title,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.05),
@@ -26,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
-              text: "LOGIN",
+              text: AppLocalizations.of(context).login_caps,
               press: () {
                 Navigator.push(
                   context,
@@ -39,13 +40,13 @@ class WelcomeScreen extends StatelessWidget {
               },
             ),
             RoundedButton(
-              text: "SIGN UP",
+              text: AppLocalizations.of(context).register_caps,
               press: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return SignUpScreen();
+                      return RegisterScreen();
                     },
                   ),
                 );

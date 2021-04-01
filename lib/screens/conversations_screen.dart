@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationsScreen extends StatefulWidget {
   @override
@@ -63,13 +64,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       // bottomSheet: Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
       bottomSheet: Ads.getBanner(context),
       appBar: AppBar(
-        title: Text('AnyChat'),
+        title: Text(AppLocalizations.of(context).title),
         actions: conversationWidgets.length == 0
             ? <Widget>[]
             : <Widget>[
                 IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: 'Add Chatter',
+                  tooltip: AppLocalizations.of(context).createConversation,
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -89,7 +90,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           children: <Widget>[
             DrawerHeader(
               child: Text(
-                'AnyChat',
+                AppLocalizations.of(context).title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
@@ -97,7 +98,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               ),
             ),
             ListTile(
-                title: Text('Live Translator'),
+                title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
                   await Utilities.handleCameraAndMic(Permission.microphone);
                   Navigator.push(
@@ -106,7 +107,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                           builder: (context) => LiveTranslatorScreen()));
                 }),
             ListTile(
-                title: Text('Settings'),
+                title: Text(AppLocalizations.of(context).settings),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -114,7 +115,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                           builder: (context) => SettingsScreen()));
                 }),
             ListTile(
-                title: Text('Logout'),
+                title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
@@ -134,9 +135,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               children: conversationWidgets.length > 0
                   ? conversationWidgets
                   : <Widget>[
-                      Text('Conversations will appear here.'),
+                      Text(AppLocalizations.of(context).conversationsWillAppear),
                       RoundedButton(
-                        text: "Start Chatting",
+                        text: AppLocalizations.of(context).startConversation,
                         press: () {
                           Navigator.push(
                               context,
@@ -289,7 +290,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           _chatMessageSubscriptions.add(
               loadAllChatMessages(conversation.id).listen(_sendNotification));
           message = AnyChatMessage(
-              "", Timestamp.now(), chatter.id, "New Conversation", null);
+              "", Timestamp.now(), chatter.id, AppLocalizations.of(context).newConversation, null);
         }
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
@@ -465,7 +466,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         //     onTap: () => print('More'),
         //   ),
         new IconSlideAction(
-          caption: 'Delete',
+          caption: AppLocalizations.of(context).delete,
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {

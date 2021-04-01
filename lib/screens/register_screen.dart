@@ -1,5 +1,5 @@
 import 'package:anychat/Screens/login_screen.dart';
-import 'package:anychat/components/already_have_an_account_acheck.dart';
+import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
@@ -10,8 +10,9 @@ import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SignUpScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String email;
@@ -23,7 +24,7 @@ class SignUpScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "SIGN-UP",
+              AppLocalizations.of(context).register_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
@@ -35,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
               height: size.height * 0.35,
             ),
             RoundedInputField(
-              hintText: "Your Email",
+              hintText: AppLocalizations.of(context).email,
               onChanged: (value) {
                 email = value;
               },
@@ -46,7 +47,7 @@ class SignUpScreen extends StatelessWidget {
               },
             ),
             RoundedButton(
-              text: "SIGN-UP",
+              text: AppLocalizations.of(context).register_caps,
               press: () async {
                 try {
                   var user = await AnyChatAuth.signInEmail(email, password, true);
@@ -54,13 +55,13 @@ class SignUpScreen extends StatelessWidget {
                     Utilities.initConversationScreen(context, user);
                   }
                 } catch (e) {
-                  Utilities.showAlertDialog(context, "Error",
-                      "Unable to register to AnyChat. Please try again.");
+                  Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                      AppLocalizations.of(context).unableRegister);
                 }
               },
             ),
             SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
+            HaveAccountCheck(
               login: false,
               press: () {
                 Navigator.push(
@@ -86,8 +87,8 @@ class SignUpScreen extends StatelessWidget {
                         Utilities.initConversationScreen(context, user);
                       }
                     } catch (e) {
-                      Utilities.showAlertDialog(context, "Error",
-                          "Unable to register though Facebook. Please try again.");
+                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                          AppLocalizations.of(context).unableRegisterFacebook);
                     }
                   },
                 ),
@@ -100,8 +101,8 @@ class SignUpScreen extends StatelessWidget {
                         Utilities.initConversationScreen(context, user);
                       }
                     } catch (e) {
-                      Utilities.showAlertDialog(context, "Error",
-                          "Unable to register though Twitter. Please try again.");
+                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                          AppLocalizations.of(context).unableRegisterTwitter);
                     }
                   },
                 ),
@@ -114,8 +115,8 @@ class SignUpScreen extends StatelessWidget {
                           Utilities.initConversationScreen(context, user);
                         }
                       } catch (e) {
-                        Utilities.showAlertDialog(context, "Error",
-                            "Unable to register though Google. Please try again.");
+                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                            AppLocalizations.of(context).unableRegisterGoogle);
                       }
                     })
               ],

@@ -5,6 +5,7 @@ import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'contacts_screen.dart';
 import 'conversations_screen.dart';
@@ -16,7 +17,7 @@ class AddChatterScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text('AnyChat'),
+          title: Text(AppLocalizations.of(context).title),
           // bottom: PreferredSize(
           //   preferredSize: Size(320, 48),
           //   child: Padding(
@@ -38,7 +39,7 @@ class AddChatterScreen extends StatelessWidget {
             children: <Widget>[
               DrawerHeader(
                 child: Text(
-                  'AnyChat',
+              AppLocalizations.of(context).title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
@@ -46,7 +47,7 @@ class AddChatterScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                  title: Text('Return to conversations'),
+                  title: Text(AppLocalizations.of(context).conversations),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -55,7 +56,7 @@ class AddChatterScreen extends StatelessWidget {
                     //_handleSignOut();
                   }),
               ListTile(
-                  title: Text('Logout'),
+                  title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
                     Navigator.push(
@@ -75,12 +76,12 @@ class AddChatterScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       RoundedInputField(
-                          hintText: "Find chatter by e-mail",
+                          hintText: AppLocalizations.of(context).findSomeoneByEmail,
                           onChanged: (value) {
                             email = value;
                           }),
                       RoundedButton(
-                          text: "Search",
+                          text: AppLocalizations.of(context).search,
                           press: () {
                             Navigator.push(
                                 context,
@@ -89,9 +90,9 @@ class AddChatterScreen extends StatelessWidget {
                                         SearchChatterByEmailScreen(email: email)));
                           }),
                       Divider(height: 100),
-                      Text('See who is already on AnyChat!'),
+                      Text(AppLocalizations.of(context).seeWhoIsAlreadyOnAnyChat),
                       RoundedButton(
-                          text: "Contacts",
+                          text: AppLocalizations.of(context).contacts,
                           press: () {
                             Navigator.push(
                                 context,

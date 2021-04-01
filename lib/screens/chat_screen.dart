@@ -13,7 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'add_chatter_screen.dart';
 import 'call_screen.dart';
 import 'conversations_screen.dart';
@@ -208,7 +208,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
                 decoration:
-                    InputDecoration.collapsed(hintText: 'Send a message'),
+                    InputDecoration.collapsed(hintText: AppLocalizations.of(context).send_a_messgae),
                 focusNode: _focusNode,
               ),
             ),
@@ -216,7 +216,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? CupertinoButton(
-                        child: Text('Send'),
+                        child: Text(AppLocalizations.of(context).send),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,
@@ -251,7 +251,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     var widgets = <Widget>[];
     widgets.add(IconButton(
         icon: const Icon(Icons.language),
-        tooltip: 'Language',
+        tooltip: AppLocalizations.of(context).language,
         onPressed: () {
           showDialog(
               context: context,
@@ -259,7 +259,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         }));
     widgets.add(IconButton(
       icon: const Icon(Icons.call),
-      tooltip: 'Call',
+      tooltip: AppLocalizations.of(context).call,
       onPressed: () async {
         await Utilities.handleCameraAndMic(Permission.camera);
         await Utilities.handleCameraAndMic(Permission.microphone);
@@ -274,7 +274,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-              "Chat with ${Utilities.getChatterDisplayNameString(ChatWindow.currentChatters)}"),
+              Utilities.getChatterDisplayNameString(ChatWindow.currentChatters)),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           actions: widgets),
@@ -288,7 +288,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           children: <Widget>[
             DrawerHeader(
               child: Text(
-                'AnyChat',
+                AppLocalizations.of(context).title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
@@ -296,7 +296,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-                title: Text('Add Someone to Conversation'),
+                title: Text(AppLocalizations.of(context).addSomeoneToConversation),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -304,13 +304,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                           builder: (context) => AddChatterScreen()));
                 }),
             ListTile(
-                title: Text('Leave Conversation'),
+                title: Text(AppLocalizations.of(context).leaveConversation),
                 onTap: () {
                   AnyChatUser.deleteConversation(
                       context, ChatWindow.currentConversation.id);
                 }),
             ListTile(
-                title: Text('Back'),
+                title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -318,7 +318,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                           builder: (context) => ConversationsScreen()));
                 }),
             ListTile(
-                title: Text('Logout'),
+                title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
@@ -386,12 +386,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         Utilities.getLanguageFromIsoCode(info.outgoingLanguage);
     print(incomingDropdownValue);
     return new AlertDialog(
-      title: const Text('Select Language'),
+      title: Text(AppLocalizations.of(context).selectLanguage),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Incoming Messages'),
+          Text(AppLocalizations.of(context).incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
             icon: Icon(Icons.language),
@@ -432,7 +432,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             }).toList(),
           ),
           Divider(height: 25),
-          Text('Outgoing Messges'),
+          Text(AppLocalizations.of(context).outgoingMessages),
           DropdownButton<String>(
             value: outgoingDropdownValue,
             icon: Icon(Icons.language),

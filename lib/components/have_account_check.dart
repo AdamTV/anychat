@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AlreadyHaveAnAccountCheck extends StatelessWidget {
+class HaveAccountCheck extends StatelessWidget {
   final bool login;
   final Function press;
 
-  const AlreadyHaveAnAccountCheck({
+  const HaveAccountCheck({
     Key key,
     this.login = true,
     this.press,
@@ -16,13 +17,13 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          login ? "Don’t have an Account ? " : "Already have an Account ? ",
+          login ? AppLocalizations.of(context).doNotHaveAccount + " " : AppLocalizations.of(context).haveAccount + " ",
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         GestureDetector(
           onTap: press,
           child: Text(
-            login ? "Sign Up" : "Sign In",
+            login ? AppLocalizations.of(context).register : AppLocalizations.of(context).login,
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,

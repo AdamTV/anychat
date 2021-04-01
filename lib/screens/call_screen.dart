@@ -18,6 +18,7 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'chat_screen.dart';
 
@@ -256,7 +257,7 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AnyChat'),
+        title: Text(AppLocalizations.of(context).title),
       ),
       backgroundColor: Colors.black,
       body: Center(

@@ -1,5 +1,4 @@
-import 'package:anychat/Screens/signup_screen.dart';
-import 'package:anychat/components/already_have_an_account_acheck.dart';
+import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
@@ -7,8 +6,10 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -23,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "LOGIN",
+              AppLocalizations.of(context).login_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
@@ -32,7 +33,7 @@ class LoginScreen extends StatelessWidget {
               height: size.height * 0.35,
             ),
             RoundedInputField(
-              hintText: "Your Email",
+              hintText: AppLocalizations.of(context).email,
               onChanged: (value) {
                 email = value;
               },
@@ -43,7 +44,7 @@ class LoginScreen extends StatelessWidget {
               },
             ),
             RoundedButton(
-              text: "LOGIN",
+              text: AppLocalizations.of(context).login_caps,
               press: () {
                 AnyChatAuth.signInEmail(email, password, false)
                     .then((value) => {
@@ -51,22 +52,22 @@ class LoginScreen extends StatelessWidget {
                             {Utilities.initConversationScreen(context, value)}
                           else
                             Utilities.showAlertDialog(
-                                context, "Error", "Invalid Credentials")
+                                context, AppLocalizations.of(context).error, AppLocalizations.of(context).invalidCredentials)
                         })
                     .catchError((e) => {
-                          Utilities.showAlertDialog(context, "Error",
-                              "There was an error logging in.")
+                          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                              AppLocalizations.of(context).errorLoggingIn)
                         });
               },
             ),
             SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
+            HaveAccountCheck(
               press: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return SignUpScreen();
+                      return RegisterScreen();
                     },
                   ),
                 );
@@ -86,8 +87,8 @@ class LoginScreen extends StatelessWidget {
                         Utilities.initConversationScreen(context, user);
                       }
                     } catch (e) {
-                      Utilities.showAlertDialog(context, "Error",
-                          "Unable to sign in though Twitter. Please try again.");
+                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                          AppLocalizations.of(context).errorLoggingInTwitter);
                     }
                   },
                 ),
@@ -100,8 +101,8 @@ class LoginScreen extends StatelessWidget {
                           Utilities.initConversationScreen(context, user);
                         }
                       } catch (e) {
-                        Utilities.showAlertDialog(context, "Error",
-                            "Unable to sign in though Google. Please try again.");
+                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                            AppLocalizations.of(context).errorLoggingInGoogle);
                       }
                     })
               ],
@@ -123,8 +124,8 @@ class LoginScreen extends StatelessWidget {
             Utilities.initConversationScreen(context, user);
           }
         } catch (e) {
-          Utilities.showAlertDialog(context, "Error",
-              "Unable to sign in though Facebook. Please try again.");
+          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+              AppLocalizations.of(context).errorLoggingInFacebook);
         }
       },
     );

@@ -1,6 +1,6 @@
 import 'package:anychat/Screens/chat_screen.dart';
 import 'package:anychat/Screens/conversations_screen.dart';
-import 'package:anychat/components/anychatLocale.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
