@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -56,7 +61,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>AnyChat is requesting access to your camera</string>
 	<key>NSContactsUsageDescription</key>
-    <string>AnyChat is requesting access to your contacts.</string>
+	<string>AnyChat is requesting access to your contacts.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>AnyChat is requesting access to your microphone</string>
 	<key>UIBackgroundModes</key>
