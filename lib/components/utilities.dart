@@ -123,7 +123,11 @@ class Utilities {
         ret += ", ";
       }
     }
-    ret = ret.substring(0, ret.length - 2);
+    try {
+      ret = ret.substring(0, ret.length - 2);
+    }catch(e){
+
+    }
     return ret;
   }
 

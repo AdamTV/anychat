@@ -1,6 +1,6 @@
 import 'package:anychat/Screens/chat_screen.dart';
 import 'package:anychat/Screens/conversations_screen.dart';
-import 'package:anychat/components/locale.dart';
+import 'package:anychat/components/anychatLocale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +36,10 @@ class AnyChatUser {
   }
 
   static Future<Conversation> createConversation(String id) async {
+    if (id == AnyChatAuth.currentUser.id) {
+      Fluttertoast.showToast(msg: "Can not create a conversation with yourself!");
+      return null;
+    }
     final conversation =
         await FirebaseFirestore.instance.collection("conversations").add({
       'participants': [id, AnyChatAuth.currentUser.id],
@@ -95,7 +99,7 @@ class AnyChatUser {
                 'displayName': displayName,
                 'email': email,
                 'photoUrl': photoUrl,
-                'language': Locale.currentLocale.substring(0, 2),
+                'language': AnyChatLocale.currentLocale.substring(0, 2),
               })
             }
         });

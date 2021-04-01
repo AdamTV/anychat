@@ -1,7 +1,7 @@
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/services.dart';
 
-class Locale {
+class AnyChatLocale {
   static List languages;
   static String currentLocale;
   static String humanReadable;

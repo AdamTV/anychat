@@ -3,7 +3,7 @@ import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
-import 'package:anychat/components/locale.dart';
+import 'package:anychat/components/anychatLocale.dart';
 import 'package:anychat/components/notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,17 +12,29 @@ import 'package:flutter/material.dart';
 
 import 'Screens/conversations_screen.dart';
 import 'components/utilities.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Notifications().init();
-  Locale.init();
+  AnyChatLocale.init();
   Firebase.initializeApp().then((value) => {
     Ads.init(),
     Utilities.init().then((value) => {
               runApp(MaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: 'AnyChat',
+                  localizationsDelegates: [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: [
+                    const Locale('en', ''), // English, no country code
+                    const Locale('es', ''), // Spanish, no country code
+                  ],
                   theme: kDefaultTheme,
                   darkTheme: kDarkTheme,
                   themeMode: Utilities.getThemeMode(),
