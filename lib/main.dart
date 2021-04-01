@@ -45,8 +45,7 @@ void main() {
                     const Locale('bg', ''),
                     const Locale('ca', ''),
                     const Locale('ceb', ''),
-                    const Locale('zh-CN', ''),
-                    const Locale('zh-TW', ''),
+                    const Locale('zh', ''),
                     const Locale('co', ''),
                     const Locale('hr', ''),
                     const Locale('cs', ''),
@@ -149,6 +148,7 @@ void main() {
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (BuildContext context, snapshot) {
                       if (snapshot.hasData && (!snapshot.data.isAnonymous)) {
+                        AnyChatUser.context = context;
                         print(snapshot.data);
                         FirebaseFirestore.instance
                             .collection('users')

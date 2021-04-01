@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'chat_screen.dart';
 
 var iOSLocalizedLabels = defaultTargetPlatform == TargetPlatform.iOS;
@@ -33,12 +33,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
   // List names = new List(); // names we get from API
   // List _filteredContacts = new List(); // names filtered by search text
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text('Your Contacts');
+  Widget _appBarTitle = new Text('');
 
   _ContactsScreenState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
+          _appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
           _searchText = "";
           _filteredContacts = _contacts;
           // filteredNames = names;
@@ -112,13 +113,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
       throw PlatformException(
-          code: "PERMISSION_DENIED",
-          message: "Access to contact data denied",
+          code: AppLocalizations.of(context).permissionDenied,
+          message: AppLocalizations.of(context).accessContactDataDenied,
           details: null);
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
       throw PlatformException(
-          code: "PERMISSION_DISABLED",
-          message: "Contact data is not available on device",
+          code: AppLocalizations.of(context).permissionDisabled,
+          message: AppLocalizations.of(context).accessContactDataDisabled,
           details: null);
     }
   }
@@ -206,14 +207,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
             hintStyle: TextStyle(
                 color: Theme.of(context).primaryColorLight, fontSize: 20),
             // icon: new Icon(Icons.search),
-            hintText: 'Search...',
+            hintText: AppLocalizations.of(context).searchDotDotDot,
             // border: OutlineInputBorder(),
             border: InputBorder.none,
           ),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text('Your Contacts');
+        this._appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
         _filter.clear();
       }
       isSearch = !isSearch;
@@ -281,7 +282,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   ListTile contactListTile(AnyChatContact c) {
-    String sub = c.isRegistered ? "Start Chatting" : "Invite to AnyChat";
+    String sub = c.isRegistered ? AppLocalizations.of(context).startChatting : AppLocalizations.of(context).inviteToAnyChat;
     return ListTile(
       onTap: c.isRegistered
           ? () async {
@@ -353,7 +354,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     if (user.emails.isNotEmpty) {
       var eurl = "mailto:" + user.emails.first.value + params.replaceAll("+", " ");
       widgets.add(RoundedButton(
-          text: "E-mail Invite",
+          text: AppLocalizations.of(context).emailInvite,
           press: () {
             _launchURL(eurl);
           }));
@@ -361,13 +362,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
     if (user.phones.isNotEmpty) {
       var purl = "sms:" + user.phones.first.value + params;
       widgets.add(RoundedButton(
-          text: "SMS Invite",
+          text: AppLocalizations.of(context).smsInvite,
           press: () {
             _launchURL(purl);
           }));
     }
     return AlertDialog(
-        title: Text('Invite ' + user.displayName + " to AnyChat"),
+        title: Text(AppLocalizations.of(context).invite + " " + user.displayName + " " + AppLocalizations.of(context).toAnyChat),
         content: new Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

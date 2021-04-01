@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_user.dart';
 import 'constants.dart';
@@ -62,7 +63,7 @@ class Utilities {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Approve'),
+              child: Text(AppLocalizations.of(context).approve),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -148,6 +149,20 @@ class Utilities {
     }
   }
 
+
+  static String getThemeDropdownValue() {
+    var pref = prefs.getString('theme');
+    if (pref.toLowerCase() == 'system'){
+      return AppLocalizations.of(AnyChatUser.context).system;
+    } else if (pref.toLowerCase() == 'dark'){
+      return AppLocalizations.of(AnyChatUser.context).dark;
+    } else if (pref.toLowerCase() == 'light'){
+      return AppLocalizations.of(AnyChatUser.context).light;
+    } else {
+      return AppLocalizations.of(AnyChatUser.context).system;
+    }
+  }
+
   static void showToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
@@ -155,5 +170,15 @@ class Utilities {
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 3,
         fontSize: 16.0);
+  }
+
+  static setThemeFromDropdownValue(String newValue) {
+    var newPref = 'system';
+    if (newValue == AppLocalizations.of(AnyChatUser.context).light){
+      newPref = 'light';
+    } else if (newValue == AppLocalizations.of(AnyChatUser.context).dark) {
+      newPref = 'dark';
+    }
+    prefs.setString('theme', newPref);
   }
 }

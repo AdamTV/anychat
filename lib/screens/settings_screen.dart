@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     print('loading settings screen');
 
     themes = [AppLocalizations.of(context).system, AppLocalizations.of(context).light, AppLocalizations.of(context).dark];
-    dropdownValue = Utilities.prefs.getString('theme') ?? AppLocalizations.of(context).system;
+    dropdownValue = Utilities.getThemeDropdownValue();
 
     return WillPopScope(
         child: Scaffold(
@@ -154,8 +154,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       setState(() {
                                         dropdownValue = newValue;
                                       });
-                                      await Utilities.prefs
-                                          .setString('theme', newValue);
+                                      await Utilities
+                                          .setThemeFromDropdownValue(newValue);
                                       Navigator.pop(context);
                                       main();
                                     },

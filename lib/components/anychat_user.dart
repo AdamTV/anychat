@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_auth.dart';
 import 'conversation.dart';
@@ -18,6 +19,8 @@ class AnyChatUser {
   final String photoUrl;
   final String language;
   List<ConversationInfo> conversations = [];
+
+  static BuildContext context;
 
   AnyChatUser(
       this.id, this.displayName, this.email, this.photoUrl, this.language);
@@ -37,7 +40,7 @@ class AnyChatUser {
 
   static Future<Conversation> createConversation(String id) async {
     if (id == AnyChatAuth.currentUser.id) {
-      Fluttertoast.showToast(msg: "Can not create a conversation with yourself!");
+      Fluttertoast.showToast(msg: AppLocalizations.of(context).canNotCreateConvoWithSelf);
       return null;
     }
     final conversation =
@@ -187,7 +190,7 @@ class AnyChatUser {
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
-          'text': "This person has left the conversation.",
+          'text': AppLocalizations.of(context).thisPersonHasLeftConversation,
         });
       });
     });
@@ -336,7 +339,7 @@ class AnyChatUser {
         .doc(ChatWindow.currentConversation.id);
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
     if (conversation.participants.contains(user.id)){
-      Utilities.showToast("${user.displayName} is already in this conversation!");
+      Utilities.showToast("${user.displayName} ${AppLocalizations.of(context).isAlreadyInThisConversation}");
       return false;
     }
     final newMessage = conversationRef.collection('messages').doc();
@@ -351,7 +354,7 @@ class AnyChatUser {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
           'text':
-              "${AnyChatAuth.currentUser.displayName} has added ${user.displayName} to the conversation.",
+              "${AnyChatAuth.currentUser.displayName} ${AppLocalizations.of(context).hasAdded} ${user.displayName} ${AppLocalizations.of(context).toTheConversation}",
         });
       });
     });
@@ -380,26 +383,25 @@ class AnyChatUser {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete Conversation"),
+          title: Text(AppLocalizations.of(context).deleteConversation),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text("Are you sure you want to leave this conversation? "
-                    "You will not be able to join back unless somebody "
-                    "invites you."),
+                Text(AppLocalizations.of(context).areYouSureYouWantToLeave + " " +
+                    AppLocalizations.of(context).youWillNotJoinBackUnlessInvited),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop();
-                Utilities.showToast("Cancelled");
+                Utilities.showToast(AppLocalizations.of(context).cancelled);
               },
             ),
             TextButton(
-              child: Text('Approve'),
+              child: Text(AppLocalizations.of(context).approve),
               onPressed: () {
                 if (AnyChatAuth.currentUser.conversations != null) {
                   AnyChatAuth.currentUser.conversations
@@ -408,7 +410,7 @@ class AnyChatUser {
                 Navigator.of(context).pop();
                 ChatWindow.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
-                Utilities.showToast("Successfully left conversation");
+                Utilities.showToast(AppLocalizations.of(context).successfullyLeftConversation);
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

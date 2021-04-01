@@ -160,8 +160,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           .doc(conversation.id)
           .get());
 
-      String chatterName = "test";
-
       if (!ids.contains(conversation.id)) {
         print(conversation.id);
         ids.add(conversation.id);
@@ -177,7 +175,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .doc(users[i])
                 .get());
             chatters.add(chatter);
-            chatterName = chatter.displayName;
             if (!conversationWidgets
                     .any((element) => element.key == Key(conversation.id)) &&
                 mounted) {

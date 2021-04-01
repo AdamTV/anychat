@@ -1,5 +1,8 @@
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'anychat_user.dart';
 
 class Notifications {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -47,9 +50,9 @@ class Notifications {
       return;
     }
     print('showNotification');
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'AnyChat',
+          AppLocalizations.of(AnyChatUser.context).title,
       'your channel name',
       'your channel description',
       importance: Importance.max,
@@ -57,7 +60,7 @@ class Notifications {
       ticker: 'ticker',
       styleInformation: BigTextStyleInformation(''),
     );
-    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     if (flutterLocalNotificationsPlugin == null) {
       await init();
