@@ -1,4 +1,4 @@
-import 'package:anychat/components/locale.dart';
+import 'package:anychat/components/anychatLocale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,7 +60,7 @@ class AnyChatAuth {
             googleSignInAccount.displayName,
             googleSignInAccount.email,
             googleSignInAccount.photoUrl,
-            Locale.currentLocale.substring(0, 2));
+            AnyChatLocale.currentLocale.substring(0, 2));
         currentUser.addUserToFirestore();
         return currentUser;
       }
@@ -86,7 +86,7 @@ class AnyChatAuth {
           _user.displayName,
           _user.email,
           _user.photoURL,
-          Locale.currentLocale);
+          AnyChatLocale.currentLocale);
       currentUser.addUserToFirestore();
 
       return currentUser;
@@ -129,7 +129,7 @@ class AnyChatAuth {
             result.displayName,
             result.email,
             result.photoURL,
-            Locale.currentLocale.substring(0, 2));
+            AnyChatLocale.currentLocale.substring(0, 2));
         currentUser.addUserToFirestore();
         return currentUser;
       }
@@ -185,7 +185,7 @@ class AnyChatAuth {
           return currentUser;
         } else {
           currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, Locale.currentLocale.substring(0, 2));
+              user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
           currentUser.addUserToFirestore();
           return currentUser;
         }
@@ -233,7 +233,7 @@ class AnyChatAuth {
       return currentUser;
     } else {
       currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-          user.photoURL, Locale.currentLocale.substring(0, 2));
+          user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
       currentUser.addUserToFirestore();
       return currentUser;
     }

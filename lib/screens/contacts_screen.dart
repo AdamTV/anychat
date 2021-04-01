@@ -288,6 +288,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               var user = await AnyChatUser.findUserById(c.anyChatId);
               if (ChatWindow.currentConversation == null) {
                 var convo = await AnyChatUser.createConversation(user.id);
+                if (convo == null) return;
                 ChatWindow.currentConversation = convo;
                 List<AnyChatUser> users = <AnyChatUser>[];
                 for (var id in convo.participants) {
