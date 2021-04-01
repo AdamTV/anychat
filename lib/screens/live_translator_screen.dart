@@ -12,7 +12,7 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../components/constants.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
@@ -34,11 +34,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text('AnyChat'),
+          title: Text(AppLocalizations.of(context).title),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.language),
-              tooltip: 'Language',
+              tooltip: AppLocalizations.of(context).language,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -48,7 +48,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             ),
             IconButton(
                 icon: const Icon(Icons.delete),
-                tooltip: 'Delete',
+                tooltip: AppLocalizations.of(context).delete,
                 onPressed: () {
                   setState(() {
                     text = "";
@@ -79,7 +79,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             children: <Widget>[
               DrawerHeader(
                 child: Text(
-                  'AnyChat',
+                  AppLocalizations.of(context).title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
@@ -87,14 +87,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 ),
               ),
               ListTile(
-                  title: Text('Back'),
+                  title: Text(AppLocalizations.of(context).back),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: Text('Logout'),
+                  title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
                     Navigator.push(
@@ -133,7 +133,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
   Widget _buildPopupDialog(BuildContext context) {
     return new AlertDialog(
-      title: const Text('Select Language'),
+      title: Text(AppLocalizations.of(context).selectLanguage),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

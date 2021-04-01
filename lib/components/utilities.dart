@@ -32,6 +32,7 @@ class Utilities {
         ifAbsent: () => isoCode);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
     var uri = Uri.https(authority, unencodedPath, queryParameters);
+    print(uri);
     Response x = await http.post(uri);
     String body = x.body;
     print(body);

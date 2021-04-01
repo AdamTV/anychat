@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/anychat_auth.dart';
 import '../components/anychat_user.dart';
@@ -24,24 +25,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String isoCode;
   bool notifications = Utilities.prefs.getBool('notifications') ?? true;
   String displayName = AnyChatAuth.currentUser.displayName;
-  var themes = ['System', 'Light', 'Dark'];
-  String dropdownValue = Utilities.prefs.getString('theme') ?? "System";
   ThemeMode themeMode;
+  List<String> themes;
+  String dropdownValue;
 
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
-    print(dropdownValue);
+
+    themes = [AppLocalizations.of(context).system, AppLocalizations.of(context).light, AppLocalizations.of(context).dark];
+    dropdownValue = Utilities.prefs.getString('theme') ?? AppLocalizations.of(context).system;
+
     return WillPopScope(
         child: Scaffold(
-          appBar: AppBar(title: Text('AnyChat Settings')),
+          appBar: AppBar(title: Text('${AppLocalizations.of(context).title} ${AppLocalizations.of(context).settings}')),
           body: SettingsList(
             sections: [
               SettingsSection(
-                title: 'Translation',
+                title: AppLocalizations.of(context).translation,
                 tiles: [
                   SettingsTile(
-                    title: 'Language',
+                    title: AppLocalizations.of(context).language,
                     subtitle: Utilities.getLanguageFromIsoCode(
                         AnyChatAuth.currentUser.language),
                     leading: Icon(Icons.language),
@@ -54,10 +58,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: 'Information',
+                title: AppLocalizations.of(context).information,
                 tiles: [
                   SettingsTile(
-                    title: 'Display Name',
+                    title: AppLocalizations.of(context).displayName,
                     subtitle: displayName,
                     leading: Icon(Icons.drive_file_rename_outline),
                     onPressed: (BuildContext context) {
@@ -65,7 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Enter your name"),
+                              title: Text(AppLocalizations.of(context).enterYourName),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -80,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('Save'),
+                                  child: Text(AppLocalizations.of(context).save),
                                   onPressed: () async {
                                     await AnyChatUser.updateDisplayName(
                                         displayName);
@@ -96,13 +100,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingsTile(
-                      title: 'E-mail',
+                      title: AppLocalizations.of(context).email,
                       subtitle: AnyChatAuth.currentUser.email,
                       leading: Icon(Icons.email)),
                 ],
               ),
               SettingsSection(
-                title: 'Picture',
+                title: AppLocalizations.of(context).picture,
                 tiles: [
                   // SettingsTile.switchTile(
                   //   title: 'Profile Picture',
@@ -120,7 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // ),
                   SettingsTile(
                       onPressed: (v) => {getImage(true)},
-                      title: 'Change Picture',
+                      title: AppLocalizations.of(context).changePicture,
                       // enabled: changeProfilePictureEnabled,
                       leading: Icon(Icons.photo),
                       trailing: CircleAvatar(
@@ -128,9 +132,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               NetworkImage(AnyChatAuth.currentUser.photoUrl))),
                 ],
               ),
-              SettingsSection(title: 'Colors', tiles: [
+              SettingsSection(title: AppLocalizations.of(context).colors, tiles: [
                 SettingsTile(
-                  title: 'Theme',
+                  title: AppLocalizations.of(context).theme,
                   subtitle: dropdownValue,
                   leading: Icon(Icons.palette),
                   onPressed: (BuildContext context) {
@@ -138,7 +142,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Select Your Theme"),
+                            title: Text(AppLocalizations.of(context).selectYourTheme),
                             content: SingleChildScrollView(
                               child: ListBody(
                                 children: <Widget>[
@@ -172,10 +176,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 )
               ]),
               SettingsSection(
-                title: 'Notifications',
+                title: AppLocalizations.of(context).notifications,
                 tiles: [
                   SettingsTile.switchTile(
-                    title: 'Notifications',
+                    title: AppLocalizations.of(context).notifications,
                     leading: Icon(Icons.notifications_active),
                     switchValue: notifications,
                     onToggle: (value) async {

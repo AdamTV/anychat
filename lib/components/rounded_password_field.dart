@@ -1,5 +1,6 @@
 import 'package:anychat/components/text_field_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RoundedPasswordField extends StatelessWidget {
   final ValueChanged<String> onChanged;
@@ -17,7 +18,7 @@ class RoundedPasswordField extends StatelessWidget {
         onChanged: onChanged,
         cursorColor: Theme.of(context).primaryColor,
         decoration: InputDecoration(
-          hintText: "Password",
+          hintText: AppLocalizations.of(context).password,
           icon: Icon(
             Icons.lock,
             color: Theme.of(context).primaryColor,
