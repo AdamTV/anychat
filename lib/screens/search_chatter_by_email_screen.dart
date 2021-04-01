@@ -7,6 +7,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'conversations_screen.dart';
 
@@ -34,7 +35,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AnyChat'),
+        title: Text(AppLocalizations.of(context).title),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -46,7 +47,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
           children: <Widget>[
             DrawerHeader(
               child: Text(
-                'AnyChat',
+                AppLocalizations.of(context).title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
               decoration: BoxDecoration(
@@ -54,7 +55,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
               ),
             ),
             ListTile(
-                title: Text('Return to conversations'),
+                title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -62,7 +63,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
                           builder: (context) => ConversationsScreen()));
                 }),
             ListTile(
-                title: Text('Logout'),
+                title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
                   Navigator.push(context,
@@ -78,7 +79,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
               title: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      text: "No Results Found",
+                      text: AppLocalizations.of(context).noResultsFound,
                       style: TextStyle(color: Colors.grey))))
               : ListView.builder(
             padding: EdgeInsets.all(8.0),
