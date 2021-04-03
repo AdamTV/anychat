@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,10 +98,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WelcomeScreen()));
+                    Navigator.pushNamed(
+                        context, "/welcome");
                   }),
             ],
           ),
@@ -148,11 +147,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               setState(() {
                 dropdownValue = newValue;
               });
-              isoCode = isoMap[newValue];
+              isoCode = AnyChatLocale.isoMap[newValue];
               print(isoCode);
               Navigator.pop(context);
             },
-            items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

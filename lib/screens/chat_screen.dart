@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
@@ -170,7 +171,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           .collection("users")
           .doc(_chatMessages.last.senderId)
           .get());
-      var info = AnyChatAuth.currentUser.conversations.firstWhere(
+      var info = AnyChatAuth.currentUser.conversations?.firstWhere(
           (element) => element.id == ChatWindow.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
           ? info.outgoingLanguage
@@ -263,12 +264,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       onPressed: () async {
         await Utilities.handleCameraAndMic(Permission.camera);
         await Utilities.handleCameraAndMic(Permission.microphone);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  CallScreen(channelName: ChatWindow.currentConversation.id),
-            ));
+        CallScreen.channelName = ChatWindow.currentConversation.id;
+        Navigator.pushNamed(context, "/call");
       },
     ));
     return Scaffold(
@@ -298,10 +295,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text(AppLocalizations.of(context).addSomeoneToConversation),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddChatterScreen()));
+                  Navigator.pushNamed(
+                      context, "/addChatter");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).leaveConversation),
@@ -312,17 +307,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConversationsScreen()));
+                  Navigator.pushNamed(
+                      context, "/conversations");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  Navigator.pushNamed(context, "/welcome");
                 }),
           ],
         ),
@@ -413,18 +405,17 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                         (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
                   transaction.update(userConversationInfo, {
-                    'incomingLanguage': isoMap[newValue],
+                    'incomingLanguage': AnyChatLocale.isoMap[newValue],
                   });
                 });
               });
               setState(() {
-                info.incomingLanguage = isoMap[newValue];
+                info.incomingLanguage = AnyChatLocale.isoMap[newValue];
                 incomingDropdownValue = newValue;
               });
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChatScreen()));
+              Navigator.pushNamed(context, "/chat");
             },
-            items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -454,18 +445,17 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                         (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
                   transaction.update(userConversationInfo, {
-                    'outgoingLanguage': isoMap[newValue],
+                    'outgoingLanguage': AnyChatLocale.isoMap[newValue],
                   });
                 });
               });
               setState(() {
-                info.outgoingLanguage = isoMap[newValue];
+                info.outgoingLanguage = AnyChatLocale.isoMap[newValue];
                 outgoingDropdownValue = newValue;
               });
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChatScreen()));
+              Navigator.pushNamed(context, "/chat");
             },
-            items: isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

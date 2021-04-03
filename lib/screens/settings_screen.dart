@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:anychat/Screens/languages_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/conversations_screen.dart';
@@ -32,7 +33,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
-
     themes = [AppLocalizations.of(context).system, AppLocalizations.of(context).light, AppLocalizations.of(context).dark];
     dropdownValue = Utilities.getThemeDropdownValue();
 

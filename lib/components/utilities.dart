@@ -1,18 +1,17 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'anychat_locale.dart';
 import 'anychat_user.dart';
-import 'constants.dart';
 
 class Utilities {
   static SharedPreferences prefs;
@@ -81,31 +80,14 @@ class Utilities {
         .doc(value.id)
         .get()
         .then((value) => AnyChatUser.fromSnapshot(value))
-        .then((AnyChatUser user) => {
-              // if (userconversationIds?.isEmpty)
-              //   {
-              //     user.conversationIds = <String>[]
-              //   },
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ConversationsScreen()))
-            })
-        .catchError((e) => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ConversationsScreen();
-                  },
-                ),
-              )
-            });
+        .then((AnyChatUser user) =>
+            {Navigator.pushNamed(context, "/conversations")})
+        .catchError((e) => {Navigator.pushNamed(context, "/conversations")});
   }
 
   static String getLanguageFromIsoCode(String language) {
-    for (String key in isoMap.keys) {
-      if (isoMap[key] == language) {
+    for (String key in AnyChatLocale.isoMap.keys) {
+      if (AnyChatLocale.isoMap[key] == language) {
         return key;
       }
     }
@@ -119,29 +101,27 @@ class Utilities {
 
   static String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
-    for (var user in users){
-      if (user.id != AnyChatAuth.currentUser.id){
+    for (var user in users) {
+      if (user.id != AnyChatAuth.currentUser.id) {
         ret += user.displayName;
         ret += ", ";
       }
     }
     try {
       ret = ret.substring(0, ret.length - 2);
-    }catch(e){
-
-    }
+    } catch (e) {}
     return ret;
   }
 
   static ThemeMode getThemeMode() {
-    switch (prefs.getString('theme')?.toLowerCase() ?? 'system'){
-      case 'system' :
+    switch (prefs.getString('theme')?.toLowerCase() ?? 'system') {
+      case 'system':
         return ThemeMode.system;
         break;
-      case 'dark' :
+      case 'dark':
         return ThemeMode.dark;
         break;
-      case 'light' :
+      case 'light':
         return ThemeMode.light;
         break;
       default:
@@ -149,14 +129,13 @@ class Utilities {
     }
   }
 
-
   static String getThemeDropdownValue() {
-    var pref = prefs.getString('theme');
-    if (pref.toLowerCase() == 'system'){
+    var pref = prefs.getString('theme') ?? 'system';
+    if (pref.toLowerCase() == 'system') {
       return AppLocalizations.of(AnyChatUser.context).system;
-    } else if (pref.toLowerCase() == 'dark'){
+    } else if (pref.toLowerCase() == 'dark') {
       return AppLocalizations.of(AnyChatUser.context).dark;
-    } else if (pref.toLowerCase() == 'light'){
+    } else if (pref.toLowerCase() == 'light') {
       return AppLocalizations.of(AnyChatUser.context).light;
     } else {
       return AppLocalizations.of(AnyChatUser.context).system;
@@ -174,7 +153,7 @@ class Utilities {
 
   static setThemeFromDropdownValue(String newValue) {
     var newPref = 'system';
-    if (newValue == AppLocalizations.of(AnyChatUser.context).light){
+    if (newValue == AppLocalizations.of(AnyChatUser.context).light) {
       newPref = 'light';
     } else if (newValue == AppLocalizations.of(AnyChatUser.context).dark) {
       newPref = 'dark';

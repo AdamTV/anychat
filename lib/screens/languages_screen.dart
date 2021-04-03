@@ -1,5 +1,6 @@
 import 'package:anychat/Screens/settings_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -13,13 +14,13 @@ class LanguagesScreen extends StatefulWidget {
 }
 
 class _LanguagesScreenState extends State<LanguagesScreen> {
-  final List languages = Set.from(isoMap.keys).toList();
+  final List languages = Set.from(AnyChatLocale.isoMap.keys).toList();
   int languageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    for (var value in isoMap.values) {
+    for (var value in AnyChatLocale.isoMap.values) {
       if (value == AnyChatAuth.currentUser.language) {
         break;
       }
@@ -68,12 +69,12 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
     setState(() {
       languageIndex = index;
     });
-    await AnyChatUser.updateLanguage(isoMap[languages[index]]);
+    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]);
   }
 
   List<SettingsTile> getLanguageTiles() {
     List<SettingsTile> tiles = [];
-    isoMap.keys.forEach((element) {
+    AnyChatLocale.isoMap.keys.forEach((element) {
       tiles.add(SettingsTile(
           title: element,
           trailing: trailingWidget(languages.indexOf(element)),

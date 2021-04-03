@@ -39,7 +39,7 @@ class Notifications {
     // if (payload != null) {
     //   debugPrint('notification payload: $payload');
     // }
-    // await Navigator.push(
+    // await Navigator.pushNamed(
     //   context,
     //   MaterialPageRoute<void>(builder: (context) => ChatScreen(payload)),
     // );

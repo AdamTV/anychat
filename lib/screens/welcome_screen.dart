@@ -29,27 +29,15 @@ class WelcomeScreen extends StatelessWidget {
             RoundedButton(
               text: AppLocalizations.of(context).login_caps,
               press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginScreen();
-                    },
-                  ),
-                );
+                Navigator.pushNamed(
+                  context, "/login");
               },
             ),
             RoundedButton(
               text: AppLocalizations.of(context).register_caps,
               press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RegisterScreen();
-                    },
-                  ),
-                );
+                Navigator.pushNamed(
+                  context, "/register");
               },
             ),
           ],
