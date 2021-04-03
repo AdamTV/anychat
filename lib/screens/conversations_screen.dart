@@ -1,11 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:anychat/Screens/add_chatter_screen.dart';
-import 'package:anychat/Screens/chat_screen.dart';
-import 'package:anychat/Screens/live_translator_screen.dart';
-import 'package:anychat/Screens/settings_screen.dart';
-import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
@@ -16,6 +10,7 @@ import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -416,7 +411,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           onTap: () {
             ChatWindow.currentConversation = conversation;
             ChatWindow.currentChatters = chatters;
-            Navigator.pushNamed(context,  "/chat");
+            // Navigator.pushNamed(context,  "/chat", arguments: {conversation, chatters});
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen()));
           },
           leading: Stack(
               clipBehavior: Clip.none,

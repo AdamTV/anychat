@@ -412,7 +412,7 @@ class AnyChatUser {
                 AnyChatAuth.currentUser.leaveConversation(id);
                 Utilities.showToast(AppLocalizations.of(context).successfullyLeftConversation);
                 Navigator.pushReplacementNamed(
-                    context, "conversations");
+                    context, "/conversations");
               },
             ),
           ],

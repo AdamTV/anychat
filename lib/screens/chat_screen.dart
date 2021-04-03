@@ -171,7 +171,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           .collection("users")
           .doc(_chatMessages.last.senderId)
           .get());
-      var info = AnyChatAuth.currentUser.conversations?.firstWhere(
+      var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == ChatWindow.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
           ? info.outgoingLanguage
