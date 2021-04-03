@@ -63,14 +63,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             HaveAccountCheck(
               press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return RegisterScreen();
-                    },
-                  ),
-                );
+                Navigator.pushNamed(context, "/register");
               },
             ),
             OrDivider(),

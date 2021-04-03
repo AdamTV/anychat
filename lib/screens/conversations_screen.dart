@@ -8,6 +8,7 @@ import 'package:anychat/Screens/settings_screen.dart';
 import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
@@ -72,10 +73,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   icon: const Icon(Icons.add),
                   tooltip: AppLocalizations.of(context).createConversation,
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddChatterScreen()));
+                    Navigator.pushNamed(
+                        context, "/addChatter");
                   },
                 ),
               ],
@@ -101,25 +100,20 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
                   await Utilities.handleCameraAndMic(Permission.microphone);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LiveTranslatorScreen()));
+                  Navigator.pushNamed(
+                      context, "/liveTranslator");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).settings),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsScreen()));
+                  Navigator.pushNamed(
+                      context, "/settings");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  Navigator.pushNamed(context, "/welcome");
                 }),
           ],
         ),
@@ -139,10 +133,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                       RoundedButton(
                         text: AppLocalizations.of(context).startConversation,
                         press: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddChatterScreen()));
+                          Navigator.pushNamed(
+                              context, "/addChatter");
                         },
                       ),
                     ],
@@ -424,9 +416,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           onTap: () {
             ChatWindow.currentConversation = conversation;
             ChatWindow.currentChatters = chatters;
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return ChatScreen();
-            }));
+            Navigator.pushNamed(context,  "/chat");
           },
           leading: Stack(
               clipBehavior: Clip.none,

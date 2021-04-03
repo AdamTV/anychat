@@ -411,10 +411,8 @@ class AnyChatUser {
                 ChatWindow.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
                 Utilities.showToast(AppLocalizations.of(context).successfullyLeftConversation);
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ConversationsScreen()));
+                Navigator.pushReplacementNamed(
+                    context, "conversations");
               },
             ),
           ],

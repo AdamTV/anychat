@@ -325,9 +325,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 }
 
               }
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ChatScreen();
-              }));
+              Navigator.pushNamed(context, "/chat");
             }
           : () async {
               showDialog(

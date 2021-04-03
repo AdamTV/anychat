@@ -23,9 +23,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'chat_screen.dart';
 
 class CallScreen extends StatefulWidget {
-  final String channelName;
+  static String channelName;
 
-  const CallScreen({Key key, this.channelName}) : super(key: key);
+  const CallScreen({Key key}) : super(key: key);
 
   @override
   _CallScreenState createState() => _CallScreenState();
@@ -82,7 +82,7 @@ class _CallScreenState extends State<CallScreen> {
     _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
     streamingRecognize();
-    await _engine.joinChannel(null, widget.channelName, null, 0);
+    await _engine.joinChannel(null, CallScreen.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize

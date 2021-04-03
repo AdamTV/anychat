@@ -1,8 +1,7 @@
-import 'package:anychat/Screens/search_chatter_by_email_screen.dart';
-import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/screens/search_chatter_by_email_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,20 +48,16 @@ class AddChatterScreen extends StatelessWidget {
               ListTile(
                   title: Text(AppLocalizations.of(context).conversations),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ConversationsScreen()));
+                    Navigator.pushNamed(
+                        context, "/conversations");
                     //_handleSignOut();
                   }),
               ListTile(
                   title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WelcomeScreen()));
+                    Navigator.pushNamed(
+                        context, "/welcome");
                     //_handleSignOut();
                   }),
             ],
@@ -83,22 +78,17 @@ class AddChatterScreen extends StatelessWidget {
                       RoundedButton(
                           text: AppLocalizations.of(context).search,
                           press: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SearchChatterByEmailScreen(email: email)));
+                            SearchChatterByEmailScreen.email = email;
+                            Navigator.pushNamed(
+                                context, "/searchChatterByEmail");
                           }),
                       Divider(height: 100),
                       Text(AppLocalizations.of(context).seeWhoIsAlreadyOnAnyChat),
                       RoundedButton(
                           text: AppLocalizations.of(context).contacts,
                           press: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ContactsScreen()));
+                            Navigator.pushNamed(
+                                context, "/contacts");
                           }),
                     ],
                   ),

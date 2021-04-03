@@ -64,13 +64,8 @@ class RegisterScreen extends StatelessWidget {
             HaveAccountCheck(
               login: false,
               press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginScreen();
-                    },
-                  ),
+                Navigator.pushNamed(
+                  context, "/login"
                 );
               },
             ),

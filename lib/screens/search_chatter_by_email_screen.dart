@@ -12,10 +12,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'conversations_screen.dart';
 
 class SearchChatterByEmailScreen extends StatefulWidget {
-  final String email;
+  static String email;
   static bool addToConvo;
 
-  const SearchChatterByEmailScreen({Key key, this.email}) : super(key: key);
+  const SearchChatterByEmailScreen({Key key}) : super(key: key);
 
   @override
   SearchChatterByEmailScreenState createState() => SearchChatterByEmailScreenState(email);
@@ -57,17 +57,14 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
             ListTile(
                 title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConversationsScreen()));
+                  Navigator.pushNamed(
+                      context, "/conversations");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                  Navigator.pushNamed(context, "/welcome");
                 }),
           ],
         ),
@@ -126,10 +123,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
                       ChatWindow.currentChatters
                           .add(SearchChatterByEmailScreenState.users[index]);
                     }
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                          return ChatScreen();
-                        }));
+                    Navigator.pushNamed(context, "/chat");
                   },
                   leading: new CircleAvatar(
                       backgroundColor: Theme.of(context).primaryColor,
