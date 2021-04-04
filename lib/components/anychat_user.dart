@@ -1,12 +1,11 @@
 import 'package:anychat/Screens/chat_screen.dart';
-import 'package:anychat/Screens/conversations_screen.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'anychat_auth.dart';
 import 'conversation.dart';

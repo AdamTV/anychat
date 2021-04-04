@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
@@ -13,9 +13,9 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationsScreen extends StatefulWidget {
   @override
@@ -43,7 +43,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   bool loaded = false;
   StreamSubscription<QuerySnapshot> _conversationSubscription;
   List<StreamSubscription<QuerySnapshot>> _chatMessageSubscriptions = [];
-  List<Widget> conversationWidgets = new List<Widget>();
+  List<Widget> conversationWidgets = [];
 
   _ConversationsScreenState() {
     conversationWidgets.clear();

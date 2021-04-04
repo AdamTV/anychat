@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:anychat/Screens/languages_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/conversations_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/anychat_auth.dart';
 import '../components/anychat_user.dart';

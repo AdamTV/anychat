@@ -186,12 +186,12 @@ void main() {
                         print('returning ConversationsScreen');
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return ConversationsScreen();
+                          return ConstrainedBox (constraints: BoxConstraints(maxWidth: 1), child: ConversationsScreen());
                         }));
                       });
                     }
                     print('returning WelcomeScreen');
-                    return WelcomeScreen();
+                    return ConstrainedBox (constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen ());
                   },
                 ),
               ))

@@ -1,10 +1,8 @@
-import 'package:anychat/Screens/login_screen.dart';
-import 'package:anychat/Screens/register_screen.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -60,7 +58,7 @@ class WelcomeBackground extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
-      width: double.infinity,
+      width: size.width,
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[

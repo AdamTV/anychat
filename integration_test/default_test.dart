@@ -1,9 +1,4 @@
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/social_icon.dart';
-import 'package:anychat/main.dart' as app;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 

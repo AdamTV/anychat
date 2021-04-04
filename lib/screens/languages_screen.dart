@@ -3,10 +3,8 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:flutter/material.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../components/constants.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class LanguagesScreen extends StatefulWidget {
   @override

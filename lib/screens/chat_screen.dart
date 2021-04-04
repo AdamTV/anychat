@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/welcome_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
@@ -13,11 +11,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'add_chatter_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'call_screen.dart';
-import 'conversations_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
