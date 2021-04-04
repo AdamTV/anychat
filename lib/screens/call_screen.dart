@@ -12,13 +12,13 @@ import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'chat_screen.dart';
 
@@ -87,7 +87,6 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    _engine = await RtcEngine.create(agoraAppId);
     await _engine.enableVideo();
   }
 
@@ -375,7 +374,6 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
-    final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance.collection("users").doc(message.senderId).get());
 
     final language = AnyChatAuth.currentUser.language;
     if (message.senderId != AnyChatAuth.currentUser.id) {

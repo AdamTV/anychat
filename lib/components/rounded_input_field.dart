@@ -1,8 +1,6 @@
 import 'package:anychat/components/text_field_container.dart';
 import 'package:flutter/material.dart';
 
-import 'anychat_auth.dart';
-
 class RoundedInputField extends StatelessWidget {
   final String hintText;
   final IconData icon;

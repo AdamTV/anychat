@@ -8,9 +8,10 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'chat_screen.dart';
 
 var iOSLocalizedLabels = defaultTargetPlatform == TargetPlatform.iOS;
@@ -54,7 +55,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   Widget _buildList() {
     if (_searchText.isNotEmpty) {
-      List<AnyChatContact> tempList = new List();
+      List<AnyChatContact> tempList = [];
       for (int i = 0; i < _filteredContacts.length; i++) {
         if (_filteredContacts[i]
             .displayName
@@ -178,8 +179,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   _openContactForm() async {
     try {
-      var contact = await ContactsService.openContactForm(
-          iOSLocalizedLabels: iOSLocalizedLabels);
       refreshContacts();
     } on FormOperationException catch (e) {
       switch (e.errorCode) {

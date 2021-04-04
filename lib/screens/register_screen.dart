@@ -1,6 +1,5 @@
-import 'package:anychat/Screens/login_screen.dart';
-import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
@@ -9,8 +8,8 @@ import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
