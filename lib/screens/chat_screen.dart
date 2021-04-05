@@ -28,56 +28,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class ChatMessage extends StatelessWidget {
-  final String id;
-  final AnyChatUser sender;
-  final String text;
-  final AnimationController animationController;
-
-  ChatMessage({this.text, this.animationController, this.sender, this.id});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor:
-          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-      axisAlignment: 0.0,
-      child: Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                child: sender.photoUrl != null
-                    ? CircleAvatar(
-                        backgroundImage: NetworkImage(sender.photoUrl),
-                        backgroundColor: Colors.transparent,
-                      )
-                    : CircleAvatar(
-                        child: Text(sender.displayName.substring(0, 1)),
-                      )),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(sender.displayName,
-                      style: Theme.of(context).textTheme.headline4),
-                  Container(
-                    margin: EdgeInsets.only(top: 5.0),
-                    child: Text(text),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ChatWindow extends StatefulWidget {
   static Conversation currentConversation;
 
@@ -460,6 +410,56 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             }).toList(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChatMessage extends StatelessWidget {
+  final String id;
+  final AnyChatUser sender;
+  final String text;
+  final AnimationController animationController;
+
+  ChatMessage({this.text, this.animationController, this.sender, this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizeTransition(
+      sizeFactor:
+      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+      axisAlignment: 0.0,
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: const EdgeInsets.only(right: 16.0),
+                child: sender.photoUrl != null
+                    ? CircleAvatar(
+                  backgroundImage: NetworkImage(sender.photoUrl),
+                  backgroundColor: Colors.transparent,
+                )
+                    : CircleAvatar(
+                  child: Text(sender.displayName.substring(0, 1)),
+                )),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(sender.displayName,
+                      style: Theme.of(context).textTheme.headline4),
+                  Container(
+                    margin: EdgeInsets.only(top: 5.0),
+                    child: Text(text),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
