@@ -467,7 +467,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   List<Positioned> getChatterWidgetList(List<AnyChatUser> chatters) {
     var widgets = <Positioned>[];
-    double top = 15;
+    double top = 1;
     for (var chatter in chatters) {
       if (chatters.first == chatter) {
         widgets.add(Positioned(
@@ -484,7 +484,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               backgroundImage: NetworkImage(chatter.photoUrl),
               foregroundColor: Theme.of(context).primaryColorLight),
         ));
-        top += 15;
+        top += 5;
       }
     }
     return widgets;

@@ -6,6 +6,7 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,9 +28,12 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
+            kIsWeb ?
+            Image.network("assets/icons/login.svg",
+                height: size.height < 750 ? size.height * 0.25 : size.height * 0.35)
+            : SvgPicture.asset(
               "assets/icons/login.svg",
-              height: size.height * 0.35,
+              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
