@@ -179,6 +179,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   _openContactForm() async {
     try {
+      await ContactsService.openContactForm();
       refreshContacts();
     } on FormOperationException catch (e) {
       switch (e.errorCode) {

@@ -29,10 +29,10 @@ class RegisterScreen extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             kIsWeb
                 ? Image.network("assets/icons/signup.svg",
-                height: size.height * 0.35)
+              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35)
                 : SvgPicture.asset(
               "assets/icons/signup.svg",
-              height: size.height * 0.35,
+              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
