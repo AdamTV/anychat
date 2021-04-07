@@ -366,7 +366,7 @@ class _CallScreenState extends State<CallScreen> {
   Stream<QuerySnapshot> loadAllTranscribedMessages() {
     return FirebaseFirestore.instance
         .collection('conversations')
-        .doc(ChatWindow.currentConversation.id)
+        .doc(AnyChatAuth.currentConversation.id)
         .collection('transcribedMessages')
         .orderBy('timestamp', descending: false)
         .snapshots();
