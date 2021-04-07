@@ -178,7 +178,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 }).last;
                 var info = AnyChatAuth.currentUser.conversations.firstWhere(
                     (element) =>
-                        element.id == ChatWindow.currentConversation.id);
+                        element.id == AnyChatAuth.currentConversation.id);
                 final language = message.senderId == AnyChatAuth.currentUser.id
                     ? info.outgoingLanguage
                     : info.incomingLanguage;
@@ -409,8 +409,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         color: Theme.of(context).primaryColorLight,
         child: new ListTile(
           onTap: () {
-            ChatWindow.currentConversation = conversation;
-            ChatWindow.currentChatters = chatters;
+            setState((){
+              AnyChatAuth.currentConversation = conversation;
+              AnyChatAuth.currentChatters = chatters;
+            });
             // Navigator.pushNamed(context,  "/chat", arguments: {conversation, chatters});
           Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen()));
           },

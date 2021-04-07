@@ -7,10 +7,14 @@ import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'anychat_user.dart';
+import 'conversation.dart';
 
 class AnyChatAuth {
   static AnyChatUser currentUser;
   static String linkedAccountPhotoUrl;
+  static Conversation currentConversation;
+  static List<AnyChatUser> currentChatters = <AnyChatUser>[];
+
 
   static final FacebookLogin facebookSignIn = new FacebookLogin();
   static GoogleSignIn _googleSignIn = GoogleSignIn(

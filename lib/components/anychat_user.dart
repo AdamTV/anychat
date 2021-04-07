@@ -47,7 +47,7 @@ class AnyChatUser {
       'participants': [id, AnyChatAuth.currentUser.id],
       'timestamp': FieldValue.serverTimestamp()
     });
-    ChatWindow.currentConversation =
+    AnyChatAuth.currentConversation =
         Conversation.fromSnapshot(await conversation.get());
     final currentUser = FirebaseFirestore.instance
         .collection("users")
@@ -129,7 +129,7 @@ class AnyChatUser {
   static Future<String> addMessageToConversation(String text) async {
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
-        .doc(ChatWindow.currentConversation.id);
+        .doc(AnyChatAuth.currentConversation.id);
     final newMessage = conversation.collection('messages').doc();
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
@@ -258,7 +258,7 @@ class AnyChatUser {
   static Future<void> addTranscribedMessage(String text) async {
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
-        .doc(ChatWindow.currentConversation.id);
+        .doc(AnyChatAuth.currentConversation.id);
     final newMessage = conversation.collection('transcribedMessages').doc();
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
@@ -295,7 +295,7 @@ class AnyChatUser {
   static Future<void> clearTranscribedMessages() {
     final messages = FirebaseFirestore.instance
         .collection('conversations')
-        .doc(ChatWindow.currentConversation.id)
+        .doc(AnyChatAuth.currentConversation.id)
         .collection('transcribedMessages');
     WriteBatch batch = FirebaseFirestore.instance.batch();
     return messages.get().then((querySnapshot) {
@@ -306,9 +306,9 @@ class AnyChatUser {
     });
     // return FirebaseFirestore.instance
     //     .collection("conversations")
-    //     .doc(ChatWindow.currentConversation.id)
+    //     .doc(AnyChatAuth.currentConversation.id)
     //     .collection('transcribedMessages').doc(id).delete()
-    //     .then((value) => print("Messages Deleted for ${ChatWindow.currentConversation.id}"))
+    //     .then((value) => print("Messages Deleted for ${AnyChatAuth.currentConversation.id}"))
     //     .catchError((error) => print("Failed to delete messages: $error"));
     // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
@@ -335,7 +335,7 @@ class AnyChatUser {
   static Future<bool> addUserToConversation(AnyChatUser user) async {
     final conversationRef = FirebaseFirestore.instance
         .collection('conversations')
-        .doc(ChatWindow.currentConversation.id);
+        .doc(AnyChatAuth.currentConversation.id);
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
     if (conversation.participants.contains(user.id)){
       Utilities.showToast("${user.displayName} ${AppLocalizations.of(context).isAlreadyInThisConversation}");
@@ -407,7 +407,7 @@ class AnyChatUser {
                       .removeWhere((element) => element.id == id);
                 }
                 Navigator.of(context).pop();
-                ChatWindow.currentConversation = null;
+                AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
                 Utilities.showToast(AppLocalizations.of(context).successfullyLeftConversation);
                 Navigator.pushReplacementNamed(

@@ -286,10 +286,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
       onTap: c.isRegistered
           ? () async {
               var user = await AnyChatUser.findUserById(c.anyChatId);
-              if (ChatWindow.currentConversation == null) {
+              if (AnyChatAuth.currentConversation == null) {
                 var convo = await AnyChatUser.createConversation(user.id);
                 if (convo == null) return;
-                ChatWindow.currentConversation = convo;
+                AnyChatAuth.currentConversation = convo;
                 List<AnyChatUser> users = <AnyChatUser>[];
                 for (var id in convo.participants) {
                   if (id != AnyChatAuth.currentUser.id) {
@@ -300,15 +300,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         .get()));
                   }
                 }
-                ChatWindow.currentChatters = users;
+                AnyChatAuth.currentChatters = users;
               } else {
                 if (await AnyChatUser.addUserToConversation(user)){
-                  ChatWindow.currentConversation.participants.add(user.id);
+                  AnyChatAuth.currentConversation.participants.add(user.id);
                   await FirebaseFirestore.instance
                       .runTransaction((Transaction transaction) async {
                     var convoDoc = FirebaseFirestore.instance
                         .collection('conversations')
-                        .doc(ChatWindow.currentConversation.id);
+                        .doc(AnyChatAuth.currentConversation.id);
                     return transaction
                         .get(convoDoc)
                         .then((DocumentSnapshot doc) =>
@@ -316,11 +316,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         .then((Conversation fresh) async {
                       transaction.update(convoDoc, {
                         'participants':
-                        ChatWindow.currentConversation.participants,
+                        AnyChatAuth.currentConversation.participants,
                       });
                     });
                   });
-                  ChatWindow.currentChatters.add(user);
+                  AnyChatAuth.currentChatters.add(user);
                 }
 
               }

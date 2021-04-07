@@ -29,9 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatWindow extends StatefulWidget {
-  static Conversation currentConversation;
-
-  static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
   @override
   _ChatWindowState createState() => _ChatWindowState();
@@ -39,7 +36,7 @@ class ChatWindow extends StatefulWidget {
   static Stream<QuerySnapshot> loadAllChatMessages() {
     return FirebaseFirestore.instance
         .collection('conversations')
-        .doc(currentConversation.id)
+        .doc(AnyChatAuth.currentConversation.id)
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
@@ -92,7 +89,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   AnyChatAuth.currentUser.id);
         }
         var info = AnyChatAuth.currentUser.conversations.firstWhere(
-            (element) => element.id == ChatWindow.currentConversation.id);
+            (element) => element.id == AnyChatAuth.currentConversation.id);
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
@@ -119,7 +116,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           .doc(_chatMessages.last.senderId)
           .get());
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
-          (element) => element.id == ChatWindow.currentConversation.id);
+          (element) => element.id == AnyChatAuth.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
           ? info.outgoingLanguage
           : info.incomingLanguage;
@@ -211,14 +208,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       onPressed: () async {
         await Utilities.handleCameraAndMic(Permission.camera);
         await Utilities.handleCameraAndMic(Permission.microphone);
-        CallScreen.channelName = ChatWindow.currentConversation.id;
+        CallScreen.channelName = AnyChatAuth.currentConversation.id;
         Navigator.pushNamed(context, "/call");
       },
     ));
     return Scaffold(
       appBar: AppBar(
           title: Text(
-              Utilities.getChatterDisplayNameString(ChatWindow.currentChatters)),
+              Utilities.getChatterDisplayNameString(AnyChatAuth.currentChatters)),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           actions: widgets),
@@ -249,7 +246,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(AppLocalizations.of(context).leaveConversation),
                 onTap: () {
                   AnyChatUser.deleteConversation(
-                      context, ChatWindow.currentConversation.id);
+                      context, AnyChatAuth.currentConversation.id);
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).backToConversations),
@@ -318,7 +315,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   _buildPopupDialog(BuildContext context) {
     var info = AnyChatAuth.currentUser.conversations.firstWhere(
-        (element) => element.id == ChatWindow.currentConversation.id);
+        (element) => element.id == AnyChatAuth.currentConversation.id);
     String incomingDropdownValue =
         Utilities.getLanguageFromIsoCode(info.incomingLanguage);
     String outgoingDropdownValue =
@@ -345,7 +342,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     .doc(AnyChatAuth.currentUser.id);
                 var userConversationInfo = user
                     .collection('conversations')
-                    .doc(ChatWindow.currentConversation.id);
+                    .doc(AnyChatAuth.currentConversation.id);
                 return transaction
                     .get(user)
                     .then(
@@ -385,7 +382,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     .doc(AnyChatAuth.currentUser.id);
                 var userConversationInfo = user
                     .collection('conversations')
-                    .doc(ChatWindow.currentConversation.id);
+                    .doc(AnyChatAuth.currentConversation.id);
                 return transaction
                     .get(user)
                     .then(

@@ -81,10 +81,10 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
             itemBuilder: (BuildContext buildCtx, int index) {
               return new ListTile(
                   onTap: () async {
-                    if (ChatWindow.currentConversation == null) {
+                    if (AnyChatAuth.currentConversation == null) {
                       var convo = await AnyChatUser.createConversation(
                           SearchChatterByEmailScreenState.users[index].id);
-                      ChatWindow.currentConversation = convo;
+                      AnyChatAuth.currentConversation = convo;
                       List<AnyChatUser> users = <AnyChatUser>[];
                       for (var id in convo.participants) {
                         if (id != AnyChatAuth.currentUser.id) {
@@ -95,29 +95,29 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
                                   .get()));
                         }
                       }
-                      ChatWindow.currentChatters = users;
+                      AnyChatAuth.currentChatters = users;
                     } else {
                       AnyChatUser.addUserToConversation(
                           SearchChatterByEmailScreenState.users[index]);
-                      ChatWindow.currentConversation.participants
+                      AnyChatAuth.currentConversation.participants
                           .add(SearchChatterByEmailScreenState.users[index].id);
                       await FirebaseFirestore.instance.runTransaction(
                               (Transaction transaction) async {
                             var convoDoc = FirebaseFirestore.instance
                                 .collection('conversations')
-                                .doc(ChatWindow.currentConversation.id);
+                                .doc(AnyChatAuth.currentConversation.id);
                             return transaction
                                 .get(convoDoc)
                                 .then((DocumentSnapshot doc) =>
                                 Conversation.fromSnapshot(doc))
                                 .then((Conversation fresh) async {
                               transaction.update(convoDoc, {
-                                'participants': ChatWindow
+                                'participants': AnyChatAuth
                                     .currentConversation.participants,
                               });
                             });
                           });
-                      ChatWindow.currentChatters
+                      AnyChatAuth.currentChatters
                           .add(SearchChatterByEmailScreenState.users[index]);
                     }
                     Navigator.pushNamed(context, "/chat");
