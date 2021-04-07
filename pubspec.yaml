@@ -69,6 +69,7 @@ dev_dependencies:
   integration_test: ^1.0.0
   flutter_test:
     sdk: flutter
+  e2e: ^0.2.1
   flutter_driver:
     sdk: flutter
 

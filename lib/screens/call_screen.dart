@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:agora_rtc_engine/rtc_channel.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -20,8 +22,6 @@ import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
 
-import 'chat_screen.dart';
-
 class CallScreen extends StatefulWidget {
   static String channelName;
 
@@ -32,10 +32,11 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
-  static final _users = <int>[];
+  // static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
   RtcEngine _engine;
+  RtcChannel _channel;
   String text = "";
   StreamSubscription<QuerySnapshot> _transcribedChatMessageSubscription;
 
@@ -54,7 +55,7 @@ class _CallScreenState extends State<CallScreen> {
     AnyChatUser.clearTranscribedMessages();
     // print(_infoStrings);
     // clear users
-    _users.clear();
+    remoteUid.clear();
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
@@ -79,15 +80,25 @@ class _CallScreenState extends State<CallScreen> {
       return;
     }
     await _initAgoraRtcEngine();
-    _addAgoraEventHandlers();
+    // _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
+    _channel = await RtcChannel.create(CallScreen.channelName);
+    setState(() {});
+    this._addListener(_channel);
+    await _channel.setClientRole(ClientRole.Broadcaster);
+    await _channel.publish();
+    await _channel.joinChannel(null, null, 0, ChannelMediaOptions(true, true));
     streamingRecognize();
-    await _engine.joinChannel(null, CallScreen.channelName, null, 0);
+    // await _engine.joinChannel(null, CallScreen.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
+    _engine = await RtcEngine.createWithConfig(RtcEngineConfig(agoraAppId));
     await _engine.enableVideo();
+    await _engine.startPreview();
+    await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await _engine.setClientRole(ClientRole.Broadcaster);
   }
 
   /// Add agora event handlers
@@ -108,21 +119,21 @@ class _CallScreenState extends State<CallScreen> {
       leaveChannel: (stats) {
         setState(() {
           _infoStrings.add('onLeaveChannel');
-          _users.clear();
+          remoteUid.clear();
         });
       },
       userJoined: (uid, elapsed) {
         setState(() {
           final info = 'userJoined: $uid';
           _infoStrings.add(info);
-          _users.add(uid);
+          remoteUid.add(uid);
         });
       },
       userOffline: (uid, reason) {
         setState(() {
           final info = 'userOffline: $uid , reason: $reason';
           _infoStrings.add(info);
-          _users.remove(uid);
+          remoteUid.remove(uid);
         });
       },
       firstRemoteVideoFrame: (uid, width, height, elapsed) {
@@ -273,20 +284,16 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
-    final List<Widget> list = [];
-    // if (defaultTargetPlatform == TargetPlatform.iOS) {
-    //   list.add(RtcLocalView.SurfaceView());
-    //   _users.forEach(
-    //       (int uid) => {list.add(RtcRemoteView.SurfaceView(uid: uid))});
-    // }
-    // if(defaultTargetPlatform == TargetPlatform.android){
-    // list.add(TextField());
-    list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) =>
-        // {list.add(_translatedText()), list.add(RtcRemoteView.SurfaceView(uid: uid))});
-        {list.add(RtcRemoteView.SurfaceView(uid: uid))});
-    // }
-    return list;
+    return List.of(remoteUid.map(
+      (e) => Container(
+        width: 120,
+        height: 120,
+        child: RtcRemoteView.SurfaceView(
+          uid: e,
+          channelId: CallScreen.channelName,
+        ),
+      ),
+    ));
   }
 
   /// Video view wrapper
@@ -306,47 +313,80 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Video layout wrapper
   Widget _viewRows() {
-    var getRenderViews = _getRenderViews();
-    final views = getRenderViews;
-    switch (views.length) {
-      case 1:
-        return Container(
-            child: Column(
-          children: <Widget>[_videoView(views[0])],
-        ));
-      case 2:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
-          ],
-        ));
-      case 3:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 3))
-          ],
-        ));
-      case 4:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        ));
-      default:
-    }
-    return Container();
+    return Expanded(
+      child: Stack(
+        children: [
+          if (remoteUid != null)
+            SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.of(remoteUid.map(
+                    (e) => Container(
+                      width:
+                          MediaQuery.of(context).size.width / remoteUid.length,
+                      height:
+                          MediaQuery.of(context).size.height / remoteUid.length,
+                      child: RtcRemoteView.SurfaceView(
+                        uid: e,
+                        channelId: _channel.channelId,
+                      ),
+                    ),
+                  )),
+                )),
+          Container(
+            width: 120,
+            height: 120,
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: RtcLocalView.SurfaceView(
+                  channelId: _channel?.channelId,
+                )),
+          )
+        ],
+      ),
+    );
+
+    // var getRenderViews = _getRenderViews();
+    // final views = getRenderViews;
+    // switch (views.length) {
+    //   case 1:
+    //     return Container(
+    //         child: Column(
+    //       children: <Widget>[_videoView(views[0])],
+    //     ));
+    //   case 2:
+    //     return Container(
+    //         child: Column(
+    //       children: <Widget>[
+    //         _expandedVideoRow([views[0]]),
+    //         _expandedVideoRow([views[1]])
+    //       ],
+    //     ));
+    //   case 3:
+    //     return Container(
+    //         child: Column(
+    //       children: <Widget>[
+    //         _expandedVideoRow(views.sublist(0, 2)),
+    //         _expandedVideoRow(views.sublist(2, 3))
+    //       ],
+    //     ));
+    //   case 4:
+    //     return Container(
+    //         child: Column(
+    //       children: <Widget>[
+    //         _expandedVideoRow(views.sublist(0, 2)),
+    //         _expandedVideoRow(views.sublist(2, 4))
+    //       ],
+    //     ));
+    //   default:
+    // }
+    // return Container();
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
-    if (await Ads.interstitial.isLoaded){
+    if (await Ads.interstitial.isLoaded) {
       Ads.interstitial.show();
-    }else{
+    } else {
       print('Interstitial ad is still laoding...');
     }
     Navigator.pop(context);
@@ -374,7 +414,7 @@ class _CallScreenState extends State<CallScreen> {
 
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
-
+    if (message == null) return;
     final language = AnyChatAuth.currentUser.language;
     if (message.senderId != AnyChatAuth.currentUser.id) {
       final translatedText =
@@ -386,8 +426,56 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   AnyChatMessage getMessageFromQuery(QuerySnapshot snapshot) {
+    if (snapshot.docs.isEmpty) return null;
     return snapshot.docs.map((DocumentSnapshot doc) {
       return AnyChatMessage.fromSnapshot(doc);
     }).last;
+  }
+
+  List<int> remoteUid = [];
+
+  _addListener(RtcChannel channel) {
+    String channelId = channel.channelId;
+    channel.setEventHandler(
+        RtcChannelEventHandler(joinChannelSuccess: (channel, uid, elapsed) {
+      log('joinChannelSuccess ${channel} ${uid} ${elapsed}');
+      // if (channelId == _channelId0) {
+      //   setState(() {
+      //     isJoined0 = true;
+      //   });
+      // } else if (channelId == _channelId1) {
+      //   setState(() {
+      //     isJoined1 = true;
+      //   });
+      // }
+    }, userJoined: (uid, elapsed) {
+      log('userJoined ${channel.channelId} $uid $elapsed');
+    }, userOffline: (uid, reason) {
+      log('userOffline ${channel.channelId} $uid $reason');
+    }, leaveChannel: (stats) {
+      log('leaveChannel ${channel.channelId} ${stats.toJson()}');
+      // if (channelId == _channelId0) {
+      //   this.setState(() {
+      //     isJoined0 = false;
+      //     remoteUid0.clear();
+      //   });
+      // } else if (channelId == _channelId1) {
+      //   this.setState(() {
+      //     isJoined1 = false;
+      //     remoteUid1.clear();
+      //   });
+      // }
+    }, remoteVideoStateChanged: (uid, state, reason, elapsed) {
+      log('remoteVideoStateChanged ${uid} ${state} ${reason} ${elapsed}');
+      if (state == VideoRemoteState.Starting) {
+        this.setState(() {
+          remoteUid.add(uid);
+        });
+      } else if (state == VideoRemoteState.Stopped) {
+        this.setState(() {
+          remoteUid.removeWhere((element) => element == uid);
+        });
+      }
+    }));
   }
 }
