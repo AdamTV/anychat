@@ -1,10 +1,15 @@
 import 'package:anychat/components/anychat_locale.dart';
+import 'package:anychat/components/social_icon.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_user.dart';
 import 'conversation.dart';
@@ -25,7 +30,29 @@ class AnyChatAuth {
   // );
 
   static Future<AnyChatUser> signInApple() async {
+    FirebaseAuth.instance;
+    final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        webAuthenticationOptions: WebAuthenticationOptions(clientId: "ca.alphatechnology.anychat", redirectUri: Uri.parse("https://fortunate-phase-wheel.glitch.me/callbacks/sign_in_with_apple"))
+    );
 
+    var snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(credential.userIdentifier)
+        .get();
+    if (snapshot.exists) {
+      var currentUser = AnyChatUser.fromSnapshot(snapshot);
+      linkedAccountPhotoUrl = "";
+      return currentUser;
+    } else {
+      var  currentUser = new AnyChatUser(credential.userIdentifier, credential.givenName, credential.email,
+          "", AnyChatLocale.currentLocale.substring(0, 2));
+      currentUser.addUserToFirestore();
+      return currentUser;
+    }
   }
 
   static Future<AnyChatUser> signInGoogle() async {
@@ -209,7 +236,70 @@ class AnyChatAuth {
     }
     return null;
   }
-
+  static SocialIcon facebookIcon(BuildContext context) {
+    return SocialIcon(
+      key: Key("facebookIcon"),
+      iconSrc: "assets/icons/facebook.svg",
+      press: () async {
+        try {
+          var user = await AnyChatAuth.signInFacebook();
+          if (user != null) {
+            Utilities.initConversationScreen(context, user);
+          }
+        } catch (e) {
+          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+              AppLocalizations.of(context).errorLoggingInFacebook);
+        }
+      },
+    );
+  }
+  static SocialIcon googleIcon(BuildContext context){
+    return SocialIcon(
+        iconSrc: "assets/icons/google-plus.svg",
+        press: () async {
+          try {
+            var user = await AnyChatAuth.signInGoogle();
+            if (user != null) {
+              Utilities.initConversationScreen(context, user);
+            }
+          } catch (e) {
+            Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                AppLocalizations.of(context).errorLoggingInGoogle);
+          }
+        });
+  }
+  static SocialIcon appleIcon(BuildContext context){
+    return SocialIcon(
+        iconSrc: "assets/icons/apple.svg",
+        press: () async {
+          try {
+            var user = await AnyChatAuth.signInApple();
+            if (user != null) {
+              Utilities.initConversationScreen(context, user);
+            }
+          } catch (e) {
+            Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                AppLocalizations.of(context).errorLoggingInTwitter);
+          }
+        }
+    );
+  }
+  static SocialIcon twitterIcon(BuildContext context){
+    return SocialIcon(
+      iconSrc: "assets/icons/twitter.svg",
+      press: () async {
+        try {
+          var user = await AnyChatAuth.signInTwitter();
+          if (user != null) {
+            Utilities.initConversationScreen(context, user);
+          }
+        } catch (e) {
+          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+              AppLocalizations.of(context).errorLoggingInTwitter);
+        }
+      },
+    );
+  }
   static Future<AnyChatUser> signInTwitter() async {
     // Create a TwitterLogin instance
     // final TwitterLogin twitterLogin = new TwitterLogin(
