@@ -27,10 +27,7 @@ class RegisterScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            kIsWeb
-                ? Image.network("assets/icons/signup.svg",
-              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35)
-                : SvgPicture.asset(
+            SvgPicture.asset(
               "assets/icons/signup.svg",
               height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
@@ -72,47 +69,10 @@ class RegisterScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SocialIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () async {
-                    try {
-                      var user = await AnyChatAuth.signInFacebook();
-                      if (user != null) {
-                        Utilities.initConversationScreen(context, user);
-                      }
-                    } catch (e) {
-                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                          AppLocalizations.of(context).unableRegisterFacebook);
-                    }
-                  },
-                ),
-                SocialIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () async {
-                    try {
-                      var user = await AnyChatAuth.signInTwitter();
-                      if (user != null) {
-                        Utilities.initConversationScreen(context, user);
-                      }
-                    } catch (e) {
-                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                          AppLocalizations.of(context).unableRegisterTwitter);
-                    }
-                  },
-                ),
-                SocialIcon(
-                    iconSrc: "assets/icons/google-plus.svg",
-                    press: () async {
-                      try {
-                        var user = await AnyChatAuth.signInGoogle();
-                        if (user != null) {
-                          Utilities.initConversationScreen(context, user);
-                        }
-                      } catch (e) {
-                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                            AppLocalizations.of(context).unableRegisterGoogle);
-                      }
-                    })
+                AnyChatAuth.googleIcon(context),
+                AnyChatAuth.appleIcon(context),
+                AnyChatAuth.facebookIcon(context),
+                AnyChatAuth.twitterIcon(context),
               ],
             )
           ],

@@ -19,10 +19,7 @@ class WelcomeScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.05),
-            kIsWeb
-            ? Image.network( "assets/icons/chat.svg",
-              height: size.height * 0.45)
-            : SvgPicture.asset(
+            SvgPicture.asset(
               "assets/icons/chat.svg",
               height: size.height * 0.45,
             ),

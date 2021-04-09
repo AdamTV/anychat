@@ -34,10 +34,7 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-            kIsWeb ?
-            Image.network("assets/icons/login.svg",
-                height: size.height < 750 ? size.height * 0.25 : size.height * 0.35)
-            : SvgPicture.asset(
+           SvgPicture.asset(
               "assets/icons/login.svg",
               height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
@@ -79,83 +76,16 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SocialIcon(
-                    iconSrc: "assets/icons/google-plus.svg",
-                    press: () async {
-                      try {
-                        var user = await AnyChatAuth.signInGoogle();
-                        if (user != null) {
-                          Utilities.initConversationScreen(context, user);
-                        }
-                      } catch (e) {
-                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                            AppLocalizations.of(context).errorLoggingInGoogle);
-                      }
-                    }),
-                SocialIcon(
-                    iconSrc: "assets/icons/apple.svg",
-                    press: () async {
-                      final credential = await SignInWithApple.getAppleIDCredential(
-                        scopes: [
-                          AppleIDAuthorizationScopes.email,
-                          AppleIDAuthorizationScopes.fullName,
-                        ],
-                      );
-
-                      var snapshot = await FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(credential.userIdentifier)
-                          .get();
-                      if (snapshot.exists) {
-                        AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(snapshot);
-                        AnyChatAuth.linkedAccountPhotoUrl = "";
-                      } else {
-
-                      AnyChatAuth.currentUser = new AnyChatUser(credential.userIdentifier, credential.givenName, credential.email,
-                            "", AnyChatLocale.currentLocale.substring(0, 2));
-                        AnyChatAuth.currentUser.addUserToFirestore();
-                      }
-                    }
-                ),
-                facebookIcon(context),
-                SocialIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () async {
-                    try {
-                      var user = await AnyChatAuth.signInTwitter();
-                      if (user != null) {
-                        Utilities.initConversationScreen(context, user);
-                      }
-                    } catch (e) {
-                      Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                          AppLocalizations.of(context).errorLoggingInTwitter);
-                    }
-                  },
-                ),
+                AnyChatAuth.googleIcon(context),
+                AnyChatAuth.appleIcon(context),
+                AnyChatAuth.facebookIcon(context),
+                AnyChatAuth.twitterIcon(context),
               ],
             )
           ],
         ),
       ),
     ));
-  }
-
-  SocialIcon facebookIcon(BuildContext context) {
-    return SocialIcon(
-      key: Key("facebookIcon"),
-      iconSrc: "assets/icons/facebook.svg",
-      press: () async {
-        try {
-          var user = await AnyChatAuth.signInFacebook();
-          if (user != null) {
-            Utilities.initConversationScreen(context, user);
-          }
-        } catch (e) {
-          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-              AppLocalizations.of(context).errorLoggingInFacebook);
-        }
-      },
-    );
   }
 }
 
