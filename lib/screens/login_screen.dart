@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'package:anychat/components/anychat_locale.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
@@ -7,9 +12,10 @@ import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -73,8 +79,46 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SocialIcon(
+                    iconSrc: "assets/icons/google-plus.svg",
+                    press: () async {
+                      try {
+                        var user = await AnyChatAuth.signInGoogle();
+                        if (user != null) {
+                          Utilities.initConversationScreen(context, user);
+                        }
+                      } catch (e) {
+                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                            AppLocalizations.of(context).errorLoggingInGoogle);
+                      }
+                    }),
+                SocialIcon(
+                    iconSrc: "assets/icons/apple.svg",
+                    press: () async {
+                      final credential = await SignInWithApple.getAppleIDCredential(
+                        scopes: [
+                          AppleIDAuthorizationScopes.email,
+                          AppleIDAuthorizationScopes.fullName,
+                        ],
+                      );
+
+                      var snapshot = await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(credential.userIdentifier)
+                          .get();
+                      if (snapshot.exists) {
+                        AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(snapshot);
+                        AnyChatAuth.linkedAccountPhotoUrl = "";
+                      } else {
+
+                      AnyChatAuth.currentUser = new AnyChatUser(credential.userIdentifier, credential.givenName, credential.email,
+                            "", AnyChatLocale.currentLocale.substring(0, 2));
+                        AnyChatAuth.currentUser.addUserToFirestore();
+                      }
+                    }
+                ),
                 facebookIcon(context),
-                SocalIcon(
+                SocialIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () async {
                     try {
@@ -88,19 +132,6 @@ class LoginScreen extends StatelessWidget {
                     }
                   },
                 ),
-                SocalIcon(
-                    iconSrc: "assets/icons/google-plus.svg",
-                    press: () async {
-                      try {
-                        var user = await AnyChatAuth.signInGoogle();
-                        if (user != null) {
-                          Utilities.initConversationScreen(context, user);
-                        }
-                      } catch (e) {
-                        Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                            AppLocalizations.of(context).errorLoggingInGoogle);
-                      }
-                    })
               ],
             )
           ],
@@ -109,8 +140,8 @@ class LoginScreen extends StatelessWidget {
     ));
   }
 
-  SocalIcon facebookIcon(BuildContext context) {
-    return SocalIcon(
+  SocialIcon facebookIcon(BuildContext context) {
+    return SocialIcon(
       key: Key("facebookIcon"),
       iconSrc: "assets/icons/facebook.svg",
       press: () async {

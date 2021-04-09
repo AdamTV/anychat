@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_twitter_login/flutter_twitter_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 
 import 'anychat_user.dart';
 import 'conversation.dart';
@@ -17,91 +17,95 @@ class AnyChatAuth {
 
 
   static final FacebookLogin facebookSignIn = new FacebookLogin();
-  static GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      'email',
-      //'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
+  // static GoogleSignIn _googleSignIn = GoogleSignIn(
+  //   scopes: <String>[
+  //     'email',
+  //     //'https://www.googleapis.com/auth/contacts.readonly',
+  //   ],
+  // );
+
+  static Future<AnyChatUser> signInApple() async {
+
+  }
 
   static Future<AnyChatUser> signInGoogle() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    GoogleSignInAccount googleSignInAccount;
+    // GoogleSignInAccount googleSignInAccount;
     AuthCredential credential;
     UserCredential authResult;
 
-    if (!kIsWeb) {
-      await _googleSignIn.signIn().then((result) async {
-        googleSignInAccount = result;
-        await result.authentication.then((googleKey) async {
-          print("accessToken: " + googleKey.accessToken.toString());
-          print("idToken: " + googleKey.idToken.toString());
-          print("displayName: " + googleSignInAccount.displayName.toString());
-          credential = GoogleAuthProvider.credential(
-            accessToken: googleKey.accessToken,
-            idToken: googleKey.idToken,
-          );
-          authResult = await _auth.signInWithCredential(credential);
-        }).catchError((err) {
-          print('inner error: ' + err.toString());
-        });
-      }).catchError((err) {
-        print('error occurred');
-      });
-      var snapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(googleSignInAccount.id)
-          .get();
-      if (snapshot.exists) {
-        currentUser = AnyChatUser.fromSnapshot(snapshot);
-        linkedAccountPhotoUrl = googleSignInAccount.photoUrl;
-        return currentUser;
-      } else {
-        currentUser = new AnyChatUser(
-            googleSignInAccount.id,
-            googleSignInAccount.displayName,
-            googleSignInAccount.email,
-            googleSignInAccount.photoUrl,
-            AnyChatLocale.currentLocale.substring(0, 2));
-        currentUser.addUserToFirestore();
-        return currentUser;
-      }
-    } else {
-      authResult = await _auth.signInWithPopup(GoogleAuthProvider());
-      await _googleSignIn.signInSilently();
-      print(_googleSignIn.currentUser?.id);
-    }
-
-    final _user = authResult.user;
-
-    if (_user != null) {
-      assert(!_user.isAnonymous);
-      assert(await _user.getIdToken() != null);
-
-      final User _authCurrentUser = _auth.currentUser;
-      assert(_user.uid == _authCurrentUser.uid);
-
-      print('signInWithGoogle succeeded: $_user');
-
-      currentUser = new AnyChatUser(
-          _user.providerData[0].uid,
-          _user.displayName,
-          _user.email,
-          _user.photoURL,
-          AnyChatLocale.currentLocale);
-      currentUser.addUserToFirestore();
+    // if (!kIsWeb) {
+    //   await _googleSignIn.signIn().then((result) async {
+    //     googleSignInAccount = result;
+    //     await result.authentication.then((googleKey) async {
+    //       print("accessToken: " + googleKey.accessToken.toString());
+    //       print("idToken: " + googleKey.idToken.toString());
+    //       print("displayName: " + googleSignInAccount.displayName.toString());
+    //       credential = GoogleAuthProvider.credential(
+    //         accessToken: googleKey.accessToken,
+    //         idToken: googleKey.idToken,
+    //       );
+    //       authResult = await _auth.signInWithCredential(credential);
+    //     }).catchError((err) {
+    //       print('inner error: ' + err.toString());
+    //     });
+    //   }).catchError((err) {
+    //     print('error occurred');
+    //   });
+    //   var snapshot = await FirebaseFirestore.instance
+    //       .collection("users")
+    //       .doc(googleSignInAccount.id)
+    //       .get();
+    //   if (snapshot.exists) {
+    //     currentUser = AnyChatUser.fromSnapshot(snapshot);
+    //     linkedAccountPhotoUrl = googleSignInAccount.photoUrl;
+    //     return currentUser;
+    //   } else {
+    //     currentUser = new AnyChatUser(
+    //         googleSignInAccount.id,
+    //         googleSignInAccount.displayName,
+    //         googleSignInAccount.email,
+    //         googleSignInAccount.photoUrl,
+    //         AnyChatLocale.currentLocale.substring(0, 2));
+    //     currentUser.addUserToFirestore();
+    //     return currentUser;
+    //   }
+    // } else {
+    //   authResult = await _auth.signInWithPopup(GoogleAuthProvider());
+    //   await _googleSignIn.signInSilently();
+    //   print(_googleSignIn.currentUser?.id);
+    // }
+    //
+    // final _user = authResult.user;
+    //
+    // if (_user != null) {
+    //   assert(!_user.isAnonymous);
+    //   assert(await _user.getIdToken() != null);
+    //
+    //   final User _authCurrentUser = _auth.currentUser;
+    //   assert(_user.uid == _authCurrentUser.uid);
+    //
+    //   print('signInWithGoogle succeeded: $_user');
+    //
+    //   currentUser = new AnyChatUser(
+    //       _user.providerData[0].uid,
+    //       _user.displayName,
+    //       _user.email,
+    //       _user.photoURL,
+    //       AnyChatLocale.currentLocale);
+    //   currentUser.addUserToFirestore();
 
       return currentUser;
-    }
+    // }
 
-    return null;
+    // return null;
   }
 
   static Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      await _googleSignIn.signOut();
+      // await _googleSignIn.signOut();
       await facebookSignIn.logOut();
     } catch (e) {
       print("User Signed Out");
@@ -208,37 +212,37 @@ class AnyChatAuth {
 
   static Future<AnyChatUser> signInTwitter() async {
     // Create a TwitterLogin instance
-    final TwitterLogin twitterLogin = new TwitterLogin(
-      consumerKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-      consumerSecret: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
-    );
+    // final TwitterLogin twitterLogin = new TwitterLogin(
+    //   consumerKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+    //   consumerSecret: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+    // );
 
-    final TwitterLoginResult loginResult = await twitterLogin.authorize();
+    // final TwitterLoginResult loginResult = await twitterLogin.authorize();
 
     // Get the Logged In session
-    final TwitterSession twitterSession = loginResult.session;
+    // final TwitterSession twitterSession = loginResult.session;
 
     // Create a credential from the access token
-    final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
-        accessToken: twitterSession.token, secret: twitterSession.secret);
+    // final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
+    //     accessToken: twitterSession.token, secret: twitterSession.secret);
 
-    final userCred =
-        await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
-    final user = userCred.user;
+    // final userCred =
+    //     await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+    // final user = userCred.user;
 
-    var snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .get();
-    if (snapshot.exists) {
-      currentUser = AnyChatUser.fromSnapshot(snapshot);
-      linkedAccountPhotoUrl = user.photoURL;
+    // var snapshot = await FirebaseFirestore.instance
+    //     .collection("users")
+    //     .doc(user.uid)
+    //     .get();
+    // if (snapshot.exists) {
+    //   currentUser = AnyChatUser.fromSnapshot(snapshot);
+    //   linkedAccountPhotoUrl = user.photoURL;
+    //   return currentUser;
+    // } else {
+    //   currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
+    //       user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
+    //   currentUser.addUserToFirestore();
       return currentUser;
-    } else {
-      currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-          user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
-      currentUser.addUserToFirestore();
-      return currentUser;
-    }
+    // }
   }
 }

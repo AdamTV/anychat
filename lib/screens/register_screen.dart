@@ -72,7 +72,7 @@ class RegisterScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SocalIcon(
+                SocialIcon(
                   iconSrc: "assets/icons/facebook.svg",
                   press: () async {
                     try {
@@ -86,7 +86,7 @@ class RegisterScreen extends StatelessWidget {
                     }
                   },
                 ),
-                SocalIcon(
+                SocialIcon(
                   iconSrc: "assets/icons/twitter.svg",
                   press: () async {
                     try {
@@ -100,7 +100,7 @@ class RegisterScreen extends StatelessWidget {
                     }
                   },
                 ),
-                SocalIcon(
+                SocialIcon(
                     iconSrc: "assets/icons/google-plus.svg",
                     press: () async {
                       try {
