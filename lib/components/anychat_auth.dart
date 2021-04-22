@@ -3,6 +3,7 @@ import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -30,8 +31,8 @@ class AnyChatAuth {
   // );
 
   static Future<AnyChatUser> signInApple() async {
-    FirebaseAuth.instance;
-    final credential = await SignInWithApple.getAppleIDCredential(
+
+    final appleIdCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
@@ -39,18 +40,26 @@ class AnyChatAuth {
         webAuthenticationOptions: WebAuthenticationOptions(clientId: "ca.alphatechnology.anychat", redirectUri: Uri.parse("https://fortunate-phase-wheel.glitch.me/callbacks/sign_in_with_apple"))
     );
 
+    final oAuthProvider = OAuthProvider('apple.com');
+    final credential = oAuthProvider.credential(
+      idToken: appleIdCredential.identityToken,
+      accessToken: appleIdCredential.authorizationCode,
+    );
+    final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+    final firebaseUser = authResult.user;
     var snapshot = await FirebaseFirestore.instance
         .collection("users")
-        .doc(credential.userIdentifier)
+        .doc(firebaseUser.uid)
         .get();
     if (snapshot.exists) {
       var currentUser = AnyChatUser.fromSnapshot(snapshot);
       linkedAccountPhotoUrl = "";
       return currentUser;
     } else {
-      var  currentUser = new AnyChatUser(credential.userIdentifier, credential.givenName, credential.email,
-          "", AnyChatLocale.currentLocale.substring(0, 2));
+      var  currentUser = new AnyChatUser(firebaseUser.uid, '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}', firebaseUser.email,
+          firebaseUser.photoURL ?? "", AnyChatLocale.currentLocale.substring(0, 2));
       currentUser.addUserToFirestore();
+      AnyChatAuth.currentUser = currentUser;
       return currentUser;
     }
   }
@@ -134,6 +143,7 @@ class AnyChatAuth {
       await FirebaseAuth.instance.signOut();
       // await _googleSignIn.signOut();
       await facebookSignIn.logOut();
+      // TODO: Sign-out Twitter & Apple
     } catch (e) {
       print("User Signed Out");
     }

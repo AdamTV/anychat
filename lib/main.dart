@@ -196,7 +196,7 @@ void main() {
                 ),
               ))
             }),
-        FirebaseAuth.instance.authStateChanges().listen((User user) {
+        FirebaseAuth.instance.authStateChanges().listen((User user) async {
           if (user == null) {
             print('User is signed out!');
           } else {
