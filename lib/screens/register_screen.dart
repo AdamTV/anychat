@@ -69,10 +69,10 @@ class RegisterScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                AnyChatAuth.googleIcon(context),
+                // AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
                 AnyChatAuth.facebookIcon(context),
-                AnyChatAuth.twitterIcon(context),
+                // AnyChatAuth.twitterIcon(context),
               ],
             )
           ],
