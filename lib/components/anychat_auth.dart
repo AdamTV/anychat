@@ -248,7 +248,9 @@ class AnyChatAuth {
           }
         } catch (e) {
           Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-              AppLocalizations.of(context).errorLoggingInFacebook);
+              ModalRoute.of(context).settings.name == "/login"
+                  ? AppLocalizations.of(context).errorLoggingInFacebook
+                  : AppLocalizations.of(context).unableRegisterFacebook);
         }
       },
     );
@@ -264,7 +266,9 @@ class AnyChatAuth {
             }
           } catch (e) {
             Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                AppLocalizations.of(context).errorLoggingInGoogle);
+                ModalRoute.of(context).settings.name == "/login"
+                    ? AppLocalizations.of(context).errorLoggingInGoogle
+                    : AppLocalizations.of(context).unableRegisterGoogle);
           }
         });
   }
@@ -279,7 +283,9 @@ class AnyChatAuth {
             }
           } catch (e) {
             Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-                AppLocalizations.of(context).errorLoggingInTwitter);
+                ModalRoute.of(context).settings.name == "/login"
+                    ? AppLocalizations.of(context).errorLoggingInApple
+                    : AppLocalizations.of(context).unableRegisterApple);
           }
         }
     );
@@ -295,7 +301,9 @@ class AnyChatAuth {
           }
         } catch (e) {
           Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
-              AppLocalizations.of(context).errorLoggingInTwitter);
+              ModalRoute.of(context).settings.name == "/login"
+                  ? AppLocalizations.of(context).errorLoggingInTwitter
+                  : AppLocalizations.of(context).unableRegisterTwitter);
         }
       },
     );
