@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
@@ -30,7 +31,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    text = "Listening to microphone. Live audio translations will appear here.";
+    Fluttertoast.showToast(msg: AppLocalizations.of(context).listeningToMicrophoneLiveAudio);
   }
 
   @override
@@ -57,7 +58,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 tooltip: AppLocalizations.of(context).delete,
                 onPressed: () {
                   setState(() {
-                    text = "Listening to microphone. Live audio translations will appear here.";
+                    text = "";
                   });
                 })
           ],
