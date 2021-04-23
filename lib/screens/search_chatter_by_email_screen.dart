@@ -15,10 +15,12 @@ class SearchChatterByEmailScreen extends StatefulWidget {
   const SearchChatterByEmailScreen({Key key}) : super(key: key);
 
   @override
-  SearchChatterByEmailScreenState createState() => SearchChatterByEmailScreenState(email);
+  SearchChatterByEmailScreenState createState() =>
+      SearchChatterByEmailScreenState(email);
 }
 
-class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> {
+class SearchChatterByEmailScreenState
+    extends State<SearchChatterByEmailScreen> {
   static String email;
   static Stream<QuerySnapshot> searchResults;
   static List<AnyChatUser> users = <AnyChatUser>[];
@@ -54,8 +56,7 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
             ListTile(
                 title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, "/conversations");
+                  Navigator.pushNamed(context, "/conversations");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
@@ -70,69 +71,72 @@ class SearchChatterByEmailScreenState extends State<SearchChatterByEmailScreen> 
           constraints: BoxConstraints(maxWidth: 1280),
           child: SearchChatterByEmailScreenState.users.length == 0
               ? ListTile(
-              title: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      text: AppLocalizations.of(context).noResultsFound,
-                      style: TextStyle(color: Colors.grey))))
+                  title: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: AppLocalizations.of(context).noResultsFound,
+                          style: TextStyle(color: Colors.grey))))
               : ListView.builder(
-            padding: EdgeInsets.all(8.0),
-            itemCount: SearchChatterByEmailScreenState.users.length,
-            itemBuilder: (BuildContext buildCtx, int index) {
-              return new ListTile(
-                  onTap: () async {
-                    if (AnyChatAuth.currentConversation == null) {
-                      var convo = await AnyChatUser.createConversation(
-                          SearchChatterByEmailScreenState.users[index].id);
-                      AnyChatAuth.currentConversation = convo;
-                      List<AnyChatUser> users = <AnyChatUser>[];
-                      for (var id in convo.participants) {
-                        if (id != AnyChatAuth.currentUser.id) {
-                          users.add(AnyChatUser.fromSnapshot(
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(id)
-                                  .get()));
-                        }
-                      }
-                      AnyChatAuth.currentChatters = users;
-                    } else {
-                      AnyChatUser.addUserToConversation(
-                          SearchChatterByEmailScreenState.users[index]);
-                      AnyChatAuth.currentConversation.participants
-                          .add(SearchChatterByEmailScreenState.users[index].id);
-                      await FirebaseFirestore.instance.runTransaction(
-                              (Transaction transaction) async {
-                            var convoDoc = FirebaseFirestore.instance
-                                .collection('conversations')
-                                .doc(AnyChatAuth.currentConversation.id);
-                            return transaction
-                                .get(convoDoc)
-                                .then((DocumentSnapshot doc) =>
-                                Conversation.fromSnapshot(doc))
-                                .then((Conversation fresh) async {
-                              transaction.update(convoDoc, {
-                                'participants': AnyChatAuth
-                                    .currentConversation.participants,
+                  padding: EdgeInsets.all(8.0),
+                  itemCount: SearchChatterByEmailScreenState.users.length,
+                  itemBuilder: (BuildContext buildCtx, int index) {
+                    return new ListTile(
+                        onTap: () async {
+                          if (AnyChatAuth.currentConversation == null) {
+                            var convo = await AnyChatUser.createConversation(
+                                SearchChatterByEmailScreenState
+                                    .users[index].id);
+                            AnyChatAuth.currentConversation = convo;
+                            List<AnyChatUser> users = <AnyChatUser>[];
+                            for (var id in convo.participants) {
+                              if (id != AnyChatAuth.currentUser.id) {
+                                users.add(AnyChatUser.fromSnapshot(
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(id)
+                                        .get()));
+                              }
+                            }
+                            AnyChatAuth.currentChatters = users;
+                          } else {
+                            AnyChatUser.addUserToConversation(
+                                SearchChatterByEmailScreenState.users[index]);
+                            AnyChatAuth.currentConversation.participants.add(
+                                SearchChatterByEmailScreenState
+                                    .users[index].id);
+                            await FirebaseFirestore.instance.runTransaction(
+                                (Transaction transaction) async {
+                              var convoDoc = FirebaseFirestore.instance
+                                  .collection('conversations')
+                                  .doc(AnyChatAuth.currentConversation.id);
+                              return transaction
+                                  .get(convoDoc)
+                                  .then((DocumentSnapshot doc) =>
+                                      Conversation.fromSnapshot(doc))
+                                  .then((Conversation fresh) async {
+                                transaction.update(convoDoc, {
+                                  'participants': AnyChatAuth
+                                      .currentConversation.participants,
+                                });
                               });
                             });
-                          });
-                      AnyChatAuth.currentChatters
-                          .add(SearchChatterByEmailScreenState.users[index]);
-                    }
-                    Navigator.pushNamed(context, "/chat");
+                            AnyChatAuth.currentChatters.add(
+                                SearchChatterByEmailScreenState.users[index]);
+                          }
+                          Navigator.pushNamed(context, "/chat");
+                        },
+                        leading: new CircleAvatar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundImage: NetworkImage(
+                                SearchChatterByEmailScreenState
+                                    .users[index].photoUrl)),
+                        title: RichText(
+                            text: TextSpan(
+                                text: SearchChatterByEmailScreenState
+                                    .users[index].displayName,
+                                style: TextStyle(color: Colors.grey))));
                   },
-                  leading: new CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      backgroundImage: NetworkImage(
-                          SearchChatterByEmailScreenState.users[index].photoUrl)),
-                  title: RichText(
-                      text: TextSpan(
-                          text: SearchChatterByEmailScreenState
-                              .users[index].displayName,
-                          style: TextStyle(color: Colors.grey))));
-            },
-          )),
+                )),
     );
   }
 

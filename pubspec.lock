@@ -105,7 +105,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -329,6 +329,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_twitter_login:
+    dependency: "direct main"
+    description:
+      name: flutter_twitter_login
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -346,6 +353,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.2"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   google_speech:
     dependency: "direct main"
     description:
@@ -569,7 +597,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.1"
   protobuf:
     dependency: transitive
     description:
@@ -700,7 +728,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19"
+    version: "0.3.0"
   timezone:
     dependency: transitive
     description:
@@ -770,7 +798,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.1-nullsafety.1"
+    version: "6.1.0+1"
   webdriver:
     dependency: transitive
     description:
