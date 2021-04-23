@@ -27,6 +27,13 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String text = "";
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    text = "Listening to microphone. Live audio translations will appear here.";
+  }
+
+  @override
   Widget build(BuildContext context) {
     speechToText?.dispose();
     streamingRecognize();
@@ -50,7 +57,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 tooltip: AppLocalizations.of(context).delete,
                 onPressed: () {
                   setState(() {
-                    text = "";
+                    text = "Listening to microphone. Live audio translations will appear here.";
                   });
                 })
           ],
