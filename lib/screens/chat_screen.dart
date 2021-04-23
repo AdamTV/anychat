@@ -29,7 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatWindow extends StatefulWidget {
-
   @override
   _ChatWindowState createState() => _ChatWindowState();
 
@@ -60,7 +59,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
-
     _chatMessages.clear();
     _messages.clear();
     _chatMessageSubscription =
@@ -152,8 +150,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   });
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
-                decoration:
-                    InputDecoration.collapsed(hintText: AppLocalizations.of(context).send_a_messgae),
+                decoration: InputDecoration.collapsed(
+                    hintText: AppLocalizations.of(context).send_a_messgae),
                 focusNode: _focusNode,
               ),
             ),
@@ -161,7 +159,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? CupertinoButton(
-                        child: Text(AppLocalizations.of(context).send),
+                        child: Text(
+                          AppLocalizations.of(context).send),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,
@@ -203,7 +202,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               builder: (BuildContext context) => _buildPopupDialog(context));
         }));
     widgets.add(IconButton(
-      icon: const Icon(Icons.call),
+      icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context).call,
       onPressed: () async {
         await Utilities.handleCameraAndMic(Permission.camera);
@@ -214,8 +213,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     ));
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-              Utilities.getChatterDisplayNameString(AnyChatAuth.currentChatters)),
+          title: Text(Utilities.getChatterDisplayNameString(
+              AnyChatAuth.currentChatters)),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           actions: widgets),
@@ -237,10 +236,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-                title: Text(AppLocalizations.of(context).addSomeoneToConversation),
+                title:
+                    Text(AppLocalizations.of(context).addSomeoneToConversation),
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, "/addChatter");
+                  Navigator.pushNamed(context, "/addChatter");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).leaveConversation),
@@ -251,8 +250,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text(AppLocalizations.of(context).backToConversations),
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, "/conversations");
+                  Navigator.pushNamed(context, "/conversations");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
@@ -359,7 +357,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               });
               Navigator.pushNamed(context, "/chat");
             },
-            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys
+                .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -399,7 +398,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               });
               Navigator.pushNamed(context, "/chat");
             },
-            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys
+                .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -424,7 +424,7 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor:
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Container(
         margin: const EdgeInsets.all(8.0),
@@ -436,12 +436,12 @@ class ChatMessage extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 16.0),
                 child: sender.photoUrl != null
                     ? CircleAvatar(
-                  backgroundImage: NetworkImage(sender.photoUrl),
-                  backgroundColor: Colors.transparent,
-                )
+                        backgroundImage: NetworkImage(sender.photoUrl),
+                        backgroundColor: Colors.transparent,
+                      )
                     : CircleAvatar(
-                  child: Text(sender.displayName.substring(0, 1)),
-                )),
+                        child: Text(sender.displayName.substring(0, 1)),
+                      )),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
