@@ -94,9 +94,10 @@ class Utilities {
     return "Error";
   }
 
-  static Future<void> handleCameraAndMic(Permission permission) async {
+  static Future<bool> handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print(status);
+    return status.isGranted;
   }
 
   static String getChatterDisplayNameString(List<AnyChatUser> users) {

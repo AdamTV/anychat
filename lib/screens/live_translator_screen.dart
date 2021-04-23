@@ -31,13 +31,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Fluttertoast.showToast(msg: AppLocalizations.of(context).listeningToMicrophoneLiveAudio);
+    streamingRecognize();
   }
 
   @override
   Widget build(BuildContext context) {
-    speechToText?.dispose();
-    streamingRecognize();
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
@@ -235,13 +233,9 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     return stream;
   }
 
-  // @override
-  // void initState() {
-  // }
-
   @override
   void dispose() {
-    speechToText.dispose();
+    speechToText?.dispose();
     super.dispose();
   }
 }

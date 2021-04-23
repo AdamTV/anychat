@@ -205,10 +205,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context).call,
       onPressed: () async {
-        await Utilities.handleCameraAndMic(Permission.camera);
-        await Utilities.handleCameraAndMic(Permission.microphone);
-        CallScreen.channelName = AnyChatAuth.currentConversation.id;
-        Navigator.pushNamed(context, "/call");
+        if (await Utilities.handleCameraAndMic(Permission.camera) &&
+            await Utilities.handleCameraAndMic(Permission.microphone)) {
+          CallScreen.channelName = AnyChatAuth.currentConversation.id;
+          Navigator.pushNamed(context, "/call");
+        }
       },
     ));
     return Scaffold(

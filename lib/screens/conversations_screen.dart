@@ -15,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
@@ -94,9 +95,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             ListTile(
                 title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
-                  await Utilities.handleCameraAndMic(Permission.microphone);
-                  Navigator.pushNamed(
-                      context, "/liveTranslator");
+                  if (await Utilities.handleCameraAndMic(Permission.microphone)) {
+                    Fluttertoast.showToast(msg: AppLocalizations.of(context).listeningToMicrophoneLiveAudio);
+                    Navigator.pushNamed(
+                        context, "/liveTranslator");
+                  }
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).settings),
