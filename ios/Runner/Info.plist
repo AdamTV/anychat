@@ -164,24 +164,18 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>AnyChat is requesting access to your Apple Music.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>AnyChat is requesting access to your bluetooth connection.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>AnyChat is requesting access to your calendar.</string>
+	<string>AnyChat is requesting access to your bluetooth connection. This access is required so bluetooth devices can be used in video calls.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>AnyChat is requesting access to your camera.</string>
+	<string>AnyChat is requesting access to your camera. Your camera is needed for video calls.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>AnyChat is requesting access to your contacts.</string>
+	<string>AnyChat is requesting access to your contacts. Your contacts are needed to quickly find other people who use this app, or invite friends!</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>AnyChat is requesting access to your microphone.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>AnyChat is requesting access to your motion sensors.</string>
+	<string>AnyChat is requesting access to your microphone. Your microphone is needed for video calls.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>AnyChat is requesting access to your photos.</string>
+	<string>AnyChat is requesting access to your photos. Your photos are needed to update your profile picture.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>AnyChat is requesting access to recognize your speech.</string>
+	<string>AnyChat is requesting access to recognize your speech. This access is needed to translate your communication.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
