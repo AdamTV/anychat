@@ -102,57 +102,56 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   /// Add agora event handlers
-  void _addAgoraEventHandlers() {
-    _engine.setEventHandler(RtcEngineEventHandler(
-      error: (code) {
-        setState(() {
-          final info = 'onError: $code';
-          _infoStrings.add(info);
-        });
-      },
-      joinChannelSuccess: (channel, uid, elapsed) {
-        setState(() {
-          final info = 'onJoinChannel: $channel, uid: $uid';
-          _infoStrings.add(info);
-        });
-      },
-      leaveChannel: (stats) {
-        setState(() {
-          _infoStrings.add('onLeaveChannel');
-          remoteUid.clear();
-        });
-      },
-      userJoined: (uid, elapsed) {
-        setState(() {
-          final info = 'userJoined: $uid';
-          _infoStrings.add(info);
-          remoteUid.add(uid);
-        });
-      },
-      userOffline: (uid, reason) {
-        setState(() {
-          final info = 'userOffline: $uid , reason: $reason';
-          _infoStrings.add(info);
-          remoteUid.remove(uid);
-        });
-      },
-      firstRemoteVideoFrame: (uid, width, height, elapsed) {
-        setState(() {
-          final info = 'firstRemoteVideoFrame: $uid';
-          _infoStrings.add(info);
-        });
-      },
-    ));
-  }
+  // void _addAgoraEventHandlers() {
+  //   _engine.setEventHandler(RtcEngineEventHandler(
+  //     error: (code) {
+  //       setState(() {
+  //         final info = 'onError: $code';
+  //         _infoStrings.add(info);
+  //       });
+  //     },
+  //     joinChannelSuccess: (channel, uid, elapsed) {
+  //       setState(() {
+  //         final info = 'onJoinChannel: $channel, uid: $uid';
+  //         _infoStrings.add(info);
+  //       });
+  //     },
+  //     leaveChannel: (stats) {
+  //       setState(() {
+  //         _infoStrings.add('onLeaveChannel');
+  //         remoteUid.clear();
+  //       });
+  //     },
+  //     userJoined: (uid, elapsed) {
+  //       setState(() {
+  //         final info = 'userJoined: $uid';
+  //         _infoStrings.add(info);
+  //         remoteUid.add(uid);
+  //       });
+  //     },
+  //     userOffline: (uid, reason) {
+  //       setState(() {
+  //         final info = 'userOffline: $uid , reason: $reason';
+  //         _infoStrings.add(info);
+  //         remoteUid.remove(uid);
+  //       });
+  //     },
+  //     firstRemoteVideoFrame: (uid, width, height, elapsed) {
+  //       setState(() {
+  //         final info = 'firstRemoteVideoFrame: $uid';
+  //         _infoStrings.add(info);
+  //       });
+  //     },
+  //   ));
+  // }
 
   Widget _translatedText() {
-    return Wrap(
-      children: <Widget>[
-        Text(text,
-            style: TextStyle(
-                backgroundColor: Theme.of(context).primaryColorLight,
-                fontSize: 32))
-      ],
+    return Container(
+            alignment: Alignment.bottomCenter,
+            child: Text(text,
+                style: TextStyle(
+                    backgroundColor: Theme.of(context).primaryColorLight,
+                    fontSize: 32)),
     );
   }
 
@@ -283,33 +282,33 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   /// Helper function to get list of native views
-  List<Widget> _getRenderViews() {
-    return List.of(remoteUid.map(
-      (e) => Container(
-        width: 120,
-        height: 120,
-        child: RtcRemoteView.SurfaceView(
-          uid: e,
-          channelId: CallScreen.channelName,
-        ),
-      ),
-    ));
-  }
+  // List<Widget> _getRenderViews() {
+  //   return List.of(remoteUid.map(
+  //     (e) => Container(
+  //       width: 120,
+  //       height: 120,
+  //       child: RtcRemoteView.SurfaceView(
+  //         uid: e,
+  //         channelId: CallScreen.channelName,
+  //       ),
+  //     ),
+  //   ));
+  // }
 
   /// Video view wrapper
-  Widget _videoView(view) {
-    return Expanded(child: Container(child: view));
-  }
+  // Widget _videoView(view) {
+  //   return Expanded(child: Container(child: view));
+  // }
 
   /// Video view row wrapper
-  Widget _expandedVideoRow(List<Widget> views) {
-    final wrappedViews = views.map<Widget>(_videoView).toList();
-    return Expanded(
-      child: Row(
-        children: wrappedViews,
-      ),
-    );
-  }
+  // Widget _expandedVideoRow(List<Widget> views) {
+  //   final wrappedViews = views.map<Widget>(_videoView).toList();
+  //   return Expanded(
+  //     child: Row(
+  //       children: wrappedViews,
+  //     ),
+  //   );
+  // }
 
   /// Video layout wrapper
   Widget _viewRows() {
@@ -435,7 +434,7 @@ class _CallScreenState extends State<CallScreen> {
   List<int> remoteUid = [];
 
   _addListener(RtcChannel channel) {
-    String channelId = channel.channelId;
+    // String channelId = channel.channelId;
     channel.setEventHandler(
         RtcChannelEventHandler(joinChannelSuccess: (channel, uid, elapsed) {
       log('joinChannelSuccess ${channel} ${uid} ${elapsed}');
