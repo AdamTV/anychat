@@ -409,7 +409,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       key: new Key(conversation.id),
       actionExtentRatio: 0.25,
       child: new Container(
-        color: Theme.of(context).primaryColorLight,
+        padding: EdgeInsets.all(10),
         child: new ListTile(
           onTap: () {
             setState((){
