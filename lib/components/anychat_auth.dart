@@ -3,10 +3,10 @@ import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -51,17 +51,23 @@ class AnyChatAuth {
         .collection("users")
         .doc(firebaseUser.uid)
         .get();
-    if (snapshot.exists) {
-      var currentUser = AnyChatUser.fromSnapshot(snapshot);
-      linkedAccountPhotoUrl = "";
-      return currentUser;
-    } else {
-      var  currentUser = new AnyChatUser(firebaseUser.uid, '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}', firebaseUser.email,
-          firebaseUser.photoURL ?? "", AnyChatLocale.currentLocale.substring(0, 2));
-      currentUser.addUserToFirestore();
-      AnyChatAuth.currentUser = currentUser;
-      return currentUser;
-    }
+      if (snapshot.exists) {
+        var currentUser = AnyChatUser.fromSnapshot(snapshot);
+        linkedAccountPhotoUrl = "";
+        AnyChatAuth.currentUser = currentUser;
+        return currentUser;
+      } else {
+        if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
+          var  currentUser = new AnyChatUser(firebaseUser.uid, '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}', firebaseUser.email,
+              firebaseUser.photoURL ?? "", AnyChatLocale.currentLocale.substring(0, 2));
+          currentUser.addUserToFirestore();
+          AnyChatAuth.currentUser = currentUser;
+          return currentUser;
+        }else{
+          Fluttertoast.showToast(msg: 'Email already in use.');
+          return null;
+        }
+      }
   }
 
   static Future<AnyChatUser> signInGoogle() async {
