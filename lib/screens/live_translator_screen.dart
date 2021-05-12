@@ -42,7 +42,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           title: Text(AppLocalizations.of(context).title),
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.language),
+              icon: const Icon(Icons.settings),
               tooltip: AppLocalizations.of(context).language,
               onPressed: () {
                 showDialog(
