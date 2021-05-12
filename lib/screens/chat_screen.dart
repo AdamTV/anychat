@@ -4,7 +4,6 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'call_screen.dart';
@@ -159,8 +159,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? CupertinoButton(
-                        child: Text(
-                          AppLocalizations.of(context).send),
+                        child: Text(AppLocalizations.of(context).send),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,
@@ -212,96 +211,101 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         }
       },
     ));
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(Utilities.getChatterDisplayNameString(
-              AnyChatAuth.currentChatters)),
-          elevation:
-              Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-          actions: widgets),
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                AppLocalizations.of(context).title,
-                style: TextStyle(color: Theme.of(context).primaryColorLight),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+    Container container = Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: _isLoading
+            ? [
+                Center(
+                  child: CircularProgressIndicator(
+                      valueColor: ColorTween(
+                              begin: Theme.of(context).accentColor,
+                              end: Theme.of(context).accentColor)
+                          .animate(AnimationController(vsync: this)),
+                      backgroundColor: Theme.of(context).primaryColor),
+                )
+              ]
+            : [
+                Flexible(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(8.0),
+                    reverse: true,
+                    itemBuilder: (_, int index) => _messages[index],
+                    itemCount: _messages.length,
+                  ),
+                ),
+                Divider(height: 1.0),
+                Container(
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor),
+                  child: _buildTextComposer(),
+                ),
+              ],
+      ),
+    );
+    return KeyboardSizeProvider(
+        child: Scaffold(
+            appBar: AppBar(
+                title: Text(Utilities.getChatterDisplayNameString(
+                    AnyChatAuth.currentChatters)),
+                elevation: Theme.of(context).platform == TargetPlatform.iOS
+                    ? 0.0
+                    : 4.0,
+                actions: widgets),
+            drawer: Drawer(
+              // Add a ListView to the drawer. This ensures the user can scroll
+              // through the options in the drawer if there isn't enough vertical
+              // space to fit everything.
+              child: ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    child: Text(
+                      AppLocalizations.of(context).title,
+                      style:
+                          TextStyle(color: Theme.of(context).primaryColorLight),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  ListTile(
+                      title: Text(AppLocalizations.of(context)
+                          .addSomeoneToConversation),
+                      onTap: () {
+                        Navigator.pushNamed(context, "/addChatter");
+                      }),
+                  ListTile(
+                      title:
+                          Text(AppLocalizations.of(context).leaveConversation),
+                      onTap: () {
+                        AnyChatUser.deleteConversation(
+                            context, AnyChatAuth.currentConversation.id);
+                      }),
+                  ListTile(
+                      title: Text(
+                          AppLocalizations.of(context).backToConversations),
+                      onTap: () {
+                        Navigator.pushNamed(context, "/conversations");
+                      }),
+                  ListTile(
+                      title: Text(AppLocalizations.of(context).logout),
+                      onTap: () async {
+                        await AnyChatAuth.signOut();
+                        Navigator.pushNamed(context, "/welcome");
+                      }),
+                ],
               ),
             ),
-            ListTile(
-                title:
-                    Text(AppLocalizations.of(context).addSomeoneToConversation),
-                onTap: () {
-                  Navigator.pushNamed(context, "/addChatter");
-                }),
-            ListTile(
-                title: Text(AppLocalizations.of(context).leaveConversation),
-                onTap: () {
-                  AnyChatUser.deleteConversation(
-                      context, AnyChatAuth.currentConversation.id);
-                }),
-            ListTile(
-                title: Text(AppLocalizations.of(context).backToConversations),
-                onTap: () {
-                  Navigator.pushNamed(context, "/conversations");
-                }),
-            ListTile(
-                title: Text(AppLocalizations.of(context).logout),
-                onTap: () async {
-                  await AnyChatAuth.signOut();
-                  Navigator.pushNamed(context, "/welcome");
-                }),
-          ],
-        ),
-      ),
-      body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: _isLoading
-                ? [
-                    Center(
-                      child: CircularProgressIndicator(
-                          valueColor: ColorTween(
-                                  begin: Theme.of(context).accentColor,
-                                  end: Theme.of(context).accentColor)
-                              .animate(AnimationController(vsync: this)),
-                          backgroundColor: Theme.of(context).primaryColor),
-                    )
-                  ]
-                : [
-                    Flexible(
-                      child: ListView.builder(
-                        padding: EdgeInsets.all(8.0),
-                        reverse: true,
-                        itemBuilder: (_, int index) => _messages[index],
-                        itemCount: _messages.length,
-                      ),
-                    ),
-                    Divider(height: 5.0),
-                    Container(
-                      decoration:
-                          BoxDecoration(color: Theme.of(context).cardColor),
-                      child: _buildTextComposer(),
-                    ),
-                  ],
-          ),
-          decoration: Theme.of(context).platform == TargetPlatform.iOS
-              ? BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[200]),
-                  ),
-                )
-              : null),
-    );
+            body: Consumer<ScreenHeight>(
+              builder: (context, _res, child) {
+                print('keyboard open: ${_res.isSmall}');
+                print('keyboard height: ${_res.keyboardHeight}');
+                return container;
+              },
+            )));
   }
 
   @override
@@ -329,7 +333,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           Text(AppLocalizations.of(context).incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
-            icon: Icon(Icons.language),
+            icon: Icon(Icons.settings),
             iconSize: 24,
             elevation: 16,
             style: TextStyle(color: Theme.of(context).primaryColor),
