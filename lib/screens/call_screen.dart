@@ -146,12 +146,13 @@ class _CallScreenState extends State<CallScreen> {
   // }
 
   Widget _translatedText() {
-    return Container(
-            alignment: Alignment.bottomCenter,
-            child: Text(text,
-                style: TextStyle(
-                    backgroundColor: Theme.of(context).primaryColorLight,
-                    fontSize: 32)),
+    return Wrap(
+      children: <Widget>[
+        Text(text,
+            style: TextStyle(
+                backgroundColor: Theme.of(context).primaryColorLight,
+                fontSize: 32))
+      ],
     );
   }
 
