@@ -1,12 +1,7 @@
-import 'dart:io';
-
-import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 
 class Notifications {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -49,20 +44,12 @@ class Notifications {
   }
 
   Future<void> showNotification(
-      String title, String body, String payload, {List<Message> messages, Person person}) async {
+      String title, String body, String payload) async {
     if (Utilities.prefs.getBool('notifications') != null &&
         !Utilities.prefs.getBool('notifications')) {
       return;
     }
     print('showNotification');
-
-    final MessagingStyleInformation messagingStyle = MessagingStyleInformation(
-        person,
-        groupConversation: true,
-        conversationTitle: 'Team lunch',
-        htmlFormatContent: true,
-        htmlFormatTitle: true,
-        messages: messages);
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         payload == 'ring'
             ? AndroidNotificationDetails(
@@ -72,7 +59,7 @@ class Notifications {
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',
-                styleInformation: messagingStyle,
+                styleInformation: BigTextStyleInformation(''),
                 playSound: false)
             : AndroidNotificationDetails(
                 AppLocalizations.of(Utilities.globalKey.currentContext).title,
@@ -81,7 +68,7 @@ class Notifications {
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',
-                styleInformation: messagingStyle,
+                styleInformation: BigTextStyleInformation(''),
               );
     var iosPlatformSpecs = payload == 'ring'
         ? IOSNotificationDetails(presentSound: false)
@@ -124,5 +111,10 @@ class Notifications {
           badge: true,
           sound: true,
         );
+  }
+
+  @override
+  void dispose() {
+    FlutterRingtonePlayer.stop();
   }
 }
