@@ -4,12 +4,12 @@ import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
-import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -48,7 +48,8 @@ class RegisterScreen extends StatelessWidget {
                 try {
                   var user = await AnyChatAuth.signInEmail(email, password, true);
                   if (user != null) {
-                    Utilities.initConversationScreen(context, user);
+                    Fluttertoast.showToast(msg: AppLocalizations.of(context).accountCreatedEnterSettings, toastLength: Toast.LENGTH_LONG);
+                    Navigator.pushNamed(context, '/settings');
                   }
                 } catch (e) {
                   Utilities.showAlertDialog(context, AppLocalizations.of(context).error,

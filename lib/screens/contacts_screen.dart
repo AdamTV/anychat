@@ -12,8 +12,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'chat_screen.dart';
-
 var iOSLocalizedLabels = defaultTargetPlatform == TargetPlatform.iOS;
 
 class ContactsScreen extends StatefulWidget {
@@ -40,7 +38,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
-          _appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
           _searchText = "";
           _filteredContacts = _contacts;
           // filteredNames = names;
@@ -67,10 +64,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
       }
       _filteredContacts = tempList;
     }
+    var _sortedContacts = _filteredContacts.where((element) => element.isRegistered).toList();
+    _sortedContacts.addAll(_filteredContacts.where((element) => !element.isRegistered));
     return ListView.builder(
-      itemCount: _filteredContacts?.length ?? 0,
+      itemCount: _sortedContacts?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        AnyChatContact c = _filteredContacts?.elementAt(index);
+        AnyChatContact c = _sortedContacts?.elementAt(index);
         return contactListTile(c);
       },
     );
@@ -239,6 +238,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
             },
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           );
+    if (!isSearch)
+      _appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
     return Scaffold(
       appBar: AppBar(
         title: _appBarTitle,
@@ -282,7 +283,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   ListTile contactListTile(AnyChatContact c) {
-    String sub = c.isRegistered ? AppLocalizations.of(context).startChatting : AppLocalizations.of(context).inviteToAnyChat;
+    String sub = c.isRegistered
+        ? AppLocalizations.of(context).startChatting
+        : AppLocalizations.of(context).inviteToAnyChat;
     return ListTile(
       onTap: c.isRegistered
           ? () async {
@@ -303,7 +306,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 }
                 AnyChatAuth.currentChatters = users;
               } else {
-                if (await AnyChatUser.addUserToConversation(user)){
+                if (await AnyChatUser.addUserToConversation(user)) {
                   AnyChatAuth.currentConversation.participants.add(user.id);
                   await FirebaseFirestore.instance
                       .runTransaction((Transaction transaction) async {
@@ -313,17 +316,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     return transaction
                         .get(convoDoc)
                         .then((DocumentSnapshot doc) =>
-                        Conversation.fromSnapshot(doc))
+                            Conversation.fromSnapshot(doc))
                         .then((Conversation fresh) async {
                       transaction.update(convoDoc, {
                         'participants':
-                        AnyChatAuth.currentConversation.participants,
+                            AnyChatAuth.currentConversation.participants,
                       });
                     });
                   });
                   AnyChatAuth.currentChatters.add(user);
                 }
-
               }
               Navigator.pushNamed(context, "/chat");
             }
@@ -350,7 +352,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
     var params =
         "?subject=Let%27s+chat+on+AnyChat%21&body=Let%27s+chat+on+AnyChat%21+It%27s+a+fast%2C+simple+and+secure+app+we+can+use+to+translate+our+messages+and+calls+for+free%21+Get+it+at%3A+https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dca.alphatech.anychat";
     if (user.emails.isNotEmpty) {
-      var eurl = "mailto:" + user.emails.first.value + params.replaceAll("+", " ");
+      var eurl =
+          "mailto:" + user.emails.first.value + params.replaceAll("+", " ");
       widgets.add(RoundedButton(
           text: AppLocalizations.of(context).emailInvite,
           press: () {
@@ -366,7 +369,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
           }));
     }
     return AlertDialog(
-        title: Text(AppLocalizations.of(context).invite + " " + user.displayName + " " + AppLocalizations.of(context).toAnyChat),
+        title: Text(AppLocalizations.of(context).invite +
+            " " +
+            user.displayName +
+            " " +
+            AppLocalizations.of(context).toAnyChat),
         content: new Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

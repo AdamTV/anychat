@@ -6,11 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:flutter_twitter_login/flutter_twitter_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'anychat_user.dart';
 import 'conversation.dart';
@@ -174,9 +174,13 @@ class AnyChatAuth {
         linkedAccountPhotoUrl = result.photoURL;
         return currentUser;
       } else {
+        String displayName = result.displayName;
+        if (result.displayName == null) {
+          displayName = result.email;
+        }
         currentUser = new AnyChatUser(
             result.uid,
-            result.displayName,
+            displayName,
             result.email,
             result.photoURL,
             AnyChatLocale.currentLocale.substring(0, 2));

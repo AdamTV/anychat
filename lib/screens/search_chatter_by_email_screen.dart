@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:anychat/Screens/chat_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/conversation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -99,31 +97,13 @@ class SearchChatterByEmailScreenState
                             }
                             AnyChatAuth.currentChatters = users;
                           } else {
-                            AnyChatUser.addUserToConversation(
-                                SearchChatterByEmailScreenState.users[index]);
-                            AnyChatAuth.currentConversation.participants.add(
-                                SearchChatterByEmailScreenState
-                                    .users[index].id);
-                            await FirebaseFirestore.instance.runTransaction(
-                                (Transaction transaction) async {
-                              var convoDoc = FirebaseFirestore.instance
-                                  .collection('conversations')
-                                  .doc(AnyChatAuth.currentConversation.id);
-                              return transaction
-                                  .get(convoDoc)
-                                  .then((DocumentSnapshot doc) =>
-                                      Conversation.fromSnapshot(doc))
-                                  .then((Conversation fresh) async {
-                                transaction.update(convoDoc, {
-                                  'participants': AnyChatAuth
-                                      .currentConversation.participants,
-                                });
-                              });
-                            });
-                            AnyChatAuth.currentChatters.add(
-                                SearchChatterByEmailScreenState.users[index]);
+                            if (await AnyChatUser.addUserToConversation(
+                                SearchChatterByEmailScreenState.users[index])){
+                              AnyChatAuth.currentChatters.add(
+                                  SearchChatterByEmailScreenState.users[index]);
+                            }
                           }
-                          Navigator.pushNamed(context, "/chat");
+                          Navigator.pushReplacementNamed(context, "/chat");
                         },
                         leading: new CircleAvatar(
                             backgroundColor: Theme.of(context).primaryColor,

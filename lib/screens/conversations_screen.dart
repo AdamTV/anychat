@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:anychat/components/ads.dart';
@@ -14,6 +15,7 @@ import 'package:anychat/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -69,8 +71,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   icon: const Icon(Icons.add),
                   tooltip: AppLocalizations.of(context).createConversation,
                   onPressed: () {
-                    Navigator.pushNamed(
-                        context, "/addChatter");
+                    Navigator.pushNamed(context, "/addChatter");
                   },
                 ),
               ],
@@ -95,17 +96,18 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             ListTile(
                 title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
-                  if (await Utilities.handleCameraAndMic(Permission.microphone)) {
-                    Fluttertoast.showToast(msg: AppLocalizations.of(context).listeningToMicrophoneLiveAudio);
-                    Navigator.pushNamed(
-                        context, "/liveTranslator");
+                  if (await Utilities.handleCameraAndMic(
+                      Permission.microphone)) {
+                    Fluttertoast.showToast(
+                        msg: AppLocalizations.of(context)
+                            .listeningToMicrophoneLiveAudio);
+                    Navigator.pushNamed(context, "/liveTranslator");
                   }
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).settings),
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, "/settings");
+                  Navigator.pushNamed(context, "/settings");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context).logout),
@@ -127,12 +129,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               children: conversationWidgets.length > 0
                   ? conversationWidgets
                   : <Widget>[
-                      Text(AppLocalizations.of(context).conversationsWillAppear),
+                      Text(
+                          AppLocalizations.of(context).conversationsWillAppear),
                       RoundedButton(
                         text: AppLocalizations.of(context).startConversation,
                         press: () {
-                          Navigator.pushNamed(
-                              context, "/addChatter");
+                          Navigator.pushNamed(context, "/addChatter");
                         },
                       ),
                     ],
@@ -164,7 +166,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .collection("users")
                 .doc(users[i])
                 .get());
-            chatters.add(chatter);
+            if (chatters.where((element) => element.id == chatter.id).length ==
+                0) {
+              chatters.add(chatter);
+            }
             if (!conversationWidgets
                     .any((element) => element.key == Key(conversation.id)) &&
                 mounted) {
@@ -257,7 +262,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             .collection("users")
             .doc(users[i])
             .get());
-        chatters.add(chatter);
+        if (chatters.where((element) => element.id == chatter.id).length == 0) {
+          chatters.add(chatter);
+        }
         var snapshot = await FirebaseFirestore.instance
             .collection("conversations")
             .doc(conversation.id)
@@ -276,8 +283,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   AnyChatAuth.currentUser.id);
           _chatMessageSubscriptions.add(
               loadAllChatMessages(conversation.id).listen(_sendNotification));
-          message = AnyChatMessage(
-              "", Timestamp.now(), chatter.id, AppLocalizations.of(context).newConversation, null);
+          message = AnyChatMessage("", Timestamp.now(), chatter.id,
+              AppLocalizations.of(context).newConversation, null);
         }
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
@@ -348,19 +355,27 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           .any((element) => element.id == conversation.id)) {
         var chatters = <AnyChatUser>[];
         if (conversation.participants.length == 1) {
-          chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-              .collection("users")
-              .doc(message.senderId)
-              .get()));
+          if (chatters
+                  .where((element) => element.id == message.senderId)
+                  .length ==
+              0) {
+            chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
+                .instance
+                .collection("users")
+                .doc(message.senderId)
+                .get()));
+          }
         } else {
           var chatterIds = conversation.participants
               .where((element) => element != AnyChatAuth.currentUser.id);
           for (var id in chatterIds) {
-            chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
-                .instance
-                .collection("users")
-                .doc(id)
-                .get()));
+            if (chatters.where((element) => element.id == id).length == 0) {
+              chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
+                  .instance
+                  .collection("users")
+                  .doc(id)
+                  .get()));
+            }
           }
         }
         if (AnyChatAuth.currentUser.conversations != null &&
@@ -390,8 +405,37 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       var sender = await AnyChatUser.findUserById(message.senderId);
       var text = "${message.text}\n\n"
           "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}";
-      await Notifications().showNotification(sender.displayName, text);
+      final String largeIconPath = await _downloadAndSaveFile(
+          AnyChatAuth.currentUser.photoUrl, 'largeIcon');
+      final Person me = Person(
+        name: 'Me',
+        key: '1',
+        uri: 'tel:1234567890',
+        icon: BitmapFilePathAndroidIcon(largeIconPath),
+      );
+      if (text.contains(AppLocalizations.of(context).isCallingYouOnAnyChat)) {
+        await Notifications().showNotification(sender.displayName, text, "ring");
+      } else {
+        final List<Message> messages = <Message>[
+          Message('Hi', DateTime.now(), null),
+          Message("What's up?", DateTime.now().add(const Duration(minutes: 5)),
+              me),
+          Message('Lunch?', DateTime.now().add(const Duration(minutes: 10)), null),
+          Message('What kind of food would you prefer?',
+              DateTime.now().add(const Duration(minutes: 10)), me),
+        ];
+        await Notifications().showNotification(sender.displayName, text, "chat");
+      }
     }
+  }
+
+  Future<String> _downloadAndSaveFile(String url, String fileName) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/$fileName';
+    final http.Response response = await http.get(Uri.parse(url));
+    final File file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+    return filePath;
   }
 
   loadAllChatMessages(String conversationId) {
@@ -412,16 +456,15 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         padding: EdgeInsets.all(10),
         child: new ListTile(
           onTap: () {
-            setState((){
+            setState(() {
               AnyChatAuth.currentConversation = conversation;
               AnyChatAuth.currentChatters = chatters;
             });
             // Navigator.pushNamed(context,  "/chat", arguments: {conversation, chatters});
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ChatScreen()));
           },
-          leading: Stack(
-              clipBehavior: Clip.none,
-              children: getChatterWidgetList(chatters)),
+          leading: getChatterWidgetList(chatters),
           // chatters.length > 1
           //     ? Icon(Icons.person)
           //     : CircleAvatar(
@@ -468,29 +511,201 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     );
   }
 
-  List<Positioned> getChatterWidgetList(List<AnyChatUser> chatters) {
-    var widgets = <Positioned>[];
-    double top = 1;
-    for (var chatter in chatters) {
-      if (chatters.first == chatter) {
-        widgets.add(Positioned(
-          child: new CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              backgroundImage: NetworkImage(chatter.photoUrl),
-              foregroundColor: Theme.of(context).primaryColorLight),
-        ));
-      } else {
-        widgets.add(Positioned(
-          top: top,
-          child: new CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
-              backgroundImage: NetworkImage(chatter.photoUrl),
-              foregroundColor: Theme.of(context).primaryColorLight),
-        ));
-        top += 5;
+  // Widget _buildAvatar(String photoUrl, double avatarRadius) {
+  //   return Expanded(
+  //     child: CircleAvatar(backgroundImage: NetworkImage(photoUrl)));
+  // }
+  Widget _buildAvatar(double avatarRadius, String photoUrl) {
+    return Expanded(
+        child: Container(
+            height: avatarRadius,
+            width: avatarRadius,
+            child: photoUrl == null
+            ? CircleAvatar(child: Text(AnyChatAuth.currentUser.displayName.substring(0,1)))
+            : CircleAvatar(backgroundImage: NetworkImage(photoUrl))));
+  }
+
+  Widget getChatterWidgetList(List<AnyChatUser> chatters) {
+    final double _containerRadius = 55.0;
+    final double avatarRadius = _containerRadius / 2;
+    // return Container(
+    //     height: _containerRadius,
+    //     width: _containerRadius,
+    //     decoration: BoxDecoration(
+    //       shape: BoxShape.circle,
+    //     ),
+    //     child: ClipOval(
+    //       clipBehavior: Clip.antiAlias,
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: <Widget>[
+    //           Row(
+    //             children: <Widget>[
+    //               _buildAvatar(avatarRadius, chatters.first.photoUrl),
+    //               // _buildAvatar(avatarRadius, Colors.blue),
+    //               // _buildAvatar(avatarRadius, Colors.black),
+    //             ],
+    //           ),
+    //           // Row(
+    //           //   children: <Widget>[
+    //           //     _buildAvatar(avatarRadius, Colors.yellow),
+    //           //     _buildAvatar(avatarRadius, Colors.red),
+    //           //     _buildAvatar(avatarRadius, Colors.orange),
+    //           //   ],
+    //           // )
+    //         ],
+    //       ),
+    //     ),
+    // );
+
+    var topWidgets = <Widget>[];
+    var bottomWidgets = <Widget>[];
+
+    for (int i = 0; i < chatters.length; i += 2) {
+      if (chatters.length == 1) {
+        topWidgets.add(_buildAvatar(_containerRadius, chatters[i].photoUrl));
       }
+      topWidgets.add(_buildAvatar(avatarRadius, chatters[i].photoUrl));
     }
-    return widgets;
+    for (int i = 1; i < chatters.length; i += 2) {
+      bottomWidgets.add(_buildAvatar(avatarRadius, chatters[i].photoUrl));
+    }
+    Column column;
+    switch (chatters.length) {
+      case 1:
+        column = Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  topWidgets.first,
+                ],
+              )
+            ]);
+        break;
+      case 2:
+        column = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[topWidgets.first],
+            ),
+            Row(
+              children: <Widget>[
+                bottomWidgets.first,
+              ],
+            )
+          ],
+        );
+        break;
+      case 3:
+        column = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[topWidgets.first, topWidgets[1]],
+            ),
+            Row(
+              children: <Widget>[
+                bottomWidgets.first,
+              ],
+            )
+          ],
+        );
+        break;
+      case 4:
+        column = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                topWidgets.first,
+                topWidgets[1],
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                bottomWidgets.first,
+                bottomWidgets[1],
+              ],
+            )
+          ],
+        );
+        break;
+      case 5:
+        column = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                topWidgets.first,
+                topWidgets[1],
+                topWidgets[2]
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                bottomWidgets.first,
+                bottomWidgets[1],
+              ],
+            )
+          ],
+        );
+        break;
+      case 6:
+      default:
+        column = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                topWidgets.first,
+                topWidgets[1],
+                topWidgets[2]
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                bottomWidgets.first,
+                bottomWidgets[1],
+                bottomWidgets[2],
+              ],
+            )
+          ],
+        );
+        break;
+    }
+
+    return Container(
+        height: _containerRadius,
+        width: _containerRadius,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: ClipOval(clipBehavior: Clip.antiAlias, child: column));
+
+    // var widgets = <Positioned>[];
+    // double top = 1;
+    // for (var chatter in chatters) {
+    //   if (chatters.first == chatter) {
+    //     widgets.add(Positioned(
+    //       child: new CircleAvatar(
+    //           backgroundColor: Theme.of(context).primaryColor,
+    //           backgroundImage: NetworkImage(chatter.photoUrl),
+    //           foregroundColor: Theme.of(context).primaryColorLight),
+    //     ));
+    //   } else {
+    //     widgets.add(Positioned(
+    //       top: top,
+    //       child: new CircleAvatar(
+    //           backgroundColor: Theme.of(context).primaryColor,
+    //           backgroundImage: NetworkImage(chatter.photoUrl),
+    //           foregroundColor: Theme.of(context).primaryColorLight),
+    //     ));
+    //     top += 5;
+    //   }
+    // }
+    // return widgets;
   }
 
   Future<void> initConvoInfo() async {

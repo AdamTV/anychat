@@ -1,21 +1,15 @@
-import 'dart:io';
-import 'package:anychat/components/anychat_locale.dart';
-import 'package:anychat/components/anychat_user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
-import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -66,7 +60,18 @@ class LoginScreen extends StatelessWidget {
                         });
               },
             ),
-            SizedBox(height: size.height * 0.03),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                    '/forgotPassword',
+                );
+              },
+              child: Text(
+                AppLocalizations.of(context).forgotPassword,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ),
             HaveAccountCheck(
               press: () {
                 Navigator.pushNamed(context, "/register");

@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -32,12 +33,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
-    themes = [AppLocalizations.of(context).system, AppLocalizations.of(context).light, AppLocalizations.of(context).dark];
+    themes = [
+      AppLocalizations.of(context).system,
+      AppLocalizations.of(context).light,
+      AppLocalizations.of(context).dark
+    ];
     dropdownValue = Utilities.getThemeDropdownValue();
 
     return WillPopScope(
         child: Scaffold(
-          appBar: AppBar(title: Text('${AppLocalizations.of(context).title} ${AppLocalizations.of(context).settings}')),
+          appBar: AppBar(
+              title: Text(
+                  '${AppLocalizations.of(context).title} ${AppLocalizations.of(context).settings}')),
           body: SettingsList(
             sections: [
               SettingsSection(
@@ -68,7 +75,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text(AppLocalizations.of(context).enterYourName),
+                              title: Text(
+                                  AppLocalizations.of(context).enterYourName),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -83,8 +91,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text(AppLocalizations.of(context).save),
+                                  child:
+                                      Text(AppLocalizations.of(context).save),
                                   onPressed: () async {
+                                    if (displayName.isEmpty || displayName == null) {
+                                      Fluttertoast.showToast(msg: AppLocalizations.of(context).enterYourName);
+                                      return;
+                                    }
                                     await AnyChatUser.updateDisplayName(
                                         displayName);
                                     Navigator.of(context)
@@ -126,54 +139,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: AppLocalizations.of(context).changePicture,
                       // enabled: changeProfilePictureEnabled,
                       leading: Icon(Icons.photo),
-                      trailing: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(AnyChatAuth.currentUser.photoUrl))),
+                      trailing: AnyChatAuth.currentUser.photoUrl != null
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  AnyChatAuth.currentUser.photoUrl))
+                          : CircleAvatar(child: Text(AnyChatAuth.currentUser.displayName.substring(0,2))))
                 ],
               ),
-              SettingsSection(title: AppLocalizations.of(context).colors, tiles: [
-                SettingsTile(
-                  title: AppLocalizations.of(context).theme,
-                  subtitle: dropdownValue,
-                  leading: Icon(Icons.palette),
-                  onPressed: (BuildContext context) {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(AppLocalizations.of(context).selectYourTheme),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: <Widget>[
-                                  DropdownButton<String>(
-                                    value: dropdownValue,
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    onChanged: (String newValue) async {
-                                      setState(() {
-                                        dropdownValue = newValue;
-                                      });
-                                      await Utilities
-                                          .setThemeFromDropdownValue(newValue);
-                                      Navigator.pop(context);
-                                      main();
-                                    },
-                                    items: themes.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+              SettingsSection(
+                  title: AppLocalizations.of(context).colors,
+                  tiles: [
+                    SettingsTile(
+                      title: AppLocalizations.of(context).theme,
+                      subtitle: dropdownValue,
+                      leading: Icon(Icons.palette),
+                      onPressed: (BuildContext context) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(AppLocalizations.of(context)
+                                    .selectYourTheme),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      DropdownButton<String>(
+                                        value: dropdownValue,
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        onChanged: (String newValue) async {
+                                          setState(() {
+                                            dropdownValue = newValue;
+                                          });
+                                          await Utilities
+                                              .setThemeFromDropdownValue(
+                                                  newValue);
+                                          Navigator.pop(context);
+                                          main();
+                                        },
+                                        items: themes
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                )
-              ]),
+                                ),
+                              );
+                            });
+                      },
+                    )
+                  ]),
               SettingsSection(
                 title: AppLocalizations.of(context).notifications,
                 tiles: [

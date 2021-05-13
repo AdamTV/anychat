@@ -11,7 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'call_screen.dart';
@@ -91,9 +90,21 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
+        var text = new RichText(
+          text: new TextSpan(
+            // Note: Styles for TextSpans must be explicitly defined.
+            // Child text spans will inherit styles from parent
+            style: Theme.of(context).textTheme.caption,
+            children: <TextSpan>[
+              new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+              new TextSpan(text: "${_chatMessages[i].text}\n\n"),
+              new TextSpan(text: "${AppLocalizations.of(context).translation}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+              new TextSpan(text: "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}"),
+            ],
+          ),
+        );
         final chatMessage = ChatMessage(
-          text: "${_chatMessages[i].text}\n\n"
-              "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}",
+          text: text,
           animationController: AnimationController(
             duration: const Duration(milliseconds: 0),
             vsync: this,
@@ -118,9 +129,21 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
           ? info.outgoingLanguage
           : info.incomingLanguage;
+      var text = new RichText(
+        text: new TextSpan(
+          // Note: Styles for TextSpans must be explicitly defined.
+          // Child text spans will inherit styles from parent
+          style: Theme.of(context).primaryTextTheme.caption,
+          children: <TextSpan>[
+            new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(text: "${message.text}\n\n"),
+            new TextSpan(text: "${AppLocalizations.of(context).translation}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(text: "${await Utilities.getGoogleTranslation(language, message.text)}"),
+          ],
+        ),
+      );
       final chatMessage = ChatMessage(
-        text: "${message.text}\n\n"
-            "${await Utilities.getGoogleTranslation(language, message.text)}",
+        text: text,
         animationController: AnimationController(
           duration: const Duration(milliseconds: 700),
           vsync: this,
@@ -193,7 +216,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var widgets = <Widget>[];
     widgets.add(IconButton(
-        icon: const Icon(Icons.language),
+        icon: const Icon(Icons.settings),
         tooltip: AppLocalizations.of(context).language,
         onPressed: () {
           showDialog(
@@ -206,6 +229,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       onPressed: () async {
         if (await Utilities.handleCameraAndMic(Permission.camera) &&
             await Utilities.handleCameraAndMic(Permission.microphone)) {
+          AnyChatUser.addMessageToConversation(AppLocalizations.of(context).isCallingYouOnAnyChat);
           CallScreen.channelName = AnyChatAuth.currentConversation.id;
           Navigator.pushNamed(context, "/call");
         }
@@ -244,8 +268,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ],
       ),
     );
-    return KeyboardSizeProvider(
-        child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
                 title: Text(Utilities.getChatterDisplayNameString(
                     AnyChatAuth.currentChatters)),
@@ -299,13 +322,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            body: Consumer<ScreenHeight>(
-              builder: (context, _res, child) {
-                print('keyboard open: ${_res.isSmall}');
-                print('keyboard height: ${_res.keyboardHeight}');
-                return container;
-              },
-            )));
+            body: container,
+            );
   }
 
   @override
@@ -333,10 +351,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           Text(AppLocalizations.of(context).incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
-            style: TextStyle(color: Theme.of(context).primaryColor),
             onChanged: (String newValue) async {
               await FirebaseFirestore.instance
                   .runTransaction((Transaction transaction) {
@@ -377,7 +394,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             icon: Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
-            style: TextStyle(color: Theme.of(context).primaryColor),
             onChanged: (String newValue) async {
               await FirebaseFirestore.instance
                   .runTransaction((Transaction transaction) {
@@ -420,7 +436,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 class ChatMessage extends StatelessWidget {
   final String id;
   final AnyChatUser sender;
-  final String text;
+  final RichText text;
   final AnimationController animationController;
 
   ChatMessage({this.text, this.animationController, this.sender, this.id});
@@ -455,7 +471,7 @@ class ChatMessage extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline4),
                   Container(
                     margin: EdgeInsets.only(top: 5.0),
-                    child: Text(text),
+                    child: text,
                   ),
                 ],
               ),
