@@ -1,4 +1,3 @@
-import 'package:anychat/Screens/chat_screen.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,8 +18,6 @@ class AnyChatUser {
   final String language;
   List<ConversationInfo> conversations = [];
 
-  static BuildContext context;
-
   AnyChatUser(
       this.id, this.displayName, this.email, this.photoUrl, this.language);
 
@@ -39,7 +36,7 @@ class AnyChatUser {
 
   static Future<Conversation> createConversation(String id) async {
     if (id == AnyChatAuth.currentUser.id) {
-      Fluttertoast.showToast(msg: AppLocalizations.of(context).canNotCreateConvoWithSelf);
+      Fluttertoast.showToast(msg: AppLocalizations.of(Utilities.globalKey.currentContext).canNotCreateConvoWithSelf);
       return null;
     }
     final conversation =
@@ -189,7 +186,7 @@ class AnyChatUser {
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
-          'text': AppLocalizations.of(context).thisPersonHasLeftConversation,
+          'text': AppLocalizations.of(Utilities.globalKey.currentContext).thisPersonHasLeftConversation,
         });
       });
     });
@@ -338,7 +335,7 @@ class AnyChatUser {
         .doc(AnyChatAuth.currentConversation.id);
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
     if (conversation.participants.contains(user.id)){
-      Utilities.showToast("${user.displayName} ${AppLocalizations.of(context).isAlreadyInThisConversation}");
+      Utilities.showToast("${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext).isAlreadyInThisConversation}");
       return false;
     }
     final newMessage = conversationRef.collection('messages').doc();
@@ -353,7 +350,7 @@ class AnyChatUser {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
           'text':
-              "${AnyChatAuth.currentUser.displayName} ${AppLocalizations.of(context).hasAdded} ${user.displayName} ${AppLocalizations.of(context).toTheConversation}",
+              "${AnyChatAuth.currentUser.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext).hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext).toTheConversation}",
         });
       });
     });

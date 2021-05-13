@@ -19,6 +19,7 @@ class Utilities {
   static final String authority = "translation.googleapis.com";
   static final String unencodedPath = "/language/translate/v2";
   static Map<String, String> queryParameters = Map();
+  static GlobalKey<NavigatorState> globalKey = GlobalKey();
 
   static Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
@@ -102,8 +103,10 @@ class Utilities {
 
   static String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
+    var ids = <String>[];
     for (var user in users) {
-      if (user.id != AnyChatAuth.currentUser.id) {
+      if (user.id != AnyChatAuth.currentUser.id && !ids.contains(user.id)) {
+        ids.add(user.id);
         ret += user.displayName;
         ret += ", ";
       }
@@ -133,13 +136,13 @@ class Utilities {
   static String getThemeDropdownValue() {
     var pref = prefs.getString('theme') ?? 'system';
     if (pref.toLowerCase() == 'system') {
-      return AppLocalizations.of(AnyChatUser.context).system;
+      return AppLocalizations.of(Utilities.globalKey.currentContext).system;
     } else if (pref.toLowerCase() == 'dark') {
-      return AppLocalizations.of(AnyChatUser.context).dark;
+      return AppLocalizations.of(Utilities.globalKey.currentContext).dark;
     } else if (pref.toLowerCase() == 'light') {
-      return AppLocalizations.of(AnyChatUser.context).light;
+      return AppLocalizations.of(Utilities.globalKey.currentContext).light;
     } else {
-      return AppLocalizations.of(AnyChatUser.context).system;
+      return AppLocalizations.of(Utilities.globalKey.currentContext).system;
     }
   }
 
@@ -154,9 +157,9 @@ class Utilities {
 
   static setThemeFromDropdownValue(String newValue) {
     var newPref = 'system';
-    if (newValue == AppLocalizations.of(AnyChatUser.context).light) {
+    if (newValue == AppLocalizations.of(Utilities.globalKey.currentContext).light) {
       newPref = 'light';
-    } else if (newValue == AppLocalizations.of(AnyChatUser.context).dark) {
+    } else if (newValue == AppLocalizations.of(Utilities.globalKey.currentContext).dark) {
       newPref = 'dark';
     }
     prefs.setString('theme', newPref);

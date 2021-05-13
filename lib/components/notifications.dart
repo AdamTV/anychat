@@ -1,17 +1,20 @@
+import 'dart:io';
+
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import 'anychat_user.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class Notifications {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   init() async {
     try {
-      flutterLocalNotificationsPlugin =
-          FlutterLocalNotificationsPlugin();
-    }catch (e){
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    } catch (e) {
       print('ERROR - must be on the web');
       return;
     }
@@ -45,28 +48,57 @@ class Notifications {
     // );
   }
 
-  Future<void> showNotification(String title, String body) async {
-    if (!Utilities.prefs.getBool('notifications')){
+  Future<void> showNotification(
+      String title, String body, String payload, {List<Message> messages, Person person}) async {
+    if (Utilities.prefs.getBool('notifications') != null &&
+        !Utilities.prefs.getBool('notifications')) {
       return;
     }
     print('showNotification');
+
+    final MessagingStyleInformation messagingStyle = MessagingStyleInformation(
+        person,
+        groupConversation: true,
+        conversationTitle: 'Team lunch',
+        htmlFormatContent: true,
+        htmlFormatTitle: true,
+        messages: messages);
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-          AppLocalizations.of(AnyChatUser.context).title,
-      'your channel name',
-      'your channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-      styleInformation: BigTextStyleInformation(''),
-    );
-    NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+        payload == 'ring'
+            ? AndroidNotificationDetails(
+                AppLocalizations.of(Utilities.globalKey.currentContext).title,
+                'your channel name',
+                'your channel description',
+                importance: Importance.max,
+                priority: Priority.high,
+                ticker: 'ticker',
+                styleInformation: messagingStyle,
+                playSound: false)
+            : AndroidNotificationDetails(
+                AppLocalizations.of(Utilities.globalKey.currentContext).title,
+                'your channel name',
+                'your channel description',
+                importance: Importance.max,
+                priority: Priority.high,
+                ticker: 'ticker',
+                styleInformation: messagingStyle,
+              );
+    var iosPlatformSpecs = payload == 'ring'
+        ? IOSNotificationDetails(presentSound: false)
+        : IOSNotificationDetails(presentSound: true);
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics, iOS: iosPlatformSpecs);
     if (flutterLocalNotificationsPlugin == null) {
       await init();
     }
-    await flutterLocalNotificationsPlugin
-        .show(0, title, body, platformChannelSpecifics, payload: 'item x');
+    if (payload == "ring") {
+      FlutterRingtonePlayer.playRingtone();
+      await flutterLocalNotificationsPlugin
+          .show(0, title, body, platformChannelSpecifics, payload: payload);
+    } else {
+      await flutterLocalNotificationsPlugin
+          .show(0, title, body, platformChannelSpecifics, payload: payload);
+    }
   }
 
   Future onDidReceiveLocalNotification(

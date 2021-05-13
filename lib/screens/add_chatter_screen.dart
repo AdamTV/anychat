@@ -13,7 +13,8 @@ class AddChatterScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text(AppLocalizations.of(context).title),
+          title: Text(AppLocalizations.of(context).title,
+          ),
           // bottom: PreferredSize(
           //   preferredSize: Size(320, 48),
           //   child: Padding(

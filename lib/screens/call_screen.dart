@@ -266,7 +266,8 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).title),
+        title: Text(AppLocalizations.of(context).title,
+        ),
       ),
       backgroundColor: Colors.black,
       body: Center(

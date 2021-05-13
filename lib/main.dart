@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
@@ -9,6 +11,7 @@ import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
 import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/conversations_screen.dart';
+import 'package:anychat/screens/forgot_password.dart';
 import 'package:anychat/screens/languages_screen.dart';
 import 'package:anychat/screens/live_translator_screen.dart';
 import 'package:anychat/screens/login_screen.dart';
@@ -22,6 +25,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'components/utilities.dart';
 
@@ -32,6 +36,7 @@ void main() {
         Ads.init(),
         Utilities.init().then((value) => {
               runApp(MaterialApp(
+                navigatorKey: Utilities.globalKey,
                 routes: {
                   '/addChatter': (context) => AddChatterScreen(),
                   '/call': (context) => CallScreen(),
@@ -46,6 +51,7 @@ void main() {
                       SearchChatterByEmailScreen(),
                   '/settings': (context) => SettingsScreen(),
                   '/welcome': (context) => WelcomeScreen(),
+                  '/forgotPassword': (context) => ForgotPassword(),
                 },
                 debugShowCheckedModeBanner: false,
                 onGenerateTitle: (BuildContext context) =>
@@ -173,7 +179,7 @@ void main() {
                   stream: FirebaseAuth.instance.authStateChanges(),
                   builder: (BuildContext context, snapshot) {
                     if (snapshot.hasData && (!snapshot.data.isAnonymous)) {
-                      AnyChatUser.context = context;
+                      _checkNetworkConnection(context);
                       AnyChatLocale.init(context);
                       print(snapshot.data);
                       FirebaseFirestore.instance
@@ -181,17 +187,36 @@ void main() {
                           .doc(snapshot.data.providerData[0].uid)
                           .get()
                           .then((value) => AnyChatUser.fromSnapshot(value))
-                          .then((AnyChatUser user) {
+                          .then((AnyChatUser user) async {
+                        User fuser = FirebaseAuth.instance.currentUser;
+                        print('verified ${fuser.emailVerified}');
+                        if (!fuser.emailVerified) {
+                          var actionCodeSettings = ActionCodeSettings(
+                              url:
+                                  'https://www.example.com/?email=${user.email}',
+                              dynamicLinkDomain: "example.page.link",
+                              androidInstallApp: true,
+                              androidMinimumVersion: '12',
+                              androidPackageName: "ca.alphatech.anychat",
+                              iOSBundleId: "ca.alphatech.anychat",
+                              handleCodeInApp: true);
+
+                          await fuser.sendEmailVerification();
+                        }
                         AnyChatAuth.currentUser = user;
                         print('returning ConversationsScreen');
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return ConstrainedBox (constraints: BoxConstraints(maxWidth: 1), child: ConversationsScreen());
+                          return ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 1),
+                              child: ConversationsScreen());
                         }));
                       });
                     }
                     print('returning WelcomeScreen');
-                    return ConstrainedBox (constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen ());
+                    return ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 1),
+                        child: WelcomeScreen());
                   },
                 ),
               ))
@@ -204,4 +229,17 @@ void main() {
           }
         }),
       });
+}
+
+Future<void> _checkNetworkConnection(BuildContext context) async {
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      print('connected');
+    }
+  } on SocketException catch (_) {
+    Fluttertoast.showToast(
+        msg: AppLocalizations.of(context).notConnectedToInternet,
+        toastLength: Toast.LENGTH_LONG);
+  }
 }
