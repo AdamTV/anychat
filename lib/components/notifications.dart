@@ -80,12 +80,9 @@ class Notifications {
     }
     if (payload == "ring") {
       FlutterRingtonePlayer.playRingtone();
-      await flutterLocalNotificationsPlugin
-          .show(0, title, body, platformChannelSpecifics, payload: payload);
-    } else {
-      await flutterLocalNotificationsPlugin
-          .show(0, title, body, platformChannelSpecifics, payload: payload);
     }
+    await flutterLocalNotificationsPlugin
+        .show(0, title, body, platformChannelSpecifics, payload: payload);
   }
 
   Future onDidReceiveLocalNotification(

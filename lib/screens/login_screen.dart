@@ -45,8 +45,8 @@ class LoginScreen extends StatelessWidget {
             ),
             RoundedButton(
               text: AppLocalizations.of(context).login_caps,
-              press: () {
-                AnyChatAuth.signInEmail(email, password, false)
+              press: () async {
+                await AnyChatAuth.signInEmail(email, password, false)
                     .then((value) => {
                           if (value != null)
                             {Utilities.initConversationScreen(context, value)}

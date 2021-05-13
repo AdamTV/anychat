@@ -74,7 +74,7 @@ class Utilities {
     );
   }
 
-  static initConversationScreen(BuildContext context, AnyChatUser value) {
+  static void initConversationScreen(BuildContext context, AnyChatUser value) {
     // Check if user has conversations
     FirebaseFirestore.instance
         .collection("users")
