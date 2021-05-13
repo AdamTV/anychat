@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:anychat/components/ads.dart';
@@ -15,7 +14,6 @@ import 'package:anychat/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -405,37 +403,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       var sender = await AnyChatUser.findUserById(message.senderId);
       var text = "${message.text}\n\n"
           "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}";
-      final String largeIconPath = await _downloadAndSaveFile(
-          AnyChatAuth.currentUser.photoUrl, 'largeIcon');
-      final Person me = Person(
-        name: 'Me',
-        key: '1',
-        uri: 'tel:1234567890',
-        icon: BitmapFilePathAndroidIcon(largeIconPath),
-      );
+
       if (text.contains(AppLocalizations.of(context).isCallingYouOnAnyChat)) {
         await Notifications().showNotification(sender.displayName, text, "ring");
       } else {
-        final List<Message> messages = <Message>[
-          Message('Hi', DateTime.now(), null),
-          Message("What's up?", DateTime.now().add(const Duration(minutes: 5)),
-              me),
-          Message('Lunch?', DateTime.now().add(const Duration(minutes: 10)), null),
-          Message('What kind of food would you prefer?',
-              DateTime.now().add(const Duration(minutes: 10)), me),
-        ];
         await Notifications().showNotification(sender.displayName, text, "chat");
       }
     }
-  }
-
-  Future<String> _downloadAndSaveFile(String url, String fileName) async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final String filePath = '${directory.path}/$fileName';
-    final http.Response response = await http.get(Uri.parse(url));
-    final File file = File(filePath);
-    await file.writeAsBytes(response.bodyBytes);
-    return filePath;
   }
 
   loadAllChatMessages(String conversationId) {
