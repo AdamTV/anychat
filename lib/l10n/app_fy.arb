@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hasto gjin account?",
     "email": "E-post",
     "emailInvite": "E-post útnoegje",
+    "emailSentToResetPassword": "In e-post is ferstjoerd om jo wachtwurd opnij yn te stellen",
+    "emailVerified": "E-post ferifieare",
     "endonym_af": "Afrikaansk",
     "endonym_am": "Amhaarsk",
     "endonym_ar": "Arabysk",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kin net registrearje fia Facebook. Besykje it nochris.",
     "unableRegisterGoogle": "Kin net registrearje fia Google. Besykje it nochris.",
     "unableRegisterTwitter": "Kin net registrearje fia Twitter. Besykje it nochris.",
+    "verificationEmailSent": "Ferifikaasje-e-post ferstjoerd",
     "yourContacts": "Jo kontakten",
     "youWillNotJoinBackUnlessInvited": "Jo sille net meidwaan kinne, útsein as immen jo útnoeget."
 }

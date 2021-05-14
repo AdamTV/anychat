@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Pa gen yon kont?",
     "email": "Imèl",
     "emailInvite": "E-mail Envite",
+    "emailSentToResetPassword": "Yon e-mail te voye Reyajiste modpas ou",
+    "emailVerified": "Imèl verifye",
     "endonym_af": "Afriken",
     "endonym_am": "Amharic",
     "endonym_ar": "Arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kapab enskri nan Facebook. Tanpri eseye ankò.",
     "unableRegisterGoogle": "Kapab enskri nan Google. Tanpri eseye ankò.",
     "unableRegisterTwitter": "Kapab enskri nan Twitter. Tanpri eseye ankò.",
+    "verificationEmailSent": "Verifikasyon e-mail voye",
     "yourContacts": "Kontak ou yo",
     "youWillNotJoinBackUnlessInvited": "Ou pa yo pral kapab rantre nan tounen sof si yon moun envite ou."
 }

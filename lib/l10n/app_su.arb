@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Henteu gaduh akun?",
     "email": "E-mail",
     "emailInvite": "E-mail Undang",
+    "emailSentToResetPassword": "E-mail parantos dikirim pikeun ngareset kata sandi anjeun",
+    "emailVerified": "E-mail diverifikasi",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Teu tiasa ngadaptar ngalangkungan Facebook. Punten cobian deui.",
     "unableRegisterGoogle": "Teu tiasa ngadaptar ngalangkungan Google. Punten cobian deui.",
     "unableRegisterTwitter": "Teu tiasa ngadaptar ngalangkungan Twitter. Punten cobian deui.",
+    "verificationEmailSent": "E-mail verifikasi parantos dikirim",
     "yourContacts": "Kontak Anjeun",
     "youWillNotJoinBackUnlessInvited": "Anjeun moal tiasa miluan deui upami teu aya anu ngundang anjeun."
 }

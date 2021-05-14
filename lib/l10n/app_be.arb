@@ -25,6 +25,8 @@
     "doNotHaveAccount": "У вас няма ўліковага запісу?",
     "email": "Электронная пошта",
     "emailInvite": "Запрасіць па электроннай пошце",
+    "emailSentToResetPassword": "Адпраўлены ліст для скіду пароля",
+    "emailVerified": "Адрас электроннай пошты спраўджаны",
     "endonym_af": "Афрыкаанс",
     "endonym_am": "Амхарскі",
     "endonym_ar": "Арабская",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Немагчыма зарэгістравацца праз Facebook. Калі ласка, паспрабуйце яшчэ раз.",
     "unableRegisterGoogle": "Немагчыма зарэгістравацца праз Google. Калі ласка, паспрабуйце яшчэ раз.",
     "unableRegisterTwitter": "Немагчыма зарэгістравацца праз Twitter. Калі ласка, паспрабуйце яшчэ раз.",
+    "verificationEmailSent": "Адпраўлены электронны ліст для праверкі",
     "yourContacts": "Вашы кантакты",
     "youWillNotJoinBackUnlessInvited": "Вы не зможаце далучыцца, калі хто-небудзь вас не запросіць."
 }

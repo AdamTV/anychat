@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
     "email": "ಇ-ಮೇಲ್",
     "emailInvite": "ಇ-ಮೇಲ್ ಆಹ್ವಾನ",
+    "emailSentToResetPassword": "ನಿಮ್ಮ ಪಾಸ್\u200cವರ್ಡ್ ಅನ್ನು ಮರುಹೊಂದಿಸಲು ಇ-ಮೇಲ್ ಕಳುಹಿಸಲಾಗಿದೆ",
+    "emailVerified": "ಇ-ಮೇಲ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
     "endonym_af": "ಆಫ್ರಿಕಾನ್ಸ್",
     "endonym_am": "ಅಂಹರಿಕ್",
     "endonym_ar": "ಅರೇಬಿಕ್",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ಫೇಸ್\u200cಬುಕ್ ಮೂಲಕ ನೋಂದಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.",
     "unableRegisterGoogle": "Google ಮೂಲಕ ನೋಂದಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.",
     "unableRegisterTwitter": "ಟ್ವಿಟರ್ ಮೂಲಕ ನೋಂದಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.",
+    "verificationEmailSent": "ಪರಿಶೀಲನೆ ಇ-ಮೇಲ್ ಕಳುಹಿಸಲಾಗಿದೆ",
     "yourContacts": "ನಿಮ್ಮ ಸಂಪರ್ಕಗಳು",
     "youWillNotJoinBackUnlessInvited": "ಯಾರಾದರೂ ನಿಮ್ಮನ್ನು ಆಹ್ವಾನಿಸದ ಹೊರತು ನಿಮಗೆ ಮತ್ತೆ ಸೇರಲು ಸಾಧ್ಯವಾಗುವುದಿಲ್ಲ."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ĉu vi ne havas konton?",
     "email": "Retpoŝto",
     "emailInvite": "Retpoŝti Inviti",
+    "emailSentToResetPassword": "Retpoŝto estis sendita por reagordi vian pasvorton",
+    "emailVerified": "Retpoŝto kontrolita",
     "endonym_af": "Afrikansa",
     "endonym_am": "Amhara",
     "endonym_ar": "la araba",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ne eblas registriĝi per Facebook. Bonvolu reprovi.",
     "unableRegisterGoogle": "Ne eblas registri per Google. Bonvolu reprovi.",
     "unableRegisterTwitter": "Ne eblas registriĝi per Twitter. Bonvolu reprovi.",
+    "verificationEmailSent": "Kontrola retpoŝto sendita",
     "yourContacts": "Viaj Kontaktoj",
     "youWillNotJoinBackUnlessInvited": "Vi ne povos aliĝi, krom se iu invitos vin."
 }

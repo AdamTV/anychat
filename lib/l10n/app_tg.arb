@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Шумо ҳисоб надоред?",
     "email": "Почтаи электронӣ",
     "emailInvite": "Даъвати почтаи электронӣ",
+    "emailSentToResetPassword": "Барои аз нав танзимкунии пароли шумо паёми электронӣ фиристода шуд",
+    "emailVerified": "Почтаи электронӣ тасдиқ карда шудааст",
     "endonym_af": "Африқоӣ",
     "endonym_am": "Амҳарикӣ",
     "endonym_ar": "Арабӣ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Номнавис шудан аз тариқи Facebook ғайриимкон аст. Лутфан такрор кунед.",
     "unableRegisterGoogle": "Номнавис шудан тавассути Google ғайриимкон аст. Лутфан такрор кунед.",
     "unableRegisterTwitter": "Номнавис шудан аз тариқи Twitter ғайриимкон аст. Лутфан такрор кунед.",
+    "verificationEmailSent": "Тасдиқи почтаи электронӣ фиристода шуд",
     "yourContacts": "Тамосҳои шумо",
     "youWillNotJoinBackUnlessInvited": "Шумо наметавонед дубора ҳамроҳ шавед, агар касе шуморо даъват накунад."
 }

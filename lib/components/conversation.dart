@@ -21,4 +21,11 @@ class Conversation {
         transcribedMessages = (snapshot.data()['transcribedMessages']),
         timestamp = snapshot.data()['timestamp'],
         reference = snapshot.reference;
+
+  static Future<Conversation> getConversationById(String id) async {
+    return Conversation.fromSnapshot(await FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(id)
+        .get());
+  }
 }

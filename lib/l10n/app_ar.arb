@@ -25,6 +25,8 @@
     "doNotHaveAccount": "لا تملك حساب؟",
     "email": "بريد إلكتروني",
     "emailInvite": "دعوة عبر البريد الإلكتروني",
+    "emailSentToResetPassword": "تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور الخاصة بك",
+    "emailVerified": "تم التحقق من البريد الإلكتروني",
     "endonym_af": "الأفريكانية",
     "endonym_am": "الأمهرية",
     "endonym_ar": "عربى",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "غير قادر على التسجيل عبر Facebook. حاول مرة اخرى.",
     "unableRegisterGoogle": "غير قادر على التسجيل من خلال جوجل. حاول مرة اخرى.",
     "unableRegisterTwitter": "غير قادر على التسجيل عبر تويتر. حاول مرة اخرى.",
+    "verificationEmailSent": "تم إرسال البريد الإلكتروني للتحقق",
     "yourContacts": "جهات الاتصال الخاصة بك",
     "youWillNotJoinBackUnlessInvited": "لن تتمكن من الانضمام مرة أخرى ما لم يدعوك أحد."
 }

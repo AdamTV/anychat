@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nach eil cunntas agad?",
     "email": "Post-d",
     "emailInvite": "Cuir post-d",
+    "emailSentToResetPassword": "Chaidh post-d a chuir gus d ’fhacal-faire ath-shuidheachadh",
+    "emailVerified": "Post-d air a dhearbhadh",
     "endonym_af": "Afrikaanach",
     "endonym_am": "Amharic",
     "endonym_ar": "Arabach",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Cha ghabh clàradh tro Facebook. Feuch ris a-rithist.",
     "unableRegisterGoogle": "Cha ghabh clàradh tro Google. Feuch ris a-rithist.",
     "unableRegisterTwitter": "Cha ghabh clàradh tro Twitter. Feuch ris a-rithist.",
+    "verificationEmailSent": "Post-d dearbhaidh air a chuir",
     "yourContacts": "Na ceangalaichean agad",
     "youWillNotJoinBackUnlessInvited": "Cha bhith e comasach dhut a thighinn air ais mura toir cuideigin cuireadh dhut."
 }

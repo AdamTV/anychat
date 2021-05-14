@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nincs még fiókja?",
     "email": "Email",
     "emailInvite": "E-mail meghívás",
+    "emailSentToResetPassword": "E-mailt küldtünk a jelszó visszaállításához",
+    "emailVerified": "E-mail ellenőrizve",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amhara",
     "endonym_ar": "arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nem lehet regisztrálni a Facebookon keresztül. Kérlek próbáld újra.",
     "unableRegisterGoogle": "Nem lehet regisztrálni a Google-on keresztül. Kérlek próbáld újra.",
     "unableRegisterTwitter": "Nem lehet regisztrálni a Twitteren keresztül. Kérlek próbáld újra.",
+    "verificationEmailSent": "Ellenőrző e-mail elküldve",
     "yourContacts": "Az Ön névjegyei",
     "youWillNotJoinBackUnlessInvited": "Csak akkor csatlakozhat, ha valaki meghív."
 }

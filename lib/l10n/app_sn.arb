@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hauna account?",
     "email": "E-mail",
     "emailInvite": "E-mail Koka",
+    "emailSentToResetPassword": "E-mail yatumirwa kuti itangezve password",
+    "emailVerified": "E-mail yakasimbiswa",
     "endonym_af": "ChiAfrikaans",
     "endonym_am": "ChiAmharic",
     "endonym_ar": "ChiArabic",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kutadza kunyoresa kuburikidza neFacebook. Ndapota edza zvakare.",
     "unableRegisterGoogle": "Hatina kukwanisa kunyoresa kuburikidza neGoogle. Ndapota edza zvakare.",
     "unableRegisterTwitter": "Haikwanise kunyoresa kuburikidza neTwitter. Ndapota edza zvakare.",
+    "verificationEmailSent": "Kuongorora e-mail yakatumirwa",
     "yourContacts": "Vako Vatauri",
     "youWillNotJoinBackUnlessInvited": "Iwe haugone kubatana zvakare kunze kwekunge mumwe munhu akukoka."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Không có tài khoản?",
     "email": "E-mail",
     "emailInvite": "Mời qua e-mail",
+    "emailSentToResetPassword": "Một e-mail đã được gửi để đặt lại mật khẩu của bạn",
+    "emailVerified": "Email đã kích hoạt",
     "endonym_af": "Người Afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "tiếng Ả Rập",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Không thể đăng ký thông qua Facebook. Vui lòng thử lại.",
     "unableRegisterGoogle": "Không thể đăng ký thông qua Google. Vui lòng thử lại.",
     "unableRegisterTwitter": "Không thể đăng ký qua Twitter. Vui lòng thử lại.",
+    "verificationEmailSent": "Gửi email xác minh",
     "yourContacts": "Liên hệ của bạn",
     "youWillNotJoinBackUnlessInvited": "Bạn sẽ không thể tham gia lại trừ khi ai đó mời bạn."
 }

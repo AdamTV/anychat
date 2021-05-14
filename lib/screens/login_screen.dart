@@ -45,8 +45,8 @@ class LoginScreen extends StatelessWidget {
             ),
             RoundedButton(
               text: AppLocalizations.of(context).login_caps,
-              press: () {
-                AnyChatAuth.signInEmail(email, password, false)
+              press: () async {
+                await AnyChatAuth.signInEmail(email, password, false)
                     .then((value) => {
                           if (value != null)
                             {Utilities.initConversationScreen(context, value)}
@@ -105,30 +105,34 @@ class LoginBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var children = <Widget>[];
+    if (!kIsWeb) {
+      children.addAll({
+        Positioned(
+        top: 0,
+        left: 0,
+        child: Image.asset(
+          "assets/images/main_top.png",
+          width: size.width * 0.35,
+        ),
+      ),
+        Positioned(
+          bottom: 0,
+          right: 0,
+          child: Image.asset(
+            "assets/images/login_bottom.png",
+            width: size.width * 0.3,
+          ),
+        ),
+        });
+    }
+    children.add(child);
     return Container(
       width: double.infinity,
       height: size.height,
       child: Stack(
         alignment: Alignment.center,
-        children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset(
-              "assets/images/main_top.png",
-              width: size.width * 0.35,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Image.asset(
-              "assets/images/login_bottom.png",
-              width: size.width * 0.3,
-            ),
-          ),
-          child,
-        ],
+        children: children,
       ),
     );
   }

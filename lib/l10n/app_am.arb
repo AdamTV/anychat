@@ -25,6 +25,8 @@
     "doNotHaveAccount": "መለያ የለዎትም?",
     "email": "ኢሜል",
     "emailInvite": "ኢ-ሜል ይጋብዙ",
+    "emailSentToResetPassword": "የይለፍ ቃልዎን ዳግም ለማስጀመር ኢ-ሜል ተልኳል",
+    "emailVerified": "ኢ-ሜል ተረጋግጧል",
     "endonym_af": "አፍሪካንስ",
     "endonym_am": "አማርኛ",
     "endonym_ar": "አረብኛ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "በፌስቡክ በኩል መመዝገብ አልተቻለም ፡፡ እባክዎ ዳግም ይሞክሩ.",
     "unableRegisterGoogle": "በ Google በኩል መመዝገብ አልተቻለም። እባክዎ ዳግም ይሞክሩ.",
     "unableRegisterTwitter": "በትዊተር በኩል መመዝገብ አልተቻለም። እባክዎ ዳግም ይሞክሩ.",
+    "verificationEmailSent": "የማረጋገጫ ኢ-ሜል ተልኳል",
     "yourContacts": "የእርስዎ እውቂያዎች",
     "youWillNotJoinBackUnlessInvited": "አንድ ሰው ካልጋበዘዎት በስተቀር ተመልሰው ለመቀላቀል አይችሉም።"
 }

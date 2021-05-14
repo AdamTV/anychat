@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ไม่มีบัญชี?",
     "email": "อีเมล์",
     "emailInvite": "อีเมลเชิญ",
+    "emailSentToResetPassword": "มีการส่งอีเมลเพื่อรีเซ็ตรหัสผ่านของคุณ",
+    "emailVerified": "ยืนยันอีเมลแล้ว",
     "endonym_af": "แอฟริกัน",
     "endonym_am": "อัมฮาริก",
     "endonym_ar": "อาหรับ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ไม่สามารถลงทะเบียนผ่าน Facebook กรุณาลองอีกครั้ง.",
     "unableRegisterGoogle": "ไม่สามารถลงทะเบียนผ่าน Google กรุณาลองอีกครั้ง.",
     "unableRegisterTwitter": "ไม่สามารถลงทะเบียนผ่าน Twitter กรุณาลองอีกครั้ง.",
+    "verificationEmailSent": "ส่งอีเมลยืนยันแล้ว",
     "yourContacts": "ผู้ติดต่อของคุณ",
     "youWillNotJoinBackUnlessInvited": "คุณจะไม่สามารถกลับเข้าร่วมได้เว้นแต่จะมีใครเชิญคุณ"
 }

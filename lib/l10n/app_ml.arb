@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ഒരു അക്കൗണ്ട് ഇല്ലേ?",
     "email": "ഇ-മെയിൽ",
     "emailInvite": "ഇ-മെയിൽ ക്ഷണിക്കുക",
+    "emailSentToResetPassword": "നിങ്ങളുടെ പാസ്\u200cവേഡ് പുന reset സജ്ജമാക്കുന്നതിന് ഒരു ഇ-മെയിൽ അയച്ചു",
+    "emailVerified": "ഇ-മെയിൽ പരിശോധിച്ചു",
     "endonym_af": "ആഫ്രിക്കക്കാർ",
     "endonym_am": "അംഹാരിക്",
     "endonym_ar": "അറബിക്",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ഫേസ്ബുക്ക് വഴി രജിസ്റ്റർ ചെയ്യാൻ കഴിയില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
     "unableRegisterGoogle": "Google വഴി രജിസ്റ്റർ ചെയ്യാൻ കഴിയില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
     "unableRegisterTwitter": "Twitter വഴി രജിസ്റ്റർ ചെയ്യാൻ കഴിയില്ല. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+    "verificationEmailSent": "പരിശോധന ഇ-മെയിൽ അയച്ചു",
     "yourContacts": "നിങ്ങളുടെ കോൺ\u200cടാക്റ്റുകൾ",
     "youWillNotJoinBackUnlessInvited": "ആരെങ്കിലും നിങ്ങളെ ക്ഷണിച്ചില്ലെങ്കിൽ നിങ്ങൾക്ക് തിരികെ ചേരാനാവില്ല."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hutt Dir kee Kont?",
     "email": "E-Mail",
     "emailInvite": "E-Mail Invitéieren",
+    "emailSentToResetPassword": "Eng E-Mail gouf geschéckt fir Äert Passwuert zréckzesetzen",
+    "emailVerified": "E-Mail verifizéiert",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharesch",
     "endonym_ar": "Arabesch",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kann net iwwer Facebook registréieren. Probéiert w.e.g. nach eng Kéier.",
     "unableRegisterGoogle": "Kann net iwwer Google registréieren. Probéiert w.e.g. nach eng Kéier.",
     "unableRegisterTwitter": "Kann net iwwer Twitter registréieren. Probéiert w.e.g. nach eng Kéier.",
+    "verificationEmailSent": "Verifikatiouns-E-Mail geschéckt",
     "yourContacts": "Är Kontakter",
     "youWillNotJoinBackUnlessInvited": "Dir kënnt net matzemaachen, ausser datt een Iech invitéiert."
 }

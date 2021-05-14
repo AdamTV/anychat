@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ఖాతా లేదా?",
     "email": "ఇ-మెయిల్",
     "emailInvite": "ఇ-మెయిల్ ఆహ్వానించండి",
+    "emailSentToResetPassword": "మీ పాస్\u200cవర్డ్\u200cను రీసెట్ చేయడానికి ఇ-మెయిల్ పంపబడింది",
+    "emailVerified": "ఇ-మెయిల్ ధృవీకరించబడింది",
     "endonym_af": "ఆఫ్రికాన్స్",
     "endonym_am": "అమ్హారిక్",
     "endonym_ar": "అరబిక్",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ఫేస్\u200cబుక్ ద్వారా నమోదు చేయలేకపోయింది. దయచేసి మళ్ళీ ప్రయత్నించండి.",
     "unableRegisterGoogle": "గూగుల్ ద్వారా నమోదు చేయడం సాధ్యం కాలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.",
     "unableRegisterTwitter": "ట్విట్టర్ ద్వారా నమోదు కాలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.",
+    "verificationEmailSent": "ధృవీకరణ ఇ-మెయిల్ పంపబడింది",
     "yourContacts": "మీ పరిచయాలు",
     "youWillNotJoinBackUnlessInvited": "ఎవరైనా మిమ్మల్ని ఆహ్వానించకపోతే మీరు తిరిగి చేరలేరు."
 }

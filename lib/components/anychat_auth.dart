@@ -97,7 +97,7 @@ class AnyChatAuth {
       });
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
-          .doc(googleSignInAccount.id)
+          .doc(authResult.user.uid)
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
@@ -105,7 +105,7 @@ class AnyChatAuth {
         return currentUser;
       } else {
         currentUser = new AnyChatUser(
-            googleSignInAccount.id,
+            authResult.user.uid,
             googleSignInAccount.displayName,
             googleSignInAccount.email,
             googleSignInAccount.photoUrl,

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "اکونت یا بانکي حساب نه لرئ؟",
     "email": "بریښنالیک",
     "emailInvite": "بریښنا لیک",
+    "emailSentToResetPassword": "ستاسو د رمز له سره تنظیم کولو لپاره ایمیل استول شوی دی",
+    "emailVerified": "بریښنالیک تایید شوی",
     "endonym_af": "افریقایی",
     "endonym_am": "امهاریک",
     "endonym_ar": "عربي",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "د فېسبوک له لارې نوم لیکنه نشي کولی. مهرباني وکړئ بیا کوښښ وکړئ.",
     "unableRegisterGoogle": "د ګوګل له لارې راجستر کولو توان نلري. مهرباني وکړئ بیا کوښښ وکړئ.",
     "unableRegisterTwitter": "د ټویټر له لارې راجستر کولو توان نلري. مهرباني وکړئ بیا کوښښ وکړئ.",
+    "verificationEmailSent": "د تایید بریښنالیک لیږل شوی",
     "yourContacts": "ستاسو اړیکې",
     "youWillNotJoinBackUnlessInvited": "تاسو به د دې توان ونلرئ چې بیرته یوځای شئ پرته لدې چې یو څوک تاسو ته بلنه درکړي."
 }

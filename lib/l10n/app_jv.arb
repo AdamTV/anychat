@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ora duwe akun?",
     "email": "E-mail",
     "emailInvite": "E-mail Undang",
+    "emailSentToResetPassword": "E-mail wis dikirim kanggo ngreset sandhi sampeyan",
+    "emailVerified": "E-mail wis diverifikasi",
     "endonym_af": "Wong afrika",
     "endonym_am": "Amharic",
     "endonym_ar": "Arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ora bisa ndhaptar liwat Facebook. Coba maneh.",
     "unableRegisterGoogle": "Ora bisa ndhaptar liwat Google. Coba maneh.",
     "unableRegisterTwitter": "Ora bisa ndhaptar liwat Twitter. Coba maneh.",
+    "verificationEmailSent": "E-mail verifikasi dikirim",
     "yourContacts": "Kontak Sampeyan",
     "youWillNotJoinBackUnlessInvited": "Sampeyan ora bakal bisa gabung maneh kajaba ana sing ngundang sampeyan."
 }

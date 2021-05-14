@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Tsis muaj tus account?",
     "email": "E-mail",
     "emailInvite": "E-mail Caw",
+    "emailSentToResetPassword": "Ib qho e-mail tau raug xa mus ua haujlwm rov qab koj tus password",
+    "emailVerified": "E-mail tshawb xyuas qhov tseeb",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Arabic",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Tso npe tsis tau rau hauv Facebook. Thov koj sim dua.",
     "unableRegisterGoogle": "Tsis tuaj yeem sau npe hauv Google. Thov koj sim dua.",
     "unableRegisterTwitter": "Tsis tuaj yeem tso npe los ntawm Twitter. Thov koj sim dua.",
+    "verificationEmailSent": "Kev lees paub e-mail xa",
     "yourContacts": "Koj Cov Chaw Nug",
     "youWillNotJoinBackUnlessInvited": "Koj yuav tuaj koom tsis tau tshwj tsis yog muaj ib tug twg caw koj."
 }

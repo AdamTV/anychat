@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Нямаш акаунт?",
     "email": "Електронна поща",
     "emailInvite": "Изпратете покана по имейл",
+    "emailSentToResetPassword": "Изпратено е имейл за нулиране на паролата ви",
+    "emailVerified": "Имейлът е проверен",
     "endonym_af": "Африкаанс",
     "endonym_am": "Амхарски",
     "endonym_ar": "Арабски",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Не може да се регистрира чрез Facebook. Моля, опитайте отново.",
     "unableRegisterGoogle": "Не може да се регистрира чрез Google. Моля, опитайте отново.",
     "unableRegisterTwitter": "Не може да се регистрира чрез Twitter. Моля, опитайте отново.",
+    "verificationEmailSent": "Изпратен е имейл за потвърждение",
     "yourContacts": "Вашите контакти",
     "youWillNotJoinBackUnlessInvited": "Няма да можете да се присъедините, освен ако някой не ви покани."
 }

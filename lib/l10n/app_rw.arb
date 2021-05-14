@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ntabwo ufite konti?",
     "email": "E-imeri",
     "emailInvite": "E-imeri Ubutumire",
+    "emailSentToResetPassword": "E-imeri yoherejwe kugirango usubize ijambo ryibanga",
+    "emailVerified": "E-imeri yagenzuwe",
     "endonym_af": "Abanyafurika",
     "endonym_am": "Amharic",
     "endonym_ar": "Icyarabu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ntushobora kwiyandikisha ukoresheje Facebook. Nyamuneka gerageza.",
     "unableRegisterGoogle": "Ntushobora kwiyandikisha ukoresheje Google. Nyamuneka gerageza.",
     "unableRegisterTwitter": "Ntushobora kwiyandikisha ukoresheje Twitter. Nyamuneka gerageza.",
+    "verificationEmailSent": "Kugenzura imeri yoherejwe",
     "yourContacts": "Imikoranire yawe",
     "youWillNotJoinBackUnlessInvited": "Ntushobora gusubira inyuma keretse umuntu agutumiye."
 }

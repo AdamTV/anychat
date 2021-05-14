@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nemáš účet?",
     "email": "E-mail",
     "emailInvite": "E-mailová pozvánka",
+    "emailSentToResetPassword": "Bol odoslaný e-mail na obnovenie hesla",
+    "emailVerified": "E-mail bol overený",
     "endonym_af": "Afrikánčina",
     "endonym_am": "Amharčina",
     "endonym_ar": "Arabsky",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nie je možné zaregistrovať sa cez Facebook. Prosím skúste znova.",
     "unableRegisterGoogle": "Nie je možné zaregistrovať sa cez Google. Prosím skúste znova.",
     "unableRegisterTwitter": "Cez Twitter sa nedá zaregistrovať. Prosím skúste znova.",
+    "verificationEmailSent": "Overovací e-mail bol odoslaný",
     "yourContacts": "Vaše kontakty",
     "youWillNotJoinBackUnlessInvited": "Nebudete sa môcť pripojiť späť, pokiaľ vás niekto nepozve."
 }

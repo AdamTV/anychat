@@ -94,7 +94,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           text: new TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodyText1,
             children: <TextSpan>[
               new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
               new TextSpan(text: "${_chatMessages[i].text}\n\n"),
@@ -133,7 +133,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         text: new TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
           // Child text spans will inherit styles from parent
-          style: Theme.of(context).primaryTextTheme.caption,
+          style: Theme.of(context).textTheme.bodyText1,
           children: <TextSpan>[
             new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
             new TextSpan(text: "${message.text}\n\n"),
@@ -227,12 +227,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context).call,
       onPressed: () async {
-        if (await Utilities.handleCameraAndMic(Permission.camera) &&
-            await Utilities.handleCameraAndMic(Permission.microphone)) {
-          AnyChatUser.addMessageToConversation(AppLocalizations.of(context).isCallingYouOnAnyChat);
-          CallScreen.channelName = AnyChatAuth.currentConversation.id;
-          Navigator.pushNamed(context, "/call");
-        }
+       CallScreen.requestPermissionAndNavigate();
       },
     ));
     Container container = Container(

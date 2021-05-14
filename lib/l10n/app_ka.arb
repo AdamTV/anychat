@@ -25,6 +25,8 @@
     "doNotHaveAccount": "არ გაქვთ ანგარიში?",
     "email": "ელ.ფოსტა",
     "emailInvite": "ელ.ფოსტით მოწვევა",
+    "emailSentToResetPassword": "გაიგზავნა ელ.ფოსტა თქვენი პაროლის გადასაყენებლად",
+    "emailVerified": "ელ.ფოსტა დადასტურებულია",
     "endonym_af": "აფრიკული",
     "endonym_am": "ამჰარული",
     "endonym_ar": "არაბული",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "რეგისტრაცია შეუძლებელია Facebook– ის საშუალებით. Გთხოვთ კიდევ სცადეთ.",
     "unableRegisterGoogle": "Google- ის საშუალებით რეგისტრაცია ვერ ხერხდება. Გთხოვთ კიდევ სცადეთ.",
     "unableRegisterTwitter": "რეგისტრაცია შეუძლებელია Twitter– ით. Გთხოვთ კიდევ სცადეთ.",
+    "verificationEmailSent": "დამადასტურებელი ელ.ფოსტა გაიგზავნა",
     "yourContacts": "თქვენი კონტაქტები",
     "youWillNotJoinBackUnlessInvited": "თქვენ ვერ შეძლებთ შემოერთებას, თუ ვინმე არ გიწვევთ."
 }

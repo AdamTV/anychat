@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Есептік жазбаңыз жоқ па?",
     "email": "Электрондық пошта",
     "emailInvite": "Электрондық поштаға шақыру",
+    "emailSentToResetPassword": "Құпия сөзді қалпына келтіру үшін электрондық пошта жіберілді",
+    "emailVerified": "Электрондық пошта расталды",
     "endonym_af": "Африкаанс",
     "endonym_am": "Амхар",
     "endonym_ar": "Араб",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook арқылы тіркелу мүмкін емес. Қайталап көріңіз.",
     "unableRegisterGoogle": "Google арқылы тіркелу мүмкін емес. Қайталап көріңіз.",
     "unableRegisterTwitter": "Twitter арқылы тіркелу мүмкін емес. Қайталап көріңіз.",
+    "verificationEmailSent": "Тексеру электрондық поштасы жіберілді",
     "yourContacts": "Сіздің контактілеріңіз",
     "youWillNotJoinBackUnlessInvited": "Сізді біреу шақырмаса, сіз қайта қосыла алмайсыз."
 }
