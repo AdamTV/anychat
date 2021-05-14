@@ -82,7 +82,7 @@ class Notifications implements Disposable {
     }
     print('showNotification');
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-        payload == 'ring'
+        payload.contains('ring')
             ? AndroidNotificationDetails(
                 AppLocalizations.of(Utilities.globalKey.currentContext).title,
                 'your channel name',
@@ -96,12 +96,13 @@ class Notifications implements Disposable {
                 AppLocalizations.of(Utilities.globalKey.currentContext).title,
                 'your channel name',
                 'your channel description',
+
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',
                 styleInformation: BigTextStyleInformation(''),
               );
-    var iosPlatformSpecs = payload == 'ring'
+    var iosPlatformSpecs = payload.contains('ring')
         ? IOSNotificationDetails(presentSound: false)
         : IOSNotificationDetails(presentSound: true);
     NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -109,7 +110,7 @@ class Notifications implements Disposable {
     if (flutterLocalNotificationsPlugin == null) {
       await init();
     }
-    if (payload == "ring") {
+    if (payload.contains("ring")) {
       FlutterRingtonePlayer.playRingtone();
     }
     await flutterLocalNotificationsPlugin
