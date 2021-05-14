@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hesabê we tune?",
     "email": "E-name",
     "emailInvite": "E-nameyê Vexwendin",
+    "emailSentToResetPassword": "Ji bo sifirkirina şîfreya we e-nameyek hat şandin",
+    "emailVerified": "E-name rastandin",
     "endonym_af": "Afrîkansî",
     "endonym_am": "Amharîkî",
     "endonym_ar": "Erebî",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nekare bi Facebookê qeyd bike. Ji kerema xwe dîsa biceribînin.",
     "unableRegisterGoogle": "Bi navgîniya Google ve nayê qeyd kirin. Ji kerema xwe dîsa biceribînin.",
     "unableRegisterTwitter": "Bi Twitter-ê nayê qeyd kirin. Ji kerema xwe dîsa biceribînin.",
+    "verificationEmailSent": "E-nameya rastkirinê şandin",
     "yourContacts": "Têkiliyên We",
     "youWillNotJoinBackUnlessInvited": "Heya ku kesek vexwendina we neke hûn ê nekarin paşde bibin."
 }

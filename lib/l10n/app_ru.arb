@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Нет аккаунта?",
     "email": "Электронная почта",
     "emailInvite": "Электронная почта Приглашение",
+    "emailSentToResetPassword": "Было отправлено электронное письмо для сброса пароля",
+    "emailVerified": "Электронная почта подтверждена",
     "endonym_af": "африкаанс",
     "endonym_am": "Амхарский",
     "endonym_ar": "арабский",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Невозможно зарегистрироваться через Facebook. Пожалуйста, попробуйте еще раз.",
     "unableRegisterGoogle": "Невозможно зарегистрироваться через Google. Пожалуйста, попробуйте еще раз.",
     "unableRegisterTwitter": "Невозможно зарегистрироваться через Twitter. Пожалуйста, попробуйте еще раз.",
+    "verificationEmailSent": "Письмо с подтверждением отправлено",
     "yourContacts": "Ваши контакты",
     "youWillNotJoinBackUnlessInvited": "Вы не сможете снова присоединиться, если вас не пригласят."
 }

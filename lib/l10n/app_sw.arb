@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Je! Hauna akaunti?",
     "email": "Barua pepe",
     "emailInvite": "Mwaliko wa Barua-pepe",
+    "emailSentToResetPassword": "Barua pepe imetumwa kuweka nywila yako upya",
+    "emailVerified": "Barua pepe imethibitishwa",
     "endonym_af": "Kiafrikana",
     "endonym_am": "Kiamhariki",
     "endonym_ar": "Kiarabu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Imeshindwa kujiandikisha kupitia Facebook. Tafadhali jaribu tena.",
     "unableRegisterGoogle": "Imeshindwa kujisajili kupitia Google. Tafadhali jaribu tena.",
     "unableRegisterTwitter": "Imeshindwa kujiandikisha kupitia Twitter. Tafadhali jaribu tena.",
+    "verificationEmailSent": "Barua pepe ya uthibitishaji imetumwa",
     "yourContacts": "Anwani zako",
     "youWillNotJoinBackUnlessInvited": "Hutaweza kujiunga tena isipokuwa mtu atakualika."
 }

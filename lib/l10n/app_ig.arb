@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Enweghị akaụntụ?",
     "email": "E-mail",
     "emailInvite": "E-mail Kpọọ",
+    "emailSentToResetPassword": "E-ezigala iji tọgharịa okwuntughe gị",
+    "emailVerified": "E-mail kwadoro",
     "endonym_af": "Afrịka",
     "endonym_am": "Asụsụ Amharik",
     "endonym_ar": "Arabic",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Enweghi ike ịdebanye aha site na Facebook. Biko nwaa ọzọ.",
     "unableRegisterGoogle": "Enweghi ike ịdebanye aha site na Google. Biko nwaa ọzọ.",
     "unableRegisterTwitter": "Enweghi ike ịdebanye aha na Twitter. Biko nwaa ọzọ.",
+    "verificationEmailSent": "Nyocha nkwenye e-mail",
     "yourContacts": "Ndi ana-akpo gi",
     "youWillNotJoinBackUnlessInvited": "Gaghị enwe ike isonye ọzọ belụsọ ma mmadụ akpọọ gị."
 }

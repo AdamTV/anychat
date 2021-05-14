@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ਕੀ ਕੋਈ ਖਾਤਾ ਨਹੀਂ ਹੈ?",
     "email": "ਈ - ਮੇਲ",
     "emailInvite": "ਈ-ਮੇਲ ਸੱਦਾ",
+    "emailSentToResetPassword": "ਤੁਹਾਡੇ ਪਾਸਵਰਡ ਨੂੰ ਰੀਸੈਟ ਕਰਨ ਲਈ ਇੱਕ ਈ-ਮੇਲ ਭੇਜੀ ਗਈ ਹੈ",
+    "emailVerified": "ਈ-ਮੇਲ ਪ੍ਰਮਾਣਿਤ",
     "endonym_af": "ਅਫ਼ਰੀਕੀ",
     "endonym_am": "ਅਮਹੈਰਿਕ",
     "endonym_ar": "ਅਰਬੀ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ਫੇਸਬੁੱਕ ਦੁਆਰਾ ਰਜਿਸਟਰ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ. ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ.",
     "unableRegisterGoogle": "ਗੂਗਲ ਦੁਆਰਾ ਰਜਿਸਟਰ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ. ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ.",
     "unableRegisterTwitter": "ਟਵਿੱਟਰ ਦੁਆਰਾ ਰਜਿਸਟਰ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ. ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ.",
+    "verificationEmailSent": "ਤਸਦੀਕ ਈ-ਮੇਲ ਭੇਜਿਆ",
     "yourContacts": "ਤੁਹਾਡੇ ਸੰਪਰਕ",
     "youWillNotJoinBackUnlessInvited": "ਤੁਸੀਂ ਵਾਪਸ ਸ਼ਾਮਲ ਨਹੀਂ ਹੋ ਸਕੋਗੇ ਜਦੋਂ ਤਕ ਕੋਈ ਤੁਹਾਨੂੰ ਨਹੀਂ ਬੁਲਾਉਂਦਾ."
 }

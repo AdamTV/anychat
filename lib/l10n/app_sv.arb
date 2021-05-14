@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Har du inget konto?",
     "email": "E-post",
     "emailInvite": "E-postinbjudan",
+    "emailSentToResetPassword": "Ett e-postmeddelande har skickats för att återställa ditt lösenord",
+    "emailVerified": "E-post verifierad",
     "endonym_af": "Afrikanska",
     "endonym_am": "Amhariska",
     "endonym_ar": "Arabiska",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Det går inte att registrera sig via Facebook. Var god försök igen.",
     "unableRegisterGoogle": "Det går inte att registrera sig via Google. Var god försök igen.",
     "unableRegisterTwitter": "Det går inte att registrera via Twitter. Var god försök igen.",
+    "verificationEmailSent": "Verifierings-e-post skickat",
     "yourContacts": "Dina kontakter",
     "youWillNotJoinBackUnlessInvited": "Du kommer inte att kunna gå tillbaka om inte någon bjuder in dig."
 }

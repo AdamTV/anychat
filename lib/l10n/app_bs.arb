@@ -25,6 +25,8 @@
     "doNotHaveAccount": "nemaš račun?",
     "email": "E-mail",
     "emailInvite": "Pošaljite e-poštu",
+    "emailSentToResetPassword": "Poslat je e-mail za resetiranje lozinke",
+    "emailVerified": "E-mail potvrđen",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharski",
     "endonym_ar": "Arapski",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nije moguće registrirati se putem Facebooka. Molimo pokušajte ponovo.",
     "unableRegisterGoogle": "Nije moguće registrirati se putem Googlea. Molimo pokušajte ponovo.",
     "unableRegisterTwitter": "Nije moguće registrirati se putem Twittera. Molimo pokušajte ponovo.",
+    "verificationEmailSent": "Poslat je e-mail za potvrdu",
     "yourContacts": "Vaši kontakti",
     "youWillNotJoinBackUnlessInvited": "Nećete se moći pridružiti ako vas neko ne pozove."
 }

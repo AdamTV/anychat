@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Не маєте облікового запису?",
     "email": "Електронна пошта",
     "emailInvite": "Запросити електронною поштою",
+    "emailSentToResetPassword": "Було надіслано електронне повідомлення про скидання пароля",
+    "emailVerified": "Електронну адресу підтверджено",
     "endonym_af": "Африкаанс",
     "endonym_am": "Амхарська",
     "endonym_ar": "Арабська",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Неможливо зареєструватися через Facebook. Будь ласка спробуйте ще раз.",
     "unableRegisterGoogle": "Неможливо зареєструватися через Google. Будь ласка спробуйте ще раз.",
     "unableRegisterTwitter": "Неможливо зареєструватися через Twitter. Будь ласка спробуйте ще раз.",
+    "verificationEmailSent": "Електронне повідомлення з підтвердженням надіслано",
     "yourContacts": "Ваші контакти",
     "youWillNotJoinBackUnlessInvited": "Ви не зможете приєднатися, якщо вас хтось не запросить."
 }

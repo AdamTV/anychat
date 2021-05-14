@@ -25,6 +25,8 @@
     "doNotHaveAccount": "အကောင့်မရှိဘူးလား?",
     "email": "အီးမေးလ်",
     "emailInvite": "အီးမေးလ်ဖိတ်ကြားပါ",
+    "emailSentToResetPassword": "သင်၏စကားဝှက်ကိုပြန်လည်သတ်မှတ်ရန်အီးမေးလ်တစ်စောင်ပို့ထားသည်",
+    "emailVerified": "အီးမေးလ်ကိုအတည်ပြုပြီး",
     "endonym_af": "အာဖရိကန်",
     "endonym_am": "အမ်ဟာရစ်",
     "endonym_ar": "အာရဗီ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook မှတဆင့်မှတ်ပုံတင်။ မရပါ။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ",
     "unableRegisterGoogle": "ဂူဂဲလ်မှတဆင့်မှတ်ပုံတင်။ မရပါ။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ",
     "unableRegisterTwitter": "Twitter မှတဆင့်မှတ်ပုံတင်။ မရပါ။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ",
+    "verificationEmailSent": "အတည်ပြု e-mail ကိုပို့ခဲ့သည်",
     "yourContacts": "သင်၏အဆက်အသွယ်များ",
     "youWillNotJoinBackUnlessInvited": "တစ်စုံတစ်ယောက်ကသင့်ကိုမဖိတ်ကြားပါကသင်ပြန်လည်ဆက်သွယ်နိုင်မည်မဟုတ်ပါ။"
 }

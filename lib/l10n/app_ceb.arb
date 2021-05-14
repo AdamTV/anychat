@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Wala kay account?",
     "email": "E-mail",
     "emailInvite": "Imbitasyon sa E-mail",
+    "emailSentToResetPassword": "Usa ka e-mail ang gipadala aron ma-reset ang imong password",
+    "emailVerified": "Gipamatud-an ang e-mail",
     "endonym_af": "Mga afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Arabe",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Dili makaparehistro pinaagi sa Facebook. Palihug pagsulay usab.",
     "unableRegisterGoogle": "Dili makaparehistro pinaagi sa Google. Palihug pagsulay usab.",
     "unableRegisterTwitter": "Dili makaparehistro pinaagi sa Twitter. Palihug pagsulay usab.",
+    "verificationEmailSent": "Gipadala ang e-mail sa panghimatuud",
     "yourContacts": "Imong Mga Kontak",
     "youWillNotJoinBackUnlessInvited": "Dili ka makaapil balik gawas kung adunay mag-imbita kanimo."
 }

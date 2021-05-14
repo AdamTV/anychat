@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Bir hesabınız yoxdur?",
     "email": "Elektron poçt",
     "emailInvite": "E-poçt Dəvət",
+    "emailSentToResetPassword": "Şifrənizi sıfırlamaq üçün bir elektron poçt göndərildi",
+    "emailVerified": "Elektron poçt doğrulandı",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharca",
     "endonym_ar": "Ərəb",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook vasitəsilə qeydiyyatdan keçmək mümkün deyil. Zəhmət olmasa bir daha cəhd edin.",
     "unableRegisterGoogle": "Google vasitəsilə qeydiyyatdan keçmək olmur. Zəhmət olmasa bir daha cəhd edin.",
     "unableRegisterTwitter": "Twitter vasitəsilə qeydiyyatdan keçmək mümkün deyil. Zəhmət olmasa bir daha cəhd edin.",
+    "verificationEmailSent": "Doğrulama e-poçtu göndərildi",
     "yourContacts": "Kontaktlarınız",
     "youWillNotJoinBackUnlessInvited": "Kimsə dəvət etmədiyi təqdirdə geri qoşula bilməyəcəksiniz."
 }

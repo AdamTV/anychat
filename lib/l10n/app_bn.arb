@@ -25,6 +25,8 @@
     "doNotHaveAccount": "একটি একাউন্ট আছে কি না?",
     "email": "ই-মেইল",
     "emailInvite": "ইমেল আমন্ত্রণ",
+    "emailSentToResetPassword": "আপনার পাসওয়ার্ড পুনরায় সেট করতে একটি ইমেল প্রেরণ করা হয়েছে",
+    "emailVerified": "ইমেইল যাচাই",
     "endonym_af": "আফ্রিকান",
     "endonym_am": "আমহারিক",
     "endonym_ar": "আরবি",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ফেসবুকের মাধ্যমে নিবন্ধন করতে অক্ষম। অনুগ্রহপূর্বক আবার চেষ্টা করুন.",
     "unableRegisterGoogle": "গুগলের মাধ্যমে নিবন্ধন করতে অক্ষম। অনুগ্রহপূর্বক আবার চেষ্টা করুন.",
     "unableRegisterTwitter": "টুইটারের মাধ্যমে নিবন্ধন করতে অক্ষম। অনুগ্রহপূর্বক আবার চেষ্টা করুন.",
+    "verificationEmailSent": "যাচাই ইমেল প্রেরণ",
     "yourContacts": "আপনার পরিচিতিগুলি",
     "youWillNotJoinBackUnlessInvited": "কেউ আপনাকে আমন্ত্রণ না করলে আপনি ফিরে যোগদান করতে পারবেন না।"
 }

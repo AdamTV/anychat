@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Kas teil pole kontot?",
     "email": "E-post",
     "emailInvite": "E-post Kutsu",
+    "emailSentToResetPassword": "Teie parooli lähtestamiseks on saadetud e-kiri",
+    "emailVerified": "E-post on kinnitatud",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amhari keel",
     "endonym_ar": "Araabia",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebooki kaudu ei saa registreerida. Palun proovi uuesti.",
     "unableRegisterGoogle": "Google'i kaudu ei saa registreerida. Palun proovi uuesti.",
     "unableRegisterTwitter": "Twitteri kaudu ei saa registreerida. Palun proovi uuesti.",
+    "verificationEmailSent": "Kinnitusmeil saadetud",
     "yourContacts": "Teie kontaktid",
     "youWillNotJoinBackUnlessInvited": "Te ei saa tagasi liituda, kui keegi teid ei kutsu."
 }

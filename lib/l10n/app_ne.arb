@@ -25,6 +25,8 @@
     "doNotHaveAccount": "खाता छैन?",
     "email": "इ-मेल",
     "emailInvite": "इ-मेल आमन्त्रित",
+    "emailSentToResetPassword": "तपाईको पासवर्ड रिसेट गर्न एक इ-मेल पठाइएको छ",
+    "emailVerified": "इ-मेल प्रमाणित भयो",
     "endonym_af": "अफ्रिकी",
     "endonym_am": "अम्हारिक",
     "endonym_ar": "अरबी",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "फेसबुक मार्फत दर्ता गर्न असमर्थ। फेरि प्रयास गर्नुहोस।",
     "unableRegisterGoogle": "गुगल मार्फत दर्ता गर्न असमर्थ। फेरि प्रयास गर्नुहोस।",
     "unableRegisterTwitter": "ट्विटर मार्फत दर्ता गर्न असमर्थ। फेरि प्रयास गर्नुहोस।",
+    "verificationEmailSent": "प्रमाणिकरण इ-मेल पठाइयो",
     "yourContacts": "तपाईंको सम्पर्कहरू",
     "youWillNotJoinBackUnlessInvited": "तपाईं फिर्ता सामेल हुन सक्षम हुनुहुने छैन जबसम्म कसैले तपाईंलाई आमन्त्रित गर्दैन।"
 }

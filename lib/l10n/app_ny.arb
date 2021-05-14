@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Mulibe akaunti?",
     "email": "Imelo",
     "emailInvite": "Tumizani Imelo",
+    "emailSentToResetPassword": "Imelo yatumizidwa kuti ikonzenso dzina lanu",
+    "emailVerified": "Imelo yotsimikizika",
     "endonym_af": "Chiafrikaana",
     "endonym_am": "Chiamhariki",
     "endonym_ar": "Chiarabu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Simungathe kulembetsa kudzera pa Facebook. Chonde yesaninso.",
     "unableRegisterGoogle": "Takanika kulembetsa kudzera pa Google. Chonde yesaninso.",
     "unableRegisterTwitter": "Simungathe kulembetsa kudzera pa Twitter. Chonde yesaninso.",
+    "verificationEmailSent": "Imelo yotsimikiza yatumizidwa",
     "yourContacts": "Anu Othandizira",
     "youWillNotJoinBackUnlessInvited": "Simungathe kulowa nawo pokhapokha wina atakuitanani."
 }

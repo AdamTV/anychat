@@ -21,6 +21,7 @@ import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CallScreen extends StatefulWidget {
   static String channelName;
@@ -29,6 +30,17 @@ class CallScreen extends StatefulWidget {
 
   @override
   _CallScreenState createState() => _CallScreenState();
+
+  static Future<void> requestPermissionAndNavigate() async {
+    if (await Utilities.handlePermission(Permission.camera) &&
+        await Utilities.handlePermission(Permission.microphone)) {
+      AnyChatUser.addMessageToConversation(
+          AppLocalizations.of(Utilities.globalKey.currentContext)
+              .isCallingYouOnAnyChat);
+      CallScreen.channelName = AnyChatAuth.currentConversation.id;
+      Navigator.pushNamed(Utilities.globalKey.currentContext, "/call");
+    }
+  }
 }
 
 class _CallScreenState extends State<CallScreen> {
@@ -186,9 +198,11 @@ class _CallScreenState extends State<CallScreen> {
       //   recognizeFinished = true;
       // });
     }, onDone: () {
-      setState(() {
-        recognizing = false;
-      });
+      if (mounted) {
+        setState(() {
+          recognizing = false;
+        });
+      }
     });
   }
 
@@ -234,7 +248,7 @@ class _CallScreenState extends State<CallScreen> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () async => _onCallEnd(context),
+            onPressed: () async => _onCallEnd(),
             child: Icon(
               Icons.call_end,
               color: Theme.of(context).primaryColorLight,
@@ -266,7 +280,8 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).title,
+        title: Text(
+          AppLocalizations.of(context).title,
         ),
       ),
       backgroundColor: Colors.black,
@@ -383,13 +398,13 @@ class _CallScreenState extends State<CallScreen> {
     // return Container();
   }
 
-  Future<void> _onCallEnd(BuildContext context) async {
+  Future<void> _onCallEnd() async {
     if (await Ads.interstitial.isLoaded) {
       Ads.interstitial.show();
     } else {
       print('Interstitial ad is still laoding...');
     }
-    Navigator.pop(context);
+    Navigator.popUntil(context, ModalRoute.withName('/chat'));
   }
 
   void _onToggleMute() {

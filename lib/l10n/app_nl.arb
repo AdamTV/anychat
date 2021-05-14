@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Heb je geen account?",
     "email": "E-mail",
     "emailInvite": "E-mail uitnodigen",
+    "emailSentToResetPassword": "Er is een e-mail verzonden om uw wachtwoord opnieuw in te stellen",
+    "emailVerified": "Email geverifieerd",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amhaars",
     "endonym_ar": "Arabisch",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kan niet registreren via Facebook. Probeer het a.u.b. opnieuw.",
     "unableRegisterGoogle": "Kan niet registreren via Google. Probeer het a.u.b. opnieuw.",
     "unableRegisterTwitter": "Kan niet registreren via Twitter. Probeer het a.u.b. opnieuw.",
+    "verificationEmailSent": "Verificatie email verzonden",
     "yourContacts": "Jouw contacten",
     "youWillNotJoinBackUnlessInvited": "U kunt pas weer lid worden als iemand u uitnodigt."
 }

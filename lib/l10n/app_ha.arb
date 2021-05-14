@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ba ku da asusu?",
     "email": "E-mail",
     "emailInvite": "E-mail Gayyata",
+    "emailSentToResetPassword": "An aika imel don sake saita kalmarka ta sirri",
+    "emailVerified": "An tabbatar da imel",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Larabci",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "An kasa yin rijista ta hanyar Facebook. Da fatan a sake gwadawa.",
     "unableRegisterGoogle": "An kasa yin rijista ta hanyar Google. Da fatan a sake gwadawa.",
     "unableRegisterTwitter": "An kasa yin rijista ta hanyar Twitter. Da fatan a sake gwadawa.",
+    "verificationEmailSent": "An aika imel ɗin tabbatarwa",
     "yourContacts": "Lambobinka",
     "youWillNotJoinBackUnlessInvited": "Ba za ku iya shiga cikin ba sai dai idan wani ya gayyace ku."
 }

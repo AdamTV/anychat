@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ez duzu konturik?",
     "email": "Posta elektronikoa",
     "emailInvite": "Gonbidatu posta elektronikoa",
+    "emailSentToResetPassword": "Zure pasahitza berrezartzeko mezu elektroniko bat bidali da",
+    "emailVerified": "Posta elektronikoa egiaztatu da",
     "endonym_af": "Afrikaansa",
     "endonym_am": "Amharera",
     "endonym_ar": "Arabiera",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ezin da Facebook bidez erregistratu. Saiatu berriro mesedez.",
     "unableRegisterGoogle": "Ezin da erregistratu Google-ren bidez. Saiatu berriro mesedez.",
     "unableRegisterTwitter": "Ezin da Twitter bidez erregistratu. Saiatu berriro mesedez.",
+    "verificationEmailSent": "Egiaztapen mezu elektronikoa bidali da",
     "yourContacts": "Zure kontaktuak",
     "youWillNotJoinBackUnlessInvited": "Ezin izango zara berriro sartu norbaitek gonbidatu ezean."
 }

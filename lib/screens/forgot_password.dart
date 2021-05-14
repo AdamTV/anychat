@@ -43,6 +43,7 @@ class ForgotPassword extends StatelessWidget {
                 onPressed: () async {
                   await _passwordReset();
                   print(_email);
+                  Fluttertoast.showToast(msg: AppLocalizations.of(context).emailSentToResetPassword);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
