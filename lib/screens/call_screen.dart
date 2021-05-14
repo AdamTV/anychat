@@ -18,6 +18,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
+import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
+    as v1CloudSpeech;
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:mic_stream/mic_stream.dart';
@@ -34,7 +36,8 @@ class CallScreen extends StatefulWidget {
   static Future<void> requestPermissionAndNavigate() async {
     if (await Utilities.handlePermission(Permission.camera) &&
         await Utilities.handlePermission(Permission.microphone)) {
-      AnyChatUser.addMessageToConversation(
+      AnyChatUser.addMessageToConversation(AnyChatAuth.currentUser.displayName +
+          " " +
           AppLocalizations.of(Utilities.globalKey.currentContext)
               .isCallingYouOnAnyChat);
       CallScreen.channelName = AnyChatAuth.currentConversation.id;
@@ -69,7 +72,6 @@ class _CallScreenState extends State<CallScreen> {
     // clear users
     remoteUid.clear();
     // destroy sdk
-    _engine.leaveChannel();
     _engine.destroy();
     super.dispose();
   }
@@ -157,18 +159,31 @@ class _CallScreenState extends State<CallScreen> {
   //   ));
   // }
 
-  Widget _translatedText() {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: Text(text,
-          style: TextStyle(
-              backgroundColor: Theme.of(context).primaryColorLight,
-              fontSize: 32)),
-    );
+  Container _translatedText() {
+    return text != null && text.isNotEmpty
+        ? Container(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              margin: EdgeInsets.only(top: 24, right: 24),
+              child: Text(text,
+                  style: TextStyle(
+                      backgroundColor: Colors.white,
+                      color: Colors.black54,
+                      fontSize: 32)),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+            ))
+        : Container();
   }
 
   SpeechToText speechToText;
   bool recognizing, recognizeFinished;
+  Stream<v1CloudSpeech.StreamingRecognizeResponse> responseStream;
 
   void streamingRecognize() async {
     setState(() {
@@ -180,23 +195,23 @@ class _CallScreenState extends State<CallScreen> {
 
     final config = _getConfig();
 
-    final responseStream = speechToText.streamingRecognize(
+    responseStream = speechToText.streamingRecognize(
         StreamingRecognitionConfig(config: config, interimResults: true),
         await _getAudioStream());
     String lastMessage = "";
     responseStream.listen((data) {
-      String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript).join('\n');
-      if (lastMessage.compareTo(transcribedText) != 0 &&
-          transcribedText.isNotEmpty) {
-        lastMessage = transcribedText;
-        AnyChatUser.addTranscribedMessage(lastMessage);
+        String transcribedText =
+        data.results.map((e) => e.alternatives.first.transcript).join('\n');
+        if (lastMessage.compareTo(transcribedText) != 0 &&
+            transcribedText.isNotEmpty) {
+          lastMessage = transcribedText;
+          AnyChatUser.addTranscribedMessage(lastMessage);
+        // setState(() {
+        //   text =
+        //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+        //   recognizeFinished = true;
+        // });
       }
-      // setState(() {
-      //   text =
-      //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
-      //   recognizeFinished = true;
-      // });
     }, onDone: () {
       if (mounted) {
         setState(() {
@@ -227,7 +242,7 @@ class _CallScreenState extends State<CallScreen> {
   Widget _toolbar() {
     return Container(
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: 48),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -328,37 +343,42 @@ class _CallScreenState extends State<CallScreen> {
 
   /// Video layout wrapper
   Widget _viewRows() {
-    return Expanded(
-      child: Stack(
-        children: [
-          if (remoteUid != null)
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.of(remoteUid.map(
-                    (e) => Container(
-                      width:
-                          MediaQuery.of(context).size.width / remoteUid.length,
-                      height:
-                          MediaQuery.of(context).size.height / remoteUid.length,
-                      child: RtcRemoteView.SurfaceView(
-                        uid: e,
-                        channelId: _channel.channelId,
-                      ),
-                    ),
-                  )),
-                )),
-          Container(
-            width: 120,
-            height: 120,
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: RtcLocalView.SurfaceView(
-                  channelId: _channel?.channelId,
-                )),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              if (remoteUid != null)
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.of(remoteUid.map(
+                        (e) => Container(
+                          width: MediaQuery.of(context).size.width /
+                              remoteUid.length,
+                          height: MediaQuery.of(context).size.height /
+                              remoteUid.length,
+                          child: RtcRemoteView.SurfaceView(
+                            uid: e,
+                            channelId: _channel.channelId,
+                          ),
+                        ),
+                      )),
+                    )),
+              Container(
+                padding: EdgeInsets.only(top: 12, left: 12),
+                width: 120,
+                height: 120,
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: RtcLocalView.SurfaceView(
+                      channelId: _channel?.channelId,
+                    )),
+              )
+            ],
+          ),
+        )
+      ],
     );
 
     // var getRenderViews = _getRenderViews();
@@ -399,19 +419,28 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _onCallEnd() async {
+    _channel.leaveChannel();
+    _engine.destroy();
+    AnyChatUser.clearTranscribedMessages();
     if (await Ads.interstitial.isLoaded) {
       Ads.interstitial.show();
     } else {
       print('Interstitial ad is still laoding...');
     }
-    Navigator.popUntil(context, ModalRoute.withName('/chat'));
+    Navigator.pushNamed(context, '/chat');
   }
 
-  void _onToggleMute() {
+  Future<void> _onToggleMute() async {
     setState(() {
       muted = !muted;
     });
     _engine.muteLocalAudioStream(muted);
+    if (muted) {
+      speechToText.dispose();
+      await responseStream.drain();
+    } else {
+      streamingRecognize();
+    }
   }
 
   void _onSwitchCamera() {
