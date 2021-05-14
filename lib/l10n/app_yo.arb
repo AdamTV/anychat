@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ko ni akọọlẹ kan?",
     "email": "Imeeli",
     "emailInvite": "E-mail Pepe",
+    "emailSentToResetPassword": "Ti fi imeeli ranṣẹ lati tun ọrọ igbaniwọle rẹ ṣe",
+    "emailVerified": "E-maili wadi",
     "endonym_af": "Afirika",
     "endonym_am": "Amharic",
     "endonym_ar": "Ede Larubawa",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ko le forukọsilẹ nipasẹ Facebook. Jọwọ gbiyanju lẹẹkansi.",
     "unableRegisterGoogle": "Lagbara lati forukọsilẹ nipasẹ Google. Jọwọ gbiyanju lẹẹkansi.",
     "unableRegisterTwitter": "Ko le forukọsilẹ nipasẹ Twitter. Jọwọ gbiyanju lẹẹkansi.",
+    "verificationEmailSent": "Ijerisi imeeli ti a firanṣẹ",
     "yourContacts": "Awọn olubasọrọ rẹ",
     "youWillNotJoinBackUnlessInvited": "Iwọ kii yoo ni anfani lati darapọ mọ ayafi ti ẹnikan ba pe ọ."
 }

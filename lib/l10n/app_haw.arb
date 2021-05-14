@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ʻAʻohe moʻokāki āu?",
     "email": "Leka uila",
     "emailInvite": "Kono leka uila",
+    "emailSentToResetPassword": "Ua hoʻouna ʻia kahi leka uila e hoʻonohonoho hou i kāu ʻōlelo huna",
+    "emailVerified": "Ua hōʻoia ʻia ka leka uila",
     "endonym_af": "Apikana",
     "endonym_am": "Amahapika",
     "endonym_ar": "Apapika",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ʻAʻole hiki ke hoʻopaʻa inoa ma o Facebook. E ʻoluʻolu e hoʻāʻo hou.",
     "unableRegisterGoogle": "ʻAʻole hiki ke hoʻopaʻa inoa ma o Google. E ʻoluʻolu e hoʻāʻo hou.",
     "unableRegisterTwitter": "ʻAʻole hiki ke hoʻopaʻa inoa ma o Twitter. E ʻoluʻolu e hoʻāʻo hou.",
+    "verificationEmailSent": "Hoʻouna ʻia ka leka uila hōʻoia",
     "yourContacts": "Kou Hoʻokaʻaʻike",
     "youWillNotJoinBackUnlessInvited": "ʻAʻole hiki iā ʻoe ke hui pū inā ʻaʻole i kono ʻia e kekahi."
 }

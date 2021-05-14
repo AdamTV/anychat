@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Belum punya akun?",
     "email": "Surel",
     "emailInvite": "Undangan Email",
+    "emailSentToResetPassword": "Sebuah email telah dikirim untuk mengatur ulang kata sandi Anda",
+    "emailVerified": "Email terverifikasi",
     "endonym_af": "Afrikanas",
     "endonym_am": "Amharik",
     "endonym_ar": "Arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Tidak dapat mendaftar melalui Facebook. Silahkan coba lagi.",
     "unableRegisterGoogle": "Tidak dapat mendaftar melalui Google. Silahkan coba lagi.",
     "unableRegisterTwitter": "Tidak dapat mendaftar melalui Twitter. Silahkan coba lagi.",
+    "verificationEmailSent": "Email verifikasi dikirim",
     "yourContacts": "Kontak Anda",
     "youWillNotJoinBackUnlessInvited": "Anda tidak akan dapat bergabung kembali kecuali seseorang mengundang Anda."
 }

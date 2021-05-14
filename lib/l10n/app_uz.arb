@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hisobingiz yo'qmi?",
     "email": "Elektron pochta",
     "emailInvite": "Elektron pochta orqali taklif qilish",
+    "emailSentToResetPassword": "Parolingizni tiklash uchun elektron pochta xabar yuborildi",
+    "emailVerified": "Elektron pochta tasdiqlangan",
     "endonym_af": "Afrikaanslar",
     "endonym_am": "Amharcha",
     "endonym_ar": "Arabcha",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook orqali ro'yxatdan o'tib bo'lmadi. Iltimos, yana bir bor urinib ko'ring.",
     "unableRegisterGoogle": "Google orqali ro'yxatdan o'tib bo'lmadi. Iltimos, yana bir bor urinib ko'ring.",
     "unableRegisterTwitter": "Twitter orqali ro'yxatdan o'tib bo'lmadi. Iltimos, yana bir bor urinib ko'ring.",
+    "verificationEmailSent": "Elektron pochta orqali tekshirish yuborildi",
     "yourContacts": "Sizning kontaktlaringiz",
     "youWillNotJoinBackUnlessInvited": "Agar kimdir sizni taklif qilmasa, siz yana qo'shila olmaysiz."
 }

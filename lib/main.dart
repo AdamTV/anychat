@@ -25,7 +25,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'components/utilities.dart';
@@ -35,14 +34,26 @@ void main() {
   Notifications().init();
   Firebase.initializeApp().then((value) => {
         Ads.init(),
-        Utilities.init().then((value) => {
-              runApp(MyApp())
-            }),
+        Utilities.init().then((value) => {runApp(MyApp())}),
         FirebaseAuth.instance.authStateChanges().listen((User user) async {
           if (user == null) {
             print('User is signed out!');
           } else {
             print('User is signed in!');
+            print('User is ${user.emailVerified ? "" : "NOT "}verified!');
+            if (!user.emailVerified) {
+              // var actionCodeSettings = ActionCodeSettings(
+              //     url:
+              //     'https://www.example.com/?email=${user.email}',
+              //     dynamicLinkDomain: "example.page.link",
+              //     androidInstallApp: true,
+              //     androidMinimumVersion: '12',
+              //     androidPackageName: "ca.alphatech.anychat",
+              //     iOSBundleId: "ca.alphatech.anychat",
+              //     handleCodeInApp: true);
+
+              await user.sendEmailVerification();
+            }
           }
         }),
       });
@@ -55,8 +66,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       navigatorKey: Utilities.globalKey,
       routes: {
         '/addChatter': (context) => AddChatterScreen(),
@@ -68,15 +84,14 @@ class _MyAppState extends State<MyApp> {
         '/liveTranslator': (context) => LiveTranslatorScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
-        '/searchChatterByEmail': (context) =>
-            SearchChatterByEmailScreen(),
+        '/searchChatterByEmail': (context) => SearchChatterByEmailScreen(),
         '/settings': (context) => SettingsScreen(),
         '/welcome': (context) => WelcomeScreen(),
         '/forgotPassword': (context) => ForgotPassword(),
       },
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (BuildContext context) =>
-      AppLocalizations.of(context).title,
+          AppLocalizations.of(context).title,
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -208,44 +223,28 @@ class _MyAppState extends State<MyApp> {
                 .doc(snapshot.data.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
-                .then((AnyChatUser user) async {
-              User fuser = FirebaseAuth.instance.currentUser;
-              print('verified ${fuser.emailVerified}');
-              if (!fuser.emailVerified) {
-                var actionCodeSettings = ActionCodeSettings(
-                    url:
-                    'https://www.example.com/?email=${user.email}',
-                    dynamicLinkDomain: "example.page.link",
-                    androidInstallApp: true,
-                    androidMinimumVersion: '12',
-                    androidPackageName: "ca.alphatech.anychat",
-                    iOSBundleId: "ca.alphatech.anychat",
-                    handleCodeInApp: true);
-
-                await fuser.sendEmailVerification();
-              }
+                .then((AnyChatUser user) {
               AnyChatAuth.currentUser = user;
               print('returning ConversationsScreen');
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 1),
-                        child: ConversationsScreen());
-                  }));
-            });
+                return ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 1),
+                    child: ConversationsScreen());
+              }));
+            }).catchError((error) => print(error));
           }
           print('returning WelcomeScreen');
           return ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 1),
-              child: WelcomeScreen());
+              constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen());
         },
       ),
     );
   }
+
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
-    FlutterRingtonePlayer.stop();
   }
 }
 

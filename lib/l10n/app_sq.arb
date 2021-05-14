@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nuk keni një llogari?",
     "email": "Posta elektronike",
     "emailInvite": "E-mail Fto",
+    "emailSentToResetPassword": "Një email është dërguar për të rivendosur fjalëkalimin tuaj",
+    "emailVerified": "E-mail i verifikuar",
     "endonym_af": "Afrikanisht",
     "endonym_am": "Amarike",
     "endonym_ar": "Arabisht",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Në pamundësi për t'u regjistruar përmes Facebook. Ju lutemi provoni përsëri.",
     "unableRegisterGoogle": "Nuk mund të regjistrohet përmes Google. Ju lutemi provoni përsëri.",
     "unableRegisterTwitter": "I pazoti të regjistrohet përmes Twitter. Ju lutemi provoni përsëri.",
+    "verificationEmailSent": "E-maili i verifikimit u dërgua",
     "yourContacts": "Kontaktet tuaja",
     "youWillNotJoinBackUnlessInvited": "Ju nuk do të jeni në gjendje të bashkoheni nëse dikush nuk ju fton."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Хисап язмагыз бармы?",
     "email": "Электрон почта",
     "emailInvite": "Электрон почтага чакыру",
+    "emailSentToResetPassword": "Серсүзне яңадан урнаштыру өчен электрон почта җибәрелде",
+    "emailVerified": "Электрон почта тикшерелде",
     "endonym_af": "Африка",
     "endonym_am": "Амхар",
     "endonym_ar": "Гарәп",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook аша теркәлә алмый. Зинһар, кабатлап карагыз.",
     "unableRegisterGoogle": "Google аша теркәлә алмый. Зинһар, кабатлап карагыз.",
     "unableRegisterTwitter": "Твиттер аша теркәлә алмый. Зинһар, кабатлап карагыз.",
+    "verificationEmailSent": "Тикшерү электрон почтасы җибәрелде",
     "yourContacts": "Сезнең контактлар",
     "youWillNotJoinBackUnlessInvited": "Сезне кемдер чакырмаса, сез кире кайта алмассыз."
 }

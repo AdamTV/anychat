@@ -25,6 +25,8 @@
     "doNotHaveAccount": "טאָן ניט האָבן אַ חשבון?",
     "email": "E- בריוו",
     "emailInvite": "E- בריוו פאַרבעטן",
+    "emailSentToResetPassword": "א E- בריוו איז געשיקט צו באַשטעטיק דיין פּאַראָל",
+    "emailVerified": "E- בריוו וועראַפייד",
     "endonym_af": "אפריקאנס",
     "endonym_am": "אַמהאַריש",
     "endonym_ar": "אַראַביש",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ניט געקענט רעגיסטרירן דורך Facebook. ביטע פּרובירן ווידער.",
     "unableRegisterGoogle": "ניט געקענט רעגיסטרירן דורך Google. ביטע פּרובירן ווידער.",
     "unableRegisterTwitter": "ניט געקענט רעגיסטרירן דורך טוויטטער. ביטע פּרובירן ווידער.",
+    "verificationEmailSent": "וועריפיקאַטיאָן E- בריוו געשיקט",
     "yourContacts": "דיין קאָנטאַקטן",
     "youWillNotJoinBackUnlessInvited": "איר קענט נישט צוריקקומען סייַדן עמעצער ינווייץ איר."
 }

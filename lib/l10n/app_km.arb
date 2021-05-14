@@ -25,6 +25,8 @@
     "doNotHaveAccount": "មិនមានគណនីមែនទេ?",
     "email": "អ៊ីមែល",
     "emailInvite": "អ៊ីមែលអញ្ជើញ",
+    "emailSentToResetPassword": "អ៊ីមែលត្រូវបានផ្ញើដើម្បីកំណត់ពាក្យសម្ងាត់របស់អ្នកឡើងវិញ",
+    "emailVerified": "អ៊ីមែលបានបញ្ជាក់",
     "endonym_af": "អាហ្រ្វិក",
     "endonym_am": "អាម៉ារី",
     "endonym_ar": "អារ៉ាប់",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "មិនអាចចុះឈ្មោះតាមរយៈហ្វេសប៊ុកបានទេ។ សូម\u200bព្យាយាម\u200bម្តង\u200bទៀត។",
     "unableRegisterGoogle": "មិនអាចចុះឈ្មោះតាមរយៈហ្គូហ្គោលបានទេ។ សូម\u200bព្យាយាម\u200bម្តង\u200bទៀត។",
     "unableRegisterTwitter": "មិនអាចចុះឈ្មោះតាមរយៈ Twitter បានទេ។ សូម\u200bព្យាយាម\u200bម្តង\u200bទៀត។",
+    "verificationEmailSent": "បានផ្ញើអ៊ីមែលបញ្ជាក់",
     "yourContacts": "ទំនាក់ទំនងរបស់អ្នក",
     "youWillNotJoinBackUnlessInvited": "អ្នកនឹងមិនអាចចូលរួមត្រឡប់មកវិញបានទេលើកលែងតែមានគេអញ្ជើញអ្នក។"
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Данс байхгүй юм уу?",
     "email": "И-мэйл",
     "emailInvite": "Имэйл урилга",
+    "emailSentToResetPassword": "Нууц үгээ шинэчлэх имэйл илгээсэн",
+    "emailVerified": "Имэйлийг баталгаажуулсан",
     "endonym_af": "Африк",
     "endonym_am": "Амхарик",
     "endonym_ar": "Араб хэл",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Фэйсбүүкээр дамжуулан бүртгүүлэх боломжгүй байна. Дахин оролдоно уу.",
     "unableRegisterGoogle": "Google-ээр дамжуулан бүртгүүлэх боломжгүй байна. Дахин оролдоно уу.",
     "unableRegisterTwitter": "Твиттерээр дамжуулан бүртгүүлэх боломжгүй байна. Дахин оролдоно уу.",
+    "verificationEmailSent": "Баталгаажуулах имэйлийг илгээсэн",
     "yourContacts": "Таны харилцагчид",
     "youWillNotJoinBackUnlessInvited": "Хэн нэгэн таныг урихгүй бол та буцааж нэгдэх боломжгүй болно."
 }

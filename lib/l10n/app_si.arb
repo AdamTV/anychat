@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ගිණුමක් නැද්ද?",
     "email": "විද්යුත් තැපෑල",
     "emailInvite": "විද්\u200dයුත් තැපෑලෙන් ආරාධනා කරන්න",
+    "emailSentToResetPassword": "ඔබගේ මුරපදය නැවත සැකසීමට විද්\u200dයුත් තැපෑලක් යවා ඇත",
+    "emailVerified": "විද්\u200dයුත් තැපෑල සත්\u200dයාපනය විය",
     "endonym_af": "අප්\u200dරිකානු",
     "endonym_am": "අම්හාරික්",
     "endonym_ar": "අරාබි",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ෆේස්බුක් හරහා ලියාපදිංචි විය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න.",
     "unableRegisterGoogle": "ගූගල් හරහා ලියාපදිංචි විය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න.",
     "unableRegisterTwitter": "ට්විටර් හරහා ලියාපදිංචි විය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න.",
+    "verificationEmailSent": "සත්\u200dයාපන විද්\u200dයුත් තැපෑල යවන ලදි",
     "yourContacts": "ඔබේ සම්බන්ධතා",
     "youWillNotJoinBackUnlessInvited": "කවුරුහරි ඔබට ආරාධනා නොකළහොත් ඔබට නැවත සම්බන්ධ වීමට නොහැකි වනු ඇත."
 }

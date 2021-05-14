@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ùn avete micca un contu?",
     "email": "E-mail",
     "emailInvite": "Invite per e-mail",
+    "emailSentToResetPassword": "Un e-mail hè statu mandatu per resettà a vostra chjave",
+    "emailVerified": "E-mail verificata",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amaricu",
     "endonym_ar": "Arabu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Impussibule di registrà per Facebook. Pruvate torna.",
     "unableRegisterGoogle": "Impussibule di registrà per Google. Pruvate torna.",
     "unableRegisterTwitter": "Impussibule di registrà per Twitter. Pruvate torna.",
+    "verificationEmailSent": "E-mail di verificazione mandatu",
     "yourContacts": "I Vostri Cuntatti",
     "youWillNotJoinBackUnlessInvited": "Ùn puderete micca riunitevi à menu chì qualcunu vi inviti."
 }

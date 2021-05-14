@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Áttu ekki aðgang?",
     "email": "Tölvupóstur",
     "emailInvite": "Tölvupóstur býður",
+    "emailSentToResetPassword": "Tölvupóstur hefur verið sendur til að endurstilla lykilorðið þitt",
+    "emailVerified": "Tölvupóstur staðfestur",
     "endonym_af": "Afríku",
     "endonym_am": "Amharískt",
     "endonym_ar": "Arabísku",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ekki er hægt að skrá sig í gegnum Facebook. Vinsamlegast reyndu aftur.",
     "unableRegisterGoogle": "Ekki er hægt að skrá sig í gegnum Google. Vinsamlegast reyndu aftur.",
     "unableRegisterTwitter": "Ekki er hægt að skrá sig í gegnum Twitter. Vinsamlegast reyndu aftur.",
+    "verificationEmailSent": "Staðfestingartölvupóstur sendur",
     "yourContacts": "Tengiliðir þínir",
     "youWillNotJoinBackUnlessInvited": "Þú munt ekki geta tekið þátt aftur nema einhver bjóði þér."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ખાતુ નથી?",
     "email": "ઇ-મેઇલ",
     "emailInvite": "ઇ-મેઇલ આમંત્રણ આપો",
+    "emailSentToResetPassword": "તમારા પાસવર્ડને ફરીથી સેટ કરવા માટે એક ઇ-મેઇલ મોકલવામાં આવ્યો છે",
+    "emailVerified": "ઇ-મેઇલ ચકાસાયેલ",
     "endonym_af": "આફ્રિકન્સ",
     "endonym_am": "એમ્હારિક",
     "endonym_ar": "અરબી",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ફેસબુક દ્વારા નોંધણી કરવામાં અસમર્થ. મેહરબાની કરી ને ફરી થી પ્રયાસ કરો.",
     "unableRegisterGoogle": "ગૂગલ દ્વારા નોંધણી કરવામાં અસમર્થ. મેહરબાની કરી ને ફરી થી પ્રયાસ કરો.",
     "unableRegisterTwitter": "ટ્વિટર દ્વારા નોંધણી કરવામાં અસમર્થ. મેહરબાની કરી ને ફરી થી પ્રયાસ કરો.",
+    "verificationEmailSent": "ચકાસણીનો ઈ-મેલ મોકલ્યો",
     "yourContacts": "તમારા સંપર્કો",
     "youWillNotJoinBackUnlessInvited": "કોઈ તમને આમંત્રણ નહીં આપે ત્યાં સુધી તમે પાછા જોડાવા માટે સમર્થ હશો નહીં."
 }

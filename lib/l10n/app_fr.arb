@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Vous n'avez pas de compte?",
     "email": "E-mail",
     "emailInvite": "Invitation par e-mail",
+    "emailSentToResetPassword": "Un e-mail a été envoyé pour réinitialiser votre mot de passe",
+    "emailVerified": "Email verifié",
     "endonym_af": "afrikaans",
     "endonym_am": "Amharique",
     "endonym_ar": "arabe",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Impossible de s'inscrire via Facebook. Veuillez réessayer.",
     "unableRegisterGoogle": "Impossible de s'inscrire via Google. Veuillez réessayer.",
     "unableRegisterTwitter": "Impossible de s'inscrire via Twitter. Veuillez réessayer.",
+    "verificationEmailSent": "L&#39;email de vérification a été envoyé",
     "yourContacts": "Vos contacts",
     "youWillNotJoinBackUnlessInvited": "Vous ne pourrez pas vous rejoindre à moins que quelqu'un ne vous invite."
 }

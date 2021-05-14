@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ھېساباتىڭىز يوقمۇ؟",
     "email": "ئېلېكترونلۇق خەت",
     "emailInvite": "ئېلېكترونلۇق خەت تەكلىپ",
+    "emailSentToResetPassword": "پارولىڭىزنى ئەسلىگە كەلتۈرۈش ئۈچۈن ئېلېكترونلۇق خەت ئەۋەتىلدى",
+    "emailVerified": "ئېلېكترونلۇق خەت دەلىللەندى",
     "endonym_af": "ئافرىقا",
     "endonym_am": "Amharic",
     "endonym_ar": "ئەرەبچە",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook ئارقىلىق تىزىملىتالمىدى. قايتا سىناڭ.",
     "unableRegisterGoogle": "Google ئارقىلىق تىزىملىتالمىدى. قايتا سىناڭ.",
     "unableRegisterTwitter": "Twitter ئارقىلىق تىزىملىتالمىدى. قايتا سىناڭ.",
+    "verificationEmailSent": "ئېلېكترونلۇق خەت ئەۋەتىلدى",
     "yourContacts": "ئالاقىداشلىرىڭىز",
     "youWillNotJoinBackUnlessInvited": "باشقىلار سىزنى تەكلىپ قىلمىسا ، قايتا قوشۇلالمايسىز."
 }

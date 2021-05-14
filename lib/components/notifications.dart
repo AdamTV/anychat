@@ -1,9 +1,19 @@
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/call_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:disposables/disposables.dart';
 
-class Notifications {
+import 'conversation.dart';
+import 'conversation_info.dart';
+
+final BehaviorSubject<String> selectNotificationSubject =
+BehaviorSubject<String>();
+
+class Notifications implements Disposable {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   init() async {
@@ -14,6 +24,8 @@ class Notifications {
       return;
     }
     _requestPermissions();
+    _configureSelectNotificationSubject();
+
 
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -32,8 +44,27 @@ class Notifications {
         onSelectNotification: selectNotification);
   }
 
+  void _configureSelectNotificationSubject() {
+    selectNotificationSubject.stream.listen((String payload) async {
+      print(payload);
+      var conversationId = payload.substring(5);
+      var convo = await Conversation.getConversationById(conversationId);
+      AnyChatAuth.currentConversation = convo;
+      if (payload.toLowerCase().contains('ring')) {
+        CallScreen.requestPermissionAndNavigate();
+      } else  if (payload.toLowerCase().contains('chat')) {
+        var info = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
+        AnyChatAuth.currentUser.conversations.add(info.firstWhere((element) => element.id == conversationId));
+        await Utilities.globalKey.currentState.pushNamed('/chat');
+      }
+    });
+  }
+
   Future selectNotification(String payload) async {
     print('selectNotification');
+    FlutterRingtonePlayer.stop();
+    selectNotificationSubject.add(payload);
+
     // if (payload != null) {
     //   debugPrint('notification payload: $payload');
     // }
@@ -112,6 +143,9 @@ class Notifications {
 
   @override
   void dispose() {
-    FlutterRingtonePlayer.stop();
+    selectNotificationSubject.close();
   }
+
+  @override
+  bool get isDisposed => isDisposed;
 }

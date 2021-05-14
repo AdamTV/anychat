@@ -25,6 +25,8 @@
     "doNotHaveAccount": "کھاتہ نہیں ہے کیا؟",
     "email": "ای میل",
     "emailInvite": "ای میل کی دعوت دیں",
+    "emailSentToResetPassword": "آپ کے پاس ورڈ کو دوبارہ ترتیب دینے کے لئے ایک ای میل بھیجا گیا ہے",
+    "emailVerified": "ای میل کی توثیق",
     "endonym_af": "افریقی",
     "endonym_am": "امہاری",
     "endonym_ar": "عربی",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "فیس بک کے ذریعہ اندراج کرنے سے قاصر دوبارہ کوشش کریں.",
     "unableRegisterGoogle": "گوگل کے ذریعہ اندراج کرنے سے قاصر۔ دوبارہ کوشش کریں.",
     "unableRegisterTwitter": "ٹویٹر کے ذریعے رجسٹر کرنے سے قاصر ہے۔ دوبارہ کوشش کریں.",
+    "verificationEmailSent": "توثیقی ای میل بھیجا گیا",
     "yourContacts": "آپ کے رابطے",
     "youWillNotJoinBackUnlessInvited": "جب تک کوئی آپ کو دعوت نہ دے تب تک آپ واپس شامل نہیں ہوسکیں گے۔"
 }

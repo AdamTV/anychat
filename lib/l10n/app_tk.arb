@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Hasabyňyz ýokmy?",
     "email": "E-poçta",
     "emailInvite": "E-poçta çakylygy",
+    "emailSentToResetPassword": "Parolyňyzy täzeden düzmek üçin e-poçta iberildi",
+    "emailVerified": "E-poçta tassyklandy",
     "endonym_af": "Afrika",
     "endonym_am": "Amhar",
     "endonym_ar": "Arapça",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "“Facebook” arkaly hasaba alnyp bilinmedi. Gaýtadan synanyşyň.",
     "unableRegisterGoogle": "Google-da hasaba alnyp bilinmedi. Gaýtadan synanyşyň.",
     "unableRegisterTwitter": "Twitter arkaly hasaba alnyp bilinmedi. Gaýtadan synanyşyň.",
+    "verificationEmailSent": "Barlag e-poçta iberildi",
     "yourContacts": "Aragatnaşyklaryňyz",
     "youWillNotJoinBackUnlessInvited": "Kimdir biri sizi çagyrmasa, yzyna goşulyp bilmersiňiz."
 }

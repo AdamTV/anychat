@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Eikö sinulla ole tiliä?",
     "email": "Sähköposti",
     "emailInvite": "Kutsu sähköpostilla",
+    "emailSentToResetPassword": "Salasanan vaihtamista varten on lähetetty sähköposti",
+    "emailVerified": "Sähköposti vahvistettu",
     "endonym_af": "afrikaans",
     "endonym_am": "Amhara",
     "endonym_ar": "arabialainen",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Rekisteröinti ei onnistu Facebookissa. Yritä uudelleen.",
     "unableRegisterGoogle": "Rekisteröinti Googlen kautta ei onnistu. Yritä uudelleen.",
     "unableRegisterTwitter": "Rekisteröinti ei onnistu Twitterin kautta. Yritä uudelleen.",
+    "verificationEmailSent": "Vahvistussähköposti lähetetty",
     "yourContacts": "Omat yhteystiedot",
     "youWillNotJoinBackUnlessInvited": "Et voi liittyä takaisin, ellei joku kutsuu sinua."
 }

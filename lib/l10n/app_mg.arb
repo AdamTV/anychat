@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Tsy manana kaonty?",
     "email": "Mailaka",
     "emailInvite": "Manasa amin'ny mailaka",
+    "emailSentToResetPassword": "Nisy mailaka nalefa hamerenanao ny teny miafinao",
+    "emailVerified": "Voamarina ny mailaka",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Arabo",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Tsy afaka misoratra anarana amin'ny alàlan'ny Facebook. Manandrama indray azafady.",
     "unableRegisterGoogle": "Tsy afaka misoratra anarana amin'ny alàlan'ny Google. Manandrama indray azafady.",
     "unableRegisterTwitter": "Tsy afaka misoratra anarana amin'ny alàlan'ny Twitter. Manandrama indray azafady.",
+    "verificationEmailSent": "Nalefa ny mailaka fanamarinana",
     "yourContacts": "Ny fifandraisana",
     "youWillNotJoinBackUnlessInvited": "Tsy ho afaka hiditra hiverina ianao raha tsy misy manasa anao."
 }

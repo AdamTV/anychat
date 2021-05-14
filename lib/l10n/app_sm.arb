@@ -25,6 +25,8 @@
     "doNotHaveAccount": "E leai sau tala?",
     "email": "Imeli",
     "emailInvite": "Imeli valaaulia",
+    "emailSentToResetPassword": "Ua lafo mai se imeli e toe seti lau pasiupu",
+    "emailVerified": "Imeli ua faʻamaonia",
     "endonym_af": "Faʻa Afelika",
     "endonym_am": "Amharic",
     "endonym_ar": "Alapi",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Le mafai ona lesitala e ala ile Facebook. Faʻamolemole toe taumafai.",
     "unableRegisterGoogle": "Le mafai ona lesitala e ala ile Google. Faʻamolemole toe taumafai.",
     "unableRegisterTwitter": "Le mafai ona lesitala e ala ile Twitter. Faʻamolemole toe taumafai.",
+    "verificationEmailSent": "Ua lafo le imeli meli",
     "yourContacts": "Lou Fesoʻotaʻiga",
     "youWillNotJoinBackUnlessInvited": "E le mafai ona e toe ofi i tua seʻi vagana ua valaʻaulia oe e seisi."
 }

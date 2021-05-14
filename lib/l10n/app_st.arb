@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ha u na ak'haonte?",
     "email": "Imeile",
     "emailInvite": "Mema ea E-mail",
+    "emailSentToResetPassword": "E-mail e rometsoe ho hlophisa phasewete ea hau bocha",
+    "emailVerified": "Imeile e netefalitsoe",
     "endonym_af": "Seafrikanse",
     "endonym_am": "SeAmharic",
     "endonym_ar": "Searabia",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ha e khone ho ingolisa ka Facebook. Ka kopo leka hape.",
     "unableRegisterGoogle": "E hloleha ho ingolisa ka Google. Ka kopo leka hape.",
     "unableRegisterTwitter": "Ha e khone ho ingolisa ka Twitter. Ka kopo leka hape.",
+    "verificationEmailSent": "E-mail ea netefatso e rometsoe",
     "yourContacts": "Mabitso a hau",
     "youWillNotJoinBackUnlessInvited": "O ka se khone ho kenella ntle leha motho e mong au mema."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ڇا توهان وٽ اڪائونٽ نه آهي؟",
     "email": "اِي ميل",
     "emailInvite": "اي ميل دعوت",
+    "emailSentToResetPassword": "پنهنجو پاسورڊ ري سيٽ ڪرڻ لاءِ هڪ اي ميل موڪليو ويو آهي",
+    "emailVerified": "اي ميل تصديق ڪئي",
     "endonym_af": "آفريڪي",
     "endonym_am": "امهاري",
     "endonym_ar": "عربي",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "فيسبڪ ذريعي رجسٽر ٿيڻ کان قاصر آهي. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
     "unableRegisterGoogle": "گوگل ذريعي رجسٽر ڪرڻ جي قابل ناھي مهرباني ڪري ٻيهر ڪوشش ڪريو.",
     "unableRegisterTwitter": "Twitter ذريعي رجسٽر ٿيڻ کان قاصر. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
+    "verificationEmailSent": "تصديق جي اي ميل موڪلي وئي",
     "yourContacts": "توهان جا رابطا",
     "youWillNotJoinBackUnlessInvited": "توهان انهي وقت تائين واپس نه اچي سگهندا جيستائين توهان کي ڪنهن کي دعوت نه ڏي."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "ບໍ່ມີບັນຊີບໍ?",
     "email": "ອີເມລ",
     "emailInvite": "E-mail Invite",
+    "emailSentToResetPassword": "ອີເມລໄດ້ຖືກສົ່ງໄປເພື່ອຕັ້ງຄ່າລະຫັດຜ່ານຂອງທ່ານ",
+    "emailVerified": "ຢັ້ງຢືນອີເມລ",
     "endonym_af": "ພາສາແອັສປາຍ",
     "endonym_am": "Amharic",
     "endonym_ar": "ອາຣັບ",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ບໍ່ສາມາດລົງທະບຽນຜ່ານ Facebook. ກະລຸນາລອງ ໃໝ່ ອີກຄັ້ງ.",
     "unableRegisterGoogle": "ບໍ່ສາມາດລົງທະບຽນຜ່ານ Google ໄດ້. ກະລຸນາລອງ ໃໝ່ ອີກຄັ້ງ.",
     "unableRegisterTwitter": "ບໍ່ສາມາດລົງທະບຽນຜ່ານ Twitter ໄດ້. ກະລຸນາລອງ ໃໝ່ ອີກຄັ້ງ.",
+    "verificationEmailSent": "ສົ່ງອີເມວຢັ້ງຢືນ",
     "yourContacts": "ລາຍຊື່ຜູ້ຕິດຕໍ່ຂອງທ່ານ",
     "youWillNotJoinBackUnlessInvited": "ທ່ານຈະບໍ່ສາມາດກັບມາຮ່ວມໄດ້ເວັ້ນເສຍແຕ່ວ່າຈະມີບາງຄົນເຊື້ອເຊີນທ່ານ."
 }

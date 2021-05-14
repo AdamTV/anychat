@@ -8,7 +8,8 @@ final ThemeData kDefaultTheme = ThemeData(
     focusColor: Colors.black12,
     primaryColorDark: Colors.deepPurple[900],
     primaryColorLight: Colors.white,
-    brightness: Brightness.light);
+    brightness: Brightness.light,
+    textTheme: Typography.blackMountainView);
 
 final ThemeData kDarkTheme = ThemeData(
     backgroundColor: Color(0x00008B),
@@ -18,6 +19,7 @@ final ThemeData kDarkTheme = ThemeData(
     focusColor: Colors.black12,
     primaryColorDark: Colors.deepPurple[900],
     primaryColorLight: Colors.white,
-    brightness: Brightness.dark);
+    brightness: Brightness.dark,
+    textTheme: Typography.whiteMountainView);
 
 var agoraAppId = '72559be0b8944a8fb70a772d196078ce';

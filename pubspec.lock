@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.1"
+  disposables:
+    dependency: "direct main"
+    description:
+      name: disposables
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   e2e:
     dependency: "direct dev"
     description:
