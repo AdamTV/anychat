@@ -199,7 +199,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           }
         }
         if (chatters.isNotEmpty) {
-          conversationWidgets.add(await slidable(chatters, conversation, text));
+          conversationWidgets.insert(0, await slidable(chatters, conversation, text));
           setState(() {});
         }
       }
@@ -224,12 +224,16 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .collection('users')
         .doc(AnyChatAuth.currentUser.id)
         .get());
-    var firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-        .collection('users')
-        .doc(conversation.participants
-            .firstWhere((element) => element != AnyChatAuth.currentUser.id))
-        .get());
-    AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
+    AnyChatUser firstChatter = AnyChatAuth.currentUser;
+    try{
+      firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+          .collection('users')
+          .doc(conversation.participants
+          .firstWhere((element) => element != AnyChatAuth.currentUser.id))
+          .get());
+    }catch(e){
+      print(e);
+    }
     await initConvoInfo();
     if (AnyChatAuth.currentUser.conversations != null &&
         !AnyChatAuth.currentUser.conversations
@@ -310,7 +314,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       }
     }
     if (chatters.isNotEmpty) {
-      conversationWidgets.add(await slidable(chatters, conversation, text));
+      conversationWidgets.insert(0, await slidable(chatters, conversation, text));
     }
     setState(() {
       if (!conversationWidgets
@@ -386,9 +390,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               : info.incomingLanguage;
           final text = "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(language, message.text)}";
+          conversationWidgets
+              .removeWhere((element) => element.key == Key(conversation.id));
           if (chatters.isNotEmpty) {
-            conversationWidgets
-                .removeWhere((element) => element.key == Key(conversation.id));
             conversationWidgets.insert(
                 0, await slidable(chatters, conversation, text));
             setState(() {});

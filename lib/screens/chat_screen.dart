@@ -4,6 +4,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -75,18 +76,33 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
     if (_messages.isEmpty) {
-      for (int i = 0; i < _chatMessages.length; i++) {
-        final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-            .collection("users")
-            .doc(_chatMessages[i].senderId)
-            .get());
-        if (AnyChatAuth.currentUser.conversations == null) {
-          AnyChatAuth.currentUser.conversations =
-              await ConversationInfo.getAllConversationInfo(
-                  AnyChatAuth.currentUser.id);
+      var convo = await Conversation.getConversationById(AnyChatAuth.currentConversation.id);
+      var participants = <AnyChatUser>[];
+      convo.participants.forEach((element) async {participants.add(await AnyChatUser.findUserById(element));});
+      if (AnyChatAuth.currentUser.conversations == null) {
+        AnyChatAuth.currentUser.conversations =
+        await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
+      }
+      var info = AnyChatAuth.currentUser.conversations.firstWhere(
+              (element) => element.id == AnyChatAuth.currentConversation.id);
+      // divide all chat messages into language for translation -> translate
+      Map<String, List<String>> map = Map();
+      _chatMessages.forEach((message) {
+        final language = message.senderId == AnyChatAuth.currentUser.id
+            ? info.outgoingLanguage
+            : info.incomingLanguage;
+        if (!map.containsKey(language)){
+          map.putIfAbsent(language, () => <String>[]);
         }
-        var info = AnyChatAuth.currentUser.conversations.firstWhere(
-            (element) => element.id == AnyChatAuth.currentConversation.id);
+        map[language].insert(0, message.text);
+      });
+      // Map<String, List<String>> translatedMap = Utilities.getBatchGoogleTranslation(map);
+      for (int i = 0; i < _chatMessages.length; i++) {
+        if (!participants.any((element) => element.id == _chatMessages[i].senderId)){
+          participants.add(await AnyChatUser.findUserById(_chatMessages[i].senderId));
+        }
+        final sender = participants.firstWhere((element) => element.id == _chatMessages[i].senderId);
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
@@ -99,7 +115,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
               new TextSpan(text: "${_chatMessages[i].text}\n\n"),
               new TextSpan(text: "${AppLocalizations.of(context).translation}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-              new TextSpan(text: "${await Utilities.getGoogleTranslation(language, _chatMessages[i].text)}"),
+              new TextSpan(text: "${await Utilities.getGoogleTranslation(language, map[language].removeLast())}"),
             ],
           ),
         );
