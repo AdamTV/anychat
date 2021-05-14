@@ -46,6 +46,25 @@ class Utilities {
     }
   }
 
+
+  // static Map<String, List<String>> getBatchGoogleTranslation(Map<String, List<String>> map) {
+  //   Map<String, List<String>> translatedMap = Map();
+  //   queryParameters.putIfAbsent("key", () => apiKey);
+  //
+  //   map.forEach((key, value) async {
+  //     queryParameters.update("target", (value) => key,
+  //         ifAbsent: () => key);
+  //     queryParameters.update("q", (v) => value.join(""), ifAbsent: () => null);
+  //     var uri = Uri.https(authority, unencodedPath, queryParameters);
+  //     print(uri);
+  //     Response x = await http.post(uri);
+  //     String body = x.body;
+  //     int i = 0;
+  //     // translatedMap.putIfAbsent(key, () => );
+  //   });
+  //   return translatedMap;
+  // }
+
   static Future<void> showAlertDialog(
       BuildContext context, String title, String text) async {
     return showDialog<void>(
