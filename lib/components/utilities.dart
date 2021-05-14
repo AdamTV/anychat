@@ -95,7 +95,7 @@ class Utilities {
     return "Error";
   }
 
-  static Future<bool> handleCameraAndMic(Permission permission) async {
+  static Future<bool> handlePermission(Permission permission) async {
     final status = await permission.request();
     print(status);
     return status.isGranted;

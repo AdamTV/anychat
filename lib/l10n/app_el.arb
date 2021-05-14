@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Δεν έχετε λογαριασμό;",
     "email": "ΗΛΕΚΤΡΟΝΙΚΗ ΔΙΕΥΘΥΝΣΗ",
     "emailInvite": "Πρόσκληση μέσω e-mail",
+    "emailSentToResetPassword": "Έχει σταλεί ένα e-mail για να επαναφέρετε τον κωδικό πρόσβασής σας",
+    "emailVerified": "Η διεύθυνση ηλεκτρονικού ταχυδρομείου επαληθεύτηκε",
     "endonym_af": "Αφρικανικά",
     "endonym_am": "Αμαρικά",
     "endonym_ar": "αραβικός",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Δεν είναι δυνατή η εγγραφή μέσω Facebook. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα.",
     "unableRegisterGoogle": "Δεν είναι δυνατή η εγγραφή μέσω Google. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα.",
     "unableRegisterTwitter": "Δεν είναι δυνατή η εγγραφή μέσω Twitter. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα.",
+    "verificationEmailSent": "Στάλθηκε e-mail επαλήθευσης",
     "yourContacts": "Οι επαφές σας",
     "youWillNotJoinBackUnlessInvited": "Δεν θα μπορείτε να συμμετάσχετε ξανά, εκτός αν κάποιος σας προσκαλέσει"
 }

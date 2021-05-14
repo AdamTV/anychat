@@ -25,6 +25,8 @@
     "doNotHaveAccount": "還沒有賬號？",
     "email": "電子郵件",
     "emailInvite": "電子郵件邀請",
+    "emailSentToResetPassword": "已发送一封电子邮件以重置您的密码",
+    "emailVerified": "电子邮件已验证",
     "endonym_af": "南非语",
     "endonym_am": "阿姆哈拉语",
     "endonym_ar": "阿拉伯",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "無法通過Facebook註冊。請再試一次。",
     "unableRegisterGoogle": "無法通過Google註冊。請再試一次。",
     "unableRegisterTwitter": "無法通過Twitter註冊。請再試一次。",
+    "verificationEmailSent": "验证邮件已发送",
     "yourContacts": "您的聯絡人",
     "youWillNotJoinBackUnlessInvited": "除非有人邀請您，否則您將無法加入。"
 }

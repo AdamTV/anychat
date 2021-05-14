@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Awunayo i-akhawunti?",
     "email": "I-imeyili",
     "emailInvite": "Isimemo se-imeyili",
+    "emailSentToResetPassword": "Kuthunyelwe i-imeyili ukusetha kabusha iphasiwedi yakho",
+    "emailVerified": "I-imeyili iqinisekisiwe",
     "endonym_af": "IsiBhunu",
     "endonym_am": "Isi-Amharic",
     "endonym_ar": "Isi-Arabhu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ayikwazi ukubhalisa nge-Facebook. Ngicela uzame futhi.",
     "unableRegisterGoogle": "Ayikwazi ukubhalisa nge-Google. Ngicela uzame futhi.",
     "unableRegisterTwitter": "Ayikwazi ukubhalisa nge-Twitter. Ngicela uzame futhi.",
+    "verificationEmailSent": "Kuthunyelwe i-imeyili",
     "yourContacts": "Oxhumana Nabo",
     "youWillNotJoinBackUnlessInvited": "Ngeke ukwazi ukujoyina futhi ngaphandle kokuthi othile akumeme."
 }

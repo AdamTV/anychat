@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Wala kang account?",
     "email": "E-mail",
     "emailInvite": "Imbitahan ang E-mail",
+    "emailSentToResetPassword": "Isang e-mail ang naipadala upang i-reset ang iyong password",
+    "emailVerified": "Na-verify ang e-mail",
     "endonym_af": "Mga afrikaans",
     "endonym_am": "Amharic",
     "endonym_ar": "Arabe",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Hindi makapagrehistro sa pamamagitan ng Facebook. Ulitin mo ulit.",
     "unableRegisterGoogle": "Hindi makapagrehistro sa pamamagitan ng Google. Ulitin mo ulit.",
     "unableRegisterTwitter": "Hindi makapagrehistro sa pamamagitan ng Twitter. Ulitin mo ulit.",
+    "verificationEmailSent": "Naipadala na ang e-mail ng pagpapatunay",
     "yourContacts": "Iyong Mga contact",
     "youWillNotJoinBackUnlessInvited": "Hindi ka makakasali pabalik maliban kung may mag-anyaya sa iyo."
 }

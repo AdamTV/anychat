@@ -25,6 +25,8 @@
     "doNotHaveAccount": "M'għandekx kont?",
     "email": "E-mail",
     "emailInvite": "Stedina bil-posta elettronika",
+    "emailSentToResetPassword": "Intbagħtet e-mail biex tirrisettja l-password tiegħek",
+    "emailVerified": "E-mail ivverifikata",
     "endonym_af": "Afrikans",
     "endonym_am": "Amħariku",
     "endonym_ar": "Għarbi",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ma tistax tirreġistra permezz ta 'Facebook. Jekk jogħġbok erġa pprova.",
     "unableRegisterGoogle": "Ma tistax tirreġistra permezz tal-Google. Jekk jogħġbok erġa pprova.",
     "unableRegisterTwitter": "Ma tistax tirreġistra permezz ta 'Twitter. Jekk jogħġbok erġa pprova.",
+    "verificationEmailSent": "E-mail ta &#39;verifika mibgħuta",
     "yourContacts": "Il-Kuntatti Tiegħek",
     "youWillNotJoinBackUnlessInvited": "Ma tkunx tista 'tingħaqad lura sakemm xi ħadd ma jistiednekx."
 }

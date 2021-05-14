@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Het u nie 'n rekening nie?",
     "email": "E-pos",
     "emailInvite": "E-pos nooi",
+    "emailSentToResetPassword": "&#39;N E-pos is gestuur om u wagwoord weer in te stel",
+    "emailVerified": "E-pos geverifieer",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amharies",
     "endonym_ar": "Arabies",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kan nie via Facebook registreer nie. Probeer asseblief weer.",
     "unableRegisterGoogle": "Kan nie via Google registreer nie. Probeer asseblief weer.",
     "unableRegisterTwitter": "Kan nie via Twitter registreer nie. Probeer asseblief weer.",
+    "verificationEmailSent": "Verifikasie-e-pos gestuur",
     "yourContacts": "U kontakte",
     "youWillNotJoinBackUnlessInvited": "U sal nie weer kan aansluit nie, tensy iemand u uitnooi."
 }

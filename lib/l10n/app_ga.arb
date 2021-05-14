@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nach bhfuil cuntas agat?",
     "email": "R-phost",
     "emailInvite": "Cuireadh R-phost",
+    "emailSentToResetPassword": "Tá r-phost seolta chun do phasfhocal a athshocrú",
+    "emailVerified": "R-phost fíoraithe",
     "endonym_af": "Afracáinis",
     "endonym_am": "Amarais",
     "endonym_ar": "Araibis",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ní féidir clárú trí Facebook. Arís, le d'thoil.",
     "unableRegisterGoogle": "Ní féidir clárú trí Google. Arís, le d'thoil.",
     "unableRegisterTwitter": "Ní féidir clárú trí Twitter. Arís, le d'thoil.",
+    "verificationEmailSent": "R-phost fíoraithe seolta",
     "yourContacts": "Do Teagmhálacha",
     "youWillNotJoinBackUnlessInvited": "Ní bheidh tú in ann dul ar ais mura dtugann duine cuireadh duit."
 }

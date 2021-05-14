@@ -94,7 +94,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             ListTile(
                 title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
-                  if (await Utilities.handleCameraAndMic(
+                  if (await Utilities.handlePermission(
                       Permission.microphone)) {
                     Fluttertoast.showToast(
                         msg: AppLocalizations.of(context)
@@ -284,6 +284,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           message = AnyChatMessage("", Timestamp.now(), chatter.id,
               AppLocalizations.of(context).newConversation, null);
         }
+        AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
         final language = message.senderId == AnyChatAuth.currentUser.id
@@ -346,9 +347,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       print("messages are empty");
       return;
     }
+    var conversation = Conversation.fromSnapshot(
+        await snapshot.docs.last.reference.parent.parent.get());
     if (mounted) {
-      var conversation = Conversation.fromSnapshot(
-          await snapshot.docs.last.reference.parent.parent.get());
       if (AnyChatAuth.currentUser.conversations
           .any((element) => element.id == conversation.id)) {
         var chatters = <AnyChatUser>[];
@@ -405,9 +406,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}";
 
       if (text.contains(AppLocalizations.of(context).isCallingYouOnAnyChat)) {
-        await Notifications().showNotification(sender.displayName, text, "ring");
+        await Notifications().showNotification(sender.displayName, text, "ring-${conversation.id}");
       } else {
-        await Notifications().showNotification(sender.displayName, text, "chat");
+        await Notifications().showNotification(sender.displayName, text, "chat-${conversation.id}");
       }
     }
   }

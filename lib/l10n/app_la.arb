@@ -25,6 +25,8 @@
     "doNotHaveAccount": "An non?",
     "email": "E-mail",
     "emailInvite": "E-mail invitare",
+    "emailSentToResetPassword": "An e-mail missus est ad reset vestri password",
+    "emailVerified": "E-mail verificatur",
     "endonym_af": "Africanica",
     "endonym_am": "Aethiopica",
     "endonym_ar": "Arabica",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "'Non subcriptio in Facebook. Quaero, iterum conare.",
     "unableRegisterGoogle": "'Non subcriptio per Google. Quaero, iterum conare.",
     "unableRegisterTwitter": "'Non subcriptio per a. Quaero, iterum conare.",
+    "verificationEmailSent": "E-mail missi sunt comprobatio",
     "yourContacts": "Contactus tuum",
     "youWillNotJoinBackUnlessInvited": "Et rursus non posse, nisi quis vocat vos iungere."
 }

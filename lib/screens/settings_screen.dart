@@ -5,6 +5,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/conversations_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,8 +95,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   child:
                                       Text(AppLocalizations.of(context).save),
                                   onPressed: () async {
-                                    if (displayName.isEmpty || displayName == null) {
-                                      Fluttertoast.showToast(msg: AppLocalizations.of(context).enterYourName);
+                                    if (displayName.isEmpty ||
+                                        displayName == null) {
+                                      Fluttertoast.showToast(
+                                          msg: AppLocalizations.of(context)
+                                              .enterYourName);
                                       return;
                                     }
                                     await AnyChatUser.updateDisplayName(
@@ -112,7 +116,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingsTile(
-                      title: AppLocalizations.of(context).email,
+                      title: FirebaseAuth.instance.currentUser.emailVerified
+                      ? AppLocalizations.of(context).emailVerified
+                      : AppLocalizations.of(context).verificationEmailSent,
                       subtitle: AnyChatAuth.currentUser.email,
                       leading: Icon(Icons.email)),
                 ],
@@ -143,7 +149,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ? CircleAvatar(
                               backgroundImage: NetworkImage(
                                   AnyChatAuth.currentUser.photoUrl))
-                          : CircleAvatar(child: Text(AnyChatAuth.currentUser.displayName.substring(0,2))))
+                          : CircleAvatar(
+                              child: Text(AnyChatAuth.currentUser.displayName
+                                  .substring(0, 1))))
                 ],
               ),
               SettingsSection(

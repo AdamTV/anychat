@@ -25,6 +25,8 @@
     "doNotHaveAccount": "계정이 없으십니까?",
     "email": "이메일",
     "emailInvite": "이메일 초대",
+    "emailSentToResetPassword": "비밀번호 재설정을위한 이메일이 전송되었습니다.",
+    "emailVerified": "이메일 확인",
     "endonym_af": "아프리카 어",
     "endonym_am": "암하라 어",
     "endonym_ar": "아라비아 말",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebook을 통해 등록 할 수 없습니다. 다시 시도하십시오.",
     "unableRegisterGoogle": "Google을 통해 등록 할 수 없습니다. 다시 시도하십시오.",
     "unableRegisterTwitter": "Twitter를 통해 등록 할 수 없습니다. 다시 시도하십시오.",
+    "verificationEmailSent": "확인 이메일을 보냈습니다.",
     "yourContacts": "연락처",
     "youWillNotJoinBackUnlessInvited": "누군가 초대하지 않으면 다시 참여할 수 없습니다."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Tiada akaun?",
     "email": "E-mel",
     "emailInvite": "Jemput E-mel",
+    "emailSentToResetPassword": "E-mel telah dihantar untuk menetapkan semula kata laluan anda",
+    "emailVerified": "E-mel disahkan",
     "endonym_af": "Orang Afrika",
     "endonym_am": "Bahasa Amharic",
     "endonym_ar": "Bahasa Arab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Tidak dapat mendaftar melalui Facebook. Sila cuba lagi.",
     "unableRegisterGoogle": "Tidak dapat mendaftar melalui Google. Sila cuba lagi.",
     "unableRegisterTwitter": "Tidak dapat mendaftar melalui Twitter. Sila cuba lagi.",
+    "verificationEmailSent": "E-mel pengesahan dihantar",
     "yourContacts": "Kenalan Anda",
     "youWillNotJoinBackUnlessInvited": "Anda tidak akan dapat bergabung kembali kecuali seseorang menjemput anda."
 }

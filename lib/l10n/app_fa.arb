@@ -25,6 +25,8 @@
     "doNotHaveAccount": "حساب کاربری ندارید؟",
     "email": "پست الکترونیک",
     "emailInvite": "پست الکترونیکی دعوت",
+    "emailSentToResetPassword": "نامه ای برای تنظیم مجدد رمز عبور شما ارسال شده است",
+    "emailVerified": "ایمیل تأییده شده است",
     "endonym_af": "آفریقایی",
     "endonym_am": "امهری",
     "endonym_ar": "عربی",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "ثبت نام از طریق فیس بوک امکان پذیر نیست. لطفا دوباره تلاش کنید.",
     "unableRegisterGoogle": "ثبت نام از طریق Google امکان پذیر نیست. لطفا دوباره تلاش کنید.",
     "unableRegisterTwitter": "ثبت نام از طریق توییتر امکان پذیر نیست. لطفا دوباره تلاش کنید.",
+    "verificationEmailSent": "ایمیل تأیید ارسال شد",
     "yourContacts": "مخاطبین شما",
     "youWillNotJoinBackUnlessInvited": "تا وقتی کسی شما را دعوت نکند ، نمی توانید به آن بپیوندید."
 }

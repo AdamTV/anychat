@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nu ai un cont?",
     "email": "E-mail",
     "emailInvite": "Invitați prin e-mail",
+    "emailSentToResetPassword": "A fost trimis un e-mail pentru a vă reseta parola",
+    "emailVerified": "E-mail verificat",
     "endonym_af": "afrikaans",
     "endonym_am": "Amharică",
     "endonym_ar": "arabic",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nu se poate înregistra prin Facebook. Vă rugăm să încercați din nou.",
     "unableRegisterGoogle": "Nu se poate înregistra prin Google. Vă rugăm să încercați din nou.",
     "unableRegisterTwitter": "Nu se poate înregistra prin Twitter. Vă rugăm să încercați din nou.",
+    "verificationEmailSent": "Email de verificare trimis",
     "yourContacts": "Contactele dvs.",
     "youWillNotJoinBackUnlessInvited": "Nu vă veți putea alătura decât dacă vă invită cineva."
 }

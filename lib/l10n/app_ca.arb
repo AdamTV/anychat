@@ -25,6 +25,8 @@
     "doNotHaveAccount": "no té un compte?",
     "email": "Correu electrònic",
     "emailInvite": "Invitar per correu electrònic",
+    "emailSentToResetPassword": "S&#39;ha enviat un correu electrònic per restablir la vostra contrasenya",
+    "emailVerified": "Correu electrònic verificat",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amàric",
     "endonym_ar": "Àrab",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "No es pot registrar a través de Facebook. Siusplau torna-ho a provar.",
     "unableRegisterGoogle": "No es pot registrar a través de Google. Siusplau torna-ho a provar.",
     "unableRegisterTwitter": "No es pot registrar a través de Twitter. Siusplau torna-ho a provar.",
+    "verificationEmailSent": "Correu electrònic de verificació enviat",
     "yourContacts": "Els vostres contactes",
     "youWillNotJoinBackUnlessInvited": "No podreu tornar a unir-vos a menys que algú us convidi."
 }

@@ -25,6 +25,8 @@
     "doNotHaveAccount": "口座がないのですか？",
     "email": "Eメール",
     "emailInvite": "Eメール招待",
+    "emailSentToResetPassword": "パスワードをリセットするための電子メールが送信されました",
+    "emailVerified": "確認済みの電子メール",
     "endonym_af": "アフリカーンス語",
     "endonym_am": "アムハラ語",
     "endonym_ar": "アラビア語",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Facebookから登録できません。もう一度やり直してください。",
     "unableRegisterGoogle": "Googleから登録できません。もう一度やり直してください。",
     "unableRegisterTwitter": "Twitterで登録できません。もう一度やり直してください。",
+    "verificationEmailSent": "確認メールを送信",
     "yourContacts": "あなたの連絡先",
     "youWillNotJoinBackUnlessInvited": "誰かがあなたを招待しない限り、あなたは再び参加することはできません。"
 }

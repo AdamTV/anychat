@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Չունես հաշվեհամար?",
     "email": "Էլ",
     "emailInvite": "Էլ. Փոստ Հրավիրել",
+    "emailSentToResetPassword": "Ձեր գաղտնաբառը վերակայելու համար էլ-նամակ է ուղարկվել",
+    "emailVerified": "Էլ. Փոստը հաստատված է",
     "endonym_af": "Աֆրիկաանս",
     "endonym_am": "Ամհարերեն",
     "endonym_ar": "Արաբերեն",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Ֆեյսբուքի միջոցով հնարավոր չէ գրանցվել: Խնդրում եմ կրկին փորձեք.",
     "unableRegisterGoogle": "Հնարավոր չէ գրանցվել Google- ի միջոցով: Խնդրում եմ կրկին փորձեք.",
     "unableRegisterTwitter": "Հնարավոր չէ գրանցվել Twitter- ի միջոցով: Խնդրում եմ կրկին փորձեք.",
+    "verificationEmailSent": "Ուղարկվել է հաստատման էլ",
     "yourContacts": "Ձեր կոնտակտները",
     "youWillNotJoinBackUnlessInvited": "Դուք չեք կարողանա միանալ, քանի դեռ ձեզ ինչ-որ մեկը չի հրավիրել:"
 }

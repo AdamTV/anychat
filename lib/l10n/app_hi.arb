@@ -25,6 +25,8 @@
     "doNotHaveAccount": "कोई खाता नहीं है?",
     "email": "ईमेल",
     "emailInvite": "ई-मेल आमंत्रण",
+    "emailSentToResetPassword": "आपका पासवर्ड रीसेट करने के लिए एक ई-मेल भेजा गया है",
+    "emailVerified": "ईमेल सत्यापित हुआ",
     "endonym_af": "दी",
     "endonym_am": "अम्हारिक्",
     "endonym_ar": "अरबी",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "फेसबुक के माध्यम से पंजीकरण करने में असमर्थ। कृपया पुन: प्रयास करें।",
     "unableRegisterGoogle": "Google के माध्यम से पंजीकरण करने में असमर्थ। कृपया पुन: प्रयास करें।",
     "unableRegisterTwitter": "ट्विटर के माध्यम से पंजीकरण करने में असमर्थ। कृपया पुन: प्रयास करें।",
+    "verificationEmailSent": "सत्यापन विद्युतडाक भेज दिया गया है",
     "yourContacts": "आपके संपर्क",
     "youWillNotJoinBackUnlessInvited": "जब तक कोई आपको आमंत्रित नहीं करता, आप वापस शामिल नहीं हो पाएंगे।"
 }

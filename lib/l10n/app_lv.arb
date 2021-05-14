@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Nav profila?",
     "email": "E-pasts",
     "emailInvite": "E-pasts Uzaicināt",
+    "emailSentToResetPassword": "Jūsu paroles atiestatīšanai ir nosūtīts e-pasts",
+    "emailVerified": "E-pasts pārbaudīts",
     "endonym_af": "Afrikands",
     "endonym_am": "Amharu",
     "endonym_ar": "Arābu",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nevar reģistrēties, izmantojot Facebook. Lūdzu mēģiniet vēlreiz.",
     "unableRegisterGoogle": "Nevar reģistrēties, izmantojot Google. Lūdzu mēģiniet vēlreiz.",
     "unableRegisterTwitter": "Nevar reģistrēties, izmantojot čivināt. Lūdzu mēģiniet vēlreiz.",
+    "verificationEmailSent": "Nosūtīts verifikācijas e-pasts",
     "yourContacts": "Jūsu kontaktpersonas",
     "youWillNotJoinBackUnlessInvited": "Jūs nevarēsiet pievienoties, ja kāds jūs neaicinās."
 }

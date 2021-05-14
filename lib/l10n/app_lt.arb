@@ -25,6 +25,8 @@
     "doNotHaveAccount": "neturi paskyros?",
     "email": "Elektroniniu paštu",
     "emailInvite": "El. Paštu pakviesti",
+    "emailSentToResetPassword": "El. Laiškas išsiųstas norint iš naujo nustatyti slaptažodį",
+    "emailVerified": "El. Paštas patikrintas",
     "endonym_af": "Afrikanų kalba",
     "endonym_am": "Amharų kalba",
     "endonym_ar": "arabiškas",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Nepavyko užsiregistruoti per „Facebook“. Prašau, pabandykite dar kartą.",
     "unableRegisterGoogle": "Nepavyko užregistruoti per „Google“. Prašau, pabandykite dar kartą.",
     "unableRegisterTwitter": "Nepavyko užsiregistruoti per „Twitter“. Prašau, pabandykite dar kartą.",
+    "verificationEmailSent": "Patvirtinimo el. Paštas išsiųstas",
     "yourContacts": "Jūsų kontaktai",
     "youWillNotJoinBackUnlessInvited": "Negalėsite prisijungti, kol kas nors nepakvies."
 }

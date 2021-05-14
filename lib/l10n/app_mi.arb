@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Kaore he kaute?",
     "email": "Imeera",
     "emailInvite": "Karangatia a Imeera",
+    "emailSentToResetPassword": "Kua tukuna he imeera hei tautuhi i to kupu huna",
+    "emailVerified": "I whakatutukihia te imeera",
     "endonym_af": "Awherika",
     "endonym_am": "Amharic",
     "endonym_ar": "Arapi",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Kaore e taea te rehita ma Facebook. Tena koa ngana.",
     "unableRegisterGoogle": "Kaore e taea te rehita ma Google. Tena koa ngana.",
     "unableRegisterTwitter": "Kaore e taea te rehita ma Twitter. Tena koa ngana.",
+    "verificationEmailSent": "Kua tukuna he imeera whakaū",
     "yourContacts": "Au Hoapā",
     "youWillNotJoinBackUnlessInvited": "Kaore e taea e koe te hono atu ki te kore tetahi e karanga ki a koe."
 }

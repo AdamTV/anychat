@@ -25,6 +25,8 @@
     "doNotHaveAccount": "Ma lihid xisaab?",
     "email": "E-mayl",
     "emailInvite": "Iimayl casuumaad",
+    "emailSentToResetPassword": "E-mayl ayaa loo diray si dib loogu dhigo lambarkaaga sirta ah",
+    "emailVerified": "E-mailka ayaa la xaqiijiyay",
     "endonym_af": "Afrikaans",
     "endonym_am": "Amxaar",
     "endonym_ar": "Carabi",
@@ -200,6 +202,7 @@
     "unableRegisterFacebook": "Lama diiwaan gelin karo iyada oo loo marayo Facebook. Fadlan iskuday markale.",
     "unableRegisterGoogle": "Lagama diiwaangelin karo Google. Fadlan iskuday markale.",
     "unableRegisterTwitter": "Lama diiwaan gelin karo iyada oo loo marayo Twitter. Fadlan iskuday markale.",
+    "verificationEmailSent": "E-mayl xaqiijin ah ayaa la diray",
     "yourContacts": "Xiriirradaada",
     "youWillNotJoinBackUnlessInvited": "Ma awoodi doontid inaad ku soo biirto qof mooyee inuu qof ku casuumayo mooyee."
 }
