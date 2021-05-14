@@ -12,6 +12,7 @@ class Ads {
       'f9fb4813-3745-489e-b55c-4c3adb59b3f5', // Nexus 7
       'c3f51604-1258-4021-948a-e2818e7a91b4', // Nexus 10
      'eea7bfde-2c6f-489b-930e-c98b498f424f', // OP 5T
+      '0ED527776873F3E56A11C1BDB9A1A3D2', // SM T290
       '9FE872DB63EEA34B32A3296F08C2DE1E', // Mac Android
     ]);
 

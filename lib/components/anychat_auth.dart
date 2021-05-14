@@ -131,7 +131,7 @@ class AnyChatAuth {
       print('signInWithGoogle succeeded: $_user');
 
       currentUser = new AnyChatUser(
-          _user.providerData[0].uid,
+          authResult.user.uid,
           _user.displayName,
           _user.email,
           _user.photoURL,
@@ -139,9 +139,9 @@ class AnyChatAuth {
       currentUser.addUserToFirestore();
 
       return currentUser;
+    } else {
+      throw Error();
     }
-
-    // return null;
   }
 
   static Future<void> signOut() async {

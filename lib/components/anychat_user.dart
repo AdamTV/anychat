@@ -171,25 +171,29 @@ class AnyChatUser {
       transaction.delete(userConversation);
       return;
     });
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-      return transaction
-          .get(conversation)
-          .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
-          .then((Conversation fresh) async {
-        fresh.participants.removeWhere((element) => element == id);
-        if (fresh.participants.isEmpty) {
-          transaction.delete(conversation);
-          await conversation.delete();
-          return;
-        }
-        transaction.update(conversation, {'participants': fresh.participants});
-        transaction.set(newMessage, {
-          'timestamp': FieldValue.serverTimestamp(),
-          'senderId': AnyChatAuth.currentUser.id,
-          'text': AppLocalizations.of(Utilities.globalKey.currentContext).thisPersonHasLeftConversation,
+    try {
+      await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+        return transaction
+            .get(conversation)
+            .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
+            .then((Conversation fresh) async {
+          fresh.participants.removeWhere((element) => element == id);
+          if (fresh.participants.isEmpty) {
+            transaction.delete(conversation);
+            await conversation.delete();
+            return;
+          }
+          transaction.update(conversation, {'participants': fresh.participants});
+          transaction.set(newMessage, {
+            'timestamp': FieldValue.serverTimestamp(),
+            'senderId': AnyChatAuth.currentUser.id,
+            'text': AppLocalizations.of(Utilities.globalKey.currentContext).thisPersonHasLeftConversation,
+          });
         });
       });
-    });
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<void> updatePhotoUrl(String photoUrl) async {
