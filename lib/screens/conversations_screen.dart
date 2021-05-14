@@ -229,7 +229,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .doc(conversation.participants
             .firstWhere((element) => element != AnyChatAuth.currentUser.id))
         .get());
-
+    AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
     await initConvoInfo();
     if (AnyChatAuth.currentUser.conversations != null &&
         !AnyChatAuth.currentUser.conversations
@@ -284,7 +284,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           message = AnyChatMessage("", Timestamp.now(), chatter.id,
               AppLocalizations.of(context).newConversation, null);
         }
-        AnyChatAuth.currentUser.conversations = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
         final language = message.senderId == AnyChatAuth.currentUser.id
