@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'call_screen.dart';
 
@@ -76,46 +75,57 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
     if (_messages.isEmpty) {
-      var convo = await Conversation.getConversationById(AnyChatAuth.currentConversation.id);
+      var convo = await Conversation.getConversationById(
+          AnyChatAuth.currentConversation.id);
       var participants = <AnyChatUser>[];
-      convo.participants.forEach((element) async {participants.add(await AnyChatUser.findUserById(element));});
-      if (AnyChatAuth.currentUser.conversations == null) {
-        AnyChatAuth.currentUser.conversations =
-        await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser.id);
-      }
+      convo.participants.forEach((element) async {
+        participants.add(await AnyChatUser.findUserById(element));
+      });
+      AnyChatAuth.currentUser.conversations =
+          await ConversationInfo.getAllConversationInfo(
+              AnyChatAuth.currentUser.id);
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
-              (element) => element.id == AnyChatAuth.currentConversation.id);
+          (element) => element.id == AnyChatAuth.currentConversation.id);
       // divide all chat messages into language for translation -> translate
       Map<String, List<String>> map = Map();
       _chatMessages.forEach((message) {
         final language = message.senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
-        if (!map.containsKey(language)){
+        if (!map.containsKey(language)) {
           map.putIfAbsent(language, () => <String>[]);
         }
         map[language].insert(0, message.text);
       });
       // Map<String, List<String>> translatedMap = Utilities.getBatchGoogleTranslation(map);
       for (int i = 0; i < _chatMessages.length; i++) {
-        if (!participants.any((element) => element.id == _chatMessages[i].senderId)){
-          participants.add(await AnyChatUser.findUserById(_chatMessages[i].senderId));
+        if (!participants
+            .any((element) => element.id == _chatMessages[i].senderId)) {
+          participants
+              .add(await AnyChatUser.findUserById(_chatMessages[i].senderId));
         }
-        final sender = participants.firstWhere((element) => element.id == _chatMessages[i].senderId);
+        final sender = participants
+            .firstWhere((element) => element.id == _chatMessages[i].senderId);
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
+        if (map[language].isEmpty) break;
         var text = new RichText(
           text: new TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
             style: Theme.of(context).textTheme.bodyText1,
             children: <TextSpan>[
-              new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+              new TextSpan(
+                  text: "${AppLocalizations.of(context).typed}: ",
+                  style: new TextStyle(fontWeight: FontWeight.bold)),
               new TextSpan(text: "${_chatMessages[i].text}\n\n"),
-              new TextSpan(text: "${AppLocalizations.of(context).translation}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-              new TextSpan(text: "${await Utilities.getGoogleTranslation(language, map[language].removeLast())}"),
+              new TextSpan(
+                  text: "${AppLocalizations.of(context).translation}: ",
+                  style: new TextStyle(fontWeight: FontWeight.bold)),
+              new TextSpan(
+                  text:
+                      "${await Utilities.getGoogleTranslation(language, map[language].removeLast())}"),
             ],
           ),
         );
@@ -140,6 +150,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           .collection("users")
           .doc(_chatMessages.last.senderId)
           .get());
+      AnyChatAuth.currentUser.conversations =
+          await ConversationInfo.getAllConversationInfo(
+              AnyChatAuth.currentUser.id);
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
@@ -151,10 +164,16 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           // Child text spans will inherit styles from parent
           style: Theme.of(context).textTheme.bodyText1,
           children: <TextSpan>[
-            new TextSpan(text: "${AppLocalizations.of(context).typed}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(
+                text: "${AppLocalizations.of(context).typed}: ",
+                style: new TextStyle(fontWeight: FontWeight.bold)),
             new TextSpan(text: "${message.text}\n\n"),
-            new TextSpan(text: "${AppLocalizations.of(context).translation}: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-            new TextSpan(text: "${await Utilities.getGoogleTranslation(language, message.text)}"),
+            new TextSpan(
+                text: "${AppLocalizations.of(context).translation}: ",
+                style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(
+                text:
+                    "${await Utilities.getGoogleTranslation(language, message.text)}"),
           ],
         ),
       );
@@ -243,7 +262,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context).call,
       onPressed: () async {
-       CallScreen.requestPermissionAndNavigate();
+        CallScreen.requestPermissionAndNavigate();
       },
     ));
     Container container = Container(
@@ -280,61 +299,57 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       ),
     );
     return Scaffold(
-            appBar: AppBar(
-                title: Text(Utilities.getChatterDisplayNameString(
-                    AnyChatAuth.currentChatters)),
-                elevation: Theme.of(context).platform == TargetPlatform.iOS
-                    ? 0.0
-                    : 4.0,
-                actions: widgets),
-            drawer: Drawer(
-              // Add a ListView to the drawer. This ensures the user can scroll
-              // through the options in the drawer if there isn't enough vertical
-              // space to fit everything.
-              child: ListView(
-                // Important: Remove any padding from the ListView.
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  DrawerHeader(
-                    child: Text(
-                      AppLocalizations.of(context).title,
-                      style:
-                          TextStyle(color: Theme.of(context).primaryColorLight),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  ListTile(
-                      title: Text(AppLocalizations.of(context)
-                          .addSomeoneToConversation),
-                      onTap: () {
-                        Navigator.pushNamed(context, "/addChatter");
-                      }),
-                  ListTile(
-                      title:
-                          Text(AppLocalizations.of(context).leaveConversation),
-                      onTap: () {
-                        AnyChatUser.deleteConversation(
-                            context, AnyChatAuth.currentConversation.id);
-                      }),
-                  ListTile(
-                      title: Text(
-                          AppLocalizations.of(context).backToConversations),
-                      onTap: () {
-                        Navigator.pushNamed(context, "/conversations");
-                      }),
-                  ListTile(
-                      title: Text(AppLocalizations.of(context).logout),
-                      onTap: () async {
-                        await AnyChatAuth.signOut();
-                        Navigator.pushNamed(context, "/welcome");
-                      }),
-                ],
+      appBar: AppBar(
+          title: Text(Utilities.getChatterDisplayNameString(
+              AnyChatAuth.currentChatters)),
+          elevation:
+              Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+          actions: widgets),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                AppLocalizations.of(context).title,
+                style: TextStyle(color: Theme.of(context).primaryColorLight),
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
               ),
             ),
-            body: container,
-            );
+            ListTile(
+                title:
+                    Text(AppLocalizations.of(context).addSomeoneToConversation),
+                onTap: () {
+                  Navigator.pushNamed(context, "/addChatter");
+                }),
+            ListTile(
+                title: Text(AppLocalizations.of(context).leaveConversation),
+                onTap: () {
+                  AnyChatUser.deleteConversation(
+                      context, AnyChatAuth.currentConversation.id);
+                }),
+            ListTile(
+                title: Text(AppLocalizations.of(context).backToConversations),
+                onTap: () {
+                  Navigator.pushNamed(context, "/conversations");
+                }),
+            ListTile(
+                title: Text(AppLocalizations.of(context).logout),
+                onTap: () async {
+                  await AnyChatAuth.signOut();
+                  Navigator.pushNamed(context, "/welcome");
+                }),
+          ],
+        ),
+      ),
+      body: container,
+    );
   }
 
   @override

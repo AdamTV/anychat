@@ -98,7 +98,7 @@ class SearchChatterByEmailScreenState
                             AnyChatAuth.currentChatters = users;
                           } else {
                             if (await AnyChatUser.addUserToConversation(
-                                SearchChatterByEmailScreenState.users[index])){
+                                SearchChatterByEmailScreenState.users[index])) {
                               AnyChatAuth.currentChatters.add(
                                   SearchChatterByEmailScreenState.users[index]);
                             }

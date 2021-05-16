@@ -200,12 +200,12 @@ class _CallScreenState extends State<CallScreen> {
         await _getAudioStream());
     String lastMessage = "";
     responseStream.listen((data) {
-        String transcribedText =
-        data.results.map((e) => e.alternatives.first.transcript).join('\n');
-        if (lastMessage.compareTo(transcribedText) != 0 &&
-            transcribedText.isNotEmpty) {
-          lastMessage = transcribedText;
-          AnyChatUser.addTranscribedMessage(lastMessage);
+      String transcribedText =
+          data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      if (lastMessage.compareTo(transcribedText) != 0 &&
+          transcribedText.isNotEmpty) {
+        lastMessage = transcribedText;
+        AnyChatUser.addTranscribedMessage(lastMessage);
         // setState(() {
         //   text =
         //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
@@ -482,7 +482,7 @@ class _CallScreenState extends State<CallScreen> {
     // String channelId = channel.channelId;
     channel.setEventHandler(
         RtcChannelEventHandler(joinChannelSuccess: (channel, uid, elapsed) {
-      log('joinChannelSuccess ${channel} ${uid} ${elapsed}');
+      log('joinChannelSuccess $channel $uid $elapsed');
       // if (channelId == _channelId0) {
       //   setState(() {
       //     isJoined0 = true;
@@ -510,7 +510,7 @@ class _CallScreenState extends State<CallScreen> {
       //   });
       // }
     }, remoteVideoStateChanged: (uid, state, reason, elapsed) {
-      log('remoteVideoStateChanged ${uid} ${state} ${reason} ${elapsed}');
+      log('remoteVideoStateChanged $uid $state $reason $elapsed');
       if (state == VideoRemoteState.Starting) {
         this.setState(() {
           remoteUid.add(uid);

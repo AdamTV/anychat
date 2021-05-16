@@ -1,4 +1,3 @@
-
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
@@ -28,9 +27,10 @@ class LoginScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
-           SvgPicture.asset(
+            SvgPicture.asset(
               "assets/icons/login.svg",
-              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
+              height:
+                  size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
@@ -52,10 +52,14 @@ class LoginScreen extends StatelessWidget {
                             {Utilities.initConversationScreen(context, value)}
                           else
                             Utilities.showAlertDialog(
-                                context, AppLocalizations.of(context).error, AppLocalizations.of(context).invalidCredentials)
+                                context,
+                                AppLocalizations.of(context).error,
+                                AppLocalizations.of(context).invalidCredentials)
                         })
                     .catchError((e) => {
-                          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                          Utilities.showAlertDialog(
+                              context,
+                              AppLocalizations.of(context).error,
                               AppLocalizations.of(context).errorLoggingIn)
                         });
               },
@@ -64,7 +68,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                    '/forgotPassword',
+                  '/forgotPassword',
                 );
               },
               child: Text(
@@ -109,13 +113,13 @@ class LoginBackground extends StatelessWidget {
     if (!kIsWeb) {
       children.addAll({
         Positioned(
-        top: 0,
-        left: 0,
-        child: Image.asset(
-          "assets/images/main_top.png",
-          width: size.width * 0.35,
+          top: 0,
+          left: 0,
+          child: Image.asset(
+            "assets/images/main_top.png",
+            width: size.width * 0.35,
+          ),
         ),
-      ),
         Positioned(
           bottom: 0,
           right: 0,
@@ -124,7 +128,7 @@ class LoginBackground extends StatelessWidget {
             width: size.width * 0.3,
           ),
         ),
-        });
+      });
     }
     children.add(child);
     return Container(

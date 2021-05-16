@@ -21,7 +21,6 @@ class AnyChatAuth {
   static Conversation currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-
   static final FacebookLogin facebookSignIn = new FacebookLogin();
   static GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -31,43 +30,49 @@ class AnyChatAuth {
   );
 
   static Future<AnyChatUser> signInApple() async {
-
     final appleIdCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
-        webAuthenticationOptions: WebAuthenticationOptions(clientId: "ca.alphatechnology.anychat", redirectUri: Uri.parse("https://fortunate-phase-wheel.glitch.me/callbacks/sign_in_with_apple"))
-    );
+        webAuthenticationOptions: WebAuthenticationOptions(
+            clientId: "ca.alphatechnology.anychat",
+            redirectUri: Uri.parse(
+                "https://fortunate-phase-wheel.glitch.me/callbacks/sign_in_with_apple")));
 
     final oAuthProvider = OAuthProvider('apple.com');
     final credential = oAuthProvider.credential(
       idToken: appleIdCredential.identityToken,
       accessToken: appleIdCredential.authorizationCode,
     );
-    final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+    final authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
     final firebaseUser = authResult.user;
     var snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(firebaseUser.uid)
         .get();
-      if (snapshot.exists) {
-        var currentUser = AnyChatUser.fromSnapshot(snapshot);
-        linkedAccountPhotoUrl = "";
+    if (snapshot.exists) {
+      var currentUser = AnyChatUser.fromSnapshot(snapshot);
+      linkedAccountPhotoUrl = "";
+      AnyChatAuth.currentUser = currentUser;
+      return currentUser;
+    } else {
+      if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
+        var currentUser = new AnyChatUser(
+            firebaseUser.uid,
+            '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
+            firebaseUser.email,
+            firebaseUser.photoURL ?? "",
+            AnyChatLocale.currentLocale.substring(0, 2));
+        currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
       } else {
-        if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
-          var  currentUser = new AnyChatUser(firebaseUser.uid, '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}', firebaseUser.email,
-              firebaseUser.photoURL ?? "", AnyChatLocale.currentLocale.substring(0, 2));
-          currentUser.addUserToFirestore();
-          AnyChatAuth.currentUser = currentUser;
-          return currentUser;
-        }else{
-          Fluttertoast.showToast(msg: 'Email already in use.');
-          return null;
-        }
+        Fluttertoast.showToast(msg: 'Email already in use.');
+        return null;
       }
+    }
   }
 
   static Future<AnyChatUser> signInGoogle() async {
@@ -130,12 +135,8 @@ class AnyChatAuth {
 
       print('signInWithGoogle succeeded: $_user');
 
-      currentUser = new AnyChatUser(
-          authResult.user.uid,
-          _user.displayName,
-          _user.email,
-          _user.photoURL,
-          AnyChatLocale.currentLocale);
+      currentUser = new AnyChatUser(authResult.user.uid, _user.displayName,
+          _user.email, _user.photoURL, AnyChatLocale.currentLocale);
       currentUser.addUserToFirestore();
 
       return currentUser;
@@ -178,12 +179,8 @@ class AnyChatAuth {
         if (result.displayName == null) {
           displayName = result.email;
         }
-        currentUser = new AnyChatUser(
-            result.uid,
-            displayName,
-            result.email,
-            result.photoURL,
-            AnyChatLocale.currentLocale.substring(0, 2));
+        currentUser = new AnyChatUser(result.uid, displayName, result.email,
+            result.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
         currentUser.addUserToFirestore();
         return currentUser;
       }
@@ -256,6 +253,7 @@ class AnyChatAuth {
     }
     return null;
   }
+
   static SocialIcon facebookIcon(BuildContext context) {
     return SocialIcon(
       key: Key("facebookIcon"),
@@ -267,7 +265,9 @@ class AnyChatAuth {
             Utilities.initConversationScreen(context, user);
           }
         } catch (e) {
-          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+          Utilities.showAlertDialog(
+              context,
+              AppLocalizations.of(context).error,
               ModalRoute.of(context).settings.name == "/login"
                   ? AppLocalizations.of(context).errorLoggingInFacebook
                   : AppLocalizations.of(context).unableRegisterFacebook);
@@ -275,7 +275,8 @@ class AnyChatAuth {
       },
     );
   }
-  static SocialIcon googleIcon(BuildContext context){
+
+  static SocialIcon googleIcon(BuildContext context) {
     return SocialIcon(
         iconSrc: "assets/icons/google-plus.svg",
         press: () async {
@@ -285,14 +286,17 @@ class AnyChatAuth {
               Utilities.initConversationScreen(context, user);
             }
           } catch (e) {
-            Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+            Utilities.showAlertDialog(
+                context,
+                AppLocalizations.of(context).error,
                 ModalRoute.of(context).settings.name == "/login"
                     ? AppLocalizations.of(context).errorLoggingInGoogle
                     : AppLocalizations.of(context).unableRegisterGoogle);
           }
         });
   }
-  static SocialIcon appleIcon(BuildContext context){
+
+  static SocialIcon appleIcon(BuildContext context) {
     return SocialIcon(
         iconSrc: "assets/icons/apple.svg",
         press: () async {
@@ -302,15 +306,17 @@ class AnyChatAuth {
               Utilities.initConversationScreen(context, user);
             }
           } catch (e) {
-            Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+            Utilities.showAlertDialog(
+                context,
+                AppLocalizations.of(context).error,
                 ModalRoute.of(context).settings.name == "/login"
                     ? AppLocalizations.of(context).errorLoggingInApple
                     : AppLocalizations.of(context).unableRegisterApple);
           }
-        }
-    );
+        });
   }
-  static SocialIcon twitterIcon(BuildContext context){
+
+  static SocialIcon twitterIcon(BuildContext context) {
     return SocialIcon(
       iconSrc: "assets/icons/twitter.svg",
       press: () async {
@@ -320,7 +326,9 @@ class AnyChatAuth {
             Utilities.initConversationScreen(context, user);
           }
         } catch (e) {
-          Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+          Utilities.showAlertDialog(
+              context,
+              AppLocalizations.of(context).error,
               ModalRoute.of(context).settings.name == "/login"
                   ? AppLocalizations.of(context).errorLoggingInTwitter
                   : AppLocalizations.of(context).unableRegisterTwitter);
@@ -328,6 +336,7 @@ class AnyChatAuth {
       },
     );
   }
+
   static Future<AnyChatUser> signInTwitter() async {
     // Create a TwitterLogin instance
     final TwitterLogin twitterLogin = new TwitterLogin(
