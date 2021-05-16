@@ -4,7 +4,6 @@ import 'package:anychat/Screens/languages_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/screens/conversations_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../components/anychat_auth.dart';
 import '../components/anychat_user.dart';
@@ -47,6 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: Text(
                   '${AppLocalizations.of(context).title} ${AppLocalizations.of(context).settings}')),
           body: SettingsList(
+            contentPadding: EdgeInsets.only(top: 12),
             sections: [
               SettingsSection(
                 title: AppLocalizations.of(context).translation,
@@ -117,8 +118,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SettingsTile(
                       title: FirebaseAuth.instance.currentUser.emailVerified
-                      ? AppLocalizations.of(context).emailVerified
-                      : AppLocalizations.of(context).verificationEmailSent,
+                          ? AppLocalizations.of(context).emailVerified
+                          : AppLocalizations.of(context).verificationEmailSent,
                       subtitle: AnyChatAuth.currentUser.email,
                       leading: Icon(Icons.email)),
                 ],
@@ -217,24 +218,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   )
                 ],
-              )
-              // SettingsSection(
-              //   title: 'Misc',
-              //   tiles: [
-              //     SettingsTile(
-              //         title: 'Terms of Service', leading: Icon(Icons.description)),
-              //     SettingsTile(
-              //         title: 'Open source licenses',
-              //         leading: Icon(Icons.collections_bookmark)),
-              //   ],
-              // ),
+              ),
+              SettingsSection(
+                title: AppLocalizations.of(context).miscellaneous,
+                tiles: [
+                  SettingsTile(
+                      title: AppLocalizations.of(context).privacyPolicy,
+                      leading: Icon(Icons.description),
+                      onPressed: (ctx) => _launchPrivacyPolicy()),
+                  // SettingsTile(
+                  //     title: 'Open source licenses',
+                  //     leading: Icon(Icons.collections_bookmark)),
+                ],
+              ),
+              SettingsSection(
+                title: AppLocalizations.of(context).dangerZone,
+                tiles: [
+                  SettingsTile(
+                      title: AppLocalizations.of(context).deleteYourAccount,
+                      leading: Icon(Icons.delete_forever),
+                      onPressed: (ctx) => _deleteAccount()),
+                  // SettingsTile(
+                  //     title: 'Open source licenses',
+                  //     leading: Icon(Icons.collections_bookmark)),
+                ],
+              ),
             ],
           ),
         ),
-        onWillPop: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return ConversationsScreen();
-            })));
+        onWillPop: () => _onWillPop());
   }
 
 // Image Picker
@@ -281,4 +293,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     return returnURL;
   }
+}
+
+_deleteAccount() {
+  showDialog(
+      context: Utilities.globalKey.currentContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context).deleteYourAccount),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(AppLocalizations.of(context)
+                    .areYouSureYouWantToDeleteAccount)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                  AppLocalizations.of(Utilities.globalKey.currentContext)
+                      .cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                  AppLocalizations.of(Utilities.globalKey.currentContext)
+                      .approve),
+              onPressed: () async {
+                AnyChatAuth.currentUser.deleteAccount();
+              },
+            ),
+          ],
+        );
+      });
+}
+
+_launchPrivacyPolicy() async {
+  await launch("https://www.alphatechnology.ca/anychat-privacy-policy");
+}
+
+_onWillPop() {
+  Navigator.of(Utilities.globalKey.currentContext).pop();
 }

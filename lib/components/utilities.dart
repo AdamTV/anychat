@@ -46,7 +46,6 @@ class Utilities {
     }
   }
 
-
   // static Map<String, List<String>> getBatchGoogleTranslation(Map<String, List<String>> map) {
   //   Map<String, List<String>> translatedMap = Map();
   //   queryParameters.putIfAbsent("key", () => apiKey);
@@ -176,9 +175,11 @@ class Utilities {
 
   static setThemeFromDropdownValue(String newValue) {
     var newPref = 'system';
-    if (newValue == AppLocalizations.of(Utilities.globalKey.currentContext).light) {
+    if (newValue ==
+        AppLocalizations.of(Utilities.globalKey.currentContext).light) {
       newPref = 'light';
-    } else if (newValue == AppLocalizations.of(Utilities.globalKey.currentContext).dark) {
+    } else if (newValue ==
+        AppLocalizations.of(Utilities.globalKey.currentContext).dark) {
       newPref = 'dark';
     }
     prefs.setString('theme', newPref);

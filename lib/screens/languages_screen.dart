@@ -53,8 +53,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
         onWillPop: () => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (BuildContext context) {
               return SettingsScreen();
-            }))
-    );
+            })));
   }
 
   Widget trailingWidget(int index) {

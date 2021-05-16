@@ -27,9 +27,9 @@ class SocialIcon extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: SvgPicture.asset(
-                iconSrc,
-                height: 20,
-                width: 20,
+          iconSrc,
+          height: 20,
+          width: 20,
           color: Theme.of(context).primaryColor,
         ),
       ),

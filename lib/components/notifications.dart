@@ -1,17 +1,17 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/call_screen.dart';
+import 'package:disposables/disposables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:disposables/disposables.dart';
 
 import 'conversation.dart';
 import 'conversation_info.dart';
 
 final BehaviorSubject<String> selectNotificationSubject =
-BehaviorSubject<String>();
+    BehaviorSubject<String>();
 
 class Notifications implements Disposable {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -25,7 +25,6 @@ class Notifications implements Disposable {
     }
     _requestPermissions();
     _configureSelectNotificationSubject();
-
 
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -52,9 +51,11 @@ class Notifications implements Disposable {
       AnyChatAuth.currentConversation = convo;
       if (payload.toLowerCase().contains('ring')) {
         CallScreen.requestPermissionAndNavigate();
-      } else  if (payload.toLowerCase().contains('chat')) {
-        var info = await ConversationInfo.getAllConversationInfo(AnyChatAuth.currentUser.id);
-        AnyChatAuth.currentUser.conversations.add(info.firstWhere((element) => element.id == conversationId));
+      } else if (payload.toLowerCase().contains('chat')) {
+        var info = await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
+        AnyChatAuth.currentUser.conversations
+            .add(info.firstWhere((element) => element.id == conversationId));
         await Utilities.globalKey.currentState.pushNamed('/chat');
       }
     });
@@ -96,7 +97,6 @@ class Notifications implements Disposable {
                 AppLocalizations.of(Utilities.globalKey.currentContext).title,
                 'your channel name',
                 'your channel description',
-
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',

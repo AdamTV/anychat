@@ -64,8 +64,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
       }
       _filteredContacts = tempList;
     }
-    var _sortedContacts = _filteredContacts.where((element) => element.isRegistered).toList();
-    _sortedContacts.addAll(_filteredContacts.where((element) => !element.isRegistered));
+    var _sortedContacts =
+        _filteredContacts.where((element) => element.isRegistered).toList();
+    _sortedContacts
+        .addAll(_filteredContacts.where((element) => !element.isRegistered));
     return ListView.builder(
       itemCount: _sortedContacts?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
@@ -306,25 +308,27 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 }
                 AnyChatAuth.currentChatters = users;
               } else {
-                if (await AnyChatUser.addUserToConversation(user)) {
+                var success = await AnyChatUser.addUserToConversation(user);
+                if (success) {
                   AnyChatAuth.currentConversation.participants.add(user.id);
                   await FirebaseFirestore.instance
                       .runTransaction((Transaction transaction) async {
                     var convoDoc = FirebaseFirestore.instance
                         .collection('conversations')
                         .doc(AnyChatAuth.currentConversation.id);
-                    return transaction
+                    await transaction
                         .get(convoDoc)
                         .then((DocumentSnapshot doc) =>
                             Conversation.fromSnapshot(doc))
-                        .then((Conversation fresh) async {
+                        .then((Conversation fresh) {
                       transaction.update(convoDoc, {
                         'participants':
                             AnyChatAuth.currentConversation.participants,
                       });
+
+                      AnyChatAuth.currentChatters.add(user);
                     });
                   });
-                  AnyChatAuth.currentChatters.add(user);
                 }
               }
               Navigator.pushNamed(context, "/chat");

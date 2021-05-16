@@ -36,7 +36,9 @@ class AnyChatUser {
 
   static Future<Conversation> createConversation(String id) async {
     if (id == AnyChatAuth.currentUser.id) {
-      Fluttertoast.showToast(msg: AppLocalizations.of(Utilities.globalKey.currentContext).canNotCreateConvoWithSelf);
+      Fluttertoast.showToast(
+          msg: AppLocalizations.of(Utilities.globalKey.currentContext)
+              .canNotCreateConvoWithSelf);
       return null;
     }
     final conversation =
@@ -172,7 +174,8 @@ class AnyChatUser {
       return;
     });
     try {
-      await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      await FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) {
         return transaction
             .get(conversation)
             .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
@@ -183,11 +186,13 @@ class AnyChatUser {
             await conversation.delete();
             return;
           }
-          transaction.update(conversation, {'participants': fresh.participants});
+          transaction
+              .update(conversation, {'participants': fresh.participants});
           transaction.set(newMessage, {
             'timestamp': FieldValue.serverTimestamp(),
             'senderId': AnyChatAuth.currentUser.id,
-            'text': AppLocalizations.of(Utilities.globalKey.currentContext).thisPersonHasLeftConversation,
+            'text': AppLocalizations.of(Utilities.globalKey.currentContext)
+                .thisPersonHasLeftConversation,
           });
         });
       });
@@ -338,8 +343,9 @@ class AnyChatUser {
         .collection('conversations')
         .doc(AnyChatAuth.currentConversation.id);
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
-    if (conversation.participants.contains(user.id)){
-      Utilities.showToast("${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext).isAlreadyInThisConversation}");
+    if (conversation.participants.contains(user.id)) {
+      Utilities.showToast(
+          "${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext).isAlreadyInThisConversation}");
       return false;
     }
     final newMessage = conversationRef.collection('messages').doc();
@@ -349,7 +355,8 @@ class AnyChatUser {
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) {
         fresh.participants.add(user.id);
-        transaction.update(conversationRef, {'participants': fresh.participants});
+        transaction
+            .update(conversationRef, {'participants': fresh.participants});
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
@@ -387,8 +394,10 @@ class AnyChatUser {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(AppLocalizations.of(context).areYouSureYouWantToLeave + " " +
-                    AppLocalizations.of(context).youWillNotJoinBackUnlessInvited),
+                Text(AppLocalizations.of(context).areYouSureYouWantToLeave +
+                    " " +
+                    AppLocalizations.of(context)
+                        .youWillNotJoinBackUnlessInvited),
               ],
             ),
           ),
@@ -410,9 +419,9 @@ class AnyChatUser {
                 Navigator.of(context).pop();
                 AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
-                Utilities.showToast(AppLocalizations.of(context).successfullyLeftConversation);
-                Navigator.pushReplacementNamed(
-                    context, "/conversations");
+                Utilities.showToast(
+                    AppLocalizations.of(context).successfullyLeftConversation);
+                Navigator.pushReplacementNamed(context, "/conversations");
               },
             ),
           ],
@@ -427,19 +436,29 @@ class AnyChatUser {
         .collection('users')
         .get()
         .then((QuerySnapshot querySnapshot) => {
-      querySnapshot.docs.forEach((doc) {
-        if (doc['email'] == email) {
-          user = AnyChatUser(
-              doc.id,
-              doc["displayName"],
-              doc["email"],
-              doc["photoUrl"],
-              doc["language"]);
-          print(doc["displayName"]);
-        }
-      }),
-    });
+              querySnapshot.docs.forEach((doc) {
+                if (doc['email'] == email) {
+                  user = AnyChatUser(doc.id, doc["displayName"], doc["email"],
+                      doc["photoUrl"], doc["language"]);
+                  print(doc["displayName"]);
+                }
+              }),
+            });
     return user;
+  }
+
+  Future<void> deleteAccount() async {
+    var convos = await ConversationInfo.getAllConversationInfo(id);
+    convos.forEach((element) async {
+      await leaveConversation(element.id);
+    });
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      transaction
+          .delete(FirebaseFirestore.instance.collection('users').doc(id));
+      return;
+    });
+    Navigator.pushReplacementNamed(Utilities.globalKey.currentContext, '/');
+    Fluttertoast.showToast(msg: "Account Deleted");
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

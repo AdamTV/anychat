@@ -1,3 +1,5 @@
+import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,8 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
+  @override
+  _ForgotPasswordState createState() => _ForgotPasswordState();
+}
 
+class _ForgotPasswordState extends State<ForgotPassword> {
   String _email;
   final _formKey = GlobalKey<FormState>();
 
@@ -25,25 +31,24 @@ class ForgotPassword extends StatelessWidget {
                 AppLocalizations.of(context).enterYourEmail,
                 style: TextStyle(fontSize: 32),
               ),
-              TextFormField(
-                onSaved: (newEmail) {
-                  _email = newEmail;
+              RoundedInputField(
+                icon: Icons.mail,
+                hintText: AppLocalizations.of(context).email,
+                onChanged: (value) {
+                  _email = value;
                 },
-                onChanged: (value){_email = value;},
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context).email,
-                  icon: Icon(
-                    Icons.mail,
-                  ),
-                ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                child: Text(AppLocalizations.of(context).send + " " + AppLocalizations.of(context).email),
-                onPressed: () async {
+              RoundedButton(
+                text: AppLocalizations.of(context).send +
+                    " " +
+                    AppLocalizations.of(context).email,
+                press: () async {
                   await _passwordReset();
                   print(_email);
-                  Fluttertoast.showToast(msg: AppLocalizations.of(context).emailSentToResetPassword);
+                  Fluttertoast.showToast(
+                      msg: AppLocalizations.of(context)
+                          .emailSentToResetPassword);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
@@ -52,9 +57,9 @@ class ForgotPassword extends StatelessWidget {
                   );
                 },
               ),
-              TextButton(
-                child: Text(AppLocalizations.of(context).login),
-                onPressed: () {
+              RoundedButton(
+                text: AppLocalizations.of(context).login,
+                press: () {
                   Navigator.pop(context);
                 },
               )
@@ -64,12 +69,13 @@ class ForgotPassword extends StatelessWidget {
       ),
     );
   }
+
   _passwordReset() async {
-    try{
+    try {
       final _auth = FirebaseAuth.instance;
       _formKey.currentState.save();
       await _auth.sendPasswordResetEmail(email: _email);
-    }catch (e){
+    } catch (e) {
       if (e.message != null) {
         Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
       }
