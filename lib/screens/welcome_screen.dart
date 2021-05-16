@@ -9,7 +9,8 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
-    return Scaffold(body: WelcomeBackground(
+    return Scaffold(
+        body: WelcomeBackground(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -27,15 +28,13 @@ class WelcomeScreen extends StatelessWidget {
             RoundedButton(
               text: AppLocalizations.of(context).login_caps,
               press: () {
-                Navigator.pushNamed(
-                  context, "/login");
+                Navigator.pushNamed(context, "/login");
               },
             ),
             RoundedButton(
               text: AppLocalizations.of(context).register_caps,
               press: () {
-                Navigator.pushNamed(
-                  context, "/register");
+                Navigator.pushNamed(context, "/register");
               },
             ),
           ],
@@ -60,13 +59,13 @@ class WelcomeBackground extends StatelessWidget {
     if (!kIsWeb) {
       children.addAll({
         Positioned(
-        top: 0,
-        left: 0,
-        child: Image.asset(
-          "assets/images/main_top.png",
-          width: size.width * 0.3,
+          top: 0,
+          left: 0,
+          child: Image.asset(
+            "assets/images/main_top.png",
+            width: size.width * 0.3,
+          ),
         ),
-      ),
         Positioned(
           bottom: 0,
           left: 0,
@@ -74,7 +73,8 @@ class WelcomeBackground extends StatelessWidget {
             "assets/images/main_bottom.png",
             width: size.width * 0.2,
           ),
-        ),});
+        ),
+      });
     }
     children.add(child);
     return Container(

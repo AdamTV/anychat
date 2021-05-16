@@ -7,11 +7,12 @@ class Ads {
 
   static init() {
     // Admob.initialize();
-    Admob.initialize(testDeviceIds: ['ee20dbf2-4928-4348-876e-c731bd0d5daf', // Pexel 3a
-    '6cc2ce0e-3a4f-41a7-9295-550e91e1a85e', // Nexus 5
+    Admob.initialize(testDeviceIds: [
+      'ee20dbf2-4928-4348-876e-c731bd0d5daf', // Pexel 3a
+      '6cc2ce0e-3a4f-41a7-9295-550e91e1a85e', // Nexus 5
       'f9fb4813-3745-489e-b55c-4c3adb59b3f5', // Nexus 7
       'c3f51604-1258-4021-948a-e2818e7a91b4', // Nexus 10
-     'eea7bfde-2c6f-489b-930e-c98b498f424f', // OP 5T
+      'eea7bfde-2c6f-489b-930e-c98b498f424f', // OP 5T
       '0ED527776873F3E56A11C1BDB9A1A3D2', // SM T290
       '9FE872DB63EEA34B32A3296F08C2DE1E', // Mac Android
     ]);
@@ -33,7 +34,7 @@ class Ads {
         adSize: AdmobBannerSize.SMART_BANNER(context),
         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
           handleEvent(event, args, 'Banner');
-          if (event == AdmobAdEvent.opened){
+          if (event == AdmobAdEvent.opened) {
             controller.dispose();
           }
         },
@@ -57,7 +58,7 @@ class Ads {
         break;
       case AdmobAdEvent.closed:
         print('Admob $adType Ad closed!');
-        if (adType == "Interstitial"){
+        if (adType == "Interstitial") {
           interstitial.load();
         }
         break;
@@ -96,7 +97,7 @@ class Ads {
     return defaultTargetPlatform == TargetPlatform.iOS
         ? "ca-app-pub-4494853791237895/9609705015"
         : "ca-app-pub-4494853791237895/9276436590";
-        // : "ca-app-pub-4494853791237895/1975328398";
+    // : "ca-app-pub-4494853791237895/1975328398";
   }
 
   static String getInterstitialAdUnitId() {
@@ -104,7 +105,6 @@ class Ads {
     return defaultTargetPlatform == TargetPlatform.iOS
         ? "ca-app-pub-4494853791237895/8261798477"
         : "ca-app-pub-4494853791237895/4091843930";
-        // : "ca-app-pub-4494853791237895/1975328398";
-
+    // : "ca-app-pub-4494853791237895/1975328398";
   }
 }

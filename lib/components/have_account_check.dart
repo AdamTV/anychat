@@ -17,13 +17,17 @@ class HaveAccountCheck extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          login ? AppLocalizations.of(context).doNotHaveAccount + " " : AppLocalizations.of(context).haveAccount + " ",
+          login
+              ? AppLocalizations.of(context).doNotHaveAccount + " "
+              : AppLocalizations.of(context).haveAccount + " ",
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         GestureDetector(
           onTap: press,
           child: Text(
-            login ? AppLocalizations.of(context).register : AppLocalizations.of(context).login,
+            login
+                ? AppLocalizations.of(context).register
+                : AppLocalizations.of(context).login,
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,

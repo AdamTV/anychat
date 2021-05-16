@@ -21,7 +21,8 @@ class LiveTranslatorScreen extends StatefulWidget {
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String isoCode = AnyChatAuth.currentUser.language;
-  String dropdownValue = Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
+  String dropdownValue =
+      Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
   bool recognizing;
   SpeechToText speechToText;
   String text = "";
@@ -101,8 +102,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.pushNamed(
-                        context, "/welcome");
+                    Navigator.pushNamed(context, "/welcome");
                   }),
             ],
           ),
@@ -154,7 +154,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               print(isoCode);
               Navigator.pop(context);
             },
-            items: AnyChatLocale.isoMap.keys.map<DropdownMenuItem<String>>((String value) {
+            items: AnyChatLocale.isoMap.keys
+                .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

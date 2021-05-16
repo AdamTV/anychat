@@ -17,7 +17,8 @@ class RegisterScreen extends StatelessWidget {
     String email;
     String password;
     Size size = MediaQuery.of(context).size;
-    return Scaffold(body: SignupBackground(
+    return Scaffold(
+        body: SignupBackground(
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +30,8 @@ class RegisterScreen extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
               "assets/icons/signup.svg",
-              height: size.height < 750 ? size.height * 0.25 : size.height * 0.35,
+              height:
+                  size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
@@ -46,13 +48,19 @@ class RegisterScreen extends StatelessWidget {
               text: AppLocalizations.of(context).register_caps,
               press: () async {
                 try {
-                  var user = await AnyChatAuth.signInEmail(email, password, true);
+                  var user =
+                      await AnyChatAuth.signInEmail(email, password, true);
                   if (user != null) {
-                    Fluttertoast.showToast(msg: AppLocalizations.of(context).accountCreatedEnterSettings, toastLength: Toast.LENGTH_LONG);
+                    Fluttertoast.showToast(
+                        msg: AppLocalizations.of(context)
+                            .accountCreatedEnterSettings,
+                        toastLength: Toast.LENGTH_LONG);
                     Navigator.pushNamed(context, '/settings');
                   }
                 } catch (e) {
-                  Utilities.showAlertDialog(context, AppLocalizations.of(context).error,
+                  Utilities.showAlertDialog(
+                      context,
+                      AppLocalizations.of(context).error,
                       AppLocalizations.of(context).unableRegister);
                 }
               },
@@ -61,9 +69,7 @@ class RegisterScreen extends StatelessWidget {
             HaveAccountCheck(
               login: false,
               press: () {
-                Navigator.pushNamed(
-                  context, "/login"
-                );
+                Navigator.pushNamed(context, "/login");
               },
             ),
             OrDivider(),
