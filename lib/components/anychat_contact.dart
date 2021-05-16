@@ -21,6 +21,5 @@ class AnyChatContact extends Contact {
             birthday: c.birthday,
             androidAccountType: c.androidAccountType,
             androidAccountTypeRaw: c.androidAccountTypeRaw,
-            androidAccountName: c.androidAccountName
-  );
+            androidAccountName: c.androidAccountName);
 }

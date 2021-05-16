@@ -13,7 +13,8 @@ class AddChatterScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text(AppLocalizations.of(context).title,
+          title: Text(
+            AppLocalizations.of(context).title,
           ),
           // bottom: PreferredSize(
           //   preferredSize: Size(320, 48),
@@ -36,7 +37,7 @@ class AddChatterScreen extends StatelessWidget {
             children: <Widget>[
               DrawerHeader(
                 child: Text(
-              AppLocalizations.of(context).title,
+                  AppLocalizations.of(context).title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
@@ -46,16 +47,14 @@ class AddChatterScreen extends StatelessWidget {
               ListTile(
                   title: Text(AppLocalizations.of(context).conversations),
                   onTap: () {
-                    Navigator.pushNamed(
-                        context, "/conversations");
+                    Navigator.pushNamed(context, "/conversations");
                     //_handleSignOut();
                   }),
               ListTile(
                   title: Text(AppLocalizations.of(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.pushNamed(
-                        context, "/welcome");
+                    Navigator.pushNamed(context, "/welcome");
                     //_handleSignOut();
                   }),
             ],
@@ -69,7 +68,8 @@ class AddChatterScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       RoundedInputField(
-                          hintText: AppLocalizations.of(context).findSomeoneByEmail,
+                          hintText:
+                              AppLocalizations.of(context).findSomeoneByEmail,
                           onChanged: (value) {
                             email = value;
                           }),
@@ -81,12 +81,12 @@ class AddChatterScreen extends StatelessWidget {
                                 context, "/searchChatterByEmail");
                           }),
                       Divider(height: 100),
-                      Text(AppLocalizations.of(context).seeWhoIsAlreadyOnAnyChat),
+                      Text(AppLocalizations.of(context)
+                          .seeWhoIsAlreadyOnAnyChat),
                       RoundedButton(
                           text: AppLocalizations.of(context).contacts,
                           press: () {
-                            Navigator.pushNamed(
-                                context, "/contacts");
+                            Navigator.pushNamed(context, "/contacts");
                           }),
                     ],
                   ),

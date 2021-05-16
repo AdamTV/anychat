@@ -69,6 +69,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   icon: const Icon(Icons.add),
                   tooltip: AppLocalizations.of(context).createConversation,
                   onPressed: () {
+                    AnyChatAuth.currentConversation = null;
                     Navigator.pushNamed(context, "/addChatter");
                   },
                 ),
@@ -94,8 +95,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             ListTile(
                 title: Text(AppLocalizations.of(context).liveTranslator),
                 onTap: () async {
-                  if (await Utilities.handlePermission(
-                      Permission.microphone)) {
+                  if (await Utilities.handlePermission(Permission.microphone)) {
                     Fluttertoast.showToast(
                         msg: AppLocalizations.of(context)
                             .listeningToMicrophoneLiveAudio);
@@ -198,8 +198,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             print('test widget added');
           }
         }
+        conversationWidgets
+            .removeWhere((element) => element.key == Key(conversation.id));
         if (chatters.isNotEmpty) {
-          conversationWidgets.insert(0, await slidable(chatters, conversation, text));
+          conversationWidgets.insert(
+              0, await slidable(chatters, conversation, text));
           setState(() {});
         }
       }
@@ -225,13 +228,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .doc(AnyChatAuth.currentUser.id)
         .get());
     AnyChatUser firstChatter = AnyChatAuth.currentUser;
-    try{
+    try {
       firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
           .collection('users')
           .doc(conversation.participants
-          .firstWhere((element) => element != AnyChatAuth.currentUser.id))
+              .firstWhere((element) => element != AnyChatAuth.currentUser.id))
           .get());
-    }catch(e){
+    } catch (e) {
       print(e);
     }
     await initConvoInfo();
@@ -313,8 +316,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .get()));
       }
     }
+    conversationWidgets
+        .removeWhere((element) => element.key == Key(conversation.id));
     if (chatters.isNotEmpty) {
-      conversationWidgets.insert(0, await slidable(chatters, conversation, text));
+      conversationWidgets.insert(
+          0, await slidable(chatters, conversation, text));
     }
     setState(() {
       if (!conversationWidgets
@@ -409,9 +415,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}";
 
       if (text.contains(AppLocalizations.of(context).isCallingYouOnAnyChat)) {
-        await Notifications().showNotification(sender.displayName, text, "ring-${conversation.id}");
+        await Notifications().showNotification(
+            sender.displayName, text, "ring-${conversation.id}");
       } else {
-        await Notifications().showNotification(sender.displayName, text, "chat-${conversation.id}");
+        await Notifications().showNotification(
+            sender.displayName, text, "chat-${conversation.id}");
       }
     }
   }
@@ -499,8 +507,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             height: avatarRadius,
             width: avatarRadius,
             child: photoUrl == null
-            ? CircleAvatar(child: Text(AnyChatAuth.currentUser.displayName.substring(0,1)))
-            : CircleAvatar(backgroundImage: NetworkImage(photoUrl))));
+                ? CircleAvatar(
+                    child: Text(
+                        AnyChatAuth.currentUser.displayName.substring(0, 1)))
+                : CircleAvatar(backgroundImage: NetworkImage(photoUrl))));
   }
 
   Widget getChatterWidgetList(List<AnyChatUser> chatters) {
