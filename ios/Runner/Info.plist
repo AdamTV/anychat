@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendar access is required to continue using AnyChat.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Apple Music access is required to continue using AnyChat.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion Usage access is required to continue using AnyChat.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location access is required to continue using AnyChat.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is required to continue using AnyChat.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth access is required to continue using AnyChat.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -128,7 +140,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>28</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -148,7 +160,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>1.6.1</string>
 	<key>FacebookAppID</key>
 	<string>463424718375996</string>
 	<key>FacebookDisplayName</key>
