@@ -145,13 +145,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             icon: Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
-            style: TextStyle(color: Theme.of(context).primaryColor),
             onChanged: (String newValue) {
               setState(() {
                 dropdownValue = newValue;
               });
               isoCode = AnyChatLocale.isoMap[newValue];
               print(isoCode);
+              speechToText?.dispose();
+              streamingRecognize();
               Navigator.pop(context);
             },
             items: AnyChatLocale.isoMap.keys
@@ -193,12 +194,13 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     final config = _getConfig();
 
     final responseStream = speechToText.streamingRecognize(
-        StreamingRecognitionConfig(config: config, interimResults: true),
+        StreamingRecognitionConfig(config: config, interimResults: false),
         await _getAudioStream());
     String lastMessage = "";
+
     responseStream.listen((data) async {
       String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript).join('\n');
+          data.results.map((e) => e.alternatives.first.transcript)?.last ?? "";
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
@@ -209,7 +211,10 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           text += newText + " ";
         });
       }
-    }, onDone: () {
+    }, onError: (e) {
+      print(e);
+      speechToText?.dispose();
+      streamingRecognize();
       // setState(() {
       //   recognizing = false;
       // });
