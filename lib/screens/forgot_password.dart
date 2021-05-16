@@ -60,7 +60,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               RoundedButton(
                 text: AppLocalizations.of(context).login,
                 press: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
               )
             ],
