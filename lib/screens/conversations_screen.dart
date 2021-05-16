@@ -283,14 +283,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             return AnyChatMessage.fromSnapshot(doc);
           }).last;
         } else {
-          AnyChatAuth.currentUser.conversations =
-              await ConversationInfo.getAllConversationInfo(
-                  AnyChatAuth.currentUser.id);
           _chatMessageSubscriptions.add(
               loadAllChatMessages(conversation.id).listen(_sendNotification));
           message = AnyChatMessage("", Timestamp.now(), chatter.id,
               AppLocalizations.of(context).newConversation, null);
         }
+        AnyChatAuth.currentUser.conversations =
+        await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
         final language = message.senderId == AnyChatAuth.currentUser.id

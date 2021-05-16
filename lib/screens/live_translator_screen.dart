@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
+import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
-import 'package:mic_stream/mic_stream.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:sound_stream/sound_stream.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   @override
@@ -24,7 +26,6 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String dropdownValue =
       Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
   bool recognizing;
-  SpeechToText speechToText;
   String text = "";
 
   @override
@@ -151,7 +152,6 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               });
               isoCode = AnyChatLocale.isoMap[newValue];
               print(isoCode);
-              speechToText?.dispose();
               streamingRecognize();
               Navigator.pop(context);
             },
@@ -184,19 +184,13 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   }
 
   void streamingRecognize() async {
-    // setState(() {
-    //   recognizing = true;
-    // });
-    final serviceAccount = ServiceAccount.fromString(
-        '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
-    speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+    setState(() {
+      recognizing = true;
+    });
 
-    final config = _getConfig();
-
-    final responseStream = speechToText.streamingRecognize(
-        StreamingRecognitionConfig(config: config, interimResults: false),
-        await _getAudioStream());
     String lastMessage = "";
+
+    var responseStream = await AudioTranscriber.getResponseStream(isoCode);
 
     responseStream.listen((data) async {
       String transcribedText =
@@ -211,36 +205,66 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           text += newText + " ";
         });
       }
+    }, onDone: () {
+      AudioTranscriber.stopRecording();
+      if (mounted) {
+        setState(() {
+          recognizing = false;
+        });
+      }
     }, onError: (e) {
       print(e);
-      speechToText?.dispose();
+      AudioTranscriber.stopRecording();
       streamingRecognize();
       // setState(() {
       //   recognizing = false;
       // });
+// =======
+//         StreamingRecognitionConfig(config: config, interimResults: true),
+//         _audioStream);
+//
+//     responseStream.listen((data) {
+//       setState(() {
+//         text =
+//             data.results.map((e) => e.alternatives.first.transcript).join('\n');
+//       });
+//     }, onDone: () {
+//       setState(() {
+//         recognizing = false;
+//       });
+// >>>>>>> Stashed changes
     });
-  }
 
-  RecognitionConfig _getConfig() => RecognitionConfig(
-      encoding: AudioEncoding.LINEAR16,
-      model: RecognitionModel.basic,
-      enableAutomaticPunctuation: true,
-      sampleRateHertz: 16000,
-      languageCode: isoCode);
+    // setState(() {
+    //   recognizing = true;
+    // });
 
-  Future<Stream<List<int>>> _getAudioStream() async {
-    const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-    final stream = await MicStream.microphone(
-        audioSource: AudioSource.DEFAULT,
-        sampleRate: 16000,
-        channelConfig: ChannelConfig.CHANNEL_IN_MONO,
-        audioFormat: AUDIO_FORMAT);
-    return stream;
+    // final responseStream = speechToText.streamingRecognize(
+    //     StreamingRecognitionConfig(config: config, interimResults: true),
+    //     await _getAudioStream());
+    // String lastMessage = "";
+    // responseStream.listen((data) async {
+    //   String transcribedText =
+    //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+    //   if (lastMessage.compareTo(transcribedText) != 0 &&
+    //       transcribedText.isNotEmpty) {
+    //     lastMessage = transcribedText;
+    //     // AnyChatUser.addTranscribedMessage(lastMessage);
+    //     var newText = await Utilities.getGoogleTranslation(
+    //         AnyChatAuth.currentUser.language, lastMessage);
+    //     setState(() {
+    //       text += newText + " ";
+    //     });
+    //   }
+    // }, onDone: () {
+    //   // setState(() {
+    //   //   recognizing = false;
+    //   // });
+    // });
   }
 
   @override
   void dispose() {
-    speechToText?.dispose();
     super.dispose();
   }
 }

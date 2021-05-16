@@ -40,7 +40,6 @@ dependencies:
   agora_rtc_engine: ^4.0.0-rc.3
   permission_handler: ^6.1.1
   google_speech: ^1.2.1
-  mic_stream: ^0.5.0
   admob_flutter: ^2.0.0-nullsafety.0
   flutter_local_notifications: ^5.0.0
   device_info: ^2.0.0
@@ -57,6 +56,8 @@ dependencies:
   sign_in_with_apple: ^3.0.0
   flutter_ringtone_player: ^3.0.0
   disposables: ^1.0.0
+  sound_stream: ^0.2.0
+
 
 dependency_overrides:
   path_provider: ^2.0.1
@@ -68,7 +69,7 @@ flutter_icons:
   image_path: "assets/icons/Icon-192.png"
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.9.0
+#  flutter_launcher_icons: ^0.9.0
   integration_test: ^1.0.0
   flutter_test:
     sdk: flutter

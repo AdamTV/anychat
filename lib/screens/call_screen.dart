@@ -9,6 +9,7 @@ import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +23,6 @@ import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.d
     as v1CloudSpeech;
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
-import 'package:mic_stream/mic_stream.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:flutter/cupertino.dart';
@@ -73,7 +73,6 @@ class _CallScreenState extends State<CallScreen> {
   @override
   void dispose() {
     _transcribedChatMessageSubscription?.cancel();
-    speechToText.dispose();
     // clear transcribedMessages
     AnyChatUser.clearTranscribedMessages();
     // print(_infoStrings);
@@ -189,66 +188,76 @@ class _CallScreenState extends State<CallScreen> {
         : Container();
   }
 
-  SpeechToText speechToText;
   bool recognizing, recognizeFinished;
-  Stream<v1CloudSpeech.StreamingRecognizeResponse> responseStream;
 
   void streamingRecognize() async {
     setState(() {
       recognizing = true;
     });
-    final serviceAccount = ServiceAccount.fromString(
-        '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
-    speechToText = SpeechToText.viaServiceAccount(serviceAccount);
 
-    final config = _getConfig();
-
-    responseStream = speechToText.streamingRecognize(
-        StreamingRecognitionConfig(config: config, interimResults: true),
-        await _getAudioStream());
     String lastMessage = "";
-    responseStream.listen((data) {
+
+    var responseStream = await AudioTranscriber.getResponseStream(AnyChatAuth.currentUser.language);
+
+    responseStream.listen((data) async {
       String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript).join('\n');
+          data.results.map((e) => e.alternatives.first.transcript)?.last ?? "";
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
         AnyChatUser.addTranscribedMessage(lastMessage);
-        // setState(() {
-        //   text =
-        //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
-        //   recognizeFinished = true;
-        // });
       }
     }, onDone: () {
+      AudioTranscriber.stopRecording();
       if (mounted) {
         setState(() {
           recognizing = false;
         });
       }
     }, onError: (e) {
-      responseStream.drain();
-      speechToText?.dispose();
+      print(e);
+      AudioTranscriber.stopRecording();
       streamingRecognize();
     });
-  }
 
-  Future<Stream<List<int>>> _getAudioStream() async {
-    const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
-    final stream = await MicStream.microphone(
-        audioSource: AudioSource.DEFAULT,
-        sampleRate: 16000,
-        channelConfig: ChannelConfig.CHANNEL_IN_MONO,
-        audioFormat: AUDIO_FORMAT);
-    return stream;
+    // setState(() {
+    //   recognizing = true;
+    // });
+    // final serviceAccount = ServiceAccount.fromString(
+    //     '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
+    // speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+    //
+    // final config = _getConfig();
+    //
+    // responseStream = speechToText.streamingRecognize(
+    //     StreamingRecognitionConfig(config: config, interimResults: true),
+    //     await _getAudioStream());
+    // String lastMessage = "";
+    // responseStream.listen((data) {
+    //   String transcribedText =
+    //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+    //   if (lastMessage.compareTo(transcribedText) != 0 &&
+    //       transcribedText.isNotEmpty) {
+    //     lastMessage = transcribedText;
+    //     AnyChatUser.addTranscribedMessage(lastMessage);
+    //     // setState(() {
+    //     //   text =
+    //     //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+    //     //   recognizeFinished = true;
+    //     // });
+    //   }
+    // }, onDone: () {
+    //   if (mounted) {
+    //     setState(() {
+    //       recognizing = false;
+    //     });
+    //   }
+    // }, onError: (e) {
+    //   responseStream.drain();
+    //   speechToText?.dispose();
+    //   streamingRecognize();
+    // });
   }
-
-  RecognitionConfig _getConfig() => RecognitionConfig(
-      encoding: AudioEncoding.LINEAR16,
-      model: RecognitionModel.basic,
-      enableAutomaticPunctuation: true,
-      sampleRateHertz: 16000,
-      languageCode: AnyChatAuth.currentUser.language);
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -446,8 +455,7 @@ class _CallScreenState extends State<CallScreen> {
     });
     _engine.muteLocalAudioStream(muted);
     if (muted) {
-      speechToText.dispose();
-      await responseStream.drain();
+      AudioTranscriber.stopRecording();
     } else {
       streamingRecognize();
     }
