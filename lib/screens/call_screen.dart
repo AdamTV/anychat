@@ -218,6 +218,10 @@ class _CallScreenState extends State<CallScreen> {
           recognizing = false;
         });
       }
+    }, onError: (e) {
+      responseStream.drain();
+      speechToText?.dispose();
+      streamingRecognize();
     });
   }
 
@@ -354,10 +358,8 @@ class _CallScreenState extends State<CallScreen> {
                     child: Row(
                       children: List.of(remoteUid.map(
                         (e) => Container(
-                          width: MediaQuery.of(context).size.width /
-                              remoteUid.length,
-                          height: MediaQuery.of(context).size.height /
-                              remoteUid.length,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
                           child: RtcRemoteView.SurfaceView(
                             uid: e,
                             channelId: _channel.channelId,
