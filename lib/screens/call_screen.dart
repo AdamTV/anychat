@@ -207,16 +207,16 @@ class _CallScreenState extends State<CallScreen> {
         lastMessage = transcribedText;
         AnyChatUser.addTranscribedMessage(lastMessage);
       }
-    }, onDone: () {
-      AudioTranscriber.stopRecording();
+    }, onDone: () async {
+      await AudioTranscriber.stopRecording();
       if (mounted) {
         setState(() {
           recognizing = false;
         });
       }
-    }, onError: (e) {
+    }, onError: (e) async {
       print(e);
-      AudioTranscriber.stopRecording();
+      await AudioTranscriber.stopRecording();
       streamingRecognize();
     });
 
@@ -455,7 +455,7 @@ class _CallScreenState extends State<CallScreen> {
     });
     _engine.muteLocalAudioStream(muted);
     if (muted) {
-      AudioTranscriber.stopRecording();
+      await AudioTranscriber.stopRecording();
     } else {
       streamingRecognize();
     }
