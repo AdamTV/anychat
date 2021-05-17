@@ -105,10 +105,16 @@ class SearchChatterByEmailScreenState
                           }
                           Navigator.pushReplacementNamed(context, "/chat");
                         },
-                        leading: new CircleAvatar(
+                        leading: SearchChatterByEmailScreenState
+                            .users[index].photoUrl ==
+                            null
+                            ? CircleAvatar(
+                            child: Text(SearchChatterByEmailScreenState
+                                .users[index].displayName
+                                .substring(0, 1)))
+                            : CircleAvatar(
                             backgroundColor: Theme.of(context).primaryColor,
-                            backgroundImage: NetworkImage(
-                                SearchChatterByEmailScreenState
+                            backgroundImage: NetworkImage(SearchChatterByEmailScreenState
                                     .users[index].photoUrl)),
                         title: RichText(
                             text: TextSpan(

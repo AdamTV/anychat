@@ -205,16 +205,16 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           text += newText + " ";
         });
       }
-    }, onDone: () {
-      AudioTranscriber.stopRecording();
+    }, onDone: () async {
+      await AudioTranscriber.stopRecording();
       if (mounted) {
         setState(() {
           recognizing = false;
         });
       }
-    }, onError: (e) {
+    }, onError: (e) async {
       print(e);
-      AudioTranscriber.stopRecording();
+      await AudioTranscriber.stopRecording();
       streamingRecognize();
       // setState(() {
       //   recognizing = false;
