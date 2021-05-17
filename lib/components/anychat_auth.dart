@@ -158,6 +158,9 @@ class AnyChatAuth {
 
   static Future<AnyChatUser> signInEmail(
       String email, String password, bool isSignUp) async {
+    if (email == null || password == null) {
+      return null;
+    } 
     try {
       UserCredential _userCredential = isSignUp
           ? await FirebaseAuth.instance

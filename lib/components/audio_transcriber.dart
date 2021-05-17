@@ -62,7 +62,7 @@ class AudioTranscriber {
   //   return stream;
   // }
 
-  static void stopRecording() async {
+  static Future<void> stopRecording() async {
     await _recorder.stop();
     await _audioStreamSubscription?.cancel();
     await _audioStream?.close();
