@@ -58,8 +58,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
-    _chatMessages.clear();
-    _messages.clear();
+    if (_chatMessageSubscription == null)
     _chatMessageSubscription =
         ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
@@ -70,8 +69,6 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     }).toList();
   }
 
-  List<Timestamp> loadedMessages = <Timestamp>[];
-
   Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
     _chatMessages = getChatMessagesFromQuery(snapshot);
     if (_messages.isEmpty) {
@@ -79,7 +76,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           AnyChatAuth.currentConversation.id);
       var participants = <AnyChatUser>[];
       convo.participants.forEach((element) async {
-        participants.add(await AnyChatUser.findUserById(element));
+        participants.add(await AnyChatUser.getUserById(element));
       });
       AnyChatAuth.currentUser.conversations =
           await ConversationInfo.getAllConversationInfo(
@@ -97,19 +94,20 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         }
         map[language].insert(0, message.text);
       });
-      // Map<String, List<String>> translatedMap = Utilities.getBatchGoogleTranslation(map);
+      print("chatMessage size: ${_chatMessages.length}");
+      Map<String, List<String>> translatedMap = await Utilities.getBatchGoogleTranslation(map);
       for (int i = 0; i < _chatMessages.length; i++) {
         if (!participants
             .any((element) => element.id == _chatMessages[i].senderId)) {
           participants
-              .add(await AnyChatUser.findUserById(_chatMessages[i].senderId));
+              .add(await AnyChatUser.getUserById(_chatMessages[i].senderId));
         }
         final sender = participants
             .firstWhere((element) => element.id == _chatMessages[i].senderId);
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
-        if (map[language].isEmpty) break;
+        if (translatedMap[language].isEmpty) break;
         var text = new RichText(
           text: new TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
@@ -125,7 +123,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   style: new TextStyle(fontWeight: FontWeight.bold)),
               new TextSpan(
                   text:
-                      "${await Utilities.getGoogleTranslation(language, map[language].removeLast())}"),
+                      translatedMap[language].removeLast()),
             ],
           ),
         );

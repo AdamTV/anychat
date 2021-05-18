@@ -1,8 +1,8 @@
 import 'package:contacts_service/contacts_service.dart';
 
 class AnyChatContact extends Contact {
-  final bool isRegistered;
-  final String anyChatId;
+  bool isRegistered;
+  String anyChatId;
 
   AnyChatContact(Contact c, this.isRegistered, this.anyChatId)
       : super(

@@ -1,4 +1,5 @@
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,10 +29,10 @@ class Ads {
   }
 
   static AdmobBannerController controller;
-  static AdmobBanner getBanner(BuildContext context) {
+  static AdmobBanner getBanner() {
     return AdmobBanner(
         adUnitId: getBannerAdUnitId(),
-        adSize: AdmobBannerSize.SMART_BANNER(context),
+        adSize: AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext),
         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
           handleEvent(event, args, 'Banner');
           if (event == AdmobAdEvent.opened) {

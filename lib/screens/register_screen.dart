@@ -56,6 +56,8 @@ class RegisterScreen extends StatelessWidget {
                             .accountCreatedEnterSettings,
                         toastLength: Toast.LENGTH_LONG);
                     Navigator.pushNamed(context, '/settings');
+                  } else {
+                    throw Error();
                   }
                 } catch (e) {
                   Utilities.showAlertDialog(
