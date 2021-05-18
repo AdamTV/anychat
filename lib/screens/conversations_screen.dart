@@ -47,10 +47,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   List<Widget> conversationWidgets = [];
 
   _ConversationsScreenState() {
-    conversationWidgets.clear();
-    _conversationSubscription =
-        ChatWindow.loadAllConversations().listen(_updateConversations);
-    initChatSubscriptions();
+    // conversationWidgets.clear();
+    // _chatMessageSubscriptions.clear();
+    if (_conversationSubscription == null)
+      _conversationSubscription =
+          ChatWindow.loadAllConversations().listen(_updateConversations);
+    if (_chatMessageSubscriptions.isEmpty) initChatSubscriptions();
   }
 
   @override
@@ -58,91 +60,103 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     print(
         'in build -> conversationWidgets.length: ${conversationWidgets.length}');
     return Scaffold(
-      // bottomSheet: Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
-      bottomSheet: Ads.getBanner(context),
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).title),
-        actions: conversationWidgets.length == 0
-            ? <Widget>[]
-            : <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  tooltip: AppLocalizations.of(context).createConversation,
-                  onPressed: () {
-                    AnyChatAuth.currentConversation = null;
-                    Navigator.pushNamed(context, "/addChatter");
-                  },
-                ),
-              ],
-      ),
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                AppLocalizations.of(context).title,
-                style: TextStyle(color: Theme.of(context).primaryColorLight),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            ListTile(
-                title: Text(AppLocalizations.of(context).liveTranslator),
-                onTap: () async {
-                  if (await Utilities.handlePermission(Permission.microphone)) {
-                    Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)
-                            .listeningToMicrophoneLiveAudio);
-                    Navigator.pushNamed(context, "/liveTranslator");
-                  }
-                }),
-            ListTile(
-                title: Text(AppLocalizations.of(context).settings),
-                onTap: () {
-                  Navigator.pushNamed(context, "/settings");
-                }),
-            ListTile(
-                title: Text(AppLocalizations.of(context).logout),
-                onTap: () async {
-                  await AnyChatAuth.signOut();
-                  Navigator.pushNamed(context, "/welcome");
-                }),
-          ],
+        // bottomSheet: Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
+        // bottomSheet: Ads.getBanner(),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).title),
+          actions: conversationWidgets.length == 0
+              ? <Widget>[]
+              : <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    tooltip: AppLocalizations.of(context).createConversation,
+                    onPressed: () {
+                      AnyChatAuth.currentConversation = null;
+                      Navigator.pushNamed(context, "/addChatter");
+                    },
+                  ),
+                ],
         ),
-      ),
-      body: Align(
-          alignment: conversationWidgets.length > 0
-              ? Alignment.topCenter
-              : Alignment.center,
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 1280),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: conversationWidgets.length > 0
-                  ? conversationWidgets
-                  : <Widget>[
-                      Text(
-                          AppLocalizations.of(context).conversationsWillAppear),
+        drawer: Drawer(
+          // Add a ListView to the drawer. This ensures the user can scroll
+          // through the options in the drawer if there isn't enough vertical
+          // space to fit everything.
+          child: ListView(
+            // Important: Remove any padding from the ListView.
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Text(
+                  AppLocalizations.of(context).title,
+                  style: TextStyle(color: Theme.of(context).primaryColorLight),
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              ListTile(
+                  title: Text(AppLocalizations.of(context).liveTranslator),
+                  onTap: () async {
+                    if (await Utilities.handlePermission(
+                        Permission.microphone)) {
+                      Fluttertoast.showToast(
+                          msg: AppLocalizations.of(context)
+                              .listeningToMicrophoneLiveAudio);
+                      Navigator.pushNamed(context, "/liveTranslator");
+                    }
+                  }),
+              ListTile(
+                  title: Text(AppLocalizations.of(context).settings),
+                  onTap: () {
+                    Navigator.pushNamed(context, "/settings");
+                  }),
+              ListTile(
+                  title: Text(AppLocalizations.of(context).logout),
+                  onTap: () async {
+                    await AnyChatAuth.signOut();
+                    Navigator.pushNamed(context, "/welcome");
+                  }),
+            ],
+          ),
+        ),
+        body: Stack(
+          children: [
+            Align(
+                alignment: conversationWidgets.length > 0
+                    ? Alignment.topCenter
+                    : Alignment.center,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 1280),
+                  child: conversationWidgets.length > 0
+                      ? ListView.builder(
+
+                      itemCount: conversationWidgets.length,
+                      itemBuilder: (_, int index) => conversationWidgets[index])
+                      : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(AppLocalizations.of(context)
+                          .conversationsWillAppear),
                       RoundedButton(
-                        text: AppLocalizations.of(context).startConversation,
+                        text: AppLocalizations.of(context)
+                            .startConversation,
                         press: () {
                           Navigator.pushNamed(context, "/addChatter");
                         },
                       ),
                     ],
-            ),
-          )),
-    );
+                  ),
+                )),
+            Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
+          ],
+        ));
   }
 
-  void loadConversations() {
+  Future<void> loadConversations() async {
     var ids = <String>[];
+    AnyChatAuth.currentUser.conversations =
+        await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
     AnyChatAuth.currentUser.conversations.forEach((conversation) async {
       Conversation conversation;
       conversation = Conversation.fromSnapshot(await FirebaseFirestore.instance
@@ -168,9 +182,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 0) {
               chatters.add(chatter);
             }
-            if (!conversationWidgets
-                    .any((element) => element.key == Key(conversation.id)) &&
-                mounted) {
+            if (mounted) {
               var snapshot = await FirebaseFirestore.instance
                   .collection("conversations")
                   .doc(conversation.id)
@@ -216,24 +228,22 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   }
 
   Future<void> _updateConversations(QuerySnapshot snapshot) async {
+    if (conversationWidgets.isEmpty) {
+      await loadConversations();
+      return;
+    }
     print('in _updateConversations');
     if (getConversationsFromQuery(snapshot).isEmpty) {
       print('conversation snapshot was empty');
       return;
     }
     Conversation conversation = getConversationsFromQuery(snapshot).last;
-    AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(AnyChatAuth.currentUser.id)
-        .get());
+    AnyChatAuth.currentUser =
+        await AnyChatUser.getUserById(AnyChatAuth.currentUser.id);
     AnyChatUser firstChatter = AnyChatAuth.currentUser;
     try {
-      firstChatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-          .collection('users')
-          .doc(conversation.participants
-              .firstWhere((element) => element != AnyChatAuth.currentUser.id))
-          .get());
+      firstChatter = await AnyChatUser.getUserById(conversation.participants
+          .firstWhere((element) => element != AnyChatAuth.currentUser.id));
     } catch (e) {
       print(e);
     }
@@ -289,8 +299,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               AppLocalizations.of(context).newConversation, null);
         }
         AnyChatAuth.currentUser.conversations =
-        await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser.id);
+            await ConversationInfo.getAllConversationInfo(
+                AnyChatAuth.currentUser.id);
         var info = AnyChatAuth.currentUser.conversations
             .firstWhere((element) => element.id == conversation.id);
         final language = message.senderId == AnyChatAuth.currentUser.id
@@ -410,7 +420,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     print(_notification);
     if (message.senderId != AnyChatAuth.currentUser.id &&
         _notification != AppLifecycleState.resumed) {
-      var sender = await AnyChatUser.findUserById(message.senderId);
+      var sender = await AnyChatUser.getUserById(message.senderId);
       var text = "${message.text}\n\n"
           "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}";
 

@@ -22,4 +22,4 @@ final ThemeData kDarkTheme = ThemeData(
     brightness: Brightness.dark,
     textTheme: Typography.whiteMountainView);
 
-var agoraAppId = '72559be0b8944a8fb70a772d196078ce';
+final agoraAppId = '72559be0b8944a8fb70a772d196078ce';

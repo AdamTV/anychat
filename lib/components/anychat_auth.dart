@@ -158,7 +158,7 @@ class AnyChatAuth {
 
   static Future<AnyChatUser> signInEmail(
       String email, String password, bool isSignUp) async {
-    if (email == null || password == null) {
+    if (email == null || email.isEmpty || password == null || password.isEmpty) {
       return null;
     } 
     try {

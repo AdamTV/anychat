@@ -18,7 +18,7 @@ class Utilities {
   static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
   static final String authority = "translation.googleapis.com";
   static final String unencodedPath = "/language/translate/v2";
-  static Map<String, String> queryParameters = Map();
+  static Map<String, dynamic> queryParameters = Map();
   static GlobalKey<NavigatorState> globalKey = GlobalKey();
 
   static Future<void> init() async {
@@ -46,23 +46,40 @@ class Utilities {
     }
   }
 
-  // static Map<String, List<String>> getBatchGoogleTranslation(Map<String, List<String>> map) {
-  //   Map<String, List<String>> translatedMap = Map();
-  //   queryParameters.putIfAbsent("key", () => apiKey);
-  //
-  //   map.forEach((key, value) async {
-  //     queryParameters.update("target", (value) => key,
-  //         ifAbsent: () => key);
-  //     queryParameters.update("q", (v) => value.join(""), ifAbsent: () => null);
-  //     var uri = Uri.https(authority, unencodedPath, queryParameters);
-  //     print(uri);
-  //     Response x = await http.post(uri);
-  //     String body = x.body;
-  //     int i = 0;
-  //     // translatedMap.putIfAbsent(key, () => );
-  //   });
-  //   return translatedMap;
-  // }
+  static const CLOUD_API_MAX_Q = 128;
+  static Future<Map<String, List<String>>> getBatchGoogleTranslation(
+      Map<String, List<String>> map) async {
+    Map<String, List<String>> translatedMap = Map();
+    queryParameters.putIfAbsent("key", () => apiKey);
+    RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
+    for (var mapEntry in map.entries) {
+      var key = mapEntry.key;
+      translatedMap.putIfAbsent(key, () => []);
+      queryParameters.update("target", (value) => key, ifAbsent: () => key);
+      var value = mapEntry.value;
+      for (int i = 0; i < value.length; i+=CLOUD_API_MAX_Q){
+        int end = i + CLOUD_API_MAX_Q;
+        if (CLOUD_API_MAX_Q > value.length) end = value.length;
+        else if (end > value.length){
+          end = value.length;
+        }
+        var sublist = value.sublist(i, end);
+        queryParameters.update("q", (v) => sublist, ifAbsent: () => sublist);
+        var uri = Uri.https(authority, unencodedPath, queryParameters);
+        Response x = await http.post(uri);
+        Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
+        if (matches.length > 0) {
+          for (var match in matches) {
+            translatedMap[key]
+                .add(match.group(1).replaceAll("&#39;", "'"));
+          }
+        } else {
+          throw new Exception("Could not getGoogleTranslation -> uri: $uri");
+        }
+      }
+    }
+    return translatedMap;
+  }
 
   static Future<void> showAlertDialog(
       BuildContext context, String title, String text) async {

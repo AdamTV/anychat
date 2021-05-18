@@ -7,10 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:anychat/components/globals.dart' as globals;
 
 var iOSLocalizedLabels = defaultTargetPlatform == TargetPlatform.iOS;
 
@@ -52,16 +53,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   Widget _buildList() {
     if (_searchText.isNotEmpty) {
-      List<AnyChatContact> tempList = [];
-      for (int i = 0; i < _filteredContacts.length; i++) {
-        if (_filteredContacts[i]
-            .displayName
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          print(_filteredContacts[i].identifier);
-          tempList.add(_filteredContacts[i]);
-        }
-      }
+      List<AnyChatContact> tempList = _filteredContacts.where((element) =>
+          element.displayName
+              .toLowerCase()
+              .contains(_searchText.toLowerCase()));
+      // for (int i = 0; i < _filteredContacts.length; i++) {
+      //   if (_filteredContacts[i]
+      //       .displayName
+      //       .toLowerCase()
+      //       .contains(_searchText.toLowerCase())) {
+      //     print(_filteredContacts[i].identifier);
+      //     tempList.add(_filteredContacts[i]);
+      //   }
+      // }
       _filteredContacts = tempList;
     }
     var _sortedContacts =
@@ -114,19 +118,30 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
-      throw PlatformException(
-          code: AppLocalizations.of(context).permissionDenied,
-          message: AppLocalizations.of(context).accessContactDataDenied,
-          details: null);
+      Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).accessContactDataDisabled);
+      // throw PlatformException(
+      //     code: AppLocalizations.of(context).permissionDenied,
+      //     message: AppLocalizations.of(context).accessContactDataDenied,
+      //     details: null);
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      throw PlatformException(
-          code: AppLocalizations.of(context).permissionDisabled,
-          message: AppLocalizations.of(context).accessContactDataDisabled,
-          details: null);
+      Fluttertoast.showToast(
+          msg: AppLocalizations.of(context).accessContactDataDisabled);
+      // throw PlatformException(
+      //     code: AppLocalizations.of(context).permissionDisabled,
+      //     message: AppLocalizations.of(context).accessContactDataDisabled,
+      //     details: null);
     }
   }
 
   Future<void> refreshContacts() async {
+    setState(() {
+      if (_contacts.isNotEmpty) {
+        _isLoading = false;
+        return;
+      }
+      _isLoading = true;
+    });
     await _askPermissions();
 
     // Load without thumbnails initially.
@@ -138,18 +153,21 @@ class _ContactsScreenState extends State<ContactsScreen> {
       bool isRegistered = false;
       String anyChatId = "";
       // contact.emails.forEach((element) async {
-      //   if (await AnyChatUser.findUserByEmail(element.value) != null) {
-      //     isRegistered = true;
+      //   var user = await AnyChatUser.findUserByEmail(element.value);
+      //   if (user != null) {
+      //     list.add(AnyChatContact(contact, true, user.id));
+      //     break;
       //   }
       // });
-      for (var email in contact.emails) {
-        var user = await AnyChatUser.findUserByEmail(email.value);
-        if (user != null) {
-          isRegistered = true;
-          anyChatId = user.id;
-          break;
-        }
-      }
+
+      // for (var email in contact.emails) {
+      //   var user = await AnyChatUser.findUserByEmail(email.value);
+      //   if (user != null) {
+      //     isRegistered = true;
+      //     anyChatId = user.id;
+      //     break;
+      //   }
+      // }
       list.add(AnyChatContact(contact, isRegistered, anyChatId));
     }
 //      var contacts = (await ContactsService.getContactsForPhone("8554964652"))
@@ -157,10 +175,35 @@ class _ContactsScreenState extends State<ContactsScreen> {
     setState(() {
       _contacts = list;
       _filteredContacts = _contacts;
+      _isLoading = false;
+    });
+
+    List<String> allUsersEmails = [];
+    FirebaseFirestore.instance.collection('users').snapshots().listen((event) {
+      event.docs.forEach((element) {
+        if (_contacts.any((contact) => contact.emails.any((email) => email == element['email'])))
+          {
+            int i = 0;
+            // _contacts.firstWhere((contact) => contact.emails.firstWhere((email ) => false))
+          }
+          // allUsersEmails.add(element['email']);
+      });
     });
 
     // Lazy load thumbnails after rendering initial contacts.
     for (int i = 0; i < contacts.length; i++) {
+      // contacts[i].emails.forEach((email) async {
+      //   AnyChatUser.findUserByEmail(email.value).then((user) => {
+      //         if (user != null)
+      //           {
+      //             setState(() {
+      //               _contacts[i].isRegistered = true;
+      //               _contacts[i].anyChatId = user.id;
+      //             })
+      //           }
+      //       });
+      // });
+
       ContactsService.getAvatar(contacts[i]).then((avatar) {
         if (avatar == null) return; // Don't redraw if no change.
         setState(() => _contacts[i].avatar = avatar);
@@ -224,6 +267,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   IconButton _backButton;
   var isSearch = false;
+  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +309,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       ),
       // body: _buildList(),
       body: SafeArea(
-        child: _contacts != null
+        child: !_isLoading
             ? _buildList()
             : Center(
                 child: CircularProgressIndicator(),
@@ -291,7 +335,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     return ListTile(
       onTap: c.isRegistered
           ? () async {
-              var user = await AnyChatUser.findUserById(c.anyChatId);
+              var user = await AnyChatUser.getUserById(c.anyChatId);
               if (AnyChatAuth.currentConversation == null) {
                 var convo = await AnyChatUser.createConversation(user.id);
                 if (convo == null) return;

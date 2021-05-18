@@ -29,7 +29,7 @@ class AnyChatUser {
         photoUrl = snapshot.data()['photoUrl'],
         language = snapshot.data()['language'];
 
-  static Future<AnyChatUser> findUserById(String id) async {
+  static Future<AnyChatUser> getUserById(String id) async {
     return AnyChatUser.fromSnapshot(
         await FirebaseFirestore.instance.collection("users").doc(id).get());
   }
@@ -213,7 +213,7 @@ class AnyChatUser {
         transaction.update(user, {'photoUrl': photoUrl});
       });
     });
-    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
   }
 
   static Future<void> updateLanguage(String language) async {
@@ -228,7 +228,7 @@ class AnyChatUser {
         transaction.update(user, {'language': language});
       });
     });
-    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
   }
 
   static Future<void> updateDisplayName(String displayName) async {
@@ -243,7 +243,7 @@ class AnyChatUser {
         transaction.update(user, {'displayName': displayName});
       });
     });
-    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
   }
 
   static Future<void> updateEmail(String email) async {
@@ -258,7 +258,7 @@ class AnyChatUser {
         transaction.update(user, {'email': email});
       });
     });
-    AnyChatAuth.currentUser = await findUserById(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
   }
 
   static Future<void> addTranscribedMessage(String text) async {
