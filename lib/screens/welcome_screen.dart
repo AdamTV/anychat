@@ -56,26 +56,26 @@ class WelcomeBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     var children = <Widget>[];
     Size size = MediaQuery.of(context).size;
-    if (!kIsWeb) {
+    // if (!kIsWeb) {
       children.addAll({
         Positioned(
-          top: 0,
-          left: 0,
+          top: size.width >= 750 ? (kIsWeb ? -200 : size.width * - 0.05) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -175 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/main_top.png",
             width: size.width * 0.3,
           ),
         ),
         Positioned(
-          bottom: 0,
-          left: 0,
+          bottom: size.width >= 750 ? (kIsWeb ? -175 : size.width * - 0.05) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -175 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/main_bottom.png",
             width: size.width * 0.2,
           ),
         ),
       });
-    }
+    // }
     children.add(child);
     return Container(
       height: size.height,

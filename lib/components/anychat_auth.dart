@@ -69,7 +69,7 @@ class AnyChatAuth {
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
       } else {
-        Fluttertoast.showToast(msg: 'Email already in use.');
+        Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext).emailInUse);
         return null;
       }
     }

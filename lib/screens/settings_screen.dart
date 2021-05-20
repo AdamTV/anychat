@@ -98,8 +98,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   onPressed: () async {
                                     if (displayName.isEmpty ||
                                         displayName == null) {
-                                      Fluttertoast.showToast(
-                                          msg: AppLocalizations.of(context)
+                                      Utilities.showToast(
+                                          AppLocalizations.of(context)
                                               .enterYourName);
                                       return;
                                     }

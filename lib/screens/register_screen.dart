@@ -51,10 +51,9 @@ class RegisterScreen extends StatelessWidget {
                   var user =
                       await AnyChatAuth.signInEmail(email, password, true);
                   if (user != null) {
-                    Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)
-                            .accountCreatedEnterSettings,
-                        toastLength: Toast.LENGTH_LONG);
+                    Utilities.showToast(
+                        AppLocalizations.of(context)
+                            .accountCreatedEnterSettings);
                     Navigator.pushNamed(context, '/settings');
                   } else {
                     throw Error();
@@ -103,26 +102,24 @@ class SignupBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var children = <Widget>[];
-    if (!kIsWeb) {
       children.addAll({
         Positioned(
-          top: 0,
-          left: 0,
+          top: size.width >= 750 ? (kIsWeb ? -200 : size.width * - 0.05) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -200 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/signup_top.png",
             width: size.width * 0.35,
           ),
         ),
         Positioned(
-          bottom: 0,
-          left: 0,
+          bottom: size.width >= 750 ? (kIsWeb ? -250 : size.width * - 0.1) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -175 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/main_bottom.png",
             width: size.width * 0.25,
           ),
         )
       });
-    }
     children.add(child);
     return Container(
       height: size.height,

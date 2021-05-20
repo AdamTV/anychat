@@ -1,11 +1,12 @@
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/login_screen.dart';
+import 'package:anychat/screens/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -18,56 +19,58 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    // This size provide us total height and width of our screen
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColorDark,
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                AppLocalizations.of(context).enterYourEmail,
-                style: TextStyle(fontSize: 32),
-              ),
-              RoundedInputField(
-                icon: Icons.mail,
-                hintText: AppLocalizations.of(context).email,
-                onChanged: (value) {
-                  _email = value;
-                },
-              ),
-              SizedBox(height: 20),
-              RoundedButton(
-                text: AppLocalizations.of(context).send +
-                    " " +
-                    AppLocalizations.of(context).email,
-                press: () async {
-                  await _passwordReset();
-                  print(_email);
-                  Fluttertoast.showToast(
-                      msg: AppLocalizations.of(context)
-                          .emailSentToResetPassword);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return LoginScreen();
-                    }),
-                  );
-                },
-              ),
-              RoundedButton(
-                text: AppLocalizations.of(context).login,
-                press: () {
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-              )
-            ],
-          ),
+        body: WelcomeBackground(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              AppLocalizations.of(context).title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              AppLocalizations.of(context).enterYourEmail,
+              style: TextStyle(fontSize: 32),
+            ),
+            RoundedInputField(
+              icon: Icons.mail,
+              hintText: AppLocalizations.of(context).email,
+              onChanged: (value) {
+                _email = value;
+              },
+            ),
+            // SvgPicture.asset(
+            //   "assets/icons/chat.svg",
+            //   height: size.height * 0.45,
+            // ),
+            RoundedButton(
+              text: AppLocalizations.of(context).send +
+                  " " +
+                  AppLocalizations.of(context).email,
+              press: () async {
+                await _passwordReset();
+                print(_email);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  }),
+                );
+              },
+            ),
+            RoundedButton(
+              text: AppLocalizations.of(context).login,
+              press: () {
+                Navigator.pushNamed(context, "/login");
+              },
+            ),
+          ],
         ),
       ),
-    );
+    ));
   }
 
   _passwordReset() async {
@@ -75,9 +78,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       final _auth = FirebaseAuth.instance;
       _formKey.currentState.save();
       await _auth.sendPasswordResetEmail(email: _email);
+      Utilities.showToast(
+          AppLocalizations.of(context).emailSentToResetPassword);
     } catch (e) {
-      if (e.message != null) {
-        Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
+      if (!(e is NoSuchMethodError) && e.message != null) {
+        Utilities.showToast(e.message);
+      } else {
+        Utilities.showToast(AppLocalizations.of(context).error);
       }
       print(e);
     }
