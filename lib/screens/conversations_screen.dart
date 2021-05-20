@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:ui';
 
 import 'package:anychat/components/ads.dart';
@@ -209,8 +210,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             print('test widget added');
           }
         }
-        conversationWidgets
-            .removeWhere((element) => element.key == Key(temp.id));
+        // conversationWidgets
+        //     .removeWhere((element) => element.key == Key(temp.id));
         // if (chatters.length == 1) {
         //   var messages = snapshot.docs.map((DocumentSnapshot doc) {
         //     return AnyChatMessage.fromSnapshot(doc);
@@ -227,11 +228,24 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         //   text = message.text;
         // }
         if (chatters.isNotEmpty) {
-          if (text == null) text ='TEST';
-          conversationWidgets.insert(0, await slidable(chatters, temp, text));
-          setState(() {});
+          if (text == null) text = AppLocalizations.of(context).newConversation;
+          insertSorted(await slidable(chatters, temp, text), temp);
         }
       }
+    });
+  }
+
+  Map<String, Timestamp> convoTimes = Map();
+
+  void insertSorted(Widget slidable, Conversation conversation) {
+    convoTimes.addEntries({MapEntry(conversation.id, conversation.timestamp)});
+    var sortedTimes = convoTimes.keys.toList(growable: false)..sort((k1, k2)=>convoTimes[k2].compareTo(convoTimes[k1]));
+    LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedTimes, key: (k)=>k,value:(k)=>convoTimes[k]);
+    print(sortedMap);
+    var index = sortedMap.keys.toList().indexOf(conversation.id);
+    conversationWidgets.removeWhere((element) => element.key == slidable.key);
+    setState(() {
+      conversationWidgets.insert(index, slidable);
     });
   }
 
@@ -340,8 +354,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .get()));
       }
     }
-    conversationWidgets
-        .removeWhere((element) => element.key == Key(conversation.id));
     // if (chatters.length == 1) {
     //   var message = messages.lastWhere((element) =>
     //       element.text.compareTo(
@@ -355,10 +367,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     // }
 
     if (chatters.isNotEmpty) {
-      conversationWidgets.insert(
-          0, await slidable(chatters, conversation, text));
+      insertSorted(await slidable(chatters, conversation, text), conversation);
     }
-    setState(() {
       if (!conversationWidgets
           .any((element) => element.key == Key(conversation.id))) {
         _chatMessageSubscriptions.add(
@@ -366,7 +376,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         print('added conversation widget');
         print(conversationWidgets);
       }
-    });
   }
 
   @override
@@ -432,12 +441,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               : info.incomingLanguage;
           final text = "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(language, message.text)}";
-          conversationWidgets
-              .removeWhere((element) => element.key == Key(conversation.id));
+
           if (chatters.isNotEmpty) {
-            conversationWidgets.insert(
-                0, await slidable(chatters, conversation, text));
-            setState(() {});
+            insertSorted(await slidable(chatters, conversation, text), conversation);
           }
         }
       }
