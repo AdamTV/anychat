@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -69,7 +68,8 @@ class AnyChatAuth {
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
       } else {
-        Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext).emailInUse);
+        Utilities.showToast(
+            AppLocalizations.of(Utilities.globalKey.currentContext).emailInUse);
         return null;
       }
     }
@@ -158,9 +158,12 @@ class AnyChatAuth {
 
   static Future<AnyChatUser> signInEmail(
       String email, String password, bool isSignUp) async {
-    if (email == null || email.isEmpty || password == null || password.isEmpty) {
+    if (email == null ||
+        email.isEmpty ||
+        password == null ||
+        password.isEmpty) {
       return null;
-    } 
+    }
     try {
       UserCredential _userCredential = isSignUp
           ? await FirebaseAuth.instance

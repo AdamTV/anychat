@@ -4,13 +4,16 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/search_chatter_by_email_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'call_screen.dart';
@@ -59,8 +62,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   _ChatWindowState() {
     if (_chatMessageSubscription == null)
-    _chatMessageSubscription =
-        ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
+      _chatMessageSubscription =
+          ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
 
   List<AnyChatMessage> getChatMessagesFromQuery(QuerySnapshot snapshot) {
@@ -76,8 +79,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           AnyChatAuth.currentConversation.id);
       var participants = <AnyChatUser>[];
       convo.participants.forEach((element) async {
+        if (!AnyChatAuth.currentChatters
+            .any((chatter) => chatter.id == element))
+          AnyChatAuth.currentChatters
+              .removeWhere((chatter) => chatter.id == element);
         participants.add(await AnyChatUser.getUserById(element));
       });
+
       AnyChatAuth.currentUser.conversations =
           await ConversationInfo.getAllConversationInfo(
               AnyChatAuth.currentUser.id);
@@ -95,15 +103,28 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         map[language].insert(0, message.text);
       });
       print("chatMessage size: ${_chatMessages.length}");
-      Map<String, List<String>> translatedMap = await Utilities.getBatchGoogleTranslation(map);
+      Map<String, List<String>> translatedMap =
+          await Utilities.getBatchGoogleTranslation(map);
       for (int i = 0; i < _chatMessages.length; i++) {
         if (!participants
             .any((element) => element.id == _chatMessages[i].senderId)) {
-          participants
-              .add(await AnyChatUser.getUserById(_chatMessages[i].senderId));
+          participants.add(
+              await AnyChatUser.getUserById(_chatMessages[i].senderId).onError(
+                  (error, stackTrace) => AnyChatUser(
+                      null,
+                      AppLocalizations.of(context).accountDeleted,
+                      null,
+                      null,
+                      null)));
         }
-        final sender = participants
-            .firstWhere((element) => element.id == _chatMessages[i].senderId);
+        AnyChatUser sender;
+        try {
+          sender = participants
+              .firstWhere((element) => element.id == _chatMessages[i].senderId);
+        } catch (e) {
+          sender = AnyChatUser(null,
+              AppLocalizations.of(context).accountDeleted, null, null, null);
+        }
         final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
@@ -121,9 +142,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               new TextSpan(
                   text: "${AppLocalizations.of(context).translation}: ",
                   style: new TextStyle(fontWeight: FontWeight.bold)),
-              new TextSpan(
-                  text:
-                      translatedMap[language].removeLast()),
+              new TextSpan(text: translatedMap[language].removeLast()),
             ],
           ),
         );
@@ -138,19 +157,27 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         _messages.insert(0, chatMessage);
         chatMessage.animationController.forward();
       }
+
       setState(() {
         _isLoading = false;
       });
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
-      final sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-          .collection("users")
-          .doc(_chatMessages.last.senderId)
-          .get());
-      AnyChatAuth.currentUser.conversations =
-          await ConversationInfo.getAllConversationInfo(
-              AnyChatAuth.currentUser.id);
+      AnyChatUser sender;
+      try {
+        sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+            .collection("users")
+            .doc(_chatMessages.last.senderId)
+            .get());
+      } catch (e) {
+        sender = AnyChatUser(null, AppLocalizations.of(context).accountDeleted,
+            null, null, null);
+      }
+
+      // AnyChatAuth.currentUser.conversations =
+      //     await ConversationInfo.getAllConversationInfo(
+      //         AnyChatAuth.currentUser.id);
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
@@ -281,13 +308,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ]
             : [
                 Flexible(
+                    child: Container(
                   child: ListView.builder(
                     padding: EdgeInsets.all(8.0),
                     reverse: true,
                     itemBuilder: (_, int index) => _messages[index],
                     itemCount: _messages.length,
                   ),
-                ),
+                )),
                 Divider(height: 1.0),
                 Container(
                   decoration: BoxDecoration(color: Theme.of(context).cardColor),
@@ -324,6 +352,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title:
                     Text(AppLocalizations.of(context).addSomeoneToConversation),
                 onTap: () {
+                  SearchChatterByEmailScreen.addToConvo = true;
                   Navigator.pushNamed(context, "/addChatter");
                 }),
             ListTile(
@@ -472,7 +501,24 @@ class ChatMessage extends StatelessWidget {
           CurvedAnimation(parent: animationController, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Container(
-        margin: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: sender.id == AnyChatAuth.currentUser.id
+                ?  Theme.of(context).brightness == Brightness.dark
+                    ? kDarkChatBubbleColorRight
+                    : kDefaultChatBubbleColorRight
+                : Theme.of(context).brightness == Brightness.dark
+                    ? kDarkChatBubbleColorLeft
+                    : kDefaultChatBubbleColorLeft,
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        margin: EdgeInsets.fromLTRB(
+            sender.id == AnyChatAuth.currentUser.id
+                ? (MediaQuery.of(context).size.width * 0.25)
+                : 8,
+            8,
+            sender.id == AnyChatAuth.currentUser.id
+                ? 8
+                : (MediaQuery.of(context).size.width * 0.25),
+            8),
         padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,7 +538,7 @@ class ChatMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(sender.displayName,
-                      style: Theme.of(context).textTheme.headline4),
+                      style: Theme.of(context).textTheme.headline5),
                   Container(
                     margin: EdgeInsets.only(top: 5.0),
                     child: text,

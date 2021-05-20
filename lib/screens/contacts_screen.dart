@@ -9,7 +9,6 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:anychat/components/globals.dart' as globals;
@@ -182,12 +181,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
     List<String> allUsersEmails = [];
     FirebaseFirestore.instance.collection('users').snapshots().listen((event) {
       event.docs.forEach((element) {
-        if (_contacts.any((contact) => contact.emails.any((email) => email == element['email'])))
-          {
-            int i = 0;
-            // _contacts.firstWhere((contact) => contact.emails.firstWhere((email ) => false))
-          }
-          // allUsersEmails.add(element['email']);
+        if (_contacts.any((contact) =>
+            contact.emails.any((email) => email == element['email']))) {
+          int i = 0;
+          // _contacts.firstWhere((contact) => contact.emails.firstWhere((email ) => false))
+        }
+        // allUsersEmails.add(element['email']);
       });
     });
 

@@ -32,7 +32,8 @@ class Ads {
   static AdmobBanner getBanner() {
     return AdmobBanner(
         adUnitId: getBannerAdUnitId(),
-        adSize: AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext),
+        adSize:
+            AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext),
         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
           handleEvent(event, args, 'Banner');
           if (event == AdmobAdEvent.opened) {

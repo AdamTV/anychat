@@ -6,16 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddChatterScreen extends StatelessWidget {
+class AddChatterScreen extends StatefulWidget {
+  @override
+  _AddChatterScreenState createState() => _AddChatterScreenState();
+}
+
+class _AddChatterScreenState extends State<AddChatterScreen> {
+  String searchValue;
   @override
   Widget build(BuildContext context) {
-    String email;
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text(
-            AppLocalizations.of(context).title,
-          ),
+          title: Text(SearchChatterByEmailScreen.addToConvo
+              ? AppLocalizations.of(context).addSomeoneToConversation
+              : AppLocalizations.of(context).startConversation),
           // bottom: PreferredSize(
           //   preferredSize: Size(320, 48),
           //   child: Padding(
@@ -69,14 +74,16 @@ class AddChatterScreen extends StatelessWidget {
                     children: <Widget>[
                       RoundedInputField(
                           hintText:
-                              AppLocalizations.of(context).findSomeoneByEmail,
+                              "${AppLocalizations.of(context).findSomeoneByName} ${AppLocalizations.of(context).or} ${AppLocalizations.of(context).email}",
                           onChanged: (value) {
-                            email = value;
+                            searchValue = value;
                           }),
                       RoundedButton(
                           text: AppLocalizations.of(context).search,
                           press: () {
-                            SearchChatterByEmailScreen.email = email;
+                            // SearchChatterByEmailScreen.email = email;
+                            SearchChatterByEmailScreen.searchValue =
+                                searchValue;
                             Navigator.pushNamed(
                                 context, "/searchChatterByEmail");
                           }),

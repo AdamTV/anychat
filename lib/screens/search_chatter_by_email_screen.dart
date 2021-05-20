@@ -7,24 +7,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchChatterByEmailScreen extends StatefulWidget {
-  static String email;
-  static bool addToConvo;
+  static bool addToConvo = false;
+
+  static String searchValue;
 
   const SearchChatterByEmailScreen({Key key}) : super(key: key);
 
   @override
   SearchChatterByEmailScreenState createState() =>
-      SearchChatterByEmailScreenState(email);
+      SearchChatterByEmailScreenState(searchValue);
 }
 
 class SearchChatterByEmailScreenState
     extends State<SearchChatterByEmailScreen> {
-  static String email;
+  static String searchValue;
   static Stream<QuerySnapshot> searchResults;
   static List<AnyChatUser> users = <AnyChatUser>[];
 
-  SearchChatterByEmailScreenState(String email) {
-    SearchChatterByEmailScreenState.email = email;
+  SearchChatterByEmailScreenState(String searchValue) {
+    SearchChatterByEmailScreenState.searchValue = searchValue;
     loadSearchResults();
   }
 
@@ -32,7 +33,9 @@ class SearchChatterByEmailScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).title),
+        title: Text(SearchChatterByEmailScreen.addToConvo
+            ? AppLocalizations.of(context).addSomeoneToConversation
+            : AppLocalizations.of(context).startConversation),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -85,17 +88,17 @@ class SearchChatterByEmailScreenState
                                 SearchChatterByEmailScreenState
                                     .users[index].id);
                             AnyChatAuth.currentConversation = convo;
-                            List<AnyChatUser> users = <AnyChatUser>[];
+                            List<AnyChatUser> temp = <AnyChatUser>[];
                             for (var id in convo.participants) {
                               if (id != AnyChatAuth.currentUser.id) {
-                                users.add(AnyChatUser.fromSnapshot(
+                                temp.add(AnyChatUser.fromSnapshot(
                                     await FirebaseFirestore.instance
                                         .collection('users')
                                         .doc(id)
                                         .get()));
                               }
                             }
-                            AnyChatAuth.currentChatters = users;
+                            AnyChatAuth.currentChatters = temp;
                           } else {
                             if (await AnyChatUser.addUserToConversation(
                                 SearchChatterByEmailScreenState.users[index])) {
@@ -105,17 +108,17 @@ class SearchChatterByEmailScreenState
                           }
                           Navigator.pushReplacementNamed(context, "/chat");
                         },
-                        leading: SearchChatterByEmailScreenState
-                            .users[index].photoUrl ==
-                            null
+                        leading: SearchChatterByEmailScreenState.users[index].photoUrl ==
+                                null
                             ? CircleAvatar(
-                            child: Text(SearchChatterByEmailScreenState
-                                .users[index].displayName
-                                .substring(0, 1)))
+                                child: Text(SearchChatterByEmailScreenState
+                                    .users[index].displayName
+                                    .substring(0, 1)))
                             : CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            backgroundImage: NetworkImage(SearchChatterByEmailScreenState
-                                    .users[index].photoUrl)),
+                                backgroundColor: Theme.of(context).primaryColor,
+                                backgroundImage: NetworkImage(
+                                    SearchChatterByEmailScreenState
+                                        .users[index].photoUrl)),
                         title: RichText(
                             text: TextSpan(
                                 text: SearchChatterByEmailScreenState
@@ -128,8 +131,8 @@ class SearchChatterByEmailScreenState
 
   void loadSearchResults() async {
     users.clear();
-    var user = await AnyChatUser.findUserByEmail(email);
-    if (user != null) users.add(user);
+    users.addAll(await AnyChatUser.findUsersByEmail(searchValue));
+    users.addAll(await AnyChatUser.findUsersByDisplayName(searchValue));
     setState(() {});
   }
 }

@@ -25,7 +25,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'components/utilities.dart';
 
@@ -220,7 +219,9 @@ class _MyAppState extends State<MyApp> {
             print(snapshot.data);
             FirebaseFirestore.instance
                 .collection('users')
-                .doc(snapshot.data.providerData[0].providerId == 'google.com' ? snapshot.data.uid : snapshot.data.providerData[0].uid)
+                .doc(snapshot.data.providerData[0].providerId == 'google.com'
+                    ? snapshot.data.uid
+                    : snapshot.data.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
                 .then((AnyChatUser user) {
@@ -232,7 +233,8 @@ class _MyAppState extends State<MyApp> {
                     constraints: BoxConstraints(maxWidth: 1),
                     child: ConversationsScreen());
               }));
-            }).catchError((error) => print("error in main: "+error.toString()));
+            }).catchError(
+                    (error) => print("error in main: " + error.toString()));
           }
           print('returning WelcomeScreen');
           return ConstrainedBox(
@@ -255,7 +257,6 @@ Future<void> _checkNetworkConnection(BuildContext context) async {
       print('connected');
     }
   } on SocketException catch (_) {
-    Utilities.showToast(
-        AppLocalizations.of(context).notConnectedToInternet);
+    Utilities.showToast(AppLocalizations.of(context).notConnectedToInternet);
   }
 }

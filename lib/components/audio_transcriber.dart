@@ -1,16 +1,11 @@
 import 'dart:async';
 
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
-import 'package:anychat/components/utilities.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
-import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart' as v1Speech;
+import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
+    as v1Speech;
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,7 +17,8 @@ class AudioTranscriber {
   static BehaviorSubject<List<int>> _audioStream;
   static String isoCode;
 
-  static Future<Stream<v1Speech.StreamingRecognizeResponse>> getResponseStream(String isoCode) async {
+  static Future<Stream<v1Speech.StreamingRecognizeResponse>> getResponseStream(
+      String isoCode) async {
     AudioTranscriber.isoCode = isoCode;
 
     _recorder.initialize();
@@ -39,10 +35,10 @@ class AudioTranscriber {
     final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
     final config = _getConfig();
 
-     return speechToText.streamingRecognize(
+    return speechToText.streamingRecognize(
 // <<<<<<< Updated upstream
-    StreamingRecognitionConfig(config: config, interimResults: false),
-    _audioStream);
+        StreamingRecognitionConfig(config: config, interimResults: false),
+        _audioStream);
   }
 
   static RecognitionConfig _getConfig() => RecognitionConfig(
