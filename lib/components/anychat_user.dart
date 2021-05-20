@@ -135,6 +135,8 @@ class AnyChatUser {
           .get(conversation)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
+            transaction.update(conversation,
+                {'timestamp': FieldValue.serverTimestamp()});
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
