@@ -3,6 +3,7 @@ import 'package:anychat/components/anychat_contact.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
@@ -118,15 +119,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).accessContactDataDisabled);
+      Utilities.showToast(
+          AppLocalizations.of(context).accessContactDataDisabled);
       // throw PlatformException(
       //     code: AppLocalizations.of(context).permissionDenied,
       //     message: AppLocalizations.of(context).accessContactDataDenied,
       //     details: null);
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).accessContactDataDisabled);
+      Utilities.showToast(
+          AppLocalizations.of(context).accessContactDataDisabled);
       // throw PlatformException(
       //     code: AppLocalizations.of(context).permissionDisabled,
       //     message: AppLocalizations.of(context).accessContactDataDisabled,

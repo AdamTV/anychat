@@ -220,7 +220,7 @@ class _MyAppState extends State<MyApp> {
             print(snapshot.data);
             FirebaseFirestore.instance
                 .collection('users')
-                .doc(snapshot.data.providerData[0].uid)
+                .doc(snapshot.data.providerData[0].providerId == 'google.com' ? snapshot.data.uid : snapshot.data.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
                 .then((AnyChatUser user) {
@@ -232,7 +232,7 @@ class _MyAppState extends State<MyApp> {
                     constraints: BoxConstraints(maxWidth: 1),
                     child: ConversationsScreen());
               }));
-            }).catchError((error) => print(error));
+            }).catchError((error) => print("error in main: "+error.toString()));
           }
           print('returning WelcomeScreen');
           return ConstrainedBox(
@@ -255,8 +255,7 @@ Future<void> _checkNetworkConnection(BuildContext context) async {
       print('connected');
     }
   } on SocketException catch (_) {
-    Fluttertoast.showToast(
-        msg: AppLocalizations.of(context).notConnectedToInternet,
-        toastLength: Toast.LENGTH_LONG);
+    Utilities.showToast(
+        AppLocalizations.of(context).notConnectedToInternet);
   }
 }

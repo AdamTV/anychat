@@ -36,8 +36,7 @@ class AnyChatUser {
 
   static Future<Conversation> createConversation(String id) async {
     if (id == AnyChatAuth.currentUser.id) {
-      Fluttertoast.showToast(
-          msg: AppLocalizations.of(Utilities.globalKey.currentContext)
+      Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext)
               .canNotCreateConvoWithSelf);
       return null;
     }
@@ -458,7 +457,7 @@ class AnyChatUser {
       return;
     });
     Navigator.pushReplacementNamed(Utilities.globalKey.currentContext, '/');
-    Fluttertoast.showToast(msg: "Account Deleted");
+    Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext).accountDeleted);
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

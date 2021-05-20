@@ -19,18 +19,21 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
         body: LoginBackground(
       child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               AppLocalizations.of(context).login_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
+
             ),
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
               "assets/icons/login.svg",
               height:
                   size.height < 750 ? size.height * 0.25 : size.height * 0.35,
+              alignment: Alignment.topLeft,
             ),
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
@@ -110,26 +113,24 @@ class LoginBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var children = <Widget>[];
-    if (!kIsWeb) {
       children.addAll({
         Positioned(
-          top: 0,
-          left: 0,
+          top: size.width >= 750 ? (kIsWeb ? -250 : size.width * - 0.05) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -225 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/main_top.png",
             width: size.width * 0.35,
           ),
         ),
         Positioned(
-          bottom: 0,
-          right: 0,
+          bottom: size.width >= 750 ? (kIsWeb ? -100 : size.width * - 0.05) : 0,
+          right: size.width >= 750 ? (kIsWeb ? -150 : size.width * - 0.05) : 0,
           child: Image.asset(
             "assets/images/login_bottom.png",
             width: size.width * 0.3,
           ),
         ),
       });
-    }
     children.add(child);
     return Container(
       width: double.infinity,
