@@ -9,13 +9,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  String _email;
+  String _password;
   @override
   Widget build(BuildContext context) {
-    String email;
-    String password;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SignupBackground(
@@ -36,12 +40,12 @@ class RegisterScreen extends StatelessWidget {
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
               onChanged: (value) {
-                email = value;
+                _email = value;
               },
             ),
             RoundedPasswordField(
               onChanged: (value) {
-                password = value;
+                _password = value;
               },
             ),
             RoundedButton(
@@ -49,11 +53,10 @@ class RegisterScreen extends StatelessWidget {
               press: () async {
                 try {
                   var user =
-                      await AnyChatAuth.signInEmail(email, password, true);
+                      await AnyChatAuth.signInEmail(_email, _password, true);
                   if (user != null) {
-                    Utilities.showToast(
-                        AppLocalizations.of(context)
-                            .accountCreatedEnterSettings);
+                    Utilities.showToast(AppLocalizations.of(context)
+                        .accountCreatedEnterSettings);
                     Navigator.pushNamed(context, '/settings');
                   } else {
                     throw Error();
@@ -102,24 +105,24 @@ class SignupBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var children = <Widget>[];
-      children.addAll({
-        Positioned(
-          top: size.width >= 750 ? (kIsWeb ? -200 : size.width * - 0.05) : 0,
-          left: size.width >= 750 ? (kIsWeb ? -200 : size.width * - 0.05) : 0,
-          child: Image.asset(
-            "assets/images/signup_top.png",
-            width: size.width * 0.35,
-          ),
+    children.addAll({
+      Positioned(
+        top: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
+        left: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
+        child: Image.asset(
+          "assets/images/signup_top.png",
+          width: size.width * 0.35,
         ),
-        Positioned(
-          bottom: size.width >= 750 ? (kIsWeb ? -250 : size.width * - 0.1) : 0,
-          left: size.width >= 750 ? (kIsWeb ? -175 : size.width * - 0.05) : 0,
-          child: Image.asset(
-            "assets/images/main_bottom.png",
-            width: size.width * 0.25,
-          ),
-        )
-      });
+      ),
+      Positioned(
+        bottom: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.1) : 0,
+        left: size.width >= 750 ? (kIsWeb ? -175 : size.width * -0.05) : 0,
+        child: Image.asset(
+          "assets/images/main_bottom.png",
+          width: size.width * 0.25,
+        ),
+      )
+    });
     children.add(child);
     return Container(
       height: size.height,

@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import 'anychat_auth.dart';
 import 'conversation.dart';
@@ -36,7 +35,8 @@ class AnyChatUser {
 
   static Future<Conversation> createConversation(String id) async {
     if (id == AnyChatAuth.currentUser.id) {
-      Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext)
+      Utilities.showToast(
+          AppLocalizations.of(Utilities.globalKey.currentContext)
               .canNotCreateConvoWithSelf);
       return null;
     }
@@ -135,8 +135,8 @@ class AnyChatUser {
           .get(conversation)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
-            transaction.update(conversation,
-                {'timestamp': FieldValue.serverTimestamp()});
+        transaction
+            .update(conversation, {'timestamp': FieldValue.serverTimestamp()});
         transaction.set(newMessage, {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
@@ -448,6 +448,47 @@ class AnyChatUser {
     return user;
   }
 
+  static Future<List<AnyChatUser>> findUsersByEmail(String email) async {
+    List<AnyChatUser> users = [];
+    await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                if (email != null &&
+                    doc['email']
+                        .toString()
+                        .toLowerCase()
+                        .contains(email.toLowerCase())) {
+                  users.add(AnyChatUser.fromSnapshot(doc));
+                  print(doc["displayName"]);
+                }
+              }),
+            });
+    return users;
+  }
+
+  static Future<List<AnyChatUser>> findUsersByDisplayName(
+      String displayName) async {
+    List<AnyChatUser> users = [];
+    await FirebaseFirestore.instance
+        .collection('users')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                if (displayName != null &&
+                    doc['displayName']
+                        .toString()
+                        .toLowerCase()
+                        .contains(displayName.toLowerCase())) {
+                  users.add(AnyChatUser.fromSnapshot(doc));
+                  print(doc["displayName"]);
+                }
+              }),
+            });
+    return users;
+  }
+
   Future<void> deleteAccount() async {
     var convos = await ConversationInfo.getAllConversationInfo(id);
     convos.forEach((element) async {
@@ -459,7 +500,8 @@ class AnyChatUser {
       return;
     });
     Navigator.pushReplacementNamed(Utilities.globalKey.currentContext, '/');
-    Utilities.showToast(AppLocalizations.of(Utilities.globalKey.currentContext).accountDeleted);
+    Utilities.showToast(
+        AppLocalizations.of(Utilities.globalKey.currentContext).accountDeleted);
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

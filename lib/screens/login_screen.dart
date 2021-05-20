@@ -10,11 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String _email;
+  String _password;
+
   @override
   Widget build(BuildContext context) {
-    String email;
-    String password;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: LoginBackground(
@@ -26,7 +32,6 @@ class LoginScreen extends StatelessWidget {
             Text(
               AppLocalizations.of(context).login_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
-
             ),
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
@@ -38,33 +43,60 @@ class LoginScreen extends StatelessWidget {
             RoundedInputField(
               hintText: AppLocalizations.of(context).email,
               onChanged: (value) {
-                email = value;
+                _email = value;
               },
             ),
             RoundedPasswordField(
               onChanged: (value) {
-                password = value;
+                _password = value;
               },
             ),
             RoundedButton(
               text: AppLocalizations.of(context).login_caps,
               press: () async {
-                await AnyChatAuth.signInEmail(email, password, false)
-                    .then((value) => {
-                          if (value != null)
-                            {Utilities.initConversationScreen(context, value)}
-                          else
-                            Utilities.showAlertDialog(
-                                context,
-                                AppLocalizations.of(context).error,
-                                AppLocalizations.of(context).invalidCredentials)
-                        })
-                    .catchError((e) => {
-                          Utilities.showAlertDialog(
-                              context,
-                              AppLocalizations.of(context).error,
-                              AppLocalizations.of(context).errorLoggingIn)
-                        });
+                try {
+                  var user =
+                      await AnyChatAuth.signInEmail(_email, _password, false);
+                  if (user != null)
+                    Utilities.initConversationScreen(context, user);
+                  else
+                    Utilities.showAlertDialog(
+                        context,
+                        AppLocalizations.of(context).error,
+                        AppLocalizations.of(context).invalidCredentials);
+                } catch (e) {
+                  Utilities.showAlertDialog(
+                      context,
+                      AppLocalizations.of(context).error,
+                      AppLocalizations.of(context).errorLoggingIn);
+                }
+
+                // AnyChatAuth.signInEmail(_email, _password, false)
+                //     .then((value) =>
+                // {
+                //   if (value != null)
+                //     Utilities.initConversationScreen(context, value)
+                //   else
+                //     Utilities.showAlertDialog(
+                //         context,
+                //         AppLocalizations
+                //             .of(context)
+                //             .error,
+                //         AppLocalizations
+                //             .of(context)
+                //             .invalidCredentials),
+                // })
+                //     .catchError((e) =>
+                // {
+                //   Utilities.showAlertDialog(
+                //       context,
+                //       AppLocalizations
+                //           .of(context)
+                //           .error,
+                //       AppLocalizations
+                //           .of(context)
+                //           .errorLoggingIn)
+                // });
               },
             ),
             TextButton(
@@ -113,24 +145,24 @@ class LoginBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var children = <Widget>[];
-      children.addAll({
-        Positioned(
-          top: size.width >= 750 ? (kIsWeb ? -250 : size.width * - 0.05) : 0,
-          left: size.width >= 750 ? (kIsWeb ? -225 : size.width * - 0.05) : 0,
-          child: Image.asset(
-            "assets/images/main_top.png",
-            width: size.width * 0.35,
-          ),
+    children.addAll({
+      Positioned(
+        top: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.05) : 0,
+        left: size.width >= 750 ? (kIsWeb ? -225 : size.width * -0.05) : 0,
+        child: Image.asset(
+          "assets/images/main_top.png",
+          width: size.width * 0.35,
         ),
-        Positioned(
-          bottom: size.width >= 750 ? (kIsWeb ? -100 : size.width * - 0.05) : 0,
-          right: size.width >= 750 ? (kIsWeb ? -150 : size.width * - 0.05) : 0,
-          child: Image.asset(
-            "assets/images/login_bottom.png",
-            width: size.width * 0.3,
-          ),
+      ),
+      Positioned(
+        bottom: size.width >= 750 ? (kIsWeb ? -100 : size.width * -0.05) : 0,
+        right: size.width >= 750 ? (kIsWeb ? -150 : size.width * -0.05) : 0,
+        child: Image.asset(
+          "assets/images/login_bottom.png",
+          width: size.width * 0.3,
         ),
-      });
+      ),
+    });
     children.add(child);
     return Container(
       width: double.infinity,

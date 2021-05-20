@@ -14,15 +14,7 @@ import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_speech/config/recognition_config.dart';
-import 'package:google_speech/config/recognition_config_v1.dart';
-import 'package:google_speech/config/streaming_recognition_config.dart';
-import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
-    as v1CloudSpeech;
-import 'package:google_speech/speech_client_authenticator.dart';
-import 'package:google_speech/speech_to_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:flutter/cupertino.dart';
@@ -197,7 +189,8 @@ class _CallScreenState extends State<CallScreen> {
 
     String lastMessage = "";
 
-    var responseStream = await AudioTranscriber.getResponseStream(AnyChatAuth.currentUser.language);
+    var responseStream = await AudioTranscriber.getResponseStream(
+        AnyChatAuth.currentUser.language);
 
     responseStream.listen((data) async {
       String transcribedText =

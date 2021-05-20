@@ -9,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -336,5 +335,5 @@ _launchPrivacyPolicy() async {
 }
 
 _onWillPop() {
-  Navigator.of(Utilities.globalKey.currentContext).pop();
+  Navigator.pushNamed(Utilities.globalKey.currentContext, '/conversations');
 }

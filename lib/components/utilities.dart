@@ -57,10 +57,11 @@ class Utilities {
       translatedMap.putIfAbsent(key, () => []);
       queryParameters.update("target", (value) => key, ifAbsent: () => key);
       var value = mapEntry.value;
-      for (int i = 0; i < value.length; i+=CLOUD_API_MAX_Q){
+      for (int i = 0; i < value.length; i += CLOUD_API_MAX_Q) {
         int end = i + CLOUD_API_MAX_Q;
-        if (CLOUD_API_MAX_Q > value.length) end = value.length;
-        else if (end > value.length){
+        if (CLOUD_API_MAX_Q > value.length)
+          end = value.length;
+        else if (end > value.length) {
           end = value.length;
         }
         var sublist = value.sublist(i, end);
@@ -70,8 +71,7 @@ class Utilities {
         Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
         if (matches.length > 0) {
           for (var match in matches) {
-            translatedMap[key]
-                .add(match.group(1).replaceAll("&#39;", "'"));
+            translatedMap[key].add(match.group(1).replaceAll("&#39;", "'"));
           }
         } else {
           throw new Exception("Could not getGoogleTranslation -> uri: $uri");
