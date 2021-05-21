@@ -265,14 +265,17 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       await loadConversations();
       return;
     }
+    var conversations = getConversationsFromQuery(snapshot);
     print('in _updateConversations');
-    if (getConversationsFromQuery(snapshot).isEmpty) {
+    if (conversations.isEmpty) {
       print('conversation snapshot was empty');
       return;
     }
-    Conversation conversation = getConversationsFromQuery(snapshot).last;
-    AnyChatAuth.currentUser =
-        await AnyChatUser.getUserById(AnyChatAuth.currentUser.id);
+    Conversation conversation = conversations.last;
+    if(AnyChatAuth.currentUser == null) {
+      AnyChatAuth.currentUser =
+      await AnyChatUser.getUserById(AnyChatAuth.currentUser.id);
+    }
     AnyChatUser firstChatter = AnyChatAuth.currentUser;
     try {
       firstChatter = await AnyChatUser.getUserById(conversation.participants
@@ -280,7 +283,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     } catch (e) {
       print(e);
     }
-    await initConvoInfo();
+    if (AnyChatAuth.currentConversation == null) {
+      await initConvoInfo();
+    }
     if (AnyChatAuth.currentUser.conversations != null &&
         !AnyChatAuth.currentUser.conversations
             .any((element) => element.id == conversation.id)) {
@@ -299,9 +304,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
       return;
     }
-    var messages = snapshot.docs.map((DocumentSnapshot doc) {
-      return AnyChatMessage.fromSnapshot(doc);
-    });
     List<String> users = conversation.participants;
     var chatters = <AnyChatUser>[];
     String text;
@@ -315,7 +317,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         if (chatters.where((element) => element.id == chatter.id).length == 0) {
           chatters.add(chatter);
         }
-        var snapshot = await FirebaseFirestore.instance
+        var msgSnapshot = await FirebaseFirestore.instance
             .collection("conversations")
             .doc(conversation.id)
             .collection("messages")
@@ -323,17 +325,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             .get();
         AnyChatMessage message;
         // try {
-        if (snapshot.docs.isNotEmpty) {
-          message = messages.last;
+        if (msgSnapshot.docs.isNotEmpty) {
+          message = AnyChatMessage.fromSnapshot(msgSnapshot.docs.last);
         } else {
           _chatMessageSubscriptions.add(
               loadAllChatMessages(conversation.id).listen(_sendNotification));
           message = AnyChatMessage("", Timestamp.now(), chatter.id,
               AppLocalizations.of(context).newConversation, null);
         }
-        AnyChatAuth.currentUser.conversations =
-            await ConversationInfo.getAllConversationInfo(
-                AnyChatAuth.currentUser.id);
        try {
          var info = AnyChatAuth.currentUser.conversations
              .firstWhere((element) => element.id == conversation.id);
@@ -350,19 +349,20 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         // }
       }
     }
-    if (AnyChatAuth.currentUser.conversations != null &&
-        !AnyChatAuth.currentUser.conversations
-            .any((element) => element.id == conversation.id)) {
-      if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
-        AnyChatAuth.currentUser.conversations.add(ConversationInfo.fromSnapshot(
-            await FirebaseFirestore.instance
-                .collection("users")
-                .doc(AnyChatAuth.currentUser.id)
-                .collection('conversations')
-                .doc(conversation.id)
-                .get()));
-      }
-    }
+    // if (AnyChatAuth.currentUser.conversations != null &&
+    //     !AnyChatAuth.currentUser.conversations
+    //         .any((element) => element.id == conversation.id)) {
+    //   if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
+    //     AnyChatAuth.currentUser.conversations.add(ConversationInfo.fromSnapshot(
+    //         await FirebaseFirestore.instance
+    //             .collection("users")
+    //             .doc(AnyChatAuth.currentUser.id)
+    //             .collection('conversations')
+    //             .doc(conversation.id)
+    //             .get()));
+    //   }
+    // }
+
     // if (chatters.length == 1) {
     //   var message = messages.lastWhere((element) =>
     //       element.text.compareTo(
