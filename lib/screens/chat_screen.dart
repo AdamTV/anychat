@@ -175,9 +175,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             null, null, null);
       }
 
-      // AnyChatAuth.currentUser.conversations =
-      //     await ConversationInfo.getAllConversationInfo(
-      //         AnyChatAuth.currentUser.id);
+
+      if (AnyChatAuth.currentUser.conversations == null || AnyChatAuth.currentUser.conversations.isEmpty){
+        AnyChatAuth.currentUser.conversations =
+        await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
+      }
+
+      print("currentConvversation.id: ${AnyChatAuth.currentConversation.id}");
       var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation.id);
       final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
