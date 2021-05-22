@@ -129,7 +129,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 child: Container(
                   constraints: BoxConstraints(maxWidth: 1280),
                   child: conversationWidgets.length > 0
-                      ? ListView.builder(
+                      ? ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      indent: MediaQuery.of(context).size.width * 0.25,
+                      endIndent: MediaQuery.of(context).size.width * 0.25,
+                      color: Theme.of(context).primaryColor,
+                    ),
                           itemCount: conversationWidgets.length,
                           itemBuilder: (_, int index) =>
                               conversationWidgets[index])
