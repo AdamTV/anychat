@@ -189,6 +189,7 @@
     "permissionDenied": "РӨХСӘТ ЮК",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Рәсем",
+    "pleaseLoginInstead": "Бу мәгълүмат белән хисап инде бар. Зинһар, керегез.",
     "privacyPolicy": "Шәхсилек сәясәте",
     "register": "Регистрация",
     "register_caps": "Регистрация",

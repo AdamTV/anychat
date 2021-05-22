@@ -189,6 +189,7 @@
     "permissionDenied": "沒有權限",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "皮克圖",
+    "pleaseLoginInstead": "具有该信息的帐户已经存在。请登录。",
     "privacyPolicy": "隐私政策",
     "register": "登記",
     "register_caps": "登記",

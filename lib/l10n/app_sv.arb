@@ -189,6 +189,7 @@
     "permissionDenied": "ÅTKOMST NEKAD",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Bild",
+    "pleaseLoginInstead": "Ett konto finns redan med denna information. Logga in istället.",
     "privacyPolicy": "Integritetspolicy",
     "register": "Registrera",
     "register_caps": "REGISTRERA",

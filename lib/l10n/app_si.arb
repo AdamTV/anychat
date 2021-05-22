@@ -189,6 +189,7 @@
     "permissionDenied": "අවසරය ප්රතික්ෂේප කෙරිණි",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "පින්තූරය",
+    "pleaseLoginInstead": "මෙම තොරතුරු සමඟ ගිණුමක් දැනටමත් පවතී. කරුණාකර ඒ වෙනුවට පුරනය වන්න.",
     "privacyPolicy": "රහස්යතා ප්රතිපත්තිය",
     "register": "ලියාපදිංචි වන්න",
     "register_caps": "ලියාපදිංචි කරන්න",

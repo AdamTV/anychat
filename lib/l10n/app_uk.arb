@@ -189,6 +189,7 @@
     "permissionDenied": "ДОЗВОЛЕНО_ДОЗВОЛЕНО",
     "permissionDisabled": "ДОЗВОЛЕНО_ВІМКНЕНО",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Обліковий запис із цією інформацією вже існує. Будь ласка, увійдіть замість цього.",
     "privacyPolicy": "Політика конфіденційності",
     "register": "Зареєструйтесь",
     "register_caps": "РЕЄСТРУЙТЕСЯ",

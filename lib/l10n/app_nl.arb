@@ -189,6 +189,7 @@
     "permissionDenied": "TOESTEMMING GEWEIGERD",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Er bestaat al een account met deze informatie. Log in plaats daarvan in.",
     "privacyPolicy": "Privacybeleid",
     "register": "Registreren",
     "register_caps": "REGISTREREN",

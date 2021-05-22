@@ -189,6 +189,7 @@
     "permissionDenied": "TILLATELSE AVSLÅTT",
     "permissionDisabled": "TILLATELSE_DISABLERT",
     "picture": "På bildet",
+    "pleaseLoginInstead": "Det eksisterer allerede en konto med denne informasjonen. Vennligst logg inn i stedet.",
     "privacyPolicy": "Personvernregler",
     "register": "Registrere",
     "register_caps": "REGISTRERE",

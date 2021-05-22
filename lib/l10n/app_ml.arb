@@ -189,6 +189,7 @@
     "permissionDenied": "അനുമതി നിഷേധിച്ചു",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "ചിത്രം",
+    "pleaseLoginInstead": "ഈ വിവരത്തിനൊപ്പം ഒരു അക്ക already ണ്ട് ഇതിനകം നിലവിലുണ്ട്. പകരം ലോഗിൻ ചെയ്യുക.",
     "privacyPolicy": "സ്വകാര്യതാനയം",
     "register": "രജിസ്റ്റർ ചെയ്യുക",
     "register_caps": "രജിസ്റ്റർ ചെയ്യുക",

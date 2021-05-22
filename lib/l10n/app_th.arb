@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "ภาพ",
+    "pleaseLoginInstead": "มีบัญชีที่มีข้อมูลนี้อยู่แล้ว กรุณาเข้าสู่ระบบแทน",
     "privacyPolicy": "นโยบายความเป็นส่วนตัว",
     "register": "ลงทะเบียน",
     "register_caps": "ลงทะเบียน",

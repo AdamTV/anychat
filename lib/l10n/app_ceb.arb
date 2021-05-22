@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Hulagway",
+    "pleaseLoginInstead": "Adunay usa ka account nga adunay kini nga kasayuran. Palihug pag-login hinoon.",
     "privacyPolicy": "Patakaran sa Pagkapribado",
     "register": "Pagrehistro",
     "register_caps": "REGISTER",

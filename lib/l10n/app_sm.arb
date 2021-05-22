@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Ata",
+    "pleaseLoginInstead": "Ua i ai se teuga tupe ma lenei faʻamatalaga. Faʻamolemole login nai lo.",
     "privacyPolicy": "Faalauaiteleina Faiga Faavae",
     "register": "Tusi resitala",
     "register_caps": "Lesitala",

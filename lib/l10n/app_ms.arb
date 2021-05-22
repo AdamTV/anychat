@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Bergambar",
+    "pleaseLoginInstead": "Akaun sudah ada dengan maklumat ini. Sila masuk.",
     "privacyPolicy": "Dasar Privasi",
     "register": "Daftar",
     "register_caps": "DAFTAR",

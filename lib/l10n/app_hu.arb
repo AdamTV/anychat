@@ -189,6 +189,7 @@
     "permissionDenied": "HOZZÁFÉRÉS MEGTAGADVA",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Már létezik fiók ezen információkkal. Kérjük, jelentkezzen be.",
     "privacyPolicy": "Adatvédelmi irányelvek",
     "register": "Regisztráció",
     "register_caps": "REGISZTRÁCIÓ",

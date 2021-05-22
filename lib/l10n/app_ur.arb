@@ -189,6 +189,7 @@
     "permissionDenied": "اجازت نہیں دی گئی",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "تصویر",
+    "pleaseLoginInstead": "اس معلومات کے ساتھ ایک اکاؤنٹ پہلے سے موجود ہے۔ براہ کرم اس کے بجائے لاگ ان کریں۔",
     "privacyPolicy": "رازداری کی پالیسی",
     "register": "رجسٹر کریں",
     "register_caps": "رجسٹر",

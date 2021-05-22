@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Εικόνα",
+    "pleaseLoginInstead": "Υπάρχει ήδη ένας λογαριασμός με αυτές τις πληροφορίες. Συνδεθείτε αντ &#39;αυτού.",
     "privacyPolicy": "Πολιτική απορρήτου",
     "register": "Κανω ΕΓΓΡΑΦΗ",
     "register_caps": "ΚΑΝΩ ΕΓΓΡΑΦΗ",

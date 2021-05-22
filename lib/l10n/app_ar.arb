@@ -189,6 +189,7 @@
     "permissionDenied": "طلب الاذن مرفوض",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "بيكتو",
+    "pleaseLoginInstead": "حساب موجود بالفعل بهذه المعلومات. الرجاء تسجيل الدخول بدلا من ذلك.",
     "privacyPolicy": "سياسة الخصوصية",
     "register": "يسجل",
     "register_caps": "تسجيل",

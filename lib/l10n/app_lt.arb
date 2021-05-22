@@ -189,6 +189,7 @@
     "permissionDenied": "LEIDIMAS NESUTEIKTAS",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "„Pictue“",
+    "pleaseLoginInstead": "Ši informacija jau yra paskyra. Verčiau prisijunkite.",
     "privacyPolicy": "Privatumo politika",
     "register": "Registruotis",
     "register_caps": "REGISTRUOTIS",

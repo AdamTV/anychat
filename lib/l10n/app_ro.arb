@@ -189,6 +189,7 @@
     "permissionDenied": "ACCES REFUZAT",
     "permissionDisabled": "PERMISIE_DISABILATĂ",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Există deja un cont cu aceste informații. Vă rugăm să vă autentificați.",
     "privacyPolicy": "Politica de Confidențialitate",
     "register": "Inregistreaza-te",
     "register_caps": "INREGISTREAZA-TE",

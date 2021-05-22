@@ -189,6 +189,7 @@
     "permissionDenied": "اجازه ورنکړل شوه",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "انځور",
+    "pleaseLoginInstead": "یو معلومات دمخه د دې معلوماتو سره شتون لري. مهرباني وکړئ پرځای ننوځئ.",
     "privacyPolicy": "د پټتیا تګلاره",
     "register": "ثبت کړئ",
     "register_caps": "نومليکنه",

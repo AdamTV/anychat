@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "படம்",
+    "pleaseLoginInstead": "இந்த தகவலுடன் ஒரு கணக்கு ஏற்கனவே உள்ளது. அதற்கு பதிலாக உள்நுழைக.",
     "privacyPolicy": "தனியுரிமைக் கொள்கை",
     "register": "பதிவு",
     "register_caps": "பதிவு",

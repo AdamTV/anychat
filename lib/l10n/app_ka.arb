@@ -189,6 +189,7 @@
     "permissionDenied": "ᲬᲕᲓᲝᲛᲐ ᲐᲙᲠᲫᲐᲚᲣᲚᲘᲐ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "სურათი",
+    "pleaseLoginInstead": "ანგარიში უკვე არსებობს ამ ინფორმაციასთან ერთად. გთხოვთ, შეხვიდეთ",
     "privacyPolicy": "Კონფიდენციალურობის პოლიტიკა",
     "register": "დარეგისტრირება",
     "register_caps": "დარეგისტრირება",

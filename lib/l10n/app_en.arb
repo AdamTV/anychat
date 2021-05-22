@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "An account already exists with this information. Please login instead.",
     "privacyPolicy": "Privacy Policy",
     "register": "Register",
     "register_caps": "REGISTER",

@@ -189,6 +189,7 @@
     "permissionDenied": "DOZVOLA ODBIJENA",
     "permissionDisabled": "DOZVOLJENO_DISABLIRANO",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Račun s tim informacijama već postoji. Umjesto toga, prijavite se.",
     "privacyPolicy": "Politika privatnosti",
     "register": "Registrujte se",
     "register_caps": "PRIJAVITE SE",

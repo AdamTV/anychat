@@ -189,6 +189,7 @@
     "permissionDenied": "TOESTEMMING GEWEIER",
     "permissionDisabled": "TOESTEMMING_DESABLEER",
     "picture": "Foto",
+    "pleaseLoginInstead": "Daar bestaan reeds &#39;n rekening met hierdie inligting. Meld asseblief aan.",
     "privacyPolicy": "Privaatheidsbeleid",
     "register": "Registreer",
     "register_caps": "REGISTREER",

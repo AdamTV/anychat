@@ -189,6 +189,7 @@
     "permissionDenied": "అనుమతి నిరాకరించబడింది",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "చిత్రం",
+    "pleaseLoginInstead": "ఈ సమాచారంతో ఖాతా ఇప్పటికే ఉంది. బదులుగా లాగిన్ అవ్వండి.",
     "privacyPolicy": "గోప్యతా విధానం",
     "register": "నమోదు చేయండి",
     "register_caps": "రిజిస్టర్",

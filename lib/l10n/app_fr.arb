@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION REFUSÉE",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Un compte existe déjà avec ces informations. Veuillez vous connecter à la place.",
     "privacyPolicy": "Politique de confidentialité",
     "register": "S'inscrire",
     "register_caps": "S'INSCRIRE",

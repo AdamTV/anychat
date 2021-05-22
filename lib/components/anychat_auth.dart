@@ -194,6 +194,9 @@ class AnyChatAuth {
       if (e.code == 'weak-password') {
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
+        Utilities.showToast(
+            AppLocalizations.of(Utilities.globalKey.currentContext)
+                .pleaseLoginInstead);
         throw Exception('The account already exists for that email.');
       }
     } catch (e) {

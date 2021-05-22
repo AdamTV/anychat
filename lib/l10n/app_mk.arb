@@ -189,6 +189,7 @@
     "permissionDenied": "БАРАЊЕТО Е ОДБИЕНО",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Сликата",
+    "pleaseLoginInstead": "Сметка веќе постои со овие информации. Ве молиме најавете се наместо тоа.",
     "privacyPolicy": "Политика за приватност",
     "register": "Регистрирај се",
     "register_caps": "РЕГИСТРИРАЈТЕ",

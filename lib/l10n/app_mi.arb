@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pikitia",
+    "pleaseLoginInstead": "Kua puta ke tetahi kaute me enei korero. Tena koa takiuru.",
     "privacyPolicy": "Kaupapahere Tūmataiti",
     "register": "Rehita",
     "register_caps": "Rehita",

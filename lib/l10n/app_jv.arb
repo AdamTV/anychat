@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Gambar",
+    "pleaseLoginInstead": "Akun wis ana karo informasi iki. Monggo login wae.",
     "privacyPolicy": "Kebijakan Privasi",
     "register": "Ndhaptar",
     "register_caps": "DAFTAR",

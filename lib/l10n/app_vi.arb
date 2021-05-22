@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Tượng hình",
+    "pleaseLoginInstead": "Một tài khoản đã tồn tại với thông tin này. Vui lòng đăng nhập thay thế.",
     "privacyPolicy": "Chính sách bảo mật",
     "register": "Đăng ký",
     "register_caps": "ĐĂNG KÝ",
