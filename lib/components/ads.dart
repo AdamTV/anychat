@@ -16,6 +16,7 @@ class Ads {
       'eea7bfde-2c6f-489b-930e-c98b498f424f', // OP 5T
       '0ED527776873F3E56A11C1BDB9A1A3D2', // SM T290
       '9FE872DB63EEA34B32A3296F08C2DE1E', // Mac Android
+      'b6aa6c248f10f52337317186546d47e7', // iPad 1st gen
     ]);
 
     interstitial = AdmobInterstitial(
