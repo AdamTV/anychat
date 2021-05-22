@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISO DENEGADO",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Xa existe unha conta con esta información. Por favor, inicia sesión.",
     "privacyPolicy": "Política de Privacidade",
     "register": "Rexistrarse",
     "register_caps": "REXISTRE",

@@ -189,6 +189,7 @@
     "permissionDenied": "ЗӨВШӨӨРӨГДӨХ_ХОРИГЛОЛТ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Зураг",
+    "pleaseLoginInstead": "Энэ мэдээлэлтэй данс аль хэдийн орсон байна. Оронд нь нэвтэрнэ үү.",
     "privacyPolicy": "Нууцлалын бодлого",
     "register": "Бүртгүүлэх",
     "register_caps": "БҮРТГҮҮЛЭХ",

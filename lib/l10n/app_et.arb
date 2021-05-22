@@ -189,6 +189,7 @@
     "permissionDenied": "LUBATUD_KEELATUD",
     "permissionDisabled": "LUBATUD_KEELATUD",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Selle teabega on juba konto olemas. Palun logige selle asemel sisse.",
     "privacyPolicy": "Privaatsuspoliitika",
     "register": "Registreeri",
     "register_caps": "REGISTREERI",

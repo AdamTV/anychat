@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "تصویر",
+    "pleaseLoginInstead": "حسابی از قبل با این اطلاعات وجود دارد. لطفا در عوض وارد شوید",
     "privacyPolicy": "سیاست حفظ حریم خصوصی",
     "register": "ثبت نام",
     "register_caps": "ثبت نام",

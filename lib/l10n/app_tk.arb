@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Surat",
+    "pleaseLoginInstead": "Bu maglumat bilen eýýäm bir hasap bar. Munuň ýerine giriň.",
     "privacyPolicy": "Gizlinlik syýasaty",
     "register": "Hasaba al",
     "register_caps": "Hasaba alyş",

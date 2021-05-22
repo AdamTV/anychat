@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Сүрөт",
+    "pleaseLoginInstead": "Мындай маалымат камтылган каттоо эсеби бар. Сураныч, анын ордуна кириңиз.",
     "privacyPolicy": "Купуялык саясаты",
     "register": "Каттоо",
     "register_caps": "КАТТОО",

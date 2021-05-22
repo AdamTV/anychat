@@ -189,6 +189,7 @@
     "permissionDenied": "ခွင့်တောင်းမှုငြင်းဆိုခြင်း",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "ပန်းချီဆရာ",
+    "pleaseLoginInstead": "ဒီအချက်အလက်နဲ့အကောင့်ရှိပြီးသား ကျေးဇူးပြု၍ အစားဝင်ပါ",
     "privacyPolicy": "ကိုယ်ရေးအချက်အလက်မူဝါဒ",
     "register": "မှတ်ပုံတင်ပါ",
     "register_caps": "မှတ်ပုံတင်ပါ",

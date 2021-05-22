@@ -189,6 +189,7 @@
     "permissionDenied": "PRÍSTUP ZAMIETNUTÝ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Obrázok",
+    "pleaseLoginInstead": "Účet s týmito informáciami už existuje. Namiesto toho sa prihláste.",
     "privacyPolicy": "Zásady ochrany osobných údajov",
     "register": "Registrovať",
     "register_caps": "REGISTROVAŤ",

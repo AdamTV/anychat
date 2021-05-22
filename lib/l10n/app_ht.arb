@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Yon kont deja egziste ak enfòmasyon sa a. Tanpri konekte olye.",
     "privacyPolicy": "Règleman sou enfòmasyon prive",
     "register": "Enskri",
     "register_caps": "ENSKRI",

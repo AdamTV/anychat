@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Ishusho",
+    "pleaseLoginInstead": "Konti isanzweho hamwe naya makuru. Nyamuneka injira.",
     "privacyPolicy": "Politiki Yibanga",
     "register": "Iyandikishe",
     "register_caps": "UMWANDITSI",

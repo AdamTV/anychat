@@ -189,6 +189,7 @@
     "permissionDenied": "LEYFISLEGT",
     "permissionDisabled": "LEYFISLEGT",
     "picture": "Mynd",
+    "pleaseLoginInstead": "Reikningur er þegar til með þessum upplýsingum. Vinsamlegast skráðu þig inn í staðinn.",
     "privacyPolicy": "Friðhelgisstefna",
     "register": "Skráðu þig",
     "register_caps": "SKRÁÐU þig",

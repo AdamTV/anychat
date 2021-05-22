@@ -189,6 +189,7 @@
     "permissionDenied": "LUPA KIELLETTY",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Näillä tiedoilla on jo tili. Ole hyvä ja kirjaudu sisään.",
     "privacyPolicy": "Tietosuojakäytäntö",
     "register": "Rekisteröidy",
     "register_caps": "REKISTERÖIDY",

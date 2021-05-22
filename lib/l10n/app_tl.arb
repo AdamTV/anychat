@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Larawan",
+    "pleaseLoginInstead": "Mayroon nang isang account na may impormasyong ito. Mangyaring mag-login sa halip.",
     "privacyPolicy": "Patakaran sa Pagkapribado",
     "register": "Magparehistro",
     "register_caps": "REGISTER",

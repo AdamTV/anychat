@@ -189,6 +189,7 @@
     "permissionDenied": "IZIN DITOLAK",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Gambar",
+    "pleaseLoginInstead": "Akun dengan informasi ini sudah ada. Silakan masuk sebagai gantinya.",
     "privacyPolicy": "Kebijakan pribadi",
     "register": "Daftar",
     "register_caps": "DAFTAR",

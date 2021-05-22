@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Llun",
+    "pleaseLoginInstead": "Mae cyfrif eisoes yn bodoli gyda&#39;r wybodaeth hon. Mewngofnodi yn lle.",
     "privacyPolicy": "Polisi Preifatrwydd",
     "register": "Cofrestrwch",
     "register_caps": "COFRESTR",

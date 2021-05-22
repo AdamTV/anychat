@@ -189,6 +189,7 @@
     "permissionDenied": "РАЗРЕШЕНО_ДАННО",
     "permissionDisabled": "РАЗРЕШЕНО_ДИАБИЛИРАНО",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Вече съществува акаунт с тази информация. Моля, влезте вместо това.",
     "privacyPolicy": "Политика за поверителност",
     "register": "Регистрирам",
     "register_caps": "РЕГИСТРИРАМ",

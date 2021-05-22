@@ -189,6 +189,7 @@
     "permissionDenied": "ಅವಕಾಶ ನೀಡಲಾಗಿಲ್ಲ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "ಚಿತ್ರ",
+    "pleaseLoginInstead": "ಈ ಮಾಹಿತಿಯೊಂದಿಗೆ ಖಾತೆ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ. ಬದಲಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ.",
     "privacyPolicy": "ಗೌಪ್ಯತಾ ನೀತಿ",
     "register": "ನೋಂದಣಿ",
     "register_caps": "ನೋಂದಣಿ",

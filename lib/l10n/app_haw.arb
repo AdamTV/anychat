@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Kiʻi",
+    "pleaseLoginInstead": "Aia kekahi waihona me kēia ʻike. E ʻoluʻolu e komo ma kahi.",
     "privacyPolicy": "Kulekele pilikino",
     "register": "Kāinoa",
     "register_caps": "Kakau Kope",

@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Ar šo informāciju jau pastāv konts. Lūdzu, piesakieties.",
     "privacyPolicy": "Privātuma politika",
     "register": "Reģistrēties",
     "register_caps": "REĢISTRĒTIES",

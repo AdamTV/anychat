@@ -189,6 +189,7 @@
     "permissionDenied": "ADGANG NÆGTET",
     "permissionDisabled": "TILLADELSE_DISABLERET",
     "picture": "Billede",
+    "pleaseLoginInstead": "Der findes allerede en konto med disse oplysninger. Log ind i stedet.",
     "privacyPolicy": "Fortrolighedspolitik",
     "register": "Tilmeld",
     "register_caps": "TILMELD",

@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "ຮູບພາບ",
+    "pleaseLoginInstead": "ບັນຊີມີຢູ່ແລ້ວກັບຂໍ້ມູນນີ້. ກະລຸນາເຂົ້າລະບົບແທນ.",
     "privacyPolicy": "ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ",
     "register": "ລົງທະບຽນ",
     "register_caps": "ລົງທະບຽນ",

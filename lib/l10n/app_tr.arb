@@ -189,6 +189,7 @@
     "permissionDenied": "İZİN REDDEDİLDİ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Resim",
+    "pleaseLoginInstead": "Bu bilgileri içeren bir hesap zaten var. Lütfen bunun yerine giriş yapın.",
     "privacyPolicy": "Gizlilik Politikası",
     "register": "Kayıt ol",
     "register_caps": "KAYIT OL",

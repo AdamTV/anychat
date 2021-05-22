@@ -102,6 +102,12 @@ class AnyChatUser {
                 'language': AnyChatLocale.currentLocale.substring(0, 2),
               })
             }
+          else
+            {
+              Utilities.showToast(
+                  AppLocalizations.of(Utilities.globalKey.currentContext)
+                      .pleaseLoginInstead)
+            }
         });
   }
 

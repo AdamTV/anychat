@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Informazio honekin dagoeneko kontu bat dago. Mesedez, hasi saioa.",
     "privacyPolicy": "Pribatutasun politika",
     "register": "Izena eman",
     "register_caps": "IZENA EMAN",

@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Şəkil",
+    "pleaseLoginInstead": "Bu məlumatla bir hesab artıq mövcuddur. Xahiş edirəm əvəzinə daxil olun.",
     "privacyPolicy": "Gizlilik Siyasəti",
     "register": "Qeydiyyatdan keçin",
     "register_caps": "QEYDİYYAT",

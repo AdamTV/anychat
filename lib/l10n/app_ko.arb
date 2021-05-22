@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "이 정보가있는 계정이 이미 있습니다. 대신 로그인하십시오.",
     "privacyPolicy": "개인 정보 정책",
     "register": "레지스터",
     "register_caps": "레지스터",

@@ -189,6 +189,7 @@
     "permissionDenied": "ZUGRIFF VERWEIGERT",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Bild",
+    "pleaseLoginInstead": "Mit diesen Informationen ist bereits ein Konto vorhanden. Bitte melden Sie sich stattdessen an.",
     "privacyPolicy": "Datenschutz-Bestimmungen",
     "register": "Registrieren",
     "register_caps": "REGISTRIEREN",

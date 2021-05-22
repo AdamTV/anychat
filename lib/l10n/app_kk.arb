@@ -189,6 +189,7 @@
     "permissionDenied": "РҰҚСАТ БЕРУДЕН БАС ТАРТЫЛДЫ",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Сурет",
+    "pleaseLoginInstead": "Бұл ақпаратпен есептік жазба бұрыннан бар. Оның орнына кіріңіз.",
     "privacyPolicy": "Құпиялылық саясаты",
     "register": "Тіркелу",
     "register_caps": "ТІРКЕЛУ",

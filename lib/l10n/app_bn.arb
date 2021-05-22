@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "চিত্র",
+    "pleaseLoginInstead": "এই তথ্যের সাথে একটি অ্যাকাউন্ট ইতিমধ্যে বিদ্যমান। পরিবর্তে লগইন করুন।",
     "privacyPolicy": "গোপনীয়তা নীতি",
     "register": "নিবন্ধন",
     "register_caps": "নিবন্ধন",

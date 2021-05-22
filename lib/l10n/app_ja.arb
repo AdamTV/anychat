@@ -189,6 +189,7 @@
     "permissionDenied": "アクセス拒否",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "この情報を持つアカウントはすでに存在します。代わりにログインしてください。",
     "privacyPolicy": "個人情報保護方針",
     "register": "登録",
     "register_caps": "登録",

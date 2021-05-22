@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Daim duab",
+    "pleaseLoginInstead": "Ib tus account twb muaj nyob nrog cov ntaub ntawv no. Thov nkag mus hloov.",
     "privacyPolicy": "Txoj Cai Tswjfwm Ntiag Tug",
     "register": "Sau npe",
     "register_caps": "NPLOG",

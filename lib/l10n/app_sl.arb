@@ -189,6 +189,7 @@
     "permissionDenied": "DOVOLJENJE ZAVRNJENO",
     "permissionDisabled": "DOVOLJENO_DISABLIRANO",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Račun s temi podatki že obstaja. Namesto tega se prijavite.",
     "privacyPolicy": "Politika zasebnosti",
     "register": "Registrirajte se",
     "register_caps": "PRIJAVITE SE",

@@ -189,6 +189,7 @@
     "permissionDenied": "ДОЗВОЛА ОДБИЈЕНА",
     "permissionDisabled": "ПЕРМИССИОН_ДИСАБЛЕД",
     "picture": "Пицтуе",
+    "pleaseLoginInstead": "Налог већ постоји са овим информацијама. Уместо тога, пријавите се.",
     "privacyPolicy": "Правила о приватности",
     "register": "Регистровати",
     "register_caps": "РЕГИСТРОВАТИ",

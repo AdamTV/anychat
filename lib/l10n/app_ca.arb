@@ -189,6 +189,7 @@
     "permissionDenied": "PERMÍS DENEGAT",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Ja existeix un compte amb aquesta informació. Inicieu la sessió.",
     "privacyPolicy": "Política de privacitat",
     "register": "Registra't",
     "register_caps": "REGISTREU-VOS",

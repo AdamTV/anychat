@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Un contu esiste dighjà cù queste informazioni. Per piacè cunnettate invece.",
     "privacyPolicy": "Pulitica di Privacidad",
     "register": "Iscrizzione",
     "register_caps": "REGISTRATE",

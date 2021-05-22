@@ -189,6 +189,7 @@
     "permissionDenied": "अनुमति नहीं मिली",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "चित्र",
+    "pleaseLoginInstead": "इस जानकारी के साथ एक खाता पहले से मौजूद है। कृपया इसके बजाय लॉगिन करें।",
     "privacyPolicy": "गोपनीयता नीति",
     "register": "रजिस्टर करें",
     "register_caps": "रजिस्टर करें",

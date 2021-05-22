@@ -189,6 +189,7 @@
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "រូបតំណាង",
+    "pleaseLoginInstead": "មានគណនីរួចហើយជាមួយព័ត៌មាននេះ។ សូមចូលជំនួសវិញ។",
     "privacyPolicy": "គោលការណ៍\u200bភាព\u200bឯកជន",
     "register": "ចុះឈ្មោះ",
     "register_caps": "ចុះឈ្មោះ",

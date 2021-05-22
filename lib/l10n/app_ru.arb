@@ -189,6 +189,7 @@
     "permissionDenied": "В ДОСТУПЕ ОТКАЗАНО",
     "permissionDisabled": "PERMISSION_DISABLED",
     "picture": "Pictue",
+    "pleaseLoginInstead": "Учетная запись с этой информацией уже существует. Пожалуйста, войдите вместо этого.",
     "privacyPolicy": "Политика конфиденциальности",
     "register": "регистр",
     "register_caps": "РЕГИСТР",
