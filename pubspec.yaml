@@ -29,8 +29,6 @@ dependencies:
 
   devicelocale: ^0.4.1
   google_sign_in: ^5.0.1
-  flutter_facebook_login: ^3.0.0
-  flutter_twitter_login: ^1.1.0
   firebase_analytics: ^7.1.1
   firebase_core: ^1.1.0
   firebase_auth: ^1.0.1
@@ -56,11 +54,9 @@ dependencies:
   sign_in_with_apple: ^3.0.0
   flutter_ringtone_player: ^3.0.0
   disposables: ^1.0.0
-#  sound_stream: ^0.2.0
   flutter_sound: ^8.1.4
-
-
-
+  flutter_facebook_auth: ^3.4.0
+  twitter_login: ^3.0.8
 
 flutter_icons:
   android: "launcher_icon"
@@ -69,10 +65,10 @@ flutter_icons:
 
 dev_dependencies:
 #  flutter_launcher_icons: ^0.9.0
-  integration_test: ^1.0.0
+#  integration_test: ^1.0.0
   flutter_test:
     sdk: flutter
-  e2e: ^0.7.0+1
+#  e2e: ^0.7.0+1
 #  flutter_driver:
 #    sdk: flutter
 

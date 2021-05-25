@@ -5,9 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:twitter_login/twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -20,7 +20,7 @@ class AnyChatAuth {
   static Conversation currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-  static final FacebookLogin facebookSignIn = new FacebookLogin();
+  static FacebookAuth _facebookAuth;
   static GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -149,7 +149,7 @@ class AnyChatAuth {
     try {
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
-      await facebookSignIn.logOut();
+      await _facebookAuth.logOut();
       // TODO: Sign-out Twitter & Apple
     } catch (e) {
       print("User Signed Out");
@@ -206,59 +206,41 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser> signInFacebook() async {
-    if (kIsWeb)
-      facebookSignIn.loginBehavior = FacebookLoginBehavior.webViewOnly;
-    final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final FacebookAccessToken maccessToken = result.accessToken;
-        print('''
-         Logged in!
-         
-         Token: ${maccessToken.token}
-         User id: ${maccessToken.userId}
-         Expires: ${maccessToken.expires}
-         Permissions: ${maccessToken.permissions}
-         Declined permissions: ${maccessToken.declinedPermissions}
-         ''');
-        final facebookAuthCred =
-            FacebookAuthProvider.credential(maccessToken.token);
-        UserCredential userCred;
-        try {
-          userCred = await FirebaseAuth.instance
-              .signInWithCredential(facebookAuthCred);
-        } catch (e) {
-          facebookSignIn.logOut();
-          print('caught: ' + e.toString());
-          throw e;
-        }
-        final User user = userCred.user;
+    if (kIsWeb) {
+      // initialiaze the facebook javascript SDK
+      FacebookAuth.instance.webInitialize(
+        appId: "463424718375996",
+        cookie: true,
+        xfbml: true,
+        version: "v9.0",
+      );
+    }
+    final LoginResult result = await FacebookAuth.instance.login();
 
-        var snapshot = await FirebaseFirestore.instance
-            .collection("users")
-            .doc(user.uid)
-            .get();
-        if (snapshot.exists) {
-          currentUser = AnyChatUser.fromSnapshot(snapshot);
-          linkedAccountPhotoUrl = user.photoURL;
-          return currentUser;
-        } else {
-          currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
-          currentUser.addUserToFirestore();
-          return currentUser;
-        }
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print('Login cancelled by the user.');
-        throw Exception();
-        break;
-      case FacebookLoginStatus.error:
-        print('Something went wrong with the login process.\n'
-            'Here\'s the error Facebook gave us: ${result.errorMessage}');
-        throw Exception();
-        break;
+    bool _isLogged = result.status == LoginStatus.success;
+    if (_isLogged) {
+      // Create a credential from the access token
+      final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token);
+      // Once signed in, get the UserCredential
+      UserCredential userCred = await FirebaseAuth.instance.signInWithCredential(credential);
+          final User user = userCred.user;
+          var snapshot = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(user.uid)
+              .get();
+          if (snapshot.exists) {
+            currentUser = AnyChatUser.fromSnapshot(snapshot);
+            linkedAccountPhotoUrl = user.photoURL;
+            return currentUser;
+          } else {
+            final userData = await FacebookAuth.instance.getUserData();
+            var url = userData['picture']['data']['url'];
+            currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
+                url, AnyChatLocale.currentLocale.substring(0, 2));
+            currentUser.addUserToFirestore();
+            return currentUser;
+          }
     }
     return null;
   }
@@ -347,38 +329,92 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser> signInTwitter() async {
-    // Create a TwitterLogin instance
-    final TwitterLogin twitterLogin = new TwitterLogin(
-      consumerKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-      consumerSecret: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+    final twitterLogin = TwitterLogin(
+      // Consumer API keys
+      apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+      // Consumer API Secret keys
+      apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+      // Registered Callback URLs in TwitterApp
+      // Android is a deeplink
+      // iOS is a URLScheme
+      redirectURI: 'twittersdk://',
+      // Forces the user to enter their credentials
+      // to ensure the correct users account is authorized.
     );
+    // If you want to implement Twitter account switching, set [force_login] to true
+    // login(forceLogin: true);
+    final authResult = await twitterLogin.login();
+    switch (authResult.status) {
+      case TwitterLoginStatus.loggedIn:
+      // success
+        print('====== Login success ======');
+        // Create a credential from the access token
+        final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
+            accessToken: authResult.authToken, secret: authResult.authTokenSecret);
 
-    final TwitterLoginResult loginResult = await twitterLogin.authorize();
+        final userCred =
+            await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+        final user = userCred.user;
 
-    // Get the Logged In session
-    final TwitterSession twitterSession = loginResult.session;
-
-    // Create a credential from the access token
-    final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
-        accessToken: twitterSession.token, secret: twitterSession.secret);
-
-    final userCred =
-        await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
-    final user = userCred.user;
-
-    var snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .get();
-    if (snapshot.exists) {
-      currentUser = AnyChatUser.fromSnapshot(snapshot);
-      linkedAccountPhotoUrl = user.photoURL;
-      return currentUser;
-    } else {
-      currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-          user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
-      currentUser.addUserToFirestore();
-      return currentUser;
+        var snapshot = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .get();
+        if (snapshot.exists) {
+          currentUser = AnyChatUser.fromSnapshot(snapshot);
+          linkedAccountPhotoUrl = user.photoURL;
+          return currentUser;
+        } else {
+          currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
+              user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
+          currentUser.addUserToFirestore();
+          return currentUser;
+        }
+        break;
+      case TwitterLoginStatus.cancelledByUser:
+      // cancel
+        print('====== Login cancel ======');
+        break;
+      case TwitterLoginStatus.error:
+      default:
+      // error
+        print('====== Login error ======');
+        break;
     }
+
+
+    // // Create a TwitterLogin instance
+    // final TwitterLogin twitterLogin = new TwitterLogin(
+    //   consumerKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+    //   consumerSecret: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+    // );
+    //
+    // final TwitterLoginResult loginResult = await twitterLogin.authorize();
+    //
+    // // Get the Logged In session
+    // final TwitterSession twitterSession = loginResult.session;
+    //
+    // // Create a credential from the access token
+    // final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
+    //     accessToken: twitterSession.token, secret: twitterSession.secret);
+    //
+    // final userCred =
+    //     await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+    // final user = userCred.user;
+    //
+    // var snapshot = await FirebaseFirestore.instance
+    //     .collection("users")
+    //     .doc(user.uid)
+    //     .get();
+    // if (snapshot.exists) {
+    //   currentUser = AnyChatUser.fromSnapshot(snapshot);
+    //   linkedAccountPhotoUrl = user.photoURL;
+    //   return currentUser;
+    // } else {
+    //   currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
+    //       user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
+    //   currentUser.addUserToFirestore();
+    //   return currentUser;
+    // }
   }
 }
