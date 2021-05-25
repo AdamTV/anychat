@@ -181,6 +181,7 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   bool recognizing, recognizeFinished;
+  AudioTranscriber audioTranscriber = AudioTranscriber();
 
   void streamingRecognize() async {
     setState(() {
@@ -189,7 +190,7 @@ class _CallScreenState extends State<CallScreen> {
 
     String lastMessage = "";
 
-    var responseStream = await AudioTranscriber.getResponseStream(
+    var responseStream = await audioTranscriber.getResponseStream(
         AnyChatAuth.currentUser.language);
 
     responseStream.listen((data) async {
@@ -200,17 +201,12 @@ class _CallScreenState extends State<CallScreen> {
         lastMessage = transcribedText;
         AnyChatUser.addTranscribedMessage(lastMessage);
       }
-    }, onDone: () async {
-      await AudioTranscriber.stopRecording();
-      if (mounted) {
-        setState(() {
-          recognizing = false;
-        });
-      }
     }, onError: (e) async {
       print(e);
-      await AudioTranscriber.stopRecording();
-      streamingRecognize();
+      await audioTranscriber.stopRecording();
+      if(mounted){
+        streamingRecognize();
+      }
     });
 
     // setState(() {
@@ -448,7 +444,7 @@ class _CallScreenState extends State<CallScreen> {
     });
     _engine.muteLocalAudioStream(muted);
     if (muted) {
-      await AudioTranscriber.stopRecording();
+      await audioTranscriber.stopRecording();
     } else {
       streamingRecognize();
     }
