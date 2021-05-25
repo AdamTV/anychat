@@ -445,8 +445,7 @@ class AnyChatUser {
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) {
                 if (doc['email'] == email) {
-                  user = AnyChatUser(doc.id, doc["displayName"], doc["email"],
-                      doc["photoUrl"], doc["language"]);
+                  user = AnyChatUser.fromSnapshot(doc);
                   print(doc["displayName"]);
                 }
               }),
