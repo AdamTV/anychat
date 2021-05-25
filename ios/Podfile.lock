@@ -240,18 +240,16 @@ PODS:
     - Flutter
   - devicelocale (0.0.1):
     - Flutter
-  - e2e (0.0.1):
-    - Flutter
-  - FBSDKCoreKit (5.15.1):
-    - FBSDKCoreKit/Basics (= 5.15.1)
-    - FBSDKCoreKit/Core (= 5.15.1)
-  - FBSDKCoreKit/Basics (5.15.1)
-  - FBSDKCoreKit/Core (5.15.1):
+  - FBSDKCoreKit (9.1.0):
+    - FBSDKCoreKit/Basics (= 9.1.0)
+    - FBSDKCoreKit/Core (= 9.1.0)
+  - FBSDKCoreKit/Basics (9.1.0)
+  - FBSDKCoreKit/Core (9.1.0):
     - FBSDKCoreKit/Basics
-  - FBSDKLoginKit (5.15.1):
-    - FBSDKLoginKit/Login (= 5.15.1)
-  - FBSDKLoginKit/Login (5.15.1):
-    - FBSDKCoreKit (~> 5.0)
+  - FBSDKLoginKit (9.1.0):
+    - FBSDKLoginKit/Login (= 9.1.0)
+  - FBSDKLoginKit/Login (9.1.0):
+    - FBSDKCoreKit (~> 9.1.0)
   - Firebase/Analytics (7.11.0):
     - Firebase/Core
   - Firebase/Auth (7.11.0):
@@ -345,17 +343,25 @@ PODS:
     - FirebaseCore (~> 7.0)
     - GTMSessionFetcher/Core (~> 1.4)
   - Flutter (1.0.0)
-  - flutter_facebook_login (0.0.1):
-    - FBSDKCoreKit (~> 5.5)
-    - FBSDKLoginKit (~> 5.5)
+  - flutter_facebook_auth (2.0.0):
+    - FBSDKCoreKit (~> 9.1.0)
+    - FBSDKLoginKit (~> 9.1.0)
     - Flutter
+  - flutter_inappwebview (0.0.1):
+    - Flutter
+    - flutter_inappwebview/Core (= 0.0.1)
+    - OrderedSet (~> 5.0)
+  - flutter_inappwebview/Core (0.0.1):
+    - Flutter
+    - OrderedSet (~> 5.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_ringtone_player (0.0.1):
     - Flutter
-  - flutter_twitter_login (0.0.1):
+  - flutter_sound (8.1.4):
     - Flutter
-    - TwitterKit
+    - mobile-ffmpeg-full (= 4.4.LTS)
+    - tau_core (= 8.1.4)
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -436,14 +442,14 @@ PODS:
   - GTMSessionFetcher/Core (1.5.0)
   - image_picker (0.0.1):
     - Flutter
-  - integration_test (0.0.1):
-    - Flutter
   - leveldb-library (1.22.1)
+  - mobile-ffmpeg-full (4.4.LTS)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - OrderedSet (5.0.0)
   - path_provider (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
@@ -453,12 +459,10 @@ PODS:
     - Flutter
   - sign_in_with_apple (0.0.1):
     - Flutter
-  - sound_stream (0.0.1):
-    - Flutter
+  - tau_core (8.1.4)
   - Toast (4.0.0)
-  - TwitterCore (3.2.0)
-  - TwitterKit (3.4.2):
-    - TwitterCore (>= 3.2.0)
+  - twitter_login (0.0.1):
+    - Flutter
   - url_launcher (0.0.1):
     - Flutter
 
@@ -469,25 +473,24 @@ DEPENDENCIES:
   - contacts_service (from `.symlinks/plugins/contacts_service/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - devicelocale (from `.symlinks/plugins/devicelocale/ios`)
-  - e2e (from `.symlinks/plugins/e2e/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
-  - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
+  - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
+  - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
-  - flutter_twitter_login (from `.symlinks/plugins/flutter_twitter_login/ios`)
+  - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
-  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
-  - sound_stream (from `.symlinks/plugins/sound_stream/ios`)
+  - twitter_login (from `.symlinks/plugins/twitter_login/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
@@ -517,11 +520,12 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - leveldb-library
+    - mobile-ffmpeg-full
     - nanopb
+    - OrderedSet
     - PromisesObjC
+    - tau_core
     - Toast
-    - TwitterCore
-    - TwitterKit
 
 EXTERNAL SOURCES:
   admob_flutter:
@@ -536,8 +540,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info/ios"
   devicelocale:
     :path: ".symlinks/plugins/devicelocale/ios"
-  e2e:
-    :path: ".symlinks/plugins/e2e/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
@@ -548,22 +550,22 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
-  flutter_facebook_login:
-    :path: ".symlinks/plugins/flutter_facebook_login/ios"
+  flutter_facebook_auth:
+    :path: ".symlinks/plugins/flutter_facebook_auth/ios"
+  flutter_inappwebview:
+    :path: ".symlinks/plugins/flutter_inappwebview/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_ringtone_player:
     :path: ".symlinks/plugins/flutter_ringtone_player/ios"
-  flutter_twitter_login:
-    :path: ".symlinks/plugins/flutter_twitter_login/ios"
+  flutter_sound:
+    :path: ".symlinks/plugins/flutter_sound/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
-  integration_test:
-    :path: ".symlinks/plugins/integration_test/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -572,8 +574,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
-  sound_stream:
-    :path: ".symlinks/plugins/sound_stream/ios"
+  twitter_login:
+    :path: ".symlinks/plugins/twitter_login/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
 
@@ -588,9 +590,8 @@ SPEC CHECKSUMS:
   contacts_service: 849e1f84281804c8bfbec1b4c3eedcb23c5d3eca
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   devicelocale: b22617f40038496deffba44747101255cee005b0
-  e2e: d0c9f8c832b4cc7ab386d0c0f0af67fe5ac0c3bd
-  FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
-  FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
+  FBSDKCoreKit: a00fe2efd780c195a5e09201bf51c56106245b40
+  FBSDKLoginKit: d98498c598ec09de657385a9349a1f21119b7f86
   Firebase: c121feb35e4126c0b355e3313fa9b487d47319fd
   firebase_analytics: 5224a46c337a1cf04b92ad3abeb3be5d83e3fd4e
   firebase_auth: a2bcd374be68ccee6284c3d00286846466b5a28b
@@ -604,10 +605,11 @@ SPEC CHECKSUMS:
   FirebaseInstallations: a58d4f72ec5861840b84df489f2668d970df558a
   FirebaseStorage: 8542711850ca181a3931c0ed483006a7b46039e7
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
+  flutter_facebook_auth: 4b170c07b7fce791497093fcc3f134fb215f3f07
+  flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
-  flutter_twitter_login: acf71258bca3b35b6ac06681f7a33b48f4acc0bd
+  flutter_sound: b7e3e75915112839e8bb926b6bab1d28121ac6d5
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   Google-Mobile-Ads-SDK: 2f288748a42920d1c744946a460896a95b0e9110
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
@@ -621,20 +623,20 @@ SPEC CHECKSUMS:
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
-  integration_test: 5ed24a436eb7ec17b6a13046e9bf7ca4a404e59e
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  mobile-ffmpeg-full: f17c82219b4ff9e4018b5e21f88b78c28a3475db
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sign_in_with_apple: 34f3f5456a45fd7ac5fb42905e2ad31dae061b4a
-  sound_stream: eba0f2a5994b91d9e5009a739df6e98515a7b44f
+  tau_core: 8e07b9ce46e5e1b1956fb4d5e9ac713206e5c315
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
-  TwitterKit: 5e4f41d70b9abdb41df5467f52d7aa2c0fd26ebb
+  twitter_login: 2794db69b7640681171b17b3c2c84ad9dfb4a57f
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
 
-PODFILE CHECKSUM: eb77cd5a845e928c3a70e9656aa1e50b7131e89b
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
 COCOAPODS: 1.10.1
