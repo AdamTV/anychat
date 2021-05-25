@@ -19,6 +19,9 @@ class AudioTranscriber {
 
   static Future<Stream<v1Speech.StreamingRecognizeResponse>> getResponseStream(
       String isoCode) async {
+
+    stopRecording();
+
     AudioTranscriber.isoCode = isoCode;
 
     _recorder.initialize();
@@ -61,6 +64,6 @@ class AudioTranscriber {
   static Future<void> stopRecording() async {
     await _recorder.stop();
     await _audioStreamSubscription?.cancel();
-    await _audioStream?.close();
+    // await _audioStream?.close();
   }
 }
