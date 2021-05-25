@@ -26,9 +26,9 @@ import 'package:permission_handler/permission_handler.dart';
 // }
 
 class CallScreen extends StatefulWidget {
-  static String channelName;
+  static late String channelName;
 
-  const CallScreen({Key key}) : super(key: key);
+  const CallScreen({Key? key}) : super(key: key);
 
   @override
   _CallScreenState createState() => _CallScreenState();
@@ -36,12 +36,12 @@ class CallScreen extends StatefulWidget {
   static Future<void> requestPermissionAndNavigate() async {
     if (await Utilities.handlePermission(Permission.camera) &&
         await Utilities.handlePermission(Permission.microphone)) {
-      AnyChatUser.addMessageToConversation(AnyChatAuth.currentUser.displayName +
+      AnyChatUser.addMessageToConversation(AnyChatAuth.currentUser!.displayName! +
           " " +
-          AppLocalizations.of(Utilities.globalKey.currentContext)
+          AppLocalizations.of(Utilities.globalKey.currentContext!)!
               .isCallingYouOnAnyChat);
-      CallScreen.channelName = AnyChatAuth.currentConversation.id;
-      Navigator.pushNamed(Utilities.globalKey.currentContext, "/call");
+      CallScreen.channelName = AnyChatAuth.currentConversation!.id;
+      Navigator.pushNamed(Utilities.globalKey.currentContext!, "/call");
     }
   }
 }
@@ -50,10 +50,10 @@ class _CallScreenState extends State<CallScreen> {
   // static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
-  RtcEngine _engine;
-  RtcChannel _channel;
+  late RtcEngine _engine;
+  RtcChannel? _channel;
   String text = "";
-  StreamSubscription<QuerySnapshot> _transcribedChatMessageSubscription;
+  StreamSubscription<QuerySnapshot>? _transcribedChatMessageSubscription;
 
   get defaultTargetPlatform => null;
 
@@ -97,10 +97,10 @@ class _CallScreenState extends State<CallScreen> {
     // await _engine.enableWebSdkInteroperability(true);
     _channel = await RtcChannel.create(CallScreen.channelName);
     setState(() {});
-    this._addListener(_channel);
-    await _channel.setClientRole(ClientRole.Broadcaster);
-    await _channel.publish();
-    await _channel.joinChannel(null, null, 0, ChannelMediaOptions(true, true));
+    this._addListener(_channel!);
+    await _channel!.setClientRole(ClientRole.Broadcaster);
+    await _channel!.publish();
+    await _channel!.joinChannel(null, null, 0, ChannelMediaOptions(true, true));
     streamingRecognize();
     // await _engine.joinChannel(null, CallScreen.channelName, null, 0);
   }
@@ -159,7 +159,7 @@ class _CallScreenState extends State<CallScreen> {
   // }
 
   Container _translatedText() {
-    return text != null && text.isNotEmpty
+    return text.isNotEmpty
         ? Container(
             alignment: Alignment.topRight,
             child: Container(
@@ -180,7 +180,7 @@ class _CallScreenState extends State<CallScreen> {
         : Container();
   }
 
-  bool recognizing, recognizeFinished;
+  bool? recognizing, recognizeFinished;
   AudioTranscriber audioTranscriber = AudioTranscriber();
 
   void streamingRecognize() async {
@@ -191,11 +191,11 @@ class _CallScreenState extends State<CallScreen> {
     String lastMessage = "";
 
     var responseStream = await audioTranscriber.getResponseStream(
-        AnyChatAuth.currentUser.language);
+        AnyChatAuth.currentUser!.language);
 
     responseStream.listen((data) async {
       String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript)?.last ?? "";
+          data.results.map((e) => e.alternatives.first.transcript).last;
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
@@ -306,7 +306,7 @@ class _CallScreenState extends State<CallScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).title,
+          AppLocalizations.of(context)!.title,
         ),
       ),
       backgroundColor: Colors.black,
@@ -358,7 +358,6 @@ class _CallScreenState extends State<CallScreen> {
         Expanded(
           child: Stack(
             children: [
-              if (remoteUid != null)
                 SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -368,7 +367,7 @@ class _CallScreenState extends State<CallScreen> {
                           height: MediaQuery.of(context).size.height,
                           child: RtcRemoteView.SurfaceView(
                             uid: e,
-                            channelId: _channel.channelId,
+                            channelId: _channel!.channelId,
                           ),
                         ),
                       )),
@@ -427,10 +426,10 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _onCallEnd() async {
-    _channel.leaveChannel();
+    _channel!.leaveChannel();
     _engine.destroy();
     AnyChatUser.clearTranscribedMessages();
-    if (await Ads.interstitial.isLoaded) {
+    if (await (Ads.interstitial.isLoaded as FutureOr<bool>)) {
       Ads.interstitial.show();
     } else {
       print('Interstitial ad is still laoding...');
@@ -457,7 +456,7 @@ class _CallScreenState extends State<CallScreen> {
   Stream<QuerySnapshot> loadAllTranscribedMessages() {
     return FirebaseFirestore.instance
         .collection('conversations')
-        .doc(AnyChatAuth.currentConversation.id)
+        .doc(AnyChatAuth.currentConversation!.id)
         .collection('transcribedMessages')
         .orderBy('timestamp', descending: false)
         .snapshots();
@@ -466,8 +465,8 @@ class _CallScreenState extends State<CallScreen> {
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
     if (message == null) return;
-    final language = AnyChatAuth.currentUser.language;
-    if (message.senderId != AnyChatAuth.currentUser.id) {
+    final language = AnyChatAuth.currentUser!.language;
+    if (message.senderId != AnyChatAuth.currentUser!.id) {
       final translatedText =
           await Utilities.getGoogleTranslation(language, message.text);
       setState(() {
@@ -476,7 +475,7 @@ class _CallScreenState extends State<CallScreen> {
     }
   }
 
-  AnyChatMessage getMessageFromQuery(QuerySnapshot snapshot) {
+  AnyChatMessage? getMessageFromQuery(QuerySnapshot snapshot) {
     if (snapshot.docs.isEmpty) return null;
     return snapshot.docs.map((DocumentSnapshot doc) {
       return AnyChatMessage.fromSnapshot(doc);

@@ -16,8 +16,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String _email;
-  String _password;
+  String? _email;
+  String? _password;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -28,7 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).register_caps,
+              AppLocalizations.of(context)!.register_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
@@ -38,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   size.height < 750 ? size.height * 0.25 : size.height * 0.35,
             ),
             RoundedInputField(
-              hintText: AppLocalizations.of(context).email,
+              hintText: AppLocalizations.of(context)!.email,
               onChanged: (value) {
                 _email = value;
               },
@@ -49,13 +49,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
             RoundedButton(
-              text: AppLocalizations.of(context).register_caps,
+              text: AppLocalizations.of(context)!.register_caps,
               press: () async {
                 try {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, true);
                   if (user != null) {
-                    Utilities.showToast(AppLocalizations.of(context)
+                    Utilities.showToast(AppLocalizations.of(context)!
                         .accountCreatedEnterSettings);
                     Navigator.pushNamed(context, '/settings');
                   } else {
@@ -64,8 +64,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 } catch (e) {
                   Utilities.showAlertDialog(
                       context,
-                      AppLocalizations.of(context).error,
-                      AppLocalizations.of(context).unableRegister);
+                      AppLocalizations.of(context)!.error,
+                      AppLocalizations.of(context)!.unableRegister);
                 }
               },
             ),
@@ -97,8 +97,8 @@ class SignupBackground extends StatelessWidget {
   final Widget child;
 
   const SignupBackground({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override

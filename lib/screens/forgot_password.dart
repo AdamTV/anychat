@@ -14,13 +14,11 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  String _email;
+  String? _email;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    // This size provide us total height and width of our screen
     return Scaffold(
         body: WelcomeBackground(
       child: SingleChildScrollView(
@@ -28,16 +26,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).title,
+              AppLocalizations.of(context)!.title,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              AppLocalizations.of(context).enterYourEmail,
+              AppLocalizations.of(context)!.enterYourEmail,
               style: TextStyle(fontSize: 32),
             ),
             RoundedInputField(
               icon: Icons.mail,
-              hintText: AppLocalizations.of(context).email,
+              hintText: AppLocalizations.of(context)!.email,
               onChanged: (value) {
                 _email = value;
               },
@@ -47,9 +45,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             //   height: size.height * 0.45,
             // ),
             RoundedButton(
-              text: AppLocalizations.of(context).send +
+              text: AppLocalizations.of(context)!.send +
                   " " +
-                  AppLocalizations.of(context).email,
+                  AppLocalizations.of(context)!.email,
               press: () async {
                 await _passwordReset();
                 print(_email);
@@ -62,7 +60,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               },
             ),
             RoundedButton(
-              text: AppLocalizations.of(context).login,
+              text: AppLocalizations.of(context)!.login,
               press: () {
                 Navigator.pushNamed(context, "/login");
               },
@@ -76,15 +74,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   _passwordReset() async {
     try {
       final _auth = FirebaseAuth.instance;
-      _formKey.currentState.save();
-      await _auth.sendPasswordResetEmail(email: _email);
+      _formKey.currentState!.save();
+      await _auth.sendPasswordResetEmail(email: _email!);
       Utilities.showToast(
-          AppLocalizations.of(context).emailSentToResetPassword);
+          AppLocalizations.of(context)!.emailSentToResetPassword);
     } catch (e) {
-      if (!(e is NoSuchMethodError) && e.message != null) {
-        Utilities.showToast(e.message);
+      if ((e is FirebaseException) && e.message != null) {
+        Utilities.showToast(e.message!);
       } else {
-        Utilities.showToast(AppLocalizations.of(context).error);
+        Utilities.showToast(AppLocalizations.of(context)!.error);
       }
       print(e);
     }

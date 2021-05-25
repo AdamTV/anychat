@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Ads {
-  static AdmobInterstitial interstitial;
+  static late AdmobInterstitial interstitial;
 
   static init() {
     // Admob.initialize();
@@ -21,7 +21,7 @@ class Ads {
 
     interstitial = AdmobInterstitial(
       adUnitId: getInterstitialAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
         handleEvent(event, args, 'Interstitial');
       },
     );
@@ -29,13 +29,13 @@ class Ads {
     interstitial.load();
   }
 
-  static AdmobBannerController controller;
+  static late AdmobBannerController controller;
   static AdmobBanner getBanner() {
     return AdmobBanner(
         adUnitId: getBannerAdUnitId(),
         adSize:
-            AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext),
-        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+            AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext!),
+        listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
           handleEvent(event, args, 'Banner');
           if (event == AdmobAdEvent.opened) {
             controller.dispose();
@@ -51,7 +51,7 @@ class Ads {
   }
 
   static void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+      AdmobAdEvent event, Map<String, dynamic>? args, String adType) {
     switch (event) {
       case AdmobAdEvent.loaded:
         print('New Admob $adType Ad loaded!');

@@ -16,8 +16,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _email;
-  String _password;
+  String? _email;
+  String? _password;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).login_caps,
+              AppLocalizations.of(context)!.login_caps,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.topLeft,
             ),
             RoundedInputField(
-              hintText: AppLocalizations.of(context).email,
+              hintText: AppLocalizations.of(context)!.email,
               onChanged: (value) {
                 _email = value;
               },
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             RoundedButton(
-              text: AppLocalizations.of(context).login_caps,
+              text: AppLocalizations.of(context)!.login_caps,
               press: () async {
                 try {
                   var user =
@@ -62,13 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   else
                     Utilities.showAlertDialog(
                         context,
-                        AppLocalizations.of(context).error,
-                        AppLocalizations.of(context).invalidCredentials);
+                        AppLocalizations.of(context)!.error,
+                        AppLocalizations.of(context)!.invalidCredentials);
                 } catch (e) {
                   Utilities.showAlertDialog(
                       context,
-                      AppLocalizations.of(context).error,
-                      AppLocalizations.of(context).errorLoggingIn);
+                      AppLocalizations.of(context)!.error,
+                      AppLocalizations.of(context)!.errorLoggingIn);
                 }
 
                 // AnyChatAuth.signInEmail(_email, _password, false)
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               },
               child: Text(
-                AppLocalizations.of(context).forgotPassword,
+                AppLocalizations.of(context)!.forgotPassword,
                 style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
@@ -137,8 +137,8 @@ class LoginBackground extends StatelessWidget {
   final Widget child;
 
   const LoginBackground({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override

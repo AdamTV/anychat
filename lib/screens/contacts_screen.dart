@@ -54,9 +54,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
   Widget _buildList() {
     if (_searchText.isNotEmpty) {
       List<AnyChatContact> tempList = _filteredContacts.where((element) =>
-          element.displayName
+          element.displayName!
               .toLowerCase()
-              .contains(_searchText.toLowerCase()));
+              .contains(_searchText.toLowerCase())) as List<AnyChatContact>;
       // for (int i = 0; i < _filteredContacts.length; i++) {
       //   if (_filteredContacts[i]
       //       .displayName
@@ -73,9 +73,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
     _sortedContacts
         .addAll(_filteredContacts.where((element) => !element.isRegistered));
     return ListView.builder(
-      itemCount: _sortedContacts?.length ?? 0,
+      itemCount: _sortedContacts.length,
       itemBuilder: (BuildContext context, int index) {
-        AnyChatContact c = _sortedContacts?.elementAt(index);
+        AnyChatContact c = _sortedContacts.elementAt(index);
         return contactListTile(c);
       },
     );
@@ -119,14 +119,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
       Utilities.showToast(
-          AppLocalizations.of(context).accessContactDataDisabled);
+          AppLocalizations.of(context)!.accessContactDataDisabled);
       // throw PlatformException(
       //     code: AppLocalizations.of(context).permissionDenied,
       //     message: AppLocalizations.of(context).accessContactDataDenied,
       //     details: null);
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
       Utilities.showToast(
-          AppLocalizations.of(context).accessContactDataDisabled);
+          AppLocalizations.of(context)!.accessContactDataDisabled);
       // throw PlatformException(
       //     code: AppLocalizations.of(context).permissionDisabled,
       //     message: AppLocalizations.of(context).accessContactDataDisabled,
@@ -178,12 +178,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
       _isLoading = false;
     });
 
-    List<String> allUsersEmails = [];
     FirebaseFirestore.instance.collection('users').snapshots().listen((event) {
       event.docs.forEach((element) {
         if (_contacts.any((contact) =>
-            contact.emails.any((email) => email == element['email']))) {
-          int i = 0;
+            contact.emails!.any((email) => email == element['email']))) {
           // _contacts.firstWhere((contact) => contact.emails.firstWhere((email ) => false))
         }
         // allUsersEmails.add(element['email']);
@@ -251,21 +249,21 @@ class _ContactsScreenState extends State<ContactsScreen> {
             hintStyle: TextStyle(
                 color: Theme.of(context).primaryColorLight, fontSize: 20),
             // icon: new Icon(Icons.search),
-            hintText: AppLocalizations.of(context).searchDotDotDot,
+            hintText: AppLocalizations.of(context)!.searchDotDotDot,
             // border: OutlineInputBorder(),
             border: InputBorder.none,
           ),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
+        this._appBarTitle = new Text(AppLocalizations.of(context)!.yourContacts);
         _filter.clear();
       }
       isSearch = !isSearch;
     });
   }
 
-  IconButton _backButton;
+  late IconButton _backButton;
   var isSearch = false;
   bool _isLoading = true;
 
@@ -285,7 +283,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           );
     if (!isSearch)
-      _appBarTitle = new Text(AppLocalizations.of(context).yourContacts);
+      _appBarTitle = new Text(AppLocalizations.of(context)!.yourContacts);
     return Scaffold(
       appBar: AppBar(
         title: _appBarTitle,
@@ -330,8 +328,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   ListTile contactListTile(AnyChatContact c) {
     String sub = c.isRegistered
-        ? AppLocalizations.of(context).startChatting
-        : AppLocalizations.of(context).inviteToAnyChat;
+        ? AppLocalizations.of(context)!.startChatting
+        : AppLocalizations.of(context)!.inviteToAnyChat;
     return ListTile(
       onTap: c.isRegistered
           ? () async {
@@ -342,7 +340,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 AnyChatAuth.currentConversation = convo;
                 List<AnyChatUser> users = <AnyChatUser>[];
                 for (var id in convo.participants) {
-                  if (id != AnyChatAuth.currentUser.id) {
+                  if (id != AnyChatAuth.currentUser!.id) {
                     users.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
                         .instance
                         .collection('users')
@@ -354,12 +352,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
               } else {
                 var success = await AnyChatUser.addUserToConversation(user);
                 if (success) {
-                  AnyChatAuth.currentConversation.participants.add(user.id);
+                  AnyChatAuth.currentConversation!.participants.add(user.id);
                   await FirebaseFirestore.instance
                       .runTransaction((Transaction transaction) async {
                     var convoDoc = FirebaseFirestore.instance
                         .collection('conversations')
-                        .doc(AnyChatAuth.currentConversation.id);
+                        .doc(AnyChatAuth.currentConversation!.id);
                     await transaction
                         .get(convoDoc)
                         .then((DocumentSnapshot doc) =>
@@ -367,7 +365,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         .then((Conversation fresh) {
                       transaction.update(convoDoc, {
                         'participants':
-                            AnyChatAuth.currentConversation.participants,
+                            AnyChatAuth.currentConversation!.participants,
                       });
 
                       AnyChatAuth.currentChatters.add(user);
@@ -387,8 +385,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
               // Navigator.of(context).push(MaterialPageRoute(
               //     builder: (BuildContext context) => FindChatterScreen(email: c.emails.first.toString())));
             },
-      leading: (c.avatar != null && c.avatar.length > 0)
-          ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
+      leading: (c.avatar != null && c.avatar!.length > 0)
+          ? CircleAvatar(backgroundImage: MemoryImage(c.avatar!))
           : CircleAvatar(child: Text(c.initials())),
       title: Text(c.displayName ?? ""),
       subtitle: Text(sub),
@@ -399,29 +397,29 @@ class _ContactsScreenState extends State<ContactsScreen> {
     List<Widget> widgets = [];
     var params =
         "?subject=Let%27s+chat+on+AnyChat%21&body=Let%27s+chat+on+AnyChat%21+It%27s+a+fast%2C+simple+and+secure+app+we+can+use+to+translate+our+messages+and+calls+for+free%21+Get+it+at%3A+https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dca.alphatech.anychat";
-    if (user.emails.isNotEmpty) {
+    if (user.emails!.isNotEmpty) {
       var eurl =
-          "mailto:" + user.emails.first.value + params.replaceAll("+", " ");
+          "mailto:" + user.emails!.first.value! + params.replaceAll("+", " ");
       widgets.add(RoundedButton(
-          text: AppLocalizations.of(context).emailInvite,
+          text: AppLocalizations.of(context)!.emailInvite,
           press: () {
             _launchURL(eurl);
           }));
     }
-    if (user.phones.isNotEmpty) {
-      var purl = "sms:" + user.phones.first.value + params;
+    if (user.phones!.isNotEmpty) {
+      var purl = "sms:" + user.phones!.first.value! + params;
       widgets.add(RoundedButton(
-          text: AppLocalizations.of(context).smsInvite,
+          text: AppLocalizations.of(context)!.smsInvite,
           press: () {
             _launchURL(purl);
           }));
     }
     return AlertDialog(
-        title: Text(AppLocalizations.of(context).invite +
+        title: Text(AppLocalizations.of(context)!.invite +
             " " +
-            user.displayName +
+            user.displayName! +
             " " +
-            AppLocalizations.of(context).toAnyChat),
+            AppLocalizations.of(context)!.toAnyChat),
         content: new Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

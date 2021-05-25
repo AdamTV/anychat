@@ -22,9 +22,9 @@ final ThemeData kDarkTheme = ThemeData(
     brightness: Brightness.dark,
     textTheme: Typography.whiteMountainView);
 
-final Color kDefaultChatBubbleColorLeft = Colors.grey[200];
-final Color kDefaultChatBubbleColorRight = Colors.blue[200];
-final Color kDarkChatBubbleColorLeft = Colors.grey[800];
-final Color kDarkChatBubbleColorRight = Colors.deepPurple[800];
+final Color? kDefaultChatBubbleColorLeft = Colors.grey[200];
+final Color? kDefaultChatBubbleColorRight = Colors.blue[200];
+final Color? kDarkChatBubbleColorLeft = Colors.grey[800];
+final Color? kDarkChatBubbleColorRight = Colors.deepPurple[800];
 
 final agoraAppId = '72559be0b8944a8fb70a772d196078ce';

@@ -12,15 +12,15 @@ class AddChatterScreen extends StatefulWidget {
 }
 
 class _AddChatterScreenState extends State<AddChatterScreen> {
-  String searchValue;
+  String? searchValue;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
           title: Text(SearchChatterByEmailScreen.addToConvo
-              ? AppLocalizations.of(context).addSomeoneToConversation
-              : AppLocalizations.of(context).startConversation),
+              ? AppLocalizations.of(context)!.addSomeoneToConversation
+              : AppLocalizations.of(context)!.startConversation),
           // bottom: PreferredSize(
           //   preferredSize: Size(320, 48),
           //   child: Padding(
@@ -42,7 +42,7 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
             children: <Widget>[
               DrawerHeader(
                 child: Text(
-                  AppLocalizations.of(context).title,
+                  AppLocalizations.of(context)!.title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
@@ -50,13 +50,13 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                 ),
               ),
               ListTile(
-                  title: Text(AppLocalizations.of(context).conversations),
+                  title: Text(AppLocalizations.of(context)!.conversations),
                   onTap: () {
                     Navigator.pushNamed(context, "/conversations");
                     //_handleSignOut();
                   }),
               ListTile(
-                  title: Text(AppLocalizations.of(context).logout),
+                  title: Text(AppLocalizations.of(context)!.logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
                     Navigator.pushNamed(context, "/welcome");
@@ -74,12 +74,12 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                     children: <Widget>[
                       RoundedInputField(
                           hintText:
-                              "${AppLocalizations.of(context).findSomeoneByName} ${AppLocalizations.of(context).or} ${AppLocalizations.of(context).email}",
+                              "${AppLocalizations.of(context)!.findSomeoneByName} ${AppLocalizations.of(context)!.or} ${AppLocalizations.of(context)!.email}",
                           onChanged: (value) {
                             searchValue = value;
                           }),
                       RoundedButton(
-                          text: AppLocalizations.of(context).search,
+                          text: AppLocalizations.of(context)!.search,
                           press: () {
                             // SearchChatterByEmailScreen.email = email;
                             SearchChatterByEmailScreen.searchValue =
@@ -88,10 +88,10 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                                 context, "/searchChatterByEmail");
                           }),
                       Divider(height: 100),
-                      Text(AppLocalizations.of(context)
+                      Text(AppLocalizations.of(context)!
                           .seeWhoIsAlreadyOnAnyChat),
                       RoundedButton(
-                          text: AppLocalizations.of(context).contacts,
+                          text: AppLocalizations.of(context)!.contacts,
                           press: () {
                             Navigator.pushNamed(context, "/contacts");
                           }),

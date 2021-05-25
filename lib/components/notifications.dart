@@ -10,11 +10,11 @@ import 'package:rxdart/rxdart.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
 
-final BehaviorSubject<String> selectNotificationSubject =
-    BehaviorSubject<String>();
+final BehaviorSubject<String?> selectNotificationSubject =
+    BehaviorSubject<String?>();
 
 class Notifications implements Disposable {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 
   init() async {
     try {
@@ -39,29 +39,29 @@ class Notifications implements Disposable {
             android: initializationSettingsAndroid,
             iOS: initializationSettingsIOS,
             macOS: initializationSettingsMacOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    await flutterLocalNotificationsPlugin!.initialize(initializationSettings,
         onSelectNotification: selectNotification);
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationSubject.stream.listen((String payload) async {
+    selectNotificationSubject.stream.listen((String? payload) async {
       print(payload);
-      var conversationId = payload.substring(5);
+      var conversationId = payload!.substring(5);
       var convo = await Conversation.getConversationById(conversationId);
       AnyChatAuth.currentConversation = convo;
       if (payload.toLowerCase().contains('ring')) {
         CallScreen.requestPermissionAndNavigate();
       } else if (payload.toLowerCase().contains('chat')) {
         var info = await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser.id);
-        AnyChatAuth.currentUser.conversations
+            AnyChatAuth.currentUser!.id);
+        AnyChatAuth.currentUser!.conversations
             .add(info.firstWhere((element) => element.id == conversationId));
-        await Utilities.globalKey.currentState.pushNamed('/chat');
+        await Utilities.globalKey.currentState!.pushNamed('/chat');
       }
     });
   }
 
-  Future selectNotification(String payload) async {
+  Future selectNotification(String? payload) async {
     print('selectNotification');
     FlutterRingtonePlayer.stop();
     selectNotificationSubject.add(payload);
@@ -76,16 +76,16 @@ class Notifications implements Disposable {
   }
 
   Future<void> showNotification(
-      String title, String body, String payload) async {
+      String? title, String body, String payload) async {
     if (Utilities.prefs.getBool('notifications') != null &&
-        !Utilities.prefs.getBool('notifications')) {
+        !Utilities.prefs.getBool('notifications')!) {
       return;
     }
     print('showNotification');
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         payload.contains('ring')
             ? AndroidNotificationDetails(
-                AppLocalizations.of(Utilities.globalKey.currentContext).title,
+                AppLocalizations.of(Utilities.globalKey.currentContext!)!.title,
                 'your channel name',
                 'your channel description',
                 importance: Importance.max,
@@ -94,7 +94,7 @@ class Notifications implements Disposable {
                 styleInformation: BigTextStyleInformation(''),
                 playSound: false)
             : AndroidNotificationDetails(
-                AppLocalizations.of(Utilities.globalKey.currentContext).title,
+                AppLocalizations.of(Utilities.globalKey.currentContext!)!.title,
                 'your channel name',
                 'your channel description',
                 importance: Importance.max,
@@ -113,18 +113,18 @@ class Notifications implements Disposable {
     if (payload.contains("ring")) {
       FlutterRingtonePlayer.playRingtone();
     }
-    await flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin!
         .show(0, title, body, platformChannelSpecifics, payload: payload);
   }
 
   Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) {
+      int id, String? title, String? body, String? payload) {
     print('received notification');
     return Future.value();
   }
 
   void _requestPermissions() {
-    flutterLocalNotificationsPlugin
+    flutterLocalNotificationsPlugin!
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -132,7 +132,7 @@ class Notifications implements Disposable {
           badge: true,
           sound: true,
         );
-    flutterLocalNotificationsPlugin
+    flutterLocalNotificationsPlugin!
         .resolvePlatformSpecificImplementation<
             MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(

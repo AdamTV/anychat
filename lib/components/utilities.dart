@@ -14,7 +14,7 @@ import 'anychat_locale.dart';
 import 'anychat_user.dart';
 
 class Utilities {
-  static SharedPreferences prefs;
+  static late SharedPreferences prefs;
   static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
   static final String authority = "translation.googleapis.com";
   static final String unencodedPath = "/language/translate/v2";
@@ -26,9 +26,9 @@ class Utilities {
   }
 
   static Future<String> getGoogleTranslation(
-      String language, String text) async {
+      String? language, String? text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
-    String isoCode = language;
+    String? isoCode = language;
     queryParameters.update("target", (value) => isoCode,
         ifAbsent: () => isoCode);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
@@ -40,16 +40,16 @@ class Utilities {
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     Iterable<Match> matches = translatedTextRegex.allMatches(body);
     if (matches.length == 1 && matches.first.groupCount == 1) {
-      return matches.first.group(1).replaceAll("&#39;", "'");
+      return matches.first.group(1)!.replaceAll("&#39;", "'");
     } else {
       throw new Exception("Could not getGoogleTranslation -> uri: $uri");
     }
   }
 
   static const CLOUD_API_MAX_Q = 128;
-  static Future<Map<String, List<String>>> getBatchGoogleTranslation(
-      Map<String, List<String>> map) async {
-    Map<String, List<String>> translatedMap = Map();
+  static Future<Map<String?, List<String>>> getBatchGoogleTranslation(
+      Map<String?, List<String?>> map) async {
+    Map<String?, List<String>> translatedMap = Map();
     queryParameters.putIfAbsent("key", () => apiKey);
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     for (var mapEntry in map.entries) {
@@ -71,7 +71,7 @@ class Utilities {
         Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
         if (matches.length > 0) {
           for (var match in matches) {
-            translatedMap[key].add(match.group(1).replaceAll("&#39;", "'"));
+            translatedMap[key]!.add(match.group(1)!.replaceAll("&#39;", "'"));
           }
         } else {
           throw new Exception("Could not getGoogleTranslation -> uri: $uri");
@@ -98,7 +98,7 @@ class Utilities {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(AppLocalizations.of(context).approve),
+              child: Text(AppLocalizations.of(context)!.approve),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -121,7 +121,7 @@ class Utilities {
         .catchError((e) => {Navigator.pushNamed(context, "/conversations")});
   }
 
-  static String getLanguageFromIsoCode(String language) {
+  static String getLanguageFromIsoCode(String? language) {
     for (String key in AnyChatLocale.isoMap.keys) {
       if (AnyChatLocale.isoMap[key] == language) {
         return key;
@@ -138,11 +138,11 @@ class Utilities {
 
   static String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
-    var ids = <String>[];
+    var ids = <String?>[];
     for (var user in users) {
-      if (user.id != AnyChatAuth.currentUser.id && !ids.contains(user.id)) {
+      if (user.id != AnyChatAuth.currentUser!.id && !ids.contains(user.id)) {
         ids.add(user.id);
-        ret += user.displayName;
+        ret += user.displayName!;
         ret += ", ";
       }
     }
@@ -156,13 +156,10 @@ class Utilities {
     switch (prefs.getString('theme')?.toLowerCase() ?? 'system') {
       case 'system':
         return ThemeMode.system;
-        break;
       case 'dark':
         return ThemeMode.dark;
-        break;
       case 'light':
         return ThemeMode.light;
-        break;
       default:
         return ThemeMode.system;
     }
@@ -171,13 +168,13 @@ class Utilities {
   static String getThemeDropdownValue() {
     var pref = prefs.getString('theme') ?? 'system';
     if (pref.toLowerCase() == 'system') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext).system;
+      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.system;
     } else if (pref.toLowerCase() == 'dark') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext).dark;
+      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.dark;
     } else if (pref.toLowerCase() == 'light') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext).light;
+      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.light;
     } else {
-      return AppLocalizations.of(Utilities.globalKey.currentContext).system;
+      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.system;
     }
   }
 
@@ -190,13 +187,13 @@ class Utilities {
         fontSize: 16.0);
   }
 
-  static setThemeFromDropdownValue(String newValue) {
+  static void setThemeFromDropdownValue(String? newValue) {
     var newPref = 'system';
     if (newValue ==
-        AppLocalizations.of(Utilities.globalKey.currentContext).light) {
+        AppLocalizations.of(Utilities.globalKey.currentContext!)!.light) {
       newPref = 'light';
     } else if (newValue ==
-        AppLocalizations.of(Utilities.globalKey.currentContext).dark) {
+        AppLocalizations.of(Utilities.globalKey.currentContext!)!.dark) {
       newPref = 'dark';
     }
     prefs.setString('theme', newPref);

@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context).title,
+                  AppLocalizations.of(context)!.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: size.height * 0.05),
@@ -27,13 +27,13 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.05),
                 RoundedButton(
-                  text: AppLocalizations.of(context).login_caps,
+                  text: AppLocalizations.of(context)!.login_caps,
                   press: () {
                     Navigator.pushNamed(context, "/login");
                   },
                 ),
                 RoundedButton(
-                  text: AppLocalizations.of(context).register_caps,
+                  text: AppLocalizations.of(context)!.register_caps,
                   press: () {
                     Navigator.pushNamed(context, "/register");
                   },
@@ -50,8 +50,8 @@ class WelcomeBackground extends StatelessWidget {
   final Widget child;
 
   const WelcomeBackground({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override

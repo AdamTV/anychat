@@ -33,8 +33,8 @@ void main() {
   Notifications().init();
   Firebase.initializeApp().then((value) => {
         Ads.init(),
-        Utilities.init().then((value) => {runApp(MyApp())}),
-        FirebaseAuth.instance.authStateChanges().listen((User user) async {
+        Utilities.init().then((value) => {runApp(AnyChat())}),
+        FirebaseAuth.instance.authStateChanges().listen((User? user) async {
           if (user == null) {
             print('User is signed out!');
           } else {
@@ -58,12 +58,12 @@ void main() {
       });
 }
 
-class MyApp extends StatefulWidget {
+class AnyChat extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _AnyChatState createState() => _AnyChatState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AnyChatState extends State<AnyChat> {
   @override
   void initState() {
     super.initState();
@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
       },
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context).title,
+          AppLocalizations.of(context)!.title,
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -210,18 +210,18 @@ class _MyAppState extends State<MyApp> {
       theme: kDefaultTheme,
       darkTheme: kDarkTheme,
       themeMode: Utilities.getThemeMode(),
-      home: StreamBuilder<User>(
+      home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData && (!snapshot.data.isAnonymous)) {
+          if (snapshot.hasData && (!snapshot.data!.isAnonymous)) {
             _checkNetworkConnection(context);
             AnyChatLocale.init(context);
             print(snapshot.data);
             FirebaseFirestore.instance
                 .collection('users')
-                .doc(snapshot.data.providerData[0].providerId == 'google.com'
-                    ? snapshot.data.uid
-                    : snapshot.data.providerData[0].uid)
+                .doc(snapshot.data!.providerData[0].providerId == 'google.com'
+                    ? snapshot.data!.uid
+                    : snapshot.data!.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
                 .then((AnyChatUser user) {
@@ -233,8 +233,7 @@ class _MyAppState extends State<MyApp> {
                     constraints: BoxConstraints(maxWidth: 1),
                     child: ConversationsScreen());
               }));
-            }).catchError(
-                    (error) => print("error in main: " + error.toString()));
+            });
           }
           print('returning WelcomeScreen');
           return ConstrainedBox(
@@ -257,6 +256,6 @@ Future<void> _checkNetworkConnection(BuildContext context) async {
       print('connected');
     }
   } on SocketException catch (_) {
-    Utilities.showToast(AppLocalizations.of(context).notConnectedToInternet);
+    Utilities.showToast(AppLocalizations.of(context)!.notConnectedToInternet);
   }
 }
