@@ -183,8 +183,15 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     var responseStream = await AudioTranscriber.getResponseStream(isoCode);
 
     responseStream.listen((data) async {
-      String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript)?.last ?? "";
+      String transcribedText = '';
+      {
+        try {
+          transcribedText =
+              data.results.map((e) => e.alternatives.first.transcript).last;
+        } catch (e) {
+          print(e);
+        }
+      }
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
