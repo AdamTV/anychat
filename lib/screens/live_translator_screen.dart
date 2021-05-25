@@ -18,6 +18,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   bool recognizing;
   String text = "";
 
+  AudioTranscriber audioTranscriber = AudioTranscriber();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -180,7 +182,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
     String lastMessage = "";
 
-    var responseStream = await AudioTranscriber.getResponseStream(isoCode);
+    var responseStream = await audioTranscriber.getResponseStream(isoCode);
 
     responseStream.listen((data) async {
       if (data.results.isEmpty) return;
@@ -189,73 +191,24 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
-        // AnyChatUser.addTranscribedMessage(lastMessage);
         var newText = await Utilities.getGoogleTranslation(
             AnyChatAuth.currentUser.language, lastMessage);
         setState(() {
           text += newText + " ";
         });
       }
-    }, onDone: () async {
-      await AudioTranscriber.stopRecording();
-      if (mounted) {
-        setState(() {
-          recognizing = false;
-        });
-      }
     }, onError: (e) async {
       print(e);
-      await AudioTranscriber.stopRecording();
-      streamingRecognize();
-      // setState(() {
-      //   recognizing = false;
-      // });
-// =======
-//         StreamingRecognitionConfig(config: config, interimResults: true),
-//         _audioStream);
-//
-//     responseStream.listen((data) {
-//       setState(() {
-//         text =
-//             data.results.map((e) => e.alternatives.first.transcript).join('\n');
-//       });
-//     }, onDone: () {
-//       setState(() {
-//         recognizing = false;
-//       });
-// >>>>>>> Stashed changes
+      await audioTranscriber.stopRecording();
+      if(mounted){
+        streamingRecognize();
+      }
     });
-
-    // setState(() {
-    //   recognizing = true;
-    // });
-
-    // final responseStream = speechToText.streamingRecognize(
-    //     StreamingRecognitionConfig(config: config, interimResults: true),
-    //     await _getAudioStream());
-    // String lastMessage = "";
-    // responseStream.listen((data) async {
-    //   String transcribedText =
-    //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
-    //   if (lastMessage.compareTo(transcribedText) != 0 &&
-    //       transcribedText.isNotEmpty) {
-    //     lastMessage = transcribedText;
-    //     // AnyChatUser.addTranscribedMessage(lastMessage);
-    //     var newText = await Utilities.getGoogleTranslation(
-    //         AnyChatAuth.currentUser.language, lastMessage);
-    //     setState(() {
-    //       text += newText + " ";
-    //     });
-    //   }
-    // }, onDone: () {
-    //   // setState(() {
-    //   //   recognizing = false;
-    //   // });
-    // });
   }
 
   @override
   void dispose() {
     super.dispose();
+    audioTranscriber.stopRecording();
   }
 }
