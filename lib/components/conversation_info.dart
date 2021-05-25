@@ -4,23 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ConversationInfo {
   final String id;
-  String incomingLanguage;
-  String outgoingLanguage;
+  String? incomingLanguage;
+  String? outgoingLanguage;
 
   ConversationInfo(this.id, this.incomingLanguage, this.outgoingLanguage);
 
   ConversationInfo.fromSnapshot(DocumentSnapshot snapshot)
-      : assert(snapshot != null),
-        id = snapshot.id,
-        incomingLanguage = snapshot.data() == null
+      : id = snapshot.id,
+        incomingLanguage = (snapshot.data() as Map<String, dynamic>?) == null
             ? null
-            : snapshot.data()['incomingLanguage'],
-        outgoingLanguage = snapshot.data() == null
+            : (snapshot.data() as Map<String, dynamic>)['incomingLanguage'],
+        outgoingLanguage = (snapshot.data() as Map<String, dynamic>?) == null
             ? null
-            : snapshot.data()['outgoingLanguage'];
+            : (snapshot.data() as Map<String, dynamic>)['outgoingLanguage'];
 
   static Future<List<ConversationInfo>> getAllConversationInfo(
-      String id) async {
+      String? id) async {
     var ret = <ConversationInfo>[];
 
     var test = await FirebaseFirestore.instance

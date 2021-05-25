@@ -16,11 +16,11 @@ const int tSampleRate = 44000;
 
 class AudioTranscriber {
   // static StreamSubscription<List<int>> _audioStreamSubscription;
-  static BehaviorSubject<List<int>> _audioStream;
-  static String isoCode;
-  FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
+  static late BehaviorSubject<List<int>> _audioStream;
+  static String? isoCode;
+  FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
-  StreamSubscription _mRecordingDataSubscription;
+  StreamSubscription? _mRecordingDataSubscription;
 
 
   Future<void> _openRecorder() async {
@@ -28,19 +28,17 @@ class AudioTranscriber {
     if (status != PermissionStatus.granted) {
       throw RecordingPermissionException('Microphone permission not granted');
     }
-    await _mRecorder.openAudioSession();
+    await _mRecorder!.openAudioSession();
     // setState(() {
     _mRecorderIsInited = true;
     // });
   }
 
   Future<Stream<v1Speech.StreamingRecognizeResponse>> getResponseStream(
-      String isoCode) async {
+      String? isoCode) async {
     stopRecording();
 
     await _openRecorder();
-
-    _audioStream = BehaviorSubject<List<int>>();
 
     AudioTranscriber.isoCode = isoCode;
 
@@ -60,12 +58,12 @@ class AudioTranscriber {
         recordingDataController.stream.listen((buffer) {
       if (buffer is FoodData) {
         // sink.add(buffer.data!);
-        _audioStream.add(buffer.data);
+        _audioStream.add(buffer.data!);
       }
     }, onDone: () {
       recordingDataController.close();
     });
-    await _mRecorder.startRecorder(
+    await _mRecorder!.startRecorder(
       toStream: recordingDataController.sink,
       codec: Codec.pcm16,
       numChannels: 1,
@@ -78,7 +76,6 @@ class AudioTranscriber {
     final config = _getConfig();
 
     return speechToText.streamingRecognize(
-// <<<<<<< Updated upstream
         StreamingRecognitionConfig(config: config, interimResults: false),
         _audioStream);
   }
@@ -88,7 +85,7 @@ class AudioTranscriber {
       model: RecognitionModel.basic,
       enableAutomaticPunctuation: true,
       sampleRateHertz: tSampleRate,
-      languageCode: isoCode);
+      languageCode: isoCode!);
 
   // Future<Stream<List<int>>> _getAudioStream() async {
   //   const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
@@ -104,7 +101,7 @@ class AudioTranscriber {
     // await _recorder.stop();
     // await _audioStreamSubscription?.cancel();
     // await _audioStream?.close();
-    await _mRecorder.stopRecorder();
+    await _mRecorder!.stopRecorder();
     await _mRecordingDataSubscription?.cancel();
   }
 }

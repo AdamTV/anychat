@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RoundedPasswordField extends StatefulWidget {
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
   const RoundedPasswordField({
-    Key key,
+    Key? key,
     this.onChanged,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
         onChanged: widget.onChanged,
         cursorColor: Theme.of(context).primaryColor,
         decoration: InputDecoration(
-          hintText: AppLocalizations.of(context).password,
+          hintText: AppLocalizations.of(context)!.password,
           icon: Icon(
             Icons.lock,
             color: Theme.of(context).primaryColor,

@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import 'package:anychat/Screens/languages_screen.dart';
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
+import 'package:anychat/screens/languages_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,9 +15,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../components/anychat_auth.dart';
-import '../components/anychat_user.dart';
-import '../main.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -23,20 +22,20 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String isoCode;
+  String? isoCode;
   bool notifications = Utilities.prefs.getBool('notifications') ?? true;
-  String displayName = AnyChatAuth.currentUser.displayName;
-  ThemeMode themeMode;
-  List<String> themes;
-  String dropdownValue;
+  String? displayName = AnyChatAuth.currentUser!.displayName;
+  ThemeMode? themeMode;
+  late List<String> themes;
+  String? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
     print('loading settings screen');
     themes = [
-      AppLocalizations.of(context).system,
-      AppLocalizations.of(context).light,
-      AppLocalizations.of(context).dark
+      AppLocalizations.of(context)!.system,
+      AppLocalizations.of(context)!.light,
+      AppLocalizations.of(context)!.dark
     ];
     dropdownValue = Utilities.getThemeDropdownValue();
 
@@ -44,17 +43,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Scaffold(
           appBar: AppBar(
               title: Text(
-                  '${AppLocalizations.of(context).title} ${AppLocalizations.of(context).settings}')),
+                  '${AppLocalizations.of(context)!.title} ${AppLocalizations.of(context)!.settings}')),
           body: SettingsList(
             contentPadding: EdgeInsets.only(top: 12),
             sections: [
               SettingsSection(
-                title: AppLocalizations.of(context).translation,
+                title: AppLocalizations.of(context)!.translation,
                 tiles: [
                   SettingsTile(
-                    title: AppLocalizations.of(context).language,
+                    title: AppLocalizations.of(context)!.language,
                     subtitle: Utilities.getLanguageFromIsoCode(
-                        AnyChatAuth.currentUser.language),
+                        AnyChatAuth.currentUser!.language),
                     leading: Icon(Icons.language),
                     onPressed: (BuildContext context) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -65,10 +64,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context).information,
+                title: AppLocalizations.of(context)!.information,
                 tiles: [
                   SettingsTile(
-                    title: AppLocalizations.of(context).displayName,
+                    title: AppLocalizations.of(context)!.displayName,
                     subtitle: displayName,
                     leading: Icon(Icons.drive_file_rename_outline),
                     onPressed: (BuildContext context) {
@@ -77,13 +76,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text(
-                                  AppLocalizations.of(context).enterYourName),
+                                  AppLocalizations.of(context)!.enterYourName),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
                                     RoundedInputField(
                                         initialValue:
-                                            AnyChatAuth.currentUser.displayName,
+                                            AnyChatAuth.currentUser!.displayName,
                                         icon: Icons.drive_file_rename_outline,
                                         onChanged: (value) =>
                                             {displayName = value}),
@@ -93,12 +92,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               actions: <Widget>[
                                 TextButton(
                                   child:
-                                      Text(AppLocalizations.of(context).save),
+                                      Text(AppLocalizations.of(context)!.save),
                                   onPressed: () async {
-                                    if (displayName.isEmpty ||
+                                    if (displayName!.isEmpty ||
                                         displayName == null) {
                                       Utilities.showToast(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                               .enterYourName);
                                       return;
                                     }
@@ -116,15 +115,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingsTile(
-                      title: FirebaseAuth.instance.currentUser.emailVerified
-                          ? AppLocalizations.of(context).emailVerified
-                          : AppLocalizations.of(context).verificationEmailSent,
-                      subtitle: AnyChatAuth.currentUser.email,
+                      title: FirebaseAuth.instance.currentUser!.emailVerified
+                          ? AppLocalizations.of(context)!.emailVerified
+                          : AppLocalizations.of(context)!.verificationEmailSent,
+                      subtitle: AnyChatAuth.currentUser!.email,
                       leading: Icon(Icons.email)),
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context).picture,
+                title: AppLocalizations.of(context)!.picture,
                 tiles: [
                   // SettingsTile.switchTile(
                   //   title: 'Profile Picture',
@@ -142,23 +141,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // ),
                   SettingsTile(
                       onPressed: (v) => {getImage(true)},
-                      title: AppLocalizations.of(context).changePicture,
+                      title: AppLocalizations.of(context)!.changePicture,
                       // enabled: changeProfilePictureEnabled,
                       leading: Icon(Icons.photo),
-                      trailing: AnyChatAuth.currentUser.photoUrl != null
+                      trailing: AnyChatAuth.currentUser!.photoUrl != null
                           ? CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  AnyChatAuth.currentUser.photoUrl))
+                                  AnyChatAuth.currentUser!.photoUrl!))
                           : CircleAvatar(
-                              child: Text(AnyChatAuth.currentUser.displayName
+                              child: Text(AnyChatAuth.currentUser!.displayName!
                                   .substring(0, 1))))
                 ],
               ),
               SettingsSection(
-                  title: AppLocalizations.of(context).colors,
+                  title: AppLocalizations.of(context)!.colors,
                   tiles: [
                     SettingsTile(
-                      title: AppLocalizations.of(context).theme,
+                      title: AppLocalizations.of(context)!.theme,
                       subtitle: dropdownValue,
                       leading: Icon(Icons.palette),
                       onPressed: (BuildContext context) {
@@ -166,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text(AppLocalizations.of(context)
+                                title: Text(AppLocalizations.of(context)!
                                     .selectYourTheme),
                                 content: SingleChildScrollView(
                                   child: ListBody(
@@ -175,11 +174,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         value: dropdownValue,
                                         iconSize: 24,
                                         elevation: 16,
-                                        onChanged: (String newValue) async {
+                                        onChanged: (String? newValue) async {
                                           setState(() {
                                             dropdownValue = newValue;
                                           });
-                                          await Utilities
+                                          Utilities
                                               .setThemeFromDropdownValue(
                                                   newValue);
                                           Navigator.pop(context);
@@ -203,10 +202,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     )
                   ]),
               SettingsSection(
-                title: AppLocalizations.of(context).notifications,
+                title: AppLocalizations.of(context)!.notifications,
                 tiles: [
                   SettingsTile.switchTile(
-                    title: AppLocalizations.of(context).notifications,
+                    title: AppLocalizations.of(context)!.notifications,
                     leading: Icon(Icons.notifications_active),
                     switchValue: notifications,
                     onToggle: (value) async {
@@ -219,10 +218,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context).miscellaneous,
+                title: AppLocalizations.of(context)!.miscellaneous,
                 tiles: [
                   SettingsTile(
-                      title: AppLocalizations.of(context).privacyPolicy,
+                      title: AppLocalizations.of(context)!.privacyPolicy,
                       leading: Icon(Icons.description),
                       onPressed: (ctx) => _launchPrivacyPolicy()),
                   // SettingsTile(
@@ -231,10 +230,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context).dangerZone,
+                title: AppLocalizations.of(context)!.dangerZone,
                 tiles: [
                   SettingsTile(
-                      title: AppLocalizations.of(context).deleteYourAccount,
+                      title: AppLocalizations.of(context)!.deleteYourAccount,
                       leading: Icon(Icons.delete_forever),
                       onPressed: (ctx) => _deleteAccount()),
                   // SettingsTile(
@@ -250,11 +249,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 // Image Picker
 //     List<File> _images = [];
-  File _image; // Used only if you need a single picture
+  late File _image; // Used only if you need a single picture
 
   Future getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
-    PickedFile pickedFile;
+    PickedFile? pickedFile;
     // Let user select photo from gallery
     if (gallery) {
       pickedFile = await picker.getImage(
@@ -280,13 +279,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {});
   }
 
-  Future<String> uploadFile(File _image) async {
+  Future<String?> uploadFile(File _image) async {
     Reference storageReference =
         FirebaseStorage.instance.ref().child('images/${_image.path}');
     UploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.whenComplete(() => null);
     print('File Uploaded');
-    String returnURL;
+    String? returnURL;
     await storageReference.getDownloadURL().then((fileURL) {
       returnURL = fileURL;
     });
@@ -296,14 +295,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 _deleteAccount() {
   showDialog(
-      context: Utilities.globalKey.currentContext,
+      context: Utilities.globalKey.currentContext!,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).deleteYourAccount),
+          title: Text(AppLocalizations.of(context)!.deleteYourAccount),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(AppLocalizations.of(context)
+                Text(AppLocalizations.of(context)!
                     .areYouSureYouWantToDeleteAccount)
               ],
             ),
@@ -311,7 +310,7 @@ _deleteAccount() {
           actions: <Widget>[
             TextButton(
               child: Text(
-                  AppLocalizations.of(Utilities.globalKey.currentContext)
+                  AppLocalizations.of(Utilities.globalKey.currentContext!)!
                       .cancel),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -319,10 +318,10 @@ _deleteAccount() {
             ),
             TextButton(
               child: Text(
-                  AppLocalizations.of(Utilities.globalKey.currentContext)
+                  AppLocalizations.of(Utilities.globalKey.currentContext!)!
                       .approve),
               onPressed: () async {
-                AnyChatAuth.currentUser.deleteAccount();
+                AnyChatAuth.currentUser!.deleteAccount();
               },
             ),
           ],
@@ -334,6 +333,7 @@ _launchPrivacyPolicy() async {
   await launch("https://www.alphatechnology.ca/anychat-privacy-policy");
 }
 
-_onWillPop() {
-  Navigator.pushNamed(Utilities.globalKey.currentContext, '/conversations');
+Future<bool> _onWillPop() async {
+  Navigator.pushNamed(Utilities.globalKey.currentContext!, '/conversations');
+  return true;
 }

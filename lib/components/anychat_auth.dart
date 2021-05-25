@@ -7,20 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:twitter_login/twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 import 'anychat_user.dart';
 import 'conversation.dart';
 
 class AnyChatAuth {
-  static AnyChatUser currentUser;
-  static String linkedAccountPhotoUrl;
-  static Conversation currentConversation;
+  static AnyChatUser? currentUser;
+  static String? linkedAccountPhotoUrl;
+  static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-  static FacebookAuth _facebookAuth;
+  static late FacebookAuth _facebookAuth;
   static GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -28,7 +28,7 @@ class AnyChatAuth {
     ],
   );
 
-  static Future<AnyChatUser> signInApple() async {
+  static Future<AnyChatUser?> signInApple() async {
     final appleIdCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
@@ -46,7 +46,7 @@ class AnyChatAuth {
     );
     final authResult =
         await FirebaseAuth.instance.signInWithCredential(credential);
-    final firebaseUser = authResult.user;
+    final firebaseUser = authResult.user!;
     var snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(firebaseUser.uid)
@@ -63,32 +63,32 @@ class AnyChatAuth {
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
             firebaseUser.email,
             firebaseUser.photoURL ?? "",
-            AnyChatLocale.currentLocale.substring(0, 2));
+            AnyChatLocale.currentLocale!.substring(0, 2));
         currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
       } else {
         Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext).emailInUse);
+            AppLocalizations.of(Utilities.globalKey.currentContext!)!.emailInUse);
         return null;
       }
     }
   }
 
-  static Future<AnyChatUser> signInGoogle() async {
+  static Future<AnyChatUser?> signInGoogle() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    GoogleSignInAccount googleSignInAccount;
+    GoogleSignInAccount? googleSignInAccount;
     AuthCredential credential;
-    UserCredential authResult;
+    late UserCredential authResult;
 
     if (!kIsWeb) {
       await _googleSignIn.signIn().then((result) async {
         googleSignInAccount = result;
-        await result.authentication.then((googleKey) async {
+        await result!.authentication.then((googleKey) async {
           print("accessToken: " + googleKey.accessToken.toString());
           print("idToken: " + googleKey.idToken.toString());
-          print("displayName: " + googleSignInAccount.displayName.toString());
+          print("displayName: " + googleSignInAccount!.displayName.toString());
           credential = GoogleAuthProvider.credential(
             accessToken: googleKey.accessToken,
             idToken: googleKey.idToken,
@@ -102,20 +102,20 @@ class AnyChatAuth {
       });
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
-          .doc(authResult.user.uid)
+          .doc(authResult.user!.uid)
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
-        linkedAccountPhotoUrl = googleSignInAccount.photoUrl;
+        linkedAccountPhotoUrl = googleSignInAccount!.photoUrl;
         return currentUser;
       } else {
         currentUser = new AnyChatUser(
-            authResult.user.uid,
-            googleSignInAccount.displayName,
-            googleSignInAccount.email,
-            googleSignInAccount.photoUrl,
-            AnyChatLocale.currentLocale.substring(0, 2));
-        currentUser.addUserToFirestore();
+            authResult.user!.uid,
+            googleSignInAccount!.displayName,
+            googleSignInAccount!.email,
+            googleSignInAccount!.photoUrl,
+            AnyChatLocale.currentLocale!.substring(0, 2));
+        currentUser!.addUserToFirestore();
         return currentUser;
       }
     } else {
@@ -128,16 +128,15 @@ class AnyChatAuth {
 
     if (_user != null) {
       assert(!_user.isAnonymous);
-      assert(await _user.getIdToken() != null);
 
-      final User _authCurrentUser = _auth.currentUser;
+      final User _authCurrentUser = _auth.currentUser!;
       assert(_user.uid == _authCurrentUser.uid);
 
       print('signInWithGoogle succeeded: $_user');
 
-      currentUser = new AnyChatUser(authResult.user.uid, _user.displayName,
+      currentUser = new AnyChatUser(authResult.user!.uid, _user.displayName,
           _user.email, _user.photoURL, AnyChatLocale.currentLocale);
-      currentUser.addUserToFirestore();
+      currentUser!.addUserToFirestore();
 
       return currentUser;
     } else {
@@ -156,8 +155,8 @@ class AnyChatAuth {
     }
   }
 
-  static Future<AnyChatUser> signInEmail(
-      String email, String password, bool isSignUp) async {
+  static Future<AnyChatUser?> signInEmail(
+      String? email, String? password, bool isSignUp) async {
     if (email == null ||
         email.isEmpty ||
         password == null ||
@@ -170,7 +169,7 @@ class AnyChatAuth {
               .createUserWithEmailAndPassword(email: email, password: password)
           : await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
-      var result = _userCredential.user;
+      var result = _userCredential.user!;
 
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
@@ -181,13 +180,13 @@ class AnyChatAuth {
         linkedAccountPhotoUrl = result.photoURL;
         return currentUser;
       } else {
-        String displayName = result.displayName;
+        String? displayName = result.displayName;
         if (result.displayName == null) {
           displayName = result.email;
         }
         currentUser = new AnyChatUser(result.uid, displayName, result.email,
-            result.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
-        currentUser.addUserToFirestore();
+            result.photoURL, AnyChatLocale.currentLocale!.substring(0, 2));
+        currentUser!.addUserToFirestore();
         return currentUser;
       }
     } on FirebaseAuthException catch (e) {
@@ -195,7 +194,7 @@ class AnyChatAuth {
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext)
+            AppLocalizations.of(Utilities.globalKey.currentContext!)!
                 .pleaseLoginInstead);
         throw Exception('The account already exists for that email.');
       }
@@ -205,7 +204,7 @@ class AnyChatAuth {
     return null;
   }
 
-  static Future<AnyChatUser> signInFacebook() async {
+  static Future<AnyChatUser?> signInFacebook() async {
 
     if (kIsWeb) {
       // initialiaze the facebook javascript SDK
@@ -221,10 +220,10 @@ class AnyChatAuth {
     bool _isLogged = result.status == LoginStatus.success;
     if (_isLogged) {
       // Create a credential from the access token
-      final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token);
+      final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.token);
       // Once signed in, get the UserCredential
       UserCredential userCred = await FirebaseAuth.instance.signInWithCredential(credential);
-          final User user = userCred.user;
+          final User user = userCred.user!;
           var snapshot = await FirebaseFirestore.instance
               .collection("users")
               .doc(user.uid)
@@ -237,8 +236,8 @@ class AnyChatAuth {
             final userData = await FacebookAuth.instance.getUserData();
             var url = userData['picture']['data']['url'];
             currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-                url, AnyChatLocale.currentLocale.substring(0, 2));
-            currentUser.addUserToFirestore();
+                url, AnyChatLocale.currentLocale!.substring(0, 2));
+            currentUser!.addUserToFirestore();
             return currentUser;
           }
     }
@@ -258,10 +257,10 @@ class AnyChatAuth {
         } catch (e) {
           Utilities.showAlertDialog(
               context,
-              AppLocalizations.of(context).error,
-              ModalRoute.of(context).settings.name == "/login"
-                  ? AppLocalizations.of(context).errorLoggingInFacebook
-                  : AppLocalizations.of(context).unableRegisterFacebook);
+              AppLocalizations.of(context)!.error,
+              ModalRoute.of(context)!.settings.name == "/login"
+                  ? AppLocalizations.of(context)!.errorLoggingInFacebook
+                  : AppLocalizations.of(context)!.unableRegisterFacebook);
         }
       },
     );
@@ -279,10 +278,10 @@ class AnyChatAuth {
           } catch (e) {
             Utilities.showAlertDialog(
                 context,
-                AppLocalizations.of(context).error,
-                ModalRoute.of(context).settings.name == "/login"
-                    ? AppLocalizations.of(context).errorLoggingInGoogle
-                    : AppLocalizations.of(context).unableRegisterGoogle);
+                AppLocalizations.of(context)!.error,
+                ModalRoute.of(context)!.settings.name == "/login"
+                    ? AppLocalizations.of(context)!.errorLoggingInGoogle
+                    : AppLocalizations.of(context)!.unableRegisterGoogle);
           }
         });
   }
@@ -299,10 +298,10 @@ class AnyChatAuth {
           } catch (e) {
             Utilities.showAlertDialog(
                 context,
-                AppLocalizations.of(context).error,
-                ModalRoute.of(context).settings.name == "/login"
-                    ? AppLocalizations.of(context).errorLoggingInApple
-                    : AppLocalizations.of(context).unableRegisterApple);
+                AppLocalizations.of(context)!.error,
+                ModalRoute.of(context)!.settings.name == "/login"
+                    ? AppLocalizations.of(context)!.errorLoggingInApple
+                    : AppLocalizations.of(context)!.unableRegisterApple);
           }
         });
   }
@@ -319,16 +318,16 @@ class AnyChatAuth {
         } catch (e) {
           Utilities.showAlertDialog(
               context,
-              AppLocalizations.of(context).error,
-              ModalRoute.of(context).settings.name == "/login"
-                  ? AppLocalizations.of(context).errorLoggingInTwitter
-                  : AppLocalizations.of(context).unableRegisterTwitter);
+              AppLocalizations.of(context)!.error,
+              ModalRoute.of(context)!.settings.name == "/login"
+                  ? AppLocalizations.of(context)!.errorLoggingInTwitter
+                  : AppLocalizations.of(context)!.unableRegisterTwitter);
         }
       },
     );
   }
 
-  static Future<AnyChatUser> signInTwitter() async {
+  static Future<AnyChatUser?> signInTwitter() async {
     final twitterLogin = TwitterLogin(
       // Consumer API keys
       apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
@@ -350,11 +349,11 @@ class AnyChatAuth {
         print('====== Login success ======');
         // Create a credential from the access token
         final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
-            accessToken: authResult.authToken, secret: authResult.authTokenSecret);
+            accessToken: authResult.authToken!, secret: authResult.authTokenSecret!);
 
         final userCred =
             await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
-        final user = userCred.user;
+        final user = userCred.user!;
 
         var snapshot = await FirebaseFirestore.instance
             .collection("users")
@@ -366,11 +365,10 @@ class AnyChatAuth {
           return currentUser;
         } else {
           currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, AnyChatLocale.currentLocale.substring(0, 2));
-          currentUser.addUserToFirestore();
+              user.photoURL, AnyChatLocale.currentLocale!.substring(0, 2));
+          currentUser!.addUserToFirestore();
           return currentUser;
         }
-        break;
       case TwitterLoginStatus.cancelledByUser:
       // cancel
         print('====== Login cancel ======');

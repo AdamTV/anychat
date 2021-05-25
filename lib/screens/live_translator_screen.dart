@@ -12,10 +12,10 @@ class LiveTranslatorScreen extends StatefulWidget {
 }
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
-  String isoCode = AnyChatAuth.currentUser.language;
-  String dropdownValue =
-      Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
-  bool recognizing;
+  String? isoCode = AnyChatAuth.currentUser!.language;
+  String? dropdownValue =
+      Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser!.language);
+  bool? recognizing;
   String text = "";
 
   AudioTranscriber audioTranscriber = AudioTranscriber();
@@ -32,11 +32,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text(AppLocalizations.of(context).title),
+          title: Text(AppLocalizations.of(context)!.title),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.settings),
-              tooltip: AppLocalizations.of(context).language,
+              tooltip: AppLocalizations.of(context)!.language,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -46,7 +46,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             ),
             IconButton(
                 icon: const Icon(Icons.delete),
-                tooltip: AppLocalizations.of(context).delete,
+                tooltip: AppLocalizations.of(context)!.delete,
                 onPressed: () {
                   setState(() {
                     text = "";
@@ -77,7 +77,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             children: <Widget>[
               DrawerHeader(
                 child: Text(
-                  AppLocalizations.of(context).title,
+                  AppLocalizations.of(context)!.title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
                 decoration: BoxDecoration(
@@ -85,14 +85,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 ),
               ),
               ListTile(
-                  title: Text(AppLocalizations.of(context).back),
+                  title: Text(AppLocalizations.of(context)!.back),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: Text(AppLocalizations.of(context).logout),
+                  title: Text(AppLocalizations.of(context)!.logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
                     Navigator.pushNamed(context, "/welcome");
@@ -128,7 +128,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
   Widget _buildPopupDialog(BuildContext context) {
     return new AlertDialog(
-      title: Text(AppLocalizations.of(context).selectLanguage),
+      title: Text(AppLocalizations.of(context)!.selectLanguage),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,11 +138,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             icon: Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
-            onChanged: (String newValue) {
+            onChanged: (String? newValue) {
               setState(() {
                 dropdownValue = newValue;
               });
-              isoCode = AnyChatLocale.isoMap[newValue];
+              isoCode = AnyChatLocale.isoMap[newValue!];
               print(isoCode);
               streamingRecognize();
               Navigator.pop(context);
@@ -192,7 +192,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
         var newText = await Utilities.getGoogleTranslation(
-            AnyChatAuth.currentUser.language, lastMessage);
+            AnyChatAuth.currentUser!.language, lastMessage);
         setState(() {
           text += newText + " ";
         });
