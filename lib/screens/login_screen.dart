@@ -147,7 +147,7 @@ class LoginBackground extends StatelessWidget {
     var children = <Widget>[];
     children.addAll({
       Positioned(
-        top: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.05) : 0,
+        top: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.06) : 0,
         left: size.width >= 750 ? (kIsWeb ? -225 : size.width * -0.05) : 0,
         child: Image.asset(
           "assets/images/main_top.png",
