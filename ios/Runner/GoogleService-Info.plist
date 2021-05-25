@@ -34,5 +34,7 @@
 	<string>1:682283241991:ios:f05d7495c93fd781abd0a2</string>
 	<key>DATABASE_URL</key>
 	<string>https://anychat-c414a-default-rtdb.firebaseio.com</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-4494853791237895~6652191578</string>
 </dict>
 </plist>
