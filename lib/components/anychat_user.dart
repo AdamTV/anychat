@@ -22,7 +22,7 @@ class AnyChatUser {
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        displayName = (snapshot.data() as Map<String, dynamic>)['displayName'],
+        displayName = (snapshot?.data() as Map<String, dynamic>)['displayName'],
         email = (snapshot.data() as Map<String, dynamic>)['email'],
         photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'],
         language = (snapshot.data() as Map<String, dynamic>)['language'];
