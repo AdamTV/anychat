@@ -12,7 +12,7 @@ import 'package:google_speech/speech_to_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
-const int tSampleRate = 44000;
+const int tSampleRate = 16000;
 
 class AudioTranscriber {
   // static StreamSubscription<List<int>> _audioStreamSubscription;
