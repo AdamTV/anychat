@@ -4,7 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Ads {
-  static late AdmobInterstitial interstitial;
+  static AdmobInterstitial interstitial = AdmobInterstitial(
+    adUnitId: getInterstitialAdUnitId(),
+    listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
+      handleEvent(event, args, 'Interstitial');
+    },
+  );
 
   static init() {
     // Admob.initialize();
@@ -18,13 +23,6 @@ class Ads {
       '9FE872DB63EEA34B32A3296F08C2DE1E', // Mac Android
       'b6aa6c248f10f52337317186546d47e7', // iPad 1st gen
     ]);
-
-    interstitial = AdmobInterstitial(
-      adUnitId: getInterstitialAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
-        handleEvent(event, args, 'Interstitial');
-      },
-    );
 
     interstitial.load();
   }
