@@ -15,6 +15,7 @@ import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:flutter/cupertino.dart';
@@ -182,7 +183,7 @@ class _CallScreenState extends State<CallScreen> {
 
   bool? recognizing, recognizeFinished;
   AudioTranscriber audioTranscriber = AudioTranscriber();
-
+  late Stream<StreamingRecognizeResponse> responseStream;
   void streamingRecognize() async {
     setState(() {
       recognizing = true;
@@ -190,18 +191,20 @@ class _CallScreenState extends State<CallScreen> {
 
     String lastMessage = "";
 
-    var responseStream = await audioTranscriber.getResponseStream(
+    responseStream = await audioTranscriber.getResponseStream(
         AnyChatAuth.currentUser!.language);
 
     responseStream.listen((data) async {
+      if (data.results.isEmpty || muted) return;
       String transcribedText =
           data.results.map((e) => e.alternatives.first.transcript).last;
       if (lastMessage.compareTo(transcribedText) != 0 &&
           transcribedText.isNotEmpty) {
         lastMessage = transcribedText;
-        AnyChatUser.addTranscribedMessage(lastMessage);
+        await AnyChatUser.addTranscribedMessage(lastMessage);
       }
     }, onError: (e) async {
+      // await responseStream.drain();
       print(e);
       await audioTranscriber.stopRecording();
       if(mounted){
@@ -429,7 +432,7 @@ class _CallScreenState extends State<CallScreen> {
     _channel!.leaveChannel();
     _engine.destroy();
     AnyChatUser.clearTranscribedMessages();
-    if (await (Ads.interstitial.isLoaded as FutureOr<bool>)) {
+    if (await Ads.interstitial.isLoaded ?? false) {
       Ads.interstitial.show();
     } else {
       print('Interstitial ad is still laoding...');
@@ -441,12 +444,14 @@ class _CallScreenState extends State<CallScreen> {
     setState(() {
       muted = !muted;
     });
-    _engine.muteLocalAudioStream(muted);
-    if (muted) {
-      await audioTranscriber.stopRecording();
-    } else {
-      streamingRecognize();
-    }
+    await _engine.muteLocalAudioStream(muted);
+    // if (muted) {
+    //   // await responseStream.drain();
+    //   await audioTranscriber.pauseRecording();
+    // } else {
+    //   await audioTranscriber.resumeRecording();
+    //   streamingRecognize();
+    // }
   }
 
   void _onSwitchCamera() {

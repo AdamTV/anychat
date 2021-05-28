@@ -21,8 +21,8 @@ class AudioTranscriber {
   FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
   StreamSubscription? _mRecordingDataSubscription;
-
-
+  bool paused = false;
+  late StreamController<Food> recordingDataController;
   Future<void> _openRecorder() async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
@@ -53,11 +53,12 @@ class AudioTranscriber {
 
     assert(_mRecorderIsInited);
     // var sink = await createFile();
-    var recordingDataController = StreamController<Food>();
+    recordingDataController = StreamController<Food>();
     _mRecordingDataSubscription =
         recordingDataController.stream.listen((buffer) {
       if (buffer is FoodData) {
         // sink.add(buffer.data!);
+        if (!paused)
         _audioStream.add(buffer.data!);
       }
     }, onDone: () {
@@ -96,6 +97,18 @@ class AudioTranscriber {
   //       audioFormat: AUDIO_FORMAT);
   //   return stream;
   // }
+
+  Future<void> pauseRecording() async {
+    await _mRecorder!.pauseRecorder();
+    _mRecordingDataSubscription?.pause();
+    paused = true;
+  }
+
+  Future<void> resumeRecording() async {
+    await _mRecorder!.resumeRecorder();
+    _mRecordingDataSubscription?.resume();
+    paused = false;
+  }
 
   Future<void> stopRecording() async {
     // await _recorder.stop();
