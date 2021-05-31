@@ -268,6 +268,7 @@ class AnyChatUser {
   }
 
   static Future<void> addTranscribedMessage(String text) async {
+    print(AnyChatAuth.currentUser!.id);
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
         .doc(AnyChatAuth.currentConversation!.id);
