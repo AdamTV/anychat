@@ -187,14 +187,18 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             .get();
         for (var i = 0; i < temp.participants.length; i++) {
           if (users[i] != AnyChatAuth.currentUser!.id) {
-            var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-                .instance
-                .collection("users")
-                .doc(users[i])
-                .get());
-            if (chatters.where((element) => element.id == chatter.id).length ==
-                0) {
-              chatters.add(chatter);
+            try{
+              var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
+                  .instance
+                  .collection("users")
+                  .doc(users[i])
+                  .get());
+              if (chatters.where((element) => element.id == chatter.id).length ==
+                  0) {
+                chatters.add(chatter);
+              }
+            }catch(e){
+              print(e);
             }
             if (mounted) {
               AnyChatMessage message;

@@ -37,10 +37,11 @@ class CallScreen extends StatefulWidget {
   static Future<void> requestPermissionAndNavigate() async {
     if (await Utilities.handlePermission(Permission.camera) &&
         await Utilities.handlePermission(Permission.microphone)) {
-      AnyChatUser.addMessageToConversation(AnyChatAuth.currentUser!.displayName! +
-          " " +
-          AppLocalizations.of(Utilities.globalKey.currentContext!)!
-              .isCallingYouOnAnyChat);
+      AnyChatUser.addMessageToConversation(
+          AnyChatAuth.currentUser!.displayName! +
+              " " +
+              AppLocalizations.of(Utilities.globalKey.currentContext!)!
+                  .isCallingYouOnAnyChat);
       CallScreen.channelName = AnyChatAuth.currentConversation!.id;
       Navigator.pushNamed(Utilities.globalKey.currentContext!, "/call");
     }
@@ -184,6 +185,7 @@ class _CallScreenState extends State<CallScreen> {
   bool? recognizing, recognizeFinished;
   AudioTranscriber audioTranscriber = AudioTranscriber();
   late Stream<StreamingRecognizeResponse> responseStream;
+
   void streamingRecognize() async {
     setState(() {
       recognizing = true;
@@ -191,8 +193,8 @@ class _CallScreenState extends State<CallScreen> {
 
     String lastMessage = "";
 
-    responseStream = await audioTranscriber.getResponseStream(
-        AnyChatAuth.currentUser!.language);
+    responseStream = await audioTranscriber
+        .getResponseStream(AnyChatAuth.currentUser!.language);
 
     responseStream.listen((data) async {
       if (data.results.isEmpty || muted) return;
@@ -207,7 +209,7 @@ class _CallScreenState extends State<CallScreen> {
       // await responseStream.drain();
       print(e);
       await audioTranscriber.stopRecording();
-      if(mounted){
+      if (mounted) {
         streamingRecognize();
       }
     });
@@ -361,20 +363,20 @@ class _CallScreenState extends State<CallScreen> {
         Expanded(
           child: Stack(
             children: [
-                SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: List.of(remoteUid.map(
-                        (e) => Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: RtcRemoteView.SurfaceView(
-                            uid: e,
-                            channelId: _channel!.channelId,
-                          ),
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.of(remoteUid.map(
+                      (e) => Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: RtcRemoteView.SurfaceView(
+                          uid: e,
+                          channelId: _channel!.channelId,
                         ),
-                      )),
+                      ),
                     )),
+                  )),
               Container(
                 padding: EdgeInsets.only(top: 12, left: 12),
                 width: 120,
@@ -429,6 +431,11 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _onCallEnd() async {
+    if (mounted)
+      setState(() {
+        muted = true;
+      });
+    await audioTranscriber.stopRecording();
     _channel!.leaveChannel();
     _engine.destroy();
     AnyChatUser.clearTranscribedMessages();
