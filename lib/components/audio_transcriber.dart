@@ -12,7 +12,7 @@ import 'package:google_speech/speech_to_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
-const int tSampleRate = 16000;
+const int tSampleRate = 44000;
 
 class AudioTranscriber {
   // static StreamSubscription<List<int>> _audioStreamSubscription;
@@ -21,7 +21,6 @@ class AudioTranscriber {
   FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
   StreamSubscription? _mRecordingDataSubscription;
-  bool paused = false;
   late StreamController<Food> recordingDataController;
   Future<void> _openRecorder() async {
     var status = await Permission.microphone.request();
@@ -58,7 +57,6 @@ class AudioTranscriber {
         recordingDataController.stream.listen((buffer) {
       if (buffer is FoodData) {
         // sink.add(buffer.data!);
-        if (!paused)
         _audioStream.add(buffer.data!);
       }
     }, onDone: () {
@@ -97,18 +95,6 @@ class AudioTranscriber {
   //       audioFormat: AUDIO_FORMAT);
   //   return stream;
   // }
-
-  Future<void> pauseRecording() async {
-    await _mRecorder!.pauseRecorder();
-    _mRecordingDataSubscription?.pause();
-    paused = true;
-  }
-
-  Future<void> resumeRecording() async {
-    await _mRecorder!.resumeRecorder();
-    _mRecordingDataSubscription?.resume();
-    paused = false;
-  }
 
   Future<void> stopRecording() async {
     // await _recorder.stop();
