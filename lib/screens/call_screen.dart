@@ -15,7 +15,6 @@ import 'package:anychat/components/utilities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:flutter/cupertino.dart';
@@ -184,7 +183,7 @@ class _CallScreenState extends State<CallScreen> {
 
   bool? recognizing, recognizeFinished;
   AudioTranscriber audioTranscriber = AudioTranscriber();
-  late Stream<StreamingRecognizeResponse> responseStream;
+  // late Stream<StreamingRecognizeResponse> responseStream;
 
   void streamingRecognize() async {
     setState(() {
@@ -193,7 +192,7 @@ class _CallScreenState extends State<CallScreen> {
 
     String lastMessage = "";
 
-    responseStream = await audioTranscriber
+    var responseStream = await audioTranscriber
         .getResponseStream(AnyChatAuth.currentUser!.language);
 
     responseStream.listen((data) async {
@@ -477,8 +476,8 @@ class _CallScreenState extends State<CallScreen> {
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
     if (message == null) return;
-    final language = AnyChatAuth.currentUser!.language;
     if (message.senderId != AnyChatAuth.currentUser!.id) {
+      final language = AnyChatAuth.currentUser!.language;
       final translatedText =
           await Utilities.getGoogleTranslation(language, message.text);
       setState(() {
