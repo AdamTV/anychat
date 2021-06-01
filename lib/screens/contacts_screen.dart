@@ -256,7 +256,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text(AppLocalizations.of(context)!.yourContacts);
+        this._appBarTitle =
+            new Text(AppLocalizations.of(context)!.yourContacts);
         _filter.clear();
       }
       isSearch = !isSearch;

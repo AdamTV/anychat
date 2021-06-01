@@ -14,10 +14,11 @@ class Conversation {
 
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        participants =
-            List.castFrom<dynamic, String?>((snapshot.data() as Map<String, dynamic>)['participants']),
+        participants = List.castFrom<dynamic, String?>(
+            (snapshot.data() as Map<String, dynamic>)['participants']),
         // messages = ((snapshot.data() as Map<String, dynamic>)['messages']),
-        transcribedMessages = ((snapshot.data() as Map<String, dynamic>)['transcribedMessages']),
+        transcribedMessages =
+            ((snapshot.data() as Map<String, dynamic>)['transcribedMessages']),
         timestamp = (snapshot.data() as Map<String, dynamic>)['timestamp'],
         reference = snapshot.reference;
 

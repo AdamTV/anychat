@@ -15,7 +15,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -81,8 +80,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: ListBody(
                                   children: <Widget>[
                                     RoundedInputField(
-                                        initialValue:
-                                            AnyChatAuth.currentUser!.displayName,
+                                        initialValue: AnyChatAuth
+                                            .currentUser!.displayName,
                                         icon: Icons.drive_file_rename_outline,
                                         onChanged: (value) =>
                                             {displayName = value}),
@@ -178,9 +177,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           setState(() {
                                             dropdownValue = newValue;
                                           });
-                                          Utilities
-                                              .setThemeFromDropdownValue(
-                                                  newValue);
+                                          Utilities.setThemeFromDropdownValue(
+                                              newValue);
                                           Navigator.pop(context);
                                           main();
                                         },

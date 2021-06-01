@@ -183,6 +183,7 @@ class _CallScreenState extends State<CallScreen> {
 
   bool? recognizing, recognizeFinished;
   AudioTranscriber audioTranscriber = AudioTranscriber();
+
   // late Stream<StreamingRecognizeResponse> responseStream;
 
   void streamingRecognize() async {
@@ -430,10 +431,7 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _onCallEnd() async {
-    if (mounted)
-      setState(() {
-        muted = true;
-      });
+    muted = true;
     await audioTranscriber.stopRecording();
     _channel!.leaveChannel();
     _engine.destroy();
@@ -451,13 +449,6 @@ class _CallScreenState extends State<CallScreen> {
       muted = !muted;
     });
     await _engine.muteLocalAudioStream(muted);
-    // if (muted) {
-    //   // await responseStream.drain();
-    //   await audioTranscriber.pauseRecording();
-    // } else {
-    //   await audioTranscriber.resumeRecording();
-    //   streamingRecognize();
-    // }
   }
 
   void _onSwitchCamera() {

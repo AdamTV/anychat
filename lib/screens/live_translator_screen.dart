@@ -200,7 +200,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     }, onError: (e) async {
       print(e);
       await audioTranscriber.stopRecording();
-      if(mounted){
+      if (mounted) {
         streamingRecognize();
       }
     });

@@ -69,7 +69,8 @@ class AnyChatAuth {
         return currentUser;
       } else {
         Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext!)!.emailInUse);
+            AppLocalizations.of(Utilities.globalKey.currentContext!)!
+                .emailInUse);
         return null;
       }
     }
@@ -205,7 +206,6 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser?> signInFacebook() async {
-
     if (kIsWeb) {
       // initialiaze the facebook javascript SDK
       FacebookAuth.instance.webInitialize(
@@ -220,26 +220,28 @@ class AnyChatAuth {
     bool _isLogged = result.status == LoginStatus.success;
     if (_isLogged) {
       // Create a credential from the access token
-      final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.token);
+      final OAuthCredential credential =
+          FacebookAuthProvider.credential(result.accessToken!.token);
       // Once signed in, get the UserCredential
-      UserCredential userCred = await FirebaseAuth.instance.signInWithCredential(credential);
-          final User user = userCred.user!;
-          var snapshot = await FirebaseFirestore.instance
-              .collection("users")
-              .doc(user.uid)
-              .get();
-          if (snapshot.exists) {
-            currentUser = AnyChatUser.fromSnapshot(snapshot);
-            linkedAccountPhotoUrl = user.photoURL;
-            return currentUser;
-          } else {
-            final userData = await FacebookAuth.instance.getUserData();
-            var url = userData['picture']['data']['url'];
-            currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-                url, AnyChatLocale.currentLocale!.substring(0, 2));
-            currentUser!.addUserToFirestore();
-            return currentUser;
-          }
+      UserCredential userCred =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User user = userCred.user!;
+      var snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
+      if (snapshot.exists) {
+        currentUser = AnyChatUser.fromSnapshot(snapshot);
+        linkedAccountPhotoUrl = user.photoURL;
+        return currentUser;
+      } else {
+        final userData = await FacebookAuth.instance.getUserData();
+        var url = userData['picture']['data']['url'];
+        currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
+            url, AnyChatLocale.currentLocale!.substring(0, 2));
+        currentUser!.addUserToFirestore();
+        return currentUser;
+      }
     }
     return null;
   }
@@ -345,14 +347,16 @@ class AnyChatAuth {
     final authResult = await twitterLogin.login();
     switch (authResult.status) {
       case TwitterLoginStatus.loggedIn:
-      // success
+        // success
         print('====== Login success ======');
         // Create a credential from the access token
-        final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
-            accessToken: authResult.authToken!, secret: authResult.authTokenSecret!);
+        final AuthCredential twitterAuthCredential =
+            TwitterAuthProvider.credential(
+                accessToken: authResult.authToken!,
+                secret: authResult.authTokenSecret!);
 
-        final userCred =
-            await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+        final userCred = await FirebaseAuth.instance
+            .signInWithCredential(twitterAuthCredential);
         final user = userCred.user!;
 
         var snapshot = await FirebaseFirestore.instance
@@ -370,16 +374,15 @@ class AnyChatAuth {
           return currentUser;
         }
       case TwitterLoginStatus.cancelledByUser:
-      // cancel
+        // cancel
         print('====== Login cancel ======');
         break;
       case TwitterLoginStatus.error:
       default:
-      // error
+        // error
         print('====== Login error ======');
         break;
     }
-
 
     // // Create a TwitterLogin instance
     // final TwitterLogin twitterLogin = new TwitterLogin(
