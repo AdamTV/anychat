@@ -125,9 +125,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           sender = AnyChatUser(null,
               AppLocalizations.of(context)!.accountDeleted, null, null, null);
         }
-        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
-            ? info.outgoingLanguage
-            : info.incomingLanguage;
+        final language =
+            _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
+                ? info.outgoingLanguage
+                : info.incomingLanguage;
         if (translatedMap[language]!.isEmpty) break;
         var text = new RichText(
           text: new TextSpan(
@@ -175,19 +176,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             null, null, null);
       }
 
-
-      if (AnyChatAuth.currentUser!.conversations.isEmpty){
+      if (AnyChatAuth.currentUser!.conversations.isEmpty) {
         AnyChatAuth.currentUser!.conversations =
-        await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser!.id);
+            await ConversationInfo.getAllConversationInfo(
+                AnyChatAuth.currentUser!.id);
       }
 
       print("currentConvversation.id: ${AnyChatAuth.currentConversation!.id}");
       var info = AnyChatAuth.currentUser!.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation!.id);
-      final language = _chatMessages.last.senderId == AnyChatAuth.currentUser!.id
-          ? info.outgoingLanguage
-          : info.incomingLanguage;
+      final language =
+          _chatMessages.last.senderId == AnyChatAuth.currentUser!.id
+              ? info.outgoingLanguage
+              : info.incomingLanguage;
       var text = new RichText(
         text: new TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
@@ -354,8 +355,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-                title:
-                    Text(AppLocalizations.of(context)!.addSomeoneToConversation),
+                title: Text(
+                    AppLocalizations.of(context)!.addSomeoneToConversation),
                 onTap: () {
                   SearchChatterByEmailScreen.addToConvo = true;
                   Navigator.pushNamed(context, "/addChatter");
@@ -508,7 +509,7 @@ class ChatMessage extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: sender!.id == AnyChatAuth.currentUser!.id
-                ?  Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).brightness == Brightness.dark
                     ? kDarkChatBubbleColorRight
                     : kDefaultChatBubbleColorRight
                 : Theme.of(context).brightness == Brightness.dark

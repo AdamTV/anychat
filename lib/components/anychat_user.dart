@@ -504,7 +504,8 @@ class AnyChatUser {
     } as Future Function(Transaction));
     Navigator.pushReplacementNamed(Utilities.globalKey.currentContext!, '/');
     Utilities.showToast(
-        AppLocalizations.of(Utilities.globalKey.currentContext!)!.accountDeleted);
+        AppLocalizations.of(Utilities.globalKey.currentContext!)!
+            .accountDeleted);
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
