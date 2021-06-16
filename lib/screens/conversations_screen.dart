@@ -263,9 +263,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     print(sortedMap);
     var index = sortedMap.keys.toList().indexOf(conversation.id);
     conversationWidgets.removeWhere((element) => element.key == slidable.key);
-    setState(() {
-      conversationWidgets.insert(index, slidable);
-    });
+    if (!conversation.participants.any((element) =>
+        AnyChatAuth.currentUser!.blockedAccounts.contains(element))) {
+      setState(() {
+        conversationWidgets.insert(index, slidable);
+      });
+    }
   }
 
   List<Conversation> getConversationsFromQuery(QuerySnapshot snapshot) {
@@ -447,7 +450,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 AppLocalizations.of(context)!.accountDeleted,
                 null,
                 null,
-                null));
+                null, []));
           }
           // }
         } else {
@@ -467,7 +470,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     AppLocalizations.of(context)!.accountDeleted,
                     null,
                     null,
-                    null));
+                    null, []));
               }
             }
           }

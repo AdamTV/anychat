@@ -15,17 +15,20 @@ class AnyChatUser {
   final String? email;
   final String? photoUrl;
   final String? language;
+  final List<String?> blockedAccounts;
   List<ConversationInfo> conversations = [];
 
-  AnyChatUser(
-      this.id, this.displayName, this.email, this.photoUrl, this.language);
+  AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
+      this.language, this.blockedAccounts);
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
         displayName = (snapshot.data() as Map<String, dynamic>)['displayName'],
         email = (snapshot.data() as Map<String, dynamic>)['email'],
         photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'],
-        language = (snapshot.data() as Map<String, dynamic>)['language'];
+        language = (snapshot.data() as Map<String, dynamic>)['language'],
+        blockedAccounts = List.castFrom<dynamic, String?>(
+            (snapshot.data() as Map<String, dynamic>)['blockedAccounts'] ?? []);
 
   static Future<AnyChatUser> getUserById(String? id) async {
     return AnyChatUser.fromSnapshot(
@@ -506,6 +509,40 @@ class AnyChatUser {
     Utilities.showToast(
         AppLocalizations.of(Utilities.globalKey.currentContext!)!
             .accountDeleted);
+  }
+
+  Future<void> blockAccount(String? id) async {
+    var user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser!.id);
+
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        if (!blockedAccounts.contains(id)) blockedAccounts.add(id);
+        transaction.update(user, {'blockedAccounts': blockedAccounts});
+      });
+    });
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
+  }
+
+  Future<void> unblockAccount(String? id) async {
+    var user = FirebaseFirestore.instance
+        .collection("users")
+        .doc(AnyChatAuth.currentUser!.id);
+
+    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      return transaction
+          .get(user)
+          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+          .then((AnyChatUser fresh) {
+        blockedAccounts.removeWhere((element) => element == id);
+        transaction.update(user, {'blockedAccounts': blockedAccounts});
+      });
+    });
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

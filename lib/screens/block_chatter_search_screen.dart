@@ -1,0 +1,117 @@
+import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/rounded_button.dart';
+import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/screens/blocked_users_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+class BlockChatterSearchScreen extends StatefulWidget {
+  @override
+  _BlockChatterSearchScreenState createState() =>
+      _BlockChatterSearchScreenState();
+}
+
+class _BlockChatterSearchScreenState extends State<BlockChatterSearchScreen> {
+  String? searchValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.blockAccount),
+        ),
+        body: Center(
+            child: Container(
+                constraints: BoxConstraints(maxWidth: 1280),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      RoundedInputField(
+                          hintText:
+                              "${AppLocalizations.of(context)!.findSomeoneByName} ${AppLocalizations.of(context)!.or} ${AppLocalizations.of(context)!.email}",
+                          onChanged: (value) {
+                            searchValue = value;
+                          }),
+                      RoundedButton(
+                          text: AppLocalizations.of(context)!.search,
+                          press: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return SearchResults(searchValue: searchValue);
+                            }));
+                          }),
+                    ],
+                  ),
+                ))));
+  }
+}
+
+class SearchResults extends StatefulWidget {
+  final String? searchValue;
+
+  const SearchResults({Key? key, this.searchValue}) : super(key: key);
+
+  @override
+  _SearchResultsState createState() => _SearchResultsState(searchValue);
+}
+
+class _SearchResultsState extends State<SearchResults> {
+  List<AnyChatUser> users = [];
+
+  _SearchResultsState(String? searchValue){
+    loadSearchResults(searchValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.blockAccount),
+        ),
+        body: Container(
+            constraints: BoxConstraints(maxWidth: 1280),
+            child: users.length == 0
+                ? ListTile(
+                    title: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            text: AppLocalizations.of(context)!.noResultsFound,
+                            style: TextStyle(color: Colors.grey))))
+                : ListView.builder(
+                    padding: EdgeInsets.all(8.0),
+                    itemCount: users.length,
+                    itemBuilder: (BuildContext ctx, int index) {
+                      return new ListTile(
+                          onTap: () async {
+                            await AnyChatAuth.currentUser!.blockAccount(users[index].id);
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext ctx){
+                              return BlockedUsersScreen();
+                            }));
+                          },
+                          leading: users[index].photoUrl == null
+                              ? CircleAvatar(
+                                  child: Text(users[index]
+                                      .displayName!
+                                      .substring(0, 1)))
+                              : CircleAvatar(
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  backgroundImage:
+                                      NetworkImage(users[index].photoUrl!)),
+                          title: RichText(
+                              text: TextSpan(
+                                  text: users[index].displayName,
+                                  style: TextStyle(color: Colors.grey))));
+                    })));
+  }
+
+  void loadSearchResults(String? searchValue) async {
+    users.clear();
+    users.addAll(await AnyChatUser.findUsersByEmail(searchValue));
+    users.addAll(await AnyChatUser.findUsersByDisplayName(searchValue));
+    setState(() {});
+  }
+}

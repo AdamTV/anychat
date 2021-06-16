@@ -6,18 +6,25 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
+
+  static bool isUserAgreeToTerms(){
+    return _RegisterScreenState.isUserAgreeToTerms();
+  }
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
   String? _email;
   String? _password;
+  static bool userAgreedToTerms = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -48,9 +55,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _password = value;
               },
             ),
+            CheckboxListTile(
+              title: RichText(
+                text: TextSpan(children: [
+                  new TextSpan(
+                    text: AppLocalizations.of(context)!.byContinuingIAgree,
+                  ),
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.privacyPolicy,
+                    style: new TextStyle(color: Colors.blue),
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () {
+                        launch(
+                            'https://www.alphatechnology.ca/anychat-privacy-policy');
+                      },
+                  )
+                ]),
+              ),
+              value: userAgreedToTerms,
+              onChanged: (newValue) {
+                setState(() {
+                  userAgreedToTerms = newValue!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
             RoundedButton(
               text: AppLocalizations.of(context)!.register_caps,
               press: () async {
+                if (!isUserAgreeToTerms()) return;
                 try {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, true);
@@ -90,6 +123,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     ));
+  }
+  static bool isUserAgreeToTerms(){
+    if (!userAgreedToTerms) {
+      showDialog<void>(
+          context: Utilities.globalKey.currentContext!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text(AppLocalizations.of(context)!.error),
+                content: Text(
+                    AppLocalizations.of(context)!.toJoinAnyChatConfirmPrivacyPolicy),
+                actions: <Widget>[
+                  TextButton(
+                    child:
+                    Text(AppLocalizations.of(context)!.cancel),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Utilities.showToast(
+                          AppLocalizations.of(context)!.cancelled);
+                    },
+                  )
+                ]);
+          });
+      return false;
+    } else { return true; }
   }
 }
 

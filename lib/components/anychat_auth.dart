@@ -1,6 +1,7 @@
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,7 +64,8 @@ class AnyChatAuth {
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
             firebaseUser.email,
             firebaseUser.photoURL ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2));
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            []);
         currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
@@ -115,7 +117,8 @@ class AnyChatAuth {
             googleSignInAccount!.displayName,
             googleSignInAccount!.email,
             googleSignInAccount!.photoUrl,
-            AnyChatLocale.currentLocale!.substring(0, 2));
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -136,7 +139,7 @@ class AnyChatAuth {
       print('signInWithGoogle succeeded: $_user');
 
       currentUser = new AnyChatUser(authResult.user!.uid, _user.displayName,
-          _user.email, _user.photoURL, AnyChatLocale.currentLocale);
+          _user.email, _user.photoURL, AnyChatLocale.currentLocale, []);
       currentUser!.addUserToFirestore();
 
       return currentUser;
@@ -186,7 +189,7 @@ class AnyChatAuth {
           displayName = result.email;
         }
         currentUser = new AnyChatUser(result.uid, displayName, result.email,
-            result.photoURL, AnyChatLocale.currentLocale!.substring(0, 2));
+            result.photoURL, AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -238,7 +241,7 @@ class AnyChatAuth {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
         currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-            url, AnyChatLocale.currentLocale!.substring(0, 2));
+            url, AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -251,6 +254,7 @@ class AnyChatAuth {
       key: Key("facebookIcon"),
       iconSrc: "assets/icons/facebook.svg",
       press: () async {
+        if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
         try {
           var user = await AnyChatAuth.signInFacebook();
           if (user != null) {
@@ -272,6 +276,7 @@ class AnyChatAuth {
     return SocialIcon(
         iconSrc: "assets/icons/google-plus.svg",
         press: () async {
+          if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
           try {
             var user = await AnyChatAuth.signInGoogle();
             if (user != null) {
@@ -292,6 +297,7 @@ class AnyChatAuth {
     return SocialIcon(
         iconSrc: "assets/icons/apple.svg",
         press: () async {
+          if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
           try {
             var user = await AnyChatAuth.signInApple();
             if (user != null) {
@@ -312,6 +318,7 @@ class AnyChatAuth {
     return SocialIcon(
       iconSrc: "assets/icons/twitter.svg",
       press: () async {
+        if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
         try {
           var user = await AnyChatAuth.signInTwitter();
           if (user != null) {
@@ -369,7 +376,7 @@ class AnyChatAuth {
           return currentUser;
         } else {
           currentUser = new AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, AnyChatLocale.currentLocale!.substring(0, 2));
+              user.photoURL, AnyChatLocale.currentLocale!.substring(0, 2), []);
           currentUser!.addUserToFirestore();
           return currentUser;
         }

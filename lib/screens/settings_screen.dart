@@ -15,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'blocked_users_screen.dart';
+
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -230,6 +232,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsSection(
                 title: AppLocalizations.of(context)!.dangerZone,
                 tiles: [
+                  SettingsTile(
+                      title: "Blocked Accounts",
+                      leading: Icon(Icons.block),
+                      onPressed: (ctx) => {
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (_) => BlockedUsersScreen(),
+                            ))
+                          }),
                   SettingsTile(
                       title: AppLocalizations.of(context)!.deleteYourAccount,
                       leading: Icon(Icons.delete_forever),
