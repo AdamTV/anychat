@@ -499,12 +499,15 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           ? AppLocalizations.of(context)!.thisPersonHasLeftConversation
           : "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}";
-      if (text.contains(AppLocalizations.of(context)!.isCallingYouOnAnyChat)) {
-        await Notifications().showNotification(
-            sender.displayName, text, "ring-${conversation.id}");
-      } else if (_notification != AppLifecycleState.resumed) {
-        await Notifications().showNotification(
-            sender.displayName, text, "chat-${conversation.id}");
+      if (_notification != AppLifecycleState.resumed) {
+        if (text
+            .contains(AppLocalizations.of(context)!.isCallingYouOnAnyChat)) {
+          await Notifications().showNotification(
+              sender.displayName, text, "ring-${conversation.id}");
+        } else {
+          await Notifications().showNotification(
+              sender.displayName, text, "chat-${conversation.id}");
+        }
       }
     }
   }
