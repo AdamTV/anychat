@@ -167,9 +167,9 @@ class AnyChatAuth {
     try {
       UserCredential _userCredential = isSignUp
           ? await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: email, password: password)
+              .createUserWithEmailAndPassword(email: email.trim(), password: password)
           : await FirebaseAuth.instance
-              .signInWithEmailAndPassword(email: email, password: password);
+              .signInWithEmailAndPassword(email: email.trim(), password: password);
       var result = _userCredential.user!;
 
       var snapshot = await FirebaseFirestore.instance
