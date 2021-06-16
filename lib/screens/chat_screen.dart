@@ -115,7 +115,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                       AppLocalizations.of(context)!.accountDeleted,
                       null,
                       null,
-                      null)));
+                      null,
+                      [])));
         }
         AnyChatUser sender;
         try {
@@ -123,7 +124,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
         } catch (e) {
           sender = AnyChatUser(null,
-              AppLocalizations.of(context)!.accountDeleted, null, null, null);
+              AppLocalizations.of(context)!.accountDeleted, null, null, null, []);
         }
         final language =
             _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
@@ -173,7 +174,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             .get());
       } catch (e) {
         sender = AnyChatUser(null, AppLocalizations.of(context)!.accountDeleted,
-            null, null, null);
+            null, null, null, []);
       }
 
       if (AnyChatAuth.currentUser!.conversations.isEmpty) {

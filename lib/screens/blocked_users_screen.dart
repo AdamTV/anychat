@@ -1,0 +1,76 @@
+import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/utilities.dart';
+import 'package:anychat/screens/block_chatter_search_screen.dart';
+import 'package:anychat/screens/settings_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:settings_ui/settings_ui.dart';
+
+class BlockedUsersScreen extends StatefulWidget {
+  @override
+  _BlockedUsersScreenState createState() => _BlockedUsersScreenState();
+}
+
+class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getBlockedAccountNames();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        child: Scaffold(
+          appBar: AppBar(
+              leading: Builder(builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return SettingsScreen();
+                    }));
+                  },
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                );
+              }),
+              title: Text(AppLocalizations.of(context)!.blockAccount)),
+          body: SettingsList(
+            sections: [
+              SettingsSection(tiles: tiles),
+            ],
+          ),
+        ),
+        onWillPop: (() => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return SettingsScreen();
+            })) as Future<bool>));
+  }
+  List<SettingsTile> tiles = [];
+  Future<void> getBlockedAccountNames() async {
+    tiles.clear();
+    tiles.add(SettingsTile(
+        title: AppLocalizations.of(Utilities.globalKey.currentContext!)!.blockAccount,
+        leading: Icon(Icons.add),
+        onPressed: (ctx) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) {
+                return BlockChatterSearchScreen();
+              }));
+        }));
+
+    for (int i = 0; i < AnyChatAuth.currentUser!.blockedAccounts.length; i++){
+      var user = await AnyChatUser.getUserById(AnyChatAuth.currentUser!.blockedAccounts[i]);
+      setState(() {
+        tiles.add(SettingsTile(
+            title: user.displayName!,
+            onPressed: (BuildContext context) async {
+              await AnyChatAuth.currentUser!.unblockAccount(user.id);
+              getBlockedAccountNames();
+            }));
+      });
+    }
+  }
+}
