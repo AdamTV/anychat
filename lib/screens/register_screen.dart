@@ -60,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 text: TextSpan(children: [
                   new TextSpan(
                     text: AppLocalizations.of(context)!.byContinuingIAgree,
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   TextSpan(
                     text: AppLocalizations.of(context)!.privacyPolicy,
@@ -69,7 +70,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         launch(
                             'https://www.alphatechnology.ca/anychat-privacy-policy');
                       },
-                  )
+                  ),
+                  new TextSpan(
+                    text: " " + AppLocalizations.of(context)!.and + " ",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.eula,
+                    style: new TextStyle(color: Colors.blue),
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () {
+                        launch(
+                            'https://www.alphatechnology.ca/anychat-eula');
+                      },
+                  ),
                 ]),
               ),
               value: userAgreedToTerms,
