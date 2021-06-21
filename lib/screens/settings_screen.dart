@@ -16,6 +16,7 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'blocked_users_screen.dart';
+import 'package:mailto/mailto.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -224,6 +225,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: AppLocalizations.of(context)!.privacyPolicy,
                       leading: Icon(Icons.description),
                       onPressed: (ctx) => _launchPrivacyPolicy()),
+                  SettingsTile(
+                      title: AppLocalizations.of(context)!.eula,
+                      leading: Icon(Icons.description),
+                      onPressed: (ctx) => _launchEula()),
                   // SettingsTile(
                   //     title: 'Open source licenses',
                   //     leading: Icon(Icons.collections_bookmark)),
@@ -236,11 +241,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: "Blocked Accounts",
                       leading: Icon(Icons.block),
                       onPressed: (ctx) => {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (_) => BlockedUsersScreen(),
-                            ))
-                          }),
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(
+                          builder: (_) => BlockedUsersScreen(),
+                        ))
+                      }),
+                  SettingsTile(
+                      title: "Flag Content",
+                      leading: Icon(Icons.flag),
+                      onPressed: (ctx) async => {
+                        await launchMailto()
+                      }),
                   SettingsTile(
                       title: AppLocalizations.of(context)!.deleteYourAccount,
                       leading: Icon(Icons.delete_forever),
@@ -255,7 +266,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         onWillPop: () => _onWillPop());
   }
-
+// ...somewhere in your Flutter app...
+  Future<void> launchMailto() async {
+    final mailtoLink = Mailto(
+      to: ['alphatechnologysolutionscorp@gmail.com'],
+      // cc: ['cc1@example.com', 'cc2@example.com'],
+      subject: 'Flag Objectionable Content',
+      body: 'Please include your display name in AnyChat, the display name of the other person,'
+          'and any other information you feel is pertinent.',
+    );
+    // Convert the Mailto instance into a string.
+    // Use either Dart's string interpolation
+    // or the toString() method.
+    await launch('$mailtoLink');
+  }
 // Image Picker
 //     List<File> _images = [];
   late File _image; // Used only if you need a single picture
@@ -340,6 +364,9 @@ _deleteAccount() {
 
 _launchPrivacyPolicy() async {
   await launch("https://www.alphatechnology.ca/anychat-privacy-policy");
+}
+_launchEula() async {
+  await launch("https://www.alphatechnology.ca/anychat-eula");
 }
 
 Future<bool> _onWillPop() async {
