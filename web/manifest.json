@@ -1,11 +1,11 @@
 {
-  "name": "anychat",
-  "short_name": "anychat",
+  "name": "AnyChat Translator",
+  "short_name": "AnyChat",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
   "theme_color": "#0175C2",
-  "description": "AnyChat",
+  "description": "The world's translator.",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [
