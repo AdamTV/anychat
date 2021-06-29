@@ -21,6 +21,11 @@ class AnyChatUser {
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
       this.language, this.blockedAccounts);
 
+  static deletedUser() {
+    return AnyChatUser(null, AppLocalizations.of(Utilities.globalKey.currentContext!)!.accountDeleted,
+        null, null, null, []);
+  }
+
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
         displayName = (snapshot.data() as Map<String, dynamic>)['displayName'],

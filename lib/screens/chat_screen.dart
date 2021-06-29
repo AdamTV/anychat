@@ -173,8 +173,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             .doc(_chatMessages.last.senderId)
             .get());
       } catch (e) {
-        sender = AnyChatUser(null, AppLocalizations.of(context)!.accountDeleted,
-            null, null, null, []);
+        sender = AnyChatUser.deletedUser();
       }
 
       if (AnyChatAuth.currentUser!.conversations.isEmpty) {

@@ -224,7 +224,12 @@ class _AnyChatState extends State<AnyChat> {
                     : snapshot.data!.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
+                .onError((error, stackTrace) => AnyChatUser.deletedUser())
                 .then((AnyChatUser user) {
+                  if(user.id == null) {
+                    return ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen());
+                  }
               AnyChatAuth.currentUser = user;
               print('returning ConversationsScreen');
               Navigator.push(context,
