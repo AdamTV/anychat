@@ -7,7 +7,7 @@ class AnyChatLocale {
   static List? languages;
   static String? currentLocale;
   static String? humanReadable;
-  static Map<String, String> isoMap = Map<String, String>();
+  static Map<String, String> isoMap = <String, String>{};
 
   static Future<void> init(BuildContext context) async {
     AnyChatLocale.isoMap = {

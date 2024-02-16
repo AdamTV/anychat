@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -18,8 +17,8 @@ class SocialIcon extends StatelessWidget {
     return GestureDetector(
       onTap: press as void Function()?,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.all(20),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,
@@ -31,7 +30,7 @@ class SocialIcon extends StatelessWidget {
           iconSrc!,
           height: size.width >= 750 ? 20 : size.width * 0.04,
           width: size.width >= 750 ? 20 : size.width * 0.04,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
       ),
     );

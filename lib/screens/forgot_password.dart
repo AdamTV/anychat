@@ -4,11 +4,12 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/login_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
+
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
@@ -27,11 +28,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
               AppLocalizations.of(context)!.enterYourEmail,
-              style: TextStyle(fontSize: 32),
+              style: const TextStyle(fontSize: 32),
             ),
             RoundedInputField(
               icon: Icons.mail,
@@ -45,16 +46,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             //   height: size.height * 0.45,
             // ),
             RoundedButton(
-              text: AppLocalizations.of(context)!.send +
-                  " " +
-                  AppLocalizations.of(context)!.email,
+              text: "${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}",
               press: () async {
                 await _passwordReset();
                 print(_email);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    return LoginScreen();
+                    return const LoginScreen();
                   }),
                 );
               },
@@ -73,9 +72,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   _passwordReset() async {
     try {
-      final _auth = FirebaseAuth.instance;
+      final auth = FirebaseAuth.instance;
       _formKey.currentState!.save();
-      await _auth.sendPasswordResetEmail(email: _email!);
+      await auth.sendPasswordResetEmail(email: _email!);
       Utilities.showToast(
           AppLocalizations.of(context)!.emailSentToResetPassword);
     } catch (e) {

@@ -5,7 +5,6 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
-import 'package:anychat/components/notifications.dart';
 import 'package:anychat/screens/add_chatter_screen.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
@@ -27,38 +26,43 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'components/utilities.dart';
+import 'firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Notifications().init();
-  Firebase.initializeApp().then((value) => {
+  // Notifications().init();
+  Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) => {
         Ads.init(),
-        Utilities.init().then((value) => {runApp(AnyChat())}),
+        Utilities.init().then((value) => {runApp(const AnyChat())}),
         FirebaseAuth.instance.authStateChanges().listen((User? user) async {
           if (user == null) {
             print('User is signed out!');
           } else {
             print('User is signed in!');
             print('User is ${user.emailVerified ? "" : "NOT "}verified!');
-            if (!user.emailVerified) {
-              // var actionCodeSettings = ActionCodeSettings(
-              //     url:
-              //     'https://www.example.com/?email=${user.email}',
-              //     dynamicLinkDomain: "example.page.link",
-              //     androidInstallApp: true,
-              //     androidMinimumVersion: '12',
-              //     androidPackageName: "ca.alphatech.anychat",
-              //     iOSBundleId: "ca.alphatech.anychat",
-              //     handleCodeInApp: true);
-
-              await user.sendEmailVerification();
-            }
+            // if (!user.emailVerified) {
+            //   var actionCodeSettings = ActionCodeSettings(
+            //       url:
+            //       'https://www.example.com/?email=${user.email}',
+            //       dynamicLinkDomain: "example.page.link",
+            //       androidInstallApp: true,
+            //       androidMinimumVersion: '12',
+            //       androidPackageName: "ca.alphatech.anychat",
+            //       iOSBundleId: "ca.alphatech.anychat",
+            //       handleCodeInApp: true);
+            //
+            //   await user.sendEmailVerification();
+            // }
           }
         }),
       });
 }
 
 class AnyChat extends StatefulWidget {
+  const AnyChat({Key? key}) : super(key: key);
+
   @override
   _AnyChatState createState() => _AnyChatState();
 }
@@ -74,138 +78,138 @@ class _AnyChatState extends State<AnyChat> {
     return MaterialApp(
       navigatorKey: Utilities.globalKey,
       routes: {
-        '/addChatter': (context) => AddChatterScreen(),
-        '/call': (context) => CallScreen(),
-        '/chat': (context) => ChatScreen(),
-        '/contacts': (context) => ContactsScreen(),
-        '/conversations': (context) => ConversationsScreen(),
-        '/languages': (context) => LanguagesScreen(),
-        '/liveTranslator': (context) => LiveTranslatorScreen(),
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-        '/searchChatterByEmail': (context) => SearchChatterByEmailScreen(),
-        '/settings': (context) => SettingsScreen(),
-        '/welcome': (context) => WelcomeScreen(),
-        '/forgotPassword': (context) => ForgotPassword(),
+        '/addChatter': (context) => const AddChatterScreen(),
+        '/call': (context) => const CallScreen(),
+        '/chat': (context) => const ChatScreen(),
+        '/contacts': (context) => const ContactsScreen(),
+        '/conversations': (context) => const ConversationsScreen(),
+        '/languages': (context) => const LanguagesScreen(),
+        '/liveTranslator': (context) => const LiveTranslatorScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
+        '/searchChatterByEmail': (context) => const SearchChatterByEmailScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
+        '/forgotPassword': (context) => const ForgotPassword(),
       },
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.title,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('af', ''),
-        const Locale('sq', ''),
-        const Locale('am', ''),
-        const Locale('ar', ''),
-        const Locale('hy', ''),
-        const Locale('az', ''),
-        const Locale('eu', ''),
-        const Locale('be', ''),
-        const Locale('bn', ''),
-        const Locale('bs', ''),
-        const Locale('bg', ''),
-        const Locale('ca', ''),
-        const Locale('ceb', ''),
-        const Locale('zh', ''),
-        const Locale('co', ''),
-        const Locale('hr', ''),
-        const Locale('cs', ''),
-        const Locale('da', ''),
-        const Locale('nl', ''),
-        const Locale('en', ''),
-        const Locale('eo', ''),
-        const Locale('et', ''),
-        const Locale('fi', ''),
-        const Locale('fr', ''),
-        const Locale('fy', ''),
-        const Locale('gl', ''),
-        const Locale('ka', ''),
-        const Locale('de', ''),
-        const Locale('el', ''),
-        const Locale('gu', ''),
-        const Locale('ht', ''),
-        const Locale('ha', ''),
-        const Locale('haw', ''),
-        const Locale('iw', ''),
-        const Locale('hi', ''),
-        const Locale('hmn', ''),
-        const Locale('hu', ''),
-        const Locale('is', ''),
-        const Locale('ig', ''),
-        const Locale('id', ''),
-        const Locale('ga', ''),
-        const Locale('it', ''),
-        const Locale('ja', ''),
-        const Locale('jv', ''),
-        const Locale('kn', ''),
-        const Locale('kk', ''),
-        const Locale('km', ''),
-        const Locale('rw', ''),
-        const Locale('ko', ''),
-        const Locale('ku', ''),
-        const Locale('ky', ''),
-        const Locale('lo', ''),
-        const Locale('la', ''),
-        const Locale('lv', ''),
-        const Locale('lt', ''),
-        const Locale('lb', ''),
-        const Locale('mk', ''),
-        const Locale('mg', ''),
-        const Locale('ms', ''),
-        const Locale('ml', ''),
-        const Locale('mt', ''),
-        const Locale('mi', ''),
-        const Locale('mr', ''),
-        const Locale('mn', ''),
-        const Locale('my', ''),
-        const Locale('ne', ''),
-        const Locale('no', ''),
-        const Locale('ny', ''),
-        const Locale('or', ''),
-        const Locale('ps', ''),
-        const Locale('fa', ''),
-        const Locale('pl', ''),
-        const Locale('pt', ''),
-        const Locale('pa', ''),
-        const Locale('ro', ''),
-        const Locale('ru', ''),
-        const Locale('sm', ''),
-        const Locale('gd', ''),
-        const Locale('sr', ''),
-        const Locale('st', ''),
-        const Locale('sn', ''),
-        const Locale('sd', ''),
-        const Locale('si', ''),
-        const Locale('sk', ''),
-        const Locale('sl', ''),
-        const Locale('so', ''),
-        const Locale('es', ''),
-        const Locale('su', ''),
-        const Locale('sw', ''),
-        const Locale('sv', ''),
-        const Locale('tl', ''),
-        const Locale('tg', ''),
-        const Locale('ta', ''),
-        const Locale('tt', ''),
-        const Locale('te', ''),
-        const Locale('th', ''),
-        const Locale('tr', ''),
-        const Locale('tk', ''),
-        const Locale('uk', ''),
-        const Locale('ur', ''),
-        const Locale('ug', ''),
-        const Locale('uz', ''),
-        const Locale('vi', ''),
-        const Locale('cy', ''),
-        const Locale('xh', ''),
-        const Locale('yi', ''),
-        const Locale('yo', ''),
-        const Locale('zu', ''),
+      supportedLocales: const [
+        Locale('af', ''),
+        Locale('sq', ''),
+        Locale('am', ''),
+        Locale('ar', ''),
+        Locale('hy', ''),
+        Locale('az', ''),
+        Locale('eu', ''),
+        Locale('be', ''),
+        Locale('bn', ''),
+        Locale('bs', ''),
+        Locale('bg', ''),
+        Locale('ca', ''),
+        Locale('ceb', ''),
+        Locale('zh', ''),
+        Locale('co', ''),
+        Locale('hr', ''),
+        Locale('cs', ''),
+        Locale('da', ''),
+        Locale('nl', ''),
+        Locale('en', ''),
+        Locale('eo', ''),
+        Locale('et', ''),
+        Locale('fi', ''),
+        Locale('fr', ''),
+        Locale('fy', ''),
+        Locale('gl', ''),
+        Locale('ka', ''),
+        Locale('de', ''),
+        Locale('el', ''),
+        Locale('gu', ''),
+        Locale('ht', ''),
+        Locale('ha', ''),
+        Locale('haw', ''),
+        Locale('iw', ''),
+        Locale('hi', ''),
+        Locale('hmn', ''),
+        Locale('hu', ''),
+        Locale('is', ''),
+        Locale('ig', ''),
+        Locale('id', ''),
+        Locale('ga', ''),
+        Locale('it', ''),
+        Locale('ja', ''),
+        Locale('jv', ''),
+        Locale('kn', ''),
+        Locale('kk', ''),
+        Locale('km', ''),
+        Locale('rw', ''),
+        Locale('ko', ''),
+        Locale('ku', ''),
+        Locale('ky', ''),
+        Locale('lo', ''),
+        Locale('la', ''),
+        Locale('lv', ''),
+        Locale('lt', ''),
+        Locale('lb', ''),
+        Locale('mk', ''),
+        Locale('mg', ''),
+        Locale('ms', ''),
+        Locale('ml', ''),
+        Locale('mt', ''),
+        Locale('mi', ''),
+        Locale('mr', ''),
+        Locale('mn', ''),
+        Locale('my', ''),
+        Locale('ne', ''),
+        Locale('no', ''),
+        Locale('ny', ''),
+        Locale('or', ''),
+        Locale('ps', ''),
+        Locale('fa', ''),
+        Locale('pl', ''),
+        Locale('pt', ''),
+        Locale('pa', ''),
+        Locale('ro', ''),
+        Locale('ru', ''),
+        Locale('sm', ''),
+        Locale('gd', ''),
+        Locale('sr', ''),
+        Locale('st', ''),
+        Locale('sn', ''),
+        Locale('sd', ''),
+        Locale('si', ''),
+        Locale('sk', ''),
+        Locale('sl', ''),
+        Locale('so', ''),
+        Locale('es', ''),
+        Locale('su', ''),
+        Locale('sw', ''),
+        Locale('sv', ''),
+        Locale('tl', ''),
+        Locale('tg', ''),
+        Locale('ta', ''),
+        Locale('tt', ''),
+        Locale('te', ''),
+        Locale('th', ''),
+        Locale('tr', ''),
+        Locale('tk', ''),
+        Locale('uk', ''),
+        Locale('ur', ''),
+        Locale('ug', ''),
+        Locale('uz', ''),
+        Locale('vi', ''),
+        Locale('cy', ''),
+        Locale('xh', ''),
+        Locale('yi', ''),
+        Locale('yo', ''),
+        Locale('zu', ''),
       ],
       theme: kDefaultTheme,
       darkTheme: kDarkTheme,
@@ -228,21 +232,21 @@ class _AnyChatState extends State<AnyChat> {
                 .then((AnyChatUser user) {
                   if(user.id == null) {
                     return ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen());
+                        constraints: const BoxConstraints(maxWidth: 1), child: const WelcomeScreen());
                   }
               AnyChatAuth.currentUser = user;
               print('returning ConversationsScreen');
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
                 return ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 1),
-                    child: ConversationsScreen());
+                    constraints: const BoxConstraints(maxWidth: 1),
+                    child: const ConversationsScreen());
               }));
             });
           }
           print('returning WelcomeScreen');
           return ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 1), child: WelcomeScreen());
+              constraints: const BoxConstraints(maxWidth: 1), child: const WelcomeScreen());
         },
       ),
     );

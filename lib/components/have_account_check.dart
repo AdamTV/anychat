@@ -18,8 +18,8 @@ class HaveAccountCheck extends StatelessWidget {
       children: <Widget>[
         Text(
           login
-              ? AppLocalizations.of(context)!.doNotHaveAccount + " "
-              : AppLocalizations.of(context)!.haveAccount + " ",
+              ? "${AppLocalizations.of(context)!.doNotHaveAccount} "
+              : "${AppLocalizations.of(context)!.haveAccount} ",
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         GestureDetector(

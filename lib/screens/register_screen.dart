@@ -13,6 +13,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 
@@ -36,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.register_caps,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
@@ -58,27 +60,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
             CheckboxListTile(
               title: RichText(
                 text: TextSpan(children: [
-                  new TextSpan(
+                  TextSpan(
                     text: AppLocalizations.of(context)!.byContinuingIAgree,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   TextSpan(
                     text: AppLocalizations.of(context)!.privacyPolicy,
-                    style: new TextStyle(color: Colors.blue),
-                    recognizer: new TapGestureRecognizer()
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         launch(
                             'https://www.alphatechnology.ca/anychat-privacy-policy');
                       },
                   ),
-                  new TextSpan(
-                    text: " " + AppLocalizations.of(context)!.and + " ",
+                  TextSpan(
+                    text: " ${AppLocalizations.of(context)!.and} ",
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   TextSpan(
                     text: AppLocalizations.of(context)!.eula,
-                    style: new TextStyle(color: Colors.blue),
-                    recognizer: new TapGestureRecognizer()
+                    style: const TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         launch(
                             'https://www.alphatechnology.ca/anychat-eula');
@@ -123,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Navigator.pushNamed(context, "/login");
               },
             ),
-            OrDivider(),
+            const OrDivider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -195,7 +197,7 @@ class SignupBackground extends StatelessWidget {
       )
     });
     children.add(child);
-    return Container(
+    return SizedBox(
       height: size.height,
       width: double.infinity,
       // Here i can use size.width but use double.infinity because both work as a same

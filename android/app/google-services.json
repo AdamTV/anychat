@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "682283241991-or0ojctri44c62ijgka7k7ifb0thl4cp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.alphatech.anychat",
+            "certificate_hash": "6999af44dc441e4350524e9738a55cc1df029fe1"
+          }
+        },
+        {
           "client_id": "682283241991-pod3a1vm20eslnic6h1rtk1cs282a905.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

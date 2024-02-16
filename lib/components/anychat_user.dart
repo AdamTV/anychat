@@ -96,8 +96,8 @@ class AnyChatUser {
   addUserToFirestore() {
     FirebaseAuth.instance;
 
-    final users = FirebaseFirestore.instance.collection("users").doc(this.id);
-    checkExist(this.id).then((value) => {
+    final users = FirebaseFirestore.instance.collection("users").doc(id);
+    checkExist(id).then((value) => {
           if (!value)
             {
               //print('!value')
@@ -126,10 +126,11 @@ class AnyChatUser {
           .doc(id)
           .get()
           .then((doc) {
-        if (doc.exists)
+        if (doc.exists) {
           exists = true;
-        else
+        } else {
           exists = false;
+        }
       });
       return exists;
     } catch (e) {
@@ -320,9 +321,9 @@ class AnyChatUser {
         .collection('transcribedMessages');
     WriteBatch batch = FirebaseFirestore.instance.batch();
     return messages.get().then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         batch.delete(doc.reference);
-      });
+      }
       return batch.commit();
     });
     // return FirebaseFirestore.instance
@@ -409,10 +410,8 @@ class AnyChatUser {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(AppLocalizations.of(context)!.areYouSureYouWantToLeave +
-                    " " +
-                    AppLocalizations.of(context)!
-                        .youWillNotJoinBackUnlessInvited),
+                Text("${AppLocalizations.of(context)!.areYouSureYouWantToLeave} ${AppLocalizations.of(context)!
+                        .youWillNotJoinBackUnlessInvited}"),
               ],
             ),
           ),

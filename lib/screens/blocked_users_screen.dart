@@ -8,6 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class BlockedUsersScreen extends StatefulWidget {
+  const BlockedUsersScreen({Key? key}) : super(key: key);
+
   @override
   _BlockedUsersScreenState createState() => _BlockedUsersScreenState();
 }
@@ -22,6 +24,10 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+        onWillPop: (() => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return const SettingsScreen();
+            })) as Future<bool>),
         child: Scaffold(
           appBar: AppBar(
               leading: Builder(builder: (BuildContext context) {
@@ -30,7 +36,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return SettingsScreen();
+                      return const SettingsScreen();
                     }));
                   },
                   tooltip: MaterialLocalizations.of(context).backButtonTooltip,
@@ -42,22 +48,18 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               SettingsSection(tiles: tiles),
             ],
           ),
-        ),
-        onWillPop: (() => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return SettingsScreen();
-            })) as Future<bool>));
+        ));
   }
   List<SettingsTile> tiles = [];
   Future<void> getBlockedAccountNames() async {
     tiles.clear();
     tiles.add(SettingsTile(
-        title: AppLocalizations.of(Utilities.globalKey.currentContext!)!.blockAccount,
-        leading: Icon(Icons.add),
+        title: Text(AppLocalizations.of(Utilities.globalKey.currentContext!)!.blockAccount),
+        leading: const Icon(Icons.add),
         onPressed: (ctx) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (BuildContext context) {
-                return BlockChatterSearchScreen();
+                return const BlockChatterSearchScreen();
               }));
         }));
 
@@ -65,7 +67,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
       var user = await AnyChatUser.getUserById(AnyChatAuth.currentUser!.blockedAccounts[i]);
       setState(() {
         tiles.add(SettingsTile(
-            title: user.displayName!,
+            title: Text(user.displayName!),
             onPressed: (BuildContext context) async {
               await AnyChatAuth.currentUser!.unblockAccount(user.id);
               getBlockedAccountNames();

@@ -8,7 +8,6 @@ import 'package:anychat/main.dart';
 import 'package:anychat/screens/languages_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +18,8 @@ import 'blocked_users_screen.dart';
 import 'package:mailto/mailto.dart';
 
 class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -47,31 +48,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: Text(
                   '${AppLocalizations.of(context)!.title} ${AppLocalizations.of(context)!.settings}')),
           body: SettingsList(
-            contentPadding: EdgeInsets.only(top: 12),
+            contentPadding: const EdgeInsets.only(top: 12),
             sections: [
               SettingsSection(
-                title: AppLocalizations.of(context)!.translation,
+                title: Text(AppLocalizations.of(context)!.translation),
                 tiles: [
                   SettingsTile(
-                    title: AppLocalizations.of(context)!.language,
-                    subtitle: Utilities.getLanguageFromIsoCode(
-                        AnyChatAuth.currentUser!.language),
-                    leading: Icon(Icons.language),
+                    title: Text(AppLocalizations.of(context)!.language),
+                    description: Text(Utilities.getLanguageFromIsoCode(
+                        AnyChatAuth.currentUser!.language)),
+                    leading: const Icon(Icons.language),
                     onPressed: (BuildContext context) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (_) => LanguagesScreen(),
+                        builder: (_) => const LanguagesScreen(),
                       ));
                     },
                   ),
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context)!.information,
+                title: Text(AppLocalizations.of(context)!.information),
                 tiles: [
                   SettingsTile(
-                    title: AppLocalizations.of(context)!.displayName,
-                    subtitle: displayName,
-                    leading: Icon(Icons.drive_file_rename_outline),
+                    title: Text(AppLocalizations.of(context)!.displayName),
+                    description: Text(displayName!),
+                    leading: const Icon(Icons.drive_file_rename_outline),
                     onPressed: (BuildContext context) {
                       showDialog(
                           context: context,
@@ -107,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         displayName);
                                     Navigator.of(context)
                                         .pushReplacement(MaterialPageRoute(
-                                      builder: (_) => SettingsScreen(),
+                                      builder: (_) => const SettingsScreen(),
                                     ));
                                   },
                                 ),
@@ -117,19 +118,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingsTile(
-                      title: FirebaseAuth.instance.currentUser!.emailVerified
+                      title: Text(FirebaseAuth.instance.currentUser!.emailVerified
                           ? AppLocalizations.of(context)!.emailVerified
-                          : AppLocalizations.of(context)!.verificationEmailSent,
-                      subtitle: AnyChatAuth.currentUser!.email,
-                      leading: Icon(Icons.email)),
+                          : AppLocalizations.of(context)!.verificationEmailSent),
+                      description: Text(AnyChatAuth.currentUser!.email!),
+                      leading: const Icon(Icons.email)),
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context)!.picture,
+                title: Text(AppLocalizations.of(context)!.picture),
                 tiles: [
                   // SettingsTile.switchTile(
                   //   title: 'Profile Picture',
-                  //   subtitle: 'Use picture from linked account',
+                  //   description: 'Use picture from linked account',
                   //   switchValue: useLinkedPicture,
                   //   onToggle: (bool value) async {
                   //     if (value == true) {
@@ -143,9 +144,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // ),
                   SettingsTile(
                       onPressed: (v) => {getImage(true)},
-                      title: AppLocalizations.of(context)!.changePicture,
+                      title: Text(AppLocalizations.of(context)!.changePicture),
                       // enabled: changeProfilePictureEnabled,
-                      leading: Icon(Icons.photo),
+                      leading: const Icon(Icons.photo),
                       trailing: AnyChatAuth.currentUser!.photoUrl != null
                           ? CircleAvatar(
                               backgroundImage: NetworkImage(
@@ -156,12 +157,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                  title: AppLocalizations.of(context)!.colors,
+                  title: Text(AppLocalizations.of(context)!.colors),
                   tiles: [
                     SettingsTile(
-                      title: AppLocalizations.of(context)!.theme,
-                      subtitle: dropdownValue,
-                      leading: Icon(Icons.palette),
+                      title: Text(AppLocalizations.of(context)!.theme),
+                      description: Text(dropdownValue!),
+                      leading: const Icon(Icons.palette),
                       onPressed: (BuildContext context) {
                         showDialog(
                             context: context,
@@ -203,31 +204,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     )
                   ]),
               SettingsSection(
-                title: AppLocalizations.of(context)!.notifications,
+                title: Text(AppLocalizations.of(context)!.notifications),
                 tiles: [
                   SettingsTile.switchTile(
-                    title: AppLocalizations.of(context)!.notifications,
-                    leading: Icon(Icons.notifications_active),
-                    switchValue: notifications,
+                    title: Text(AppLocalizations.of(context)!.notifications),
+                    leading: const Icon(Icons.notifications_active),
+                    // switchValue: notifications,
                     onToggle: (value) async {
                       setState(() {
                         notifications = value;
                       });
                       await Utilities.prefs.setBool('notifications', value);
-                    },
+                    }, initialValue: null,
                   )
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context)!.miscellaneous,
+                title: Text(AppLocalizations.of(context)!.miscellaneous),
                 tiles: [
                   SettingsTile(
-                      title: AppLocalizations.of(context)!.privacyPolicy,
-                      leading: Icon(Icons.description),
+                      title: Text(AppLocalizations.of(context)!.privacyPolicy),
+                      leading: const Icon(Icons.description),
                       onPressed: (ctx) => _launchPrivacyPolicy()),
                   SettingsTile(
-                      title: AppLocalizations.of(context)!.eula,
-                      leading: Icon(Icons.description),
+                      title: Text(AppLocalizations.of(context)!.eula),
+                      leading: const Icon(Icons.description),
                       onPressed: (ctx) => _launchEula()),
                   // SettingsTile(
                   //     title: 'Open source licenses',
@@ -235,26 +236,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
-                title: AppLocalizations.of(context)!.dangerZone,
+                title: Text(AppLocalizations.of(context)!.dangerZone),
                 tiles: [
                   SettingsTile(
-                      title: "Blocked Accounts",
-                      leading: Icon(Icons.block),
+                      title: const Text("Blocked"),
+                      leading: const Icon(Icons.block),
                       onPressed: (ctx) => {
                         Navigator.of(context)
                             .pushReplacement(MaterialPageRoute(
-                          builder: (_) => BlockedUsersScreen(),
+                          builder: (_) => const BlockedUsersScreen(),
                         ))
                       }),
                   SettingsTile(
-                      title: "Flag Content",
-                      leading: Icon(Icons.flag),
+                      title: const Text("Flag Content"),
+                      leading: const Icon(Icons.flag),
                       onPressed: (ctx) async => {
                         await launchMailto()
                       }),
                   SettingsTile(
-                      title: AppLocalizations.of(context)!.deleteYourAccount,
-                      leading: Icon(Icons.delete_forever),
+                      title: Text(AppLocalizations.of(context)!.deleteYourAccount),
+                      leading: const Icon(Icons.delete_forever),
                       onPressed: (ctx) => _deleteAccount()),
                   // SettingsTile(
                   //     title: 'Open source licenses',
@@ -286,16 +287,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
-    PickedFile? pickedFile;
+    XFile? pickedFile;
     // Let user select photo from gallery
     if (gallery) {
-      pickedFile = await picker.getImage(
+      pickedFile = await picker.pickImage(
         source: ImageSource.gallery,
       );
     }
     // Otherwise open camera to get new photo
     else {
-      pickedFile = await picker.getImage(
+      pickedFile = await picker.pickImage(
         source: ImageSource.camera,
       );
     }
@@ -312,10 +313,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {});
   }
 
-  Future<String?> uploadFile(File _image) async {
+  Future<String?> uploadFile(File image) async {
     Reference storageReference =
-        FirebaseStorage.instance.ref().child('images/${_image.path}');
-    UploadTask uploadTask = storageReference.putFile(_image);
+        FirebaseStorage.instance.ref().child('images/${image.path}');
+    UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask.whenComplete(() => null);
     print('File Uploaded');
     String? returnURL;
