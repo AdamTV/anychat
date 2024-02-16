@@ -15,10 +15,10 @@ import 'anychat_user.dart';
 
 class Utilities {
   static late SharedPreferences prefs;
-  static final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
-  static final String authority = "translation.googleapis.com";
-  static final String unencodedPath = "/language/translate/v2";
-  static Map<String, dynamic> queryParameters = Map();
+  static const String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
+  static const String authority = "translation.googleapis.com";
+  static const String unencodedPath = "/language/translate/v2";
+  static Map<String, dynamic> queryParameters = {};
   static GlobalKey<NavigatorState> globalKey = GlobalKey();
 
   static Future<void> init() async {
@@ -42,14 +42,14 @@ class Utilities {
     if (matches.length == 1 && matches.first.groupCount == 1) {
       return matches.first.group(1)!.replaceAll("&#39;", "'");
     } else {
-      throw new Exception("Could not getGoogleTranslation -> uri: $uri");
+      throw Exception("Could not getGoogleTranslation -> uri: $uri");
     }
   }
 
   static const CLOUD_API_MAX_Q = 128;
   static Future<Map<String?, List<String>>> getBatchGoogleTranslation(
       Map<String?, List<String?>> map) async {
-    Map<String?, List<String>> translatedMap = Map();
+    Map<String?, List<String>> translatedMap = {};
     queryParameters.putIfAbsent("key", () => apiKey);
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     for (var mapEntry in map.entries) {
@@ -59,9 +59,9 @@ class Utilities {
       var value = mapEntry.value;
       for (int i = 0; i < value.length; i += CLOUD_API_MAX_Q) {
         int end = i + CLOUD_API_MAX_Q;
-        if (CLOUD_API_MAX_Q > value.length)
+        if (CLOUD_API_MAX_Q > value.length) {
           end = value.length;
-        else if (end > value.length) {
+        } else if (end > value.length) {
           end = value.length;
         }
         var sublist = value.sublist(i, end);
@@ -69,12 +69,12 @@ class Utilities {
         var uri = Uri.https(authority, unencodedPath, queryParameters);
         Response x = await http.post(uri);
         Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
-        if (matches.length > 0) {
+        if (matches.isNotEmpty) {
           for (var match in matches) {
             translatedMap[key]!.add(match.group(1)!.replaceAll("&#39;", "'"));
           }
         } else {
-          throw new Exception("Could not getGoogleTranslation -> uri: $uri");
+          throw Exception("Could not getGoogleTranslation -> uri: $uri");
         }
       }
     }

@@ -2,11 +2,12 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/screens/search_chatter_by_email_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddChatterScreen extends StatefulWidget {
+  const AddChatterScreen({Key? key}) : super(key: key);
+
   @override
   _AddChatterScreenState createState() => _AddChatterScreenState();
 }
@@ -41,12 +42,12 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
                 ),
               ),
               ListTile(
@@ -67,7 +68,7 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
         ),
         body: Center(
             child: Container(
-                constraints: BoxConstraints(maxWidth: 1280),
+                constraints: const BoxConstraints(maxWidth: 1280),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -87,7 +88,7 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                             Navigator.pushNamed(
                                 context, "/searchChatterByEmail");
                           }),
-                      Divider(height: 100),
+                      const Divider(height: 100),
                       Text(AppLocalizations.of(context)!
                           .seeWhoIsAlreadyOnAnyChat),
                       RoundedButton(

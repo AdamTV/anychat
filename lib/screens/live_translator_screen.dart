@@ -2,11 +2,12 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
+  const LiveTranslatorScreen({Key? key}) : super(key: key);
+
   @override
   _LiveTranslatorScreenState createState() => _LiveTranslatorScreenState();
 }
@@ -76,12 +77,12 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
                 ),
               ),
               ListTile(
@@ -101,8 +102,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           ),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-          child: Text(text, style: TextStyle(fontSize: 32)),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          child: Text(text, style: const TextStyle(fontSize: 32)),
         )
         // Expanded(
         //   flex: 1,
@@ -127,15 +128,15 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-    return new AlertDialog(
+    return AlertDialog(
       title: Text(AppLocalizations.of(context)!.selectLanguage),
-      content: new Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           DropdownButton<String>(
             value: dropdownValue,
-            icon: Icon(Icons.language),
+            icon: const Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) {
@@ -194,7 +195,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
         var newText = await Utilities.getGoogleTranslation(
             AnyChatAuth.currentUser!.language, lastMessage);
         setState(() {
-          text += newText + " ";
+          text += "$newText ";
         });
       }
     }, onError: (e) async {

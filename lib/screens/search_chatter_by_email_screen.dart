@@ -46,12 +46,12 @@ class SearchChatterByEmailScreenState
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
               child: Text(
                 AppLocalizations.of(context)!.title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -69,19 +69,19 @@ class SearchChatterByEmailScreenState
         ),
       ),
       body: Container(
-          constraints: BoxConstraints(maxWidth: 1280),
-          child: SearchChatterByEmailScreenState.users.length == 0
+          constraints: const BoxConstraints(maxWidth: 1280),
+          child: SearchChatterByEmailScreenState.users.isEmpty
               ? ListTile(
                   title: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           text: AppLocalizations.of(context)!.noResultsFound,
-                          style: TextStyle(color: Colors.grey))))
+                          style: const TextStyle(color: Colors.grey))))
               : ListView.builder(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   itemCount: SearchChatterByEmailScreenState.users.length,
                   itemBuilder: (BuildContext buildCtx, int index) {
-                    return new ListTile(
+                    return ListTile(
                         onTap: () async {
                           if (AnyChatAuth.currentConversation == null) {
                             var convo = await (AnyChatUser.createConversation(
@@ -123,7 +123,7 @@ class SearchChatterByEmailScreenState
                             text: TextSpan(
                                 text: SearchChatterByEmailScreenState
                                     .users[index].displayName,
-                                style: TextStyle(color: Colors.grey))));
+                                style: const TextStyle(color: Colors.grey))));
                   },
                 )),
     );

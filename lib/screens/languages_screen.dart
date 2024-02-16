@@ -7,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class LanguagesScreen extends StatefulWidget {
+  const LanguagesScreen({Key? key}) : super(key: key);
+
   @override
   _LanguagesScreenState createState() => _LanguagesScreenState();
 }
@@ -29,6 +31,10 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+        onWillPop: (() => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return const SettingsScreen();
+            })) as Future<bool>),
         child: Scaffold(
           appBar: AppBar(
               leading: Builder(builder: (BuildContext context) {
@@ -37,7 +43,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return SettingsScreen();
+                      return const SettingsScreen();
                     }));
                   },
                   tooltip: MaterialLocalizations.of(context).backButtonTooltip,
@@ -49,17 +55,13 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
               SettingsSection(tiles: getLanguageTiles()),
             ],
           ),
-        ),
-        onWillPop: (() => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return SettingsScreen();
-            })) as Future<bool>));
+        ));
   }
 
   Widget trailingWidget(int index) {
     return (languageIndex == index)
         ? Icon(Icons.check, color: Theme.of(context).primaryColor)
-        : Icon(null);
+        : const Icon(null);
   }
 
   Future<void> changeLanguage(int index) async {
@@ -71,14 +73,14 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
 
   List<SettingsTile> getLanguageTiles() {
     List<SettingsTile> tiles = [];
-    AnyChatLocale.isoMap.keys.forEach((element) {
+    for (var element in AnyChatLocale.isoMap.keys) {
       tiles.add(SettingsTile(
-          title: element,
+          title: Text(element),
           trailing: trailingWidget(languages.indexOf(element)),
           onPressed: (BuildContext context) {
             changeLanguage(languages.indexOf(element));
           }));
-    });
+    }
     return tiles;
   }
 }

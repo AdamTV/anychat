@@ -1,6 +1,5 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Ads {

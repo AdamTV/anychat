@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OrDivider extends StatelessWidget {
+  const OrDivider({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -28,7 +30,7 @@ class OrDivider extends StatelessWidget {
   }
 
   Expanded buildDivider() {
-    return Expanded(
+    return const Expanded(
       child: Divider(
         color: Color(0xFFD9D9D9),
         height: 1.5,

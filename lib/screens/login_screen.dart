@@ -11,6 +11,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -25,13 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         body: LoginBackground(
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 25),
+        padding: const EdgeInsets.only(top: 25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.login_caps,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
@@ -57,13 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 try {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, false);
-                  if (user != null)
+                  if (user != null) {
                     Utilities.initConversationScreen(context, user);
-                  else
+                  } else {
                     Utilities.showAlertDialog(
                         context,
                         AppLocalizations.of(context)!.error,
                         AppLocalizations.of(context)!.invalidCredentials);
+                  }
                 } catch (e) {
                   Utilities.showAlertDialog(
                       context,
@@ -116,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.pushNamed(context, "/register");
               },
             ),
-            OrDivider(),
+            const OrDivider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -164,7 +167,7 @@ class LoginBackground extends StatelessWidget {
       ),
     });
     children.add(child);
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: Stack(

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -17,14 +16,14 @@ class RoundedButton extends StatelessWidget {
     var color = theme.primaryColor;
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: size.width * 0.8,
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: const BoxConstraints(maxWidth: 500),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(29),
         child: TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
             backgroundColor: color,
           ),
           onPressed: press as void Function()?,

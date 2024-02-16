@@ -18,7 +18,7 @@ class AudioTranscriber {
   // static StreamSubscription<List<int>> _audioStreamSubscription;
   static late BehaviorSubject<List<int>> _audioStream;
   static String? isoCode;
-  FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
+  final FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
   StreamSubscription? _mRecordingDataSubscription;
   late StreamController<Food> recordingDataController;
@@ -27,7 +27,7 @@ class AudioTranscriber {
     if (status != PermissionStatus.granted) {
       throw RecordingPermissionException('Microphone permission not granted');
     }
-    await _mRecorder!.openAudioSession();
+    await _mRecorder.openRecorder();
     // setState(() {
     _mRecorderIsInited = true;
     // });
@@ -62,7 +62,7 @@ class AudioTranscriber {
     }, onDone: () {
       recordingDataController.close();
     });
-    await _mRecorder!.startRecorder(
+    await _mRecorder.startRecorder(
       toStream: recordingDataController.sink,
       codec: Codec.pcm16,
       numChannels: 1,
@@ -70,7 +70,7 @@ class AudioTranscriber {
     );
 
     final serviceAccount = ServiceAccount.fromString(
-        '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
+        (await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json')));
     final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
     final config = _getConfig();
 
@@ -100,7 +100,14 @@ class AudioTranscriber {
     // await _recorder.stop();
     // await _audioStreamSubscription?.cancel();
     // await _audioStream?.close();
-    await _mRecorder!.stopRecorder();
+    await _mRecorder.stopRecorder();
     await _mRecordingDataSubscription?.cancel();
   }
+
+
+  @override
+  void dispose()
+  {
+    _mRecorder.closeRecorder();
+    }
 }

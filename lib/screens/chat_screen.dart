@@ -11,14 +11,14 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/search_chatter_by_email_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
+  const ChatScreen({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ChatScreenState();
 }
@@ -26,11 +26,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return ChatWindow();
+    return const ChatWindow();
   }
 }
 
 class ChatWindow extends StatefulWidget {
+  const ChatWindow({Key? key}) : super(key: key);
+
   @override
   _ChatWindowState createState() => _ChatWindowState();
 
@@ -53,7 +55,7 @@ class ChatWindow extends StatefulWidget {
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   final _textController = TextEditingController();
-  List<ChatMessage> _messages = [];
+  final List<ChatMessage> _messages = [];
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
   StreamSubscription<QuerySnapshot>? _chatMessageSubscription;
@@ -61,9 +63,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
-    if (_chatMessageSubscription == null)
-      _chatMessageSubscription =
-          ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
+    _chatMessageSubscription ??= ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
 
   List<AnyChatMessage> getChatMessagesFromQuery(QuerySnapshot snapshot) {
@@ -80,9 +80,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       var participants = <AnyChatUser>[];
       convo.participants.forEach((element) async {
         if (!AnyChatAuth.currentChatters
-            .any((chatter) => chatter.id == element))
+            .any((chatter) => chatter.id == element)) {
           AnyChatAuth.currentChatters
               .removeWhere((chatter) => chatter.id == element);
+        }
         participants.add(await AnyChatUser.getUserById(element));
       });
 
@@ -92,8 +93,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       var info = AnyChatAuth.currentUser!.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation!.id);
       // divide all chat messages into language for translation -> translate
-      Map<String?, List<String?>> map = Map();
-      _chatMessages.forEach((message) {
+      Map<String?, List<String?>> map = {};
+      for (var message in _chatMessages) {
         final language = message.senderId == AnyChatAuth.currentUser!.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
@@ -101,7 +102,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           map.putIfAbsent(language, () => <String?>[]);
         }
         map[language]!.insert(0, message.text);
-      });
+      }
       print("chatMessage size: ${_chatMessages.length}");
       Map<String?, List<String>> translatedMap =
           await Utilities.getBatchGoogleTranslation(map);
@@ -131,20 +132,20 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 ? info.outgoingLanguage
                 : info.incomingLanguage;
         if (translatedMap[language]!.isEmpty) break;
-        var text = new RichText(
-          text: new TextSpan(
+        var text = RichText(
+          text: TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
             children: <TextSpan>[
-              new TextSpan(
+              TextSpan(
                   text: "${AppLocalizations.of(context)!.typed}: ",
-                  style: new TextStyle(fontWeight: FontWeight.bold)),
-              new TextSpan(text: "${_chatMessages[i].text}\n\n"),
-              new TextSpan(
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: "${_chatMessages[i].text}\n\n"),
+              TextSpan(
                   text: "${AppLocalizations.of(context)!.translation}: ",
-                  style: new TextStyle(fontWeight: FontWeight.bold)),
-              new TextSpan(text: translatedMap[language]!.removeLast()),
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: translatedMap[language]!.removeLast()),
             ],
           ),
         );
@@ -189,22 +190,22 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           _chatMessages.last.senderId == AnyChatAuth.currentUser!.id
               ? info.outgoingLanguage
               : info.incomingLanguage;
-      var text = new RichText(
-        text: new TextSpan(
+      var text = RichText(
+        text: TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
           // Child text spans will inherit styles from parent
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
           children: <TextSpan>[
-            new TextSpan(
+            TextSpan(
                 text: "${AppLocalizations.of(context)!.typed}: ",
-                style: new TextStyle(fontWeight: FontWeight.bold)),
-            new TextSpan(text: "${message.text}\n\n"),
-            new TextSpan(
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: "${message.text}\n\n"),
+            TextSpan(
                 text: "${AppLocalizations.of(context)!.translation}: ",
-                style: new TextStyle(fontWeight: FontWeight.bold)),
-            new TextSpan(
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(
                 text:
-                    "${await Utilities.getGoogleTranslation(language, message.text)}"),
+                    await Utilities.getGoogleTranslation(language, message.text)),
           ],
         ),
       );
@@ -225,9 +226,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
 
   Widget _buildTextComposer() {
     return IconTheme(
-      data: IconThemeData(color: Theme.of(context).accentColor),
+      data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: [
             Flexible(
@@ -235,7 +236,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 controller: _textController,
                 onChanged: (String text) {
                   setState(() {
-                    _isComposing = text.length > 0;
+                    _isComposing = text.isNotEmpty;
                   });
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
@@ -245,13 +246,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
             ),
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 4.0),
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Theme.of(context).platform == TargetPlatform.iOS
                     ? CupertinoButton(
-                        child: Text(AppLocalizations.of(context)!.send),
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,
+                        child: Text(AppLocalizations.of(context)!.send),
                       )
                     : IconButton(
                         icon: const Icon(Icons.send),
@@ -296,7 +297,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         CallScreen.requestPermissionAndNavigate();
       },
     ));
-    Container container = Container(
+    Container container = SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -306,8 +307,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 Center(
                   child: CircularProgressIndicator(
                       valueColor: ColorTween(
-                              begin: Theme.of(context).accentColor,
-                              end: Theme.of(context).accentColor)
+                              begin: Theme.of(context).colorScheme.secondary,
+                              end: Theme.of(context).colorScheme.secondary)
                           .animate(AnimationController(vsync: this)),
                       backgroundColor: Theme.of(context).primaryColor),
                 )
@@ -316,20 +317,20 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 Flexible(
                     child: Container(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     reverse: true,
                     itemBuilder: (_, int index) => _messages[index],
                     itemCount: _messages.length,
                   ),
                 )),
-                Divider(height: 1.0),
+                const Divider(height: 1.0),
                 Container(
                   decoration: BoxDecoration(color: Theme.of(context).cardColor),
                   child: _buildTextComposer(),
                 ),
               ],
       ),
-    );
+    ) as Container;
     return Scaffold(
       appBar: AppBar(
           title: Text(Utilities.getChatterDisplayNameString(
@@ -346,12 +347,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
               child: Text(
                 AppLocalizations.of(context)!.title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
               ),
             ),
             ListTile(
@@ -388,8 +389,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   @override
   void dispose() {
     _chatMessageSubscription?.cancel();
-    for (ChatMessage message in _messages)
+    for (ChatMessage message in _messages) {
       message.animationController!.dispose();
+    }
     super.dispose();
   }
 
@@ -401,16 +403,16 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     String? outgoingDropdownValue =
         Utilities.getLanguageFromIsoCode(info.outgoingLanguage);
     print(incomingDropdownValue);
-    return new AlertDialog(
+    return AlertDialog(
       title: Text(AppLocalizations.of(context)!.selectLanguage),
-      content: new Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(AppLocalizations.of(context)!.incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
-            icon: Icon(Icons.language),
+            icon: const Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
@@ -446,11 +448,11 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               );
             }).toList(),
           ),
-          Divider(height: 25),
+          const Divider(height: 25),
           Text(AppLocalizations.of(context)!.outgoingMessages),
           DropdownButton<String>(
             value: outgoingDropdownValue,
-            icon: Icon(Icons.language),
+            icon: const Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
@@ -498,7 +500,7 @@ class ChatMessage extends StatelessWidget {
   final RichText? text;
   final AnimationController? animationController;
 
-  ChatMessage({this.text, this.animationController, this.sender, this.id});
+  const ChatMessage({Key? key, this.text, this.animationController, this.sender, this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -515,7 +517,7 @@ class ChatMessage extends StatelessWidget {
                 : Theme.of(context).brightness == Brightness.dark
                     ? kDarkChatBubbleColorLeft
                     : kDefaultChatBubbleColorLeft,
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
         margin: EdgeInsets.fromLTRB(
             sender!.id == AnyChatAuth.currentUser!.id
                 ? (MediaQuery.of(context).size.width * 0.25)
@@ -544,9 +546,9 @@ class ChatMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(sender!.displayName!,
-                      style: Theme.of(context).textTheme.headline5),
+                      style: Theme.of(context).textTheme.headlineSmall),
                   Container(
-                    margin: EdgeInsets.only(top: 5.0),
+                    margin: const EdgeInsets.only(top: 5.0),
                     child: text,
                   ),
                 ],

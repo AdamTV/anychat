@@ -14,6 +14,8 @@ final BehaviorSubject<String?> selectNotificationSubject =
     BehaviorSubject<String?>();
 
 class Notifications implements Disposable {
+  FlutterRingtonePlayer flutterRingtonePlayer = FlutterRingtonePlayer();
+
   FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 
   init() async {
@@ -29,18 +31,19 @@ class Notifications implements Disposable {
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('logo_icon');
-    final IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings(
+    final DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
             onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    final MacOSInitializationSettings initializationSettingsMacOS =
-        MacOSInitializationSettings();
+    // final MacOSInitializationSettings initializationSettingsMacOS =
+    //     MacOSInitializationSettings();
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: initializationSettingsIOS,
-            macOS: initializationSettingsMacOS);
+            // macOS: initializationSettingsMacOS
+        );
     await flutterLocalNotificationsPlugin!.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+        onDidReceiveNotificationResponse : selectNotification);
   }
 
   void _configureSelectNotificationSubject() {
@@ -61,10 +64,10 @@ class Notifications implements Disposable {
     });
   }
 
-  Future selectNotification(String? payload) async {
+  void selectNotification(NotificationResponse payload) async {
     print('selectNotification');
-    FlutterRingtonePlayer.stop();
-    selectNotificationSubject.add(payload);
+    flutterRingtonePlayer.stop();
+    selectNotificationSubject.add(payload.payload);
 
     // if (payload != null) {
     //   debugPrint('notification payload: $payload');
@@ -87,24 +90,22 @@ class Notifications implements Disposable {
             ? AndroidNotificationDetails(
                 AppLocalizations.of(Utilities.globalKey.currentContext!)!.title,
                 'your channel name',
-                'your channel description',
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',
-                styleInformation: BigTextStyleInformation(''),
+                styleInformation: const BigTextStyleInformation(''),
                 playSound: false)
             : AndroidNotificationDetails(
                 AppLocalizations.of(Utilities.globalKey.currentContext!)!.title,
                 'your channel name',
-                'your channel description',
                 importance: Importance.max,
                 priority: Priority.high,
                 ticker: 'ticker',
-                styleInformation: BigTextStyleInformation(''),
+                styleInformation: const BigTextStyleInformation(''),
               );
     var iosPlatformSpecs = payload.contains('ring')
-        ? IOSNotificationDetails(presentSound: false)
-        : IOSNotificationDetails(presentSound: true);
+        ? const DarwinNotificationDetails(presentSound: false)
+        : const DarwinNotificationDetails(presentSound: true);
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics, iOS: iosPlatformSpecs);
     if (flutterLocalNotificationsPlugin == null) {
@@ -112,9 +113,9 @@ class Notifications implements Disposable {
     }
     if (payload.contains("ring")) {
       () async {
-        FlutterRingtonePlayer.playRingtone();
+        flutterRingtonePlayer.playRingtone();
         await Future.delayed(
-            const Duration(seconds: 15), () => FlutterRingtonePlayer.stop());
+            const Duration(seconds: 15), () => flutterRingtonePlayer.stop());
       }.call();
     }
     await flutterLocalNotificationsPlugin!

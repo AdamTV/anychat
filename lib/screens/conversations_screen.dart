@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ui';
 
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
@@ -21,6 +20,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
+  const ConversationsScreen({Key? key}) : super(key: key);
+
   @override
   _ConversationsScreenState createState() => _ConversationsScreenState();
 }
@@ -40,20 +41,18 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   bool loaded = false;
   StreamSubscription<QuerySnapshot>? _conversationSubscription;
-  List<StreamSubscription<QuerySnapshot>?> _chatMessageSubscriptions = [];
+  final List<StreamSubscription<QuerySnapshot>?> _chatMessageSubscriptions = [];
   List<Widget> conversationWidgets = [];
 
   _ConversationsScreenState() {
     conversationWidgets.clear();
     // _chatMessageSubscriptions.clear();
-    if (_conversationSubscription == null)
-      _conversationSubscription =
-          ChatWindow.loadAllConversations().listen(_updateConversations);
+    _conversationSubscription ??= ChatWindow.loadAllConversations().listen(_updateConversations);
     if (_chatMessageSubscriptions.isEmpty) initChatSubscriptions();
   }
 
@@ -66,7 +65,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         // bottomSheet: Ads.getBanner(),
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.title),
-          actions: conversationWidgets.length == 0
+          actions: conversationWidgets.isEmpty
               ? <Widget>[]
               : <Widget>[
                   IconButton(
@@ -88,12 +87,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
                 ),
               ),
               ListTile(
@@ -123,12 +122,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         body: Stack(
           children: [
             Align(
-                alignment: conversationWidgets.length > 0
+                alignment: conversationWidgets.isNotEmpty
                     ? Alignment.topCenter
                     : Alignment.center,
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 1280),
-                  child: conversationWidgets.length > 0
+                  constraints: const BoxConstraints(maxWidth: 1280),
+                  child: conversationWidgets.isNotEmpty
                       ? ListView.separated(
                           separatorBuilder: (context, index) => Divider(
                                 indent:
@@ -196,9 +195,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                   .doc(users[i])
                   .get());
               if (chatters
-                      .where((element) => element.id == chatter.id)
-                      .length ==
-                  0) {
+                      .where((element) => element.id == chatter.id).isEmpty) {
                 chatters.add(chatter);
               }
             } catch (e) {
@@ -221,7 +218,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               } catch (e) {
                 print(e);
               }
-              print('adding conversation: ' + temp.id);
+              print('adding conversation: ${temp.id}');
             }
             print('test widget added');
           }
@@ -244,21 +241,20 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         //   text = message.text;
         // }
         if (chatters.isNotEmpty && temp.timestamp != null) {
-          if (text == null)
-            text = AppLocalizations.of(context)!.newConversation;
+          text ??= AppLocalizations.of(context)!.newConversation;
           insertSorted(await slidable(chatters, temp, text), temp);
         }
       }
     });
   }
 
-  Map<String, Timestamp?> convoTimes = Map();
+  Map<String, Timestamp?> convoTimes = {};
 
   void insertSorted(Widget slidable, Conversation conversation) {
     convoTimes.addEntries({MapEntry(conversation.id, conversation.timestamp)});
     var sortedTimes = convoTimes.keys.toList(growable: false)
       ..sort((k1, k2) => convoTimes[k2]!.compareTo(convoTimes[k1]!));
-    LinkedHashMap sortedMap = new LinkedHashMap.fromIterable(sortedTimes,
+    LinkedHashMap sortedMap = LinkedHashMap.fromIterable(sortedTimes,
         key: (k) => k, value: (k) => convoTimes[k]);
     print(sortedMap);
     var index = sortedMap.keys.toList().indexOf(conversation.id);
@@ -289,10 +285,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       return;
     }
     Conversation conversation = conversations.last;
-    if (AnyChatAuth.currentUser == null) {
-      AnyChatAuth.currentUser =
-          await AnyChatUser.getUserById(AnyChatAuth.currentUser!.id);
-    }
+    AnyChatAuth.currentUser ??= await AnyChatUser.getUserById(AnyChatAuth.currentUser!.id);
     AnyChatUser? firstChatter = AnyChatAuth.currentUser;
     try {
       firstChatter = await AnyChatUser.getUserById(conversation.participants
@@ -330,7 +323,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             .collection("users")
             .doc(users[i])
             .get());
-        if (chatters.where((element) => element.id == chatter.id).length == 0) {
+        if (chatters.where((element) => element.id == chatter.id).isEmpty) {
           chatters.add(chatter);
         }
         var msgSnapshot = await FirebaseFirestore.instance
@@ -410,7 +403,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     }
     _conversationSubscription?.cancel();
     Ads.interstitial.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -457,7 +450,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           var chatterIds = conversation.participants
               .where((element) => element != AnyChatAuth.currentUser!.id);
           for (var id in chatterIds) {
-            if (chatters.where((element) => element.id == id).length == 0) {
+            if (chatters.where((element) => element.id == id).isEmpty) {
               try {
                 chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
                     .instance
@@ -531,27 +524,57 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         conversation.timestamp!.microsecondsSinceEpoch);
     String displayTime = '';
     var difference = DateTime.now().difference(timeOfLastMessage);
-    if (difference < Duration(minutes: 1)) {
+    if (difference < const Duration(minutes: 1)) {
       displayTime = "< 1 min";
-    } else if (difference < Duration(hours: 1)) {
-      displayTime = difference.inMinutes.toString() +
-          ' ${difference.inMinutes == 1 ? AppLocalizations.of(context)!.minute : AppLocalizations.of(context)!.minutes} ${AppLocalizations.of(context)!.ago}';
-    } else if (difference < Duration(days: 1)) {
-      displayTime = difference.inHours.toString() +
-          ' ${difference.inHours == 1 ? AppLocalizations.of(context)!.hour : AppLocalizations.of(context)!.hours} ${AppLocalizations.of(context)!.ago}';
-    } else if (difference < Duration(days: 7)) {
-      displayTime = difference.inDays.toString() +
-          ' ${difference.inDays == 1 ? AppLocalizations.of(context)!.day : AppLocalizations.of(context)!.days} ${AppLocalizations.of(context)!.ago}';
+    } else if (difference < const Duration(hours: 1)) {
+      displayTime = '${difference.inMinutes} ${difference.inMinutes == 1 ? AppLocalizations.of(context)!.minute : AppLocalizations.of(context)!.minutes} ${AppLocalizations.of(context)!.ago}';
+    } else if (difference < const Duration(days: 1)) {
+      displayTime = '${difference.inHours} ${difference.inHours == 1 ? AppLocalizations.of(context)!.hour : AppLocalizations.of(context)!.hours} ${AppLocalizations.of(context)!.ago}';
+    } else if (difference < const Duration(days: 7)) {
+      displayTime = '${difference.inDays} ${difference.inDays == 1 ? AppLocalizations.of(context)!.day : AppLocalizations.of(context)!.days} ${AppLocalizations.of(context)!.ago}';
     } else {
       displayTime =
           '${timeOfLastMessage.year}-${timeOfLastMessage.month}-${timeOfLastMessage.day}';
     }
-    return new Slidable(
-      key: new Key(conversation.id),
-      actionExtentRatio: 0.25,
-      child: new Container(
-        padding: EdgeInsets.all(10),
-        child: new ListTile(
+    return Slidable(
+      key: Key(conversation.id),
+      // actionExtentRatio: 0.25,
+      // actions: <Widget>[
+      //   //   new IconSlideAction(
+      //   //     caption: 'Archive',
+      //   //     color: Colors.blue,
+      //   //     icon: Icons.archive,
+      //   //     onTap: () => print('Archive'),
+      //   //   ),
+      //   //   new IconSlideAction(
+      //   //     caption: 'Share',
+      //   //     color: Colors.indigo,
+      //   //     icon: Icons.share,
+      //   //     onTap: () => print('Share'),
+      //   //   ),
+      //   // ],
+      //   // secondaryActions: <Widget>[
+      //   //   new IconSlideAction(
+      //   //     caption: 'More',
+      //   //     color: Colors.black45,
+      //   //     icon: Icons.more_horiz,
+      //   //     onTap: () => print('More'),
+      //   //   ),
+      //   IconSlideAction(
+      //     caption: AppLocalizations.of(context)!.delete,
+      //     color: Colors.red,
+      //     icon: Icons.delete,
+      //     onTap: () => {
+      //       // setState(() {
+      //       AnyChatUser.deleteConversation(context, conversation.id)
+      //       // })
+      //     },
+      //   ),
+      // ],
+      // startActionPane: SlidableDrawerActionPane(),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        child: ListTile(
           onTap: () {
             setState(() {
               AnyChatAuth.currentConversation = conversation;
@@ -559,7 +582,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             });
             // Navigator.pushNamed(context,  "/chat", arguments: {conversation, chatters});
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ChatScreen()));
+                context, MaterialPageRoute(builder: (context) => const ChatScreen()));
           },
           leading: getChatterWidgetList(chatters),
           // chatters.length > 1
@@ -568,44 +591,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           //     backgroundColor: Theme.of(context).primaryColor,
           //     backgroundImage: NetworkImage(chatters.first.photoUrl),
           //     foregroundColor: Theme.of(context).primaryColorLight),
-          title: new Text(Utilities.getChatterDisplayNameString(chatters)),
-          subtitle: new Text(text),
-          trailing: new Text(displayTime),
+          title: Text(Utilities.getChatterDisplayNameString(chatters)),
+          subtitle: Text(text),
+          trailing: Text(displayTime),
         ),
       ),
-      actions: <Widget>[
-        //   new IconSlideAction(
-        //     caption: 'Archive',
-        //     color: Colors.blue,
-        //     icon: Icons.archive,
-        //     onTap: () => print('Archive'),
-        //   ),
-        //   new IconSlideAction(
-        //     caption: 'Share',
-        //     color: Colors.indigo,
-        //     icon: Icons.share,
-        //     onTap: () => print('Share'),
-        //   ),
-        // ],
-        // secondaryActions: <Widget>[
-        //   new IconSlideAction(
-        //     caption: 'More',
-        //     color: Colors.black45,
-        //     icon: Icons.more_horiz,
-        //     onTap: () => print('More'),
-        //   ),
-        new IconSlideAction(
-          caption: AppLocalizations.of(context)!.delete,
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () => {
-            // setState(() {
-            AnyChatUser.deleteConversation(context, conversation.id)
-            // })
-          },
-        ),
-      ],
-      actionPane: SlidableDrawerActionPane(),
     );
   }
 
@@ -615,7 +605,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   // }
   Widget _buildAvatar(double avatarRadius, AnyChatUser user) {
     return Expanded(
-        child: Container(
+        child: SizedBox(
             height: avatarRadius,
             width: avatarRadius,
             child: user.photoUrl == null
@@ -624,8 +614,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   }
 
   Widget getChatterWidgetList(List<AnyChatUser> chatters) {
-    final double _containerRadius = kIsWeb ? 45 : 55.0;
-    final double avatarRadius = _containerRadius / 2;
+    const double containerRadius = kIsWeb ? 45 : 55.0;
+    const double avatarRadius = containerRadius / 2;
     // return Container(
     //     height: _containerRadius,
     //     width: _containerRadius,
@@ -661,7 +651,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
     for (int i = 0; i < chatters.length; i += 2) {
       if (chatters.length == 1) {
-        topWidgets.add(_buildAvatar(_containerRadius, chatters[i]));
+        topWidgets.add(_buildAvatar(containerRadius, chatters[i]));
       }
       topWidgets.add(_buildAvatar(avatarRadius, chatters[i]));
     }
@@ -775,9 +765,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     }
 
     return Container(
-        height: _containerRadius,
-        width: _containerRadius,
-        decoration: BoxDecoration(
+        height: containerRadius,
+        width: containerRadius,
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
         child: ClipOval(clipBehavior: Clip.antiAlias, child: column));

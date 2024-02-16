@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -18,7 +20,7 @@ class WelcomeScreen extends StatelessWidget {
               children: <Widget>[
                 Text(
                   AppLocalizations.of(context)!.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: size.height * 0.05),
                 SvgPicture.asset(
@@ -79,7 +81,7 @@ class WelcomeBackground extends StatelessWidget {
     });
     // }
     children.add(child);
-    return Container(
+    return SizedBox(
       height: size.height,
       width: size.width,
       child: Stack(

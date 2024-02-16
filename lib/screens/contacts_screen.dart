@@ -16,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 var iOSLocalizedLabels = defaultTargetPlatform == TargetPlatform.iOS;
 
 class ContactsScreen extends StatefulWidget {
+  const ContactsScreen({Key? key}) : super(key: key);
+
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
 }
@@ -25,15 +27,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
   List<AnyChatContact> _filteredContacts = [];
 
   // controls the text label we use as a search bar
-  final TextEditingController _filter = new TextEditingController();
+  final TextEditingController _filter = TextEditingController();
 
   // final dio = new Dio(); // for http requests
   String _searchText = "";
 
   // List names = new List(); // names we get from API
   // List _filteredContacts = new List(); // names filtered by search text
-  Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text('');
+  Icon _searchIcon = const Icon(Icons.search);
+  Widget _appBarTitle = const Text('');
 
   _ContactsScreenState() {
     _filter.addListener(() {
@@ -68,14 +70,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
       // }
       _filteredContacts = tempList;
     }
-    var _sortedContacts =
+    var sortedContacts =
         _filteredContacts.where((element) => element.isRegistered).toList();
-    _sortedContacts
+    sortedContacts
         .addAll(_filteredContacts.where((element) => !element.isRegistered));
     return ListView.builder(
-      itemCount: _sortedContacts.length,
+      itemCount: sortedContacts.length,
       itemBuilder: (BuildContext context, int index) {
-        AnyChatContact c = _sortedContacts.elementAt(index);
+        AnyChatContact c = sortedContacts.elementAt(index);
         return contactListTile(c);
       },
     );
@@ -179,13 +181,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
     });
 
     FirebaseFirestore.instance.collection('users').snapshots().listen((event) {
-      event.docs.forEach((element) {
+      for (var element in event.docs) {
         if (_contacts.any((contact) =>
             contact.emails!.any((email) => email == element['email']))) {
           // _contacts.firstWhere((contact) => contact.emails.firstWhere((email ) => false))
         }
         // allUsersEmails.add(element['email']);
-      });
+      }
     });
 
     // Lazy load thumbnails after rendering initial contacts.
@@ -236,14 +238,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   void _searchPressed() {
     setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
+      if (_searchIcon.icon == Icons.search) {
+        _searchIcon = const Icon(Icons.close);
+        _appBarTitle = TextField(
           style: TextStyle(
               color: Theme.of(context).primaryColorLight, fontSize: 20),
           autofocus: true,
           controller: _filter,
-          decoration: new InputDecoration(
+          decoration: InputDecoration(
             // contentPadding: EdgeInsets.fromLTRB(20, -10, 20, -10),
 
             hintStyle: TextStyle(
@@ -255,9 +257,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
           ),
         );
       } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle =
-            new Text(AppLocalizations.of(context)!.yourContacts);
+        _searchIcon = const Icon(Icons.search);
+        _appBarTitle =
+            Text(AppLocalizations.of(context)!.yourContacts);
         _filter.clear();
       }
       isSearch = !isSearch;
@@ -283,8 +285,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
             },
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           );
-    if (!isSearch)
-      _appBarTitle = new Text(AppLocalizations.of(context)!.yourContacts);
+    if (!isSearch) {
+      _appBarTitle = Text(AppLocalizations.of(context)!.yourContacts);
+    }
     return Scaffold(
       appBar: AppBar(
         title: _appBarTitle,
@@ -301,7 +304,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           _openContactForm();
         },
@@ -310,7 +313,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       body: SafeArea(
         child: !_isLoading
             ? _buildList()
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       ),
@@ -321,7 +324,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   void contactOnDeviceHasBeenUpdated(AnyChatContact contact) {
-    this.setState(() {
+    setState(() {
       var id = _contacts.indexWhere((c) => c.identifier == contact.identifier);
       _contacts[id] = contact;
     });
@@ -386,7 +389,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               // Navigator.of(context).push(MaterialPageRoute(
               //     builder: (BuildContext context) => FindChatterScreen(email: c.emails.first.toString())));
             },
-      leading: (c.avatar != null && c.avatar!.length > 0)
+      leading: (c.avatar != null && c.avatar!.isNotEmpty)
           ? CircleAvatar(backgroundImage: MemoryImage(c.avatar!))
           : CircleAvatar(child: Text(c.initials())),
       title: Text(c.displayName ?? ""),
@@ -400,7 +403,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         "?subject=Let%27s+chat+on+AnyChat%21&body=Let%27s+chat+on+AnyChat%21+It%27s+a+fast%2C+simple+and+secure+app+we+can+use+to+translate+our+messages+and+calls+for+free%21+Get+it+at%3A+https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dca.alphatech.anychat";
     if (user.emails!.isNotEmpty) {
       var eurl =
-          "mailto:" + user.emails!.first.value! + params.replaceAll("+", " ");
+          "mailto:${user.emails!.first.value!}${params.replaceAll("+", " ")}";
       widgets.add(RoundedButton(
           text: AppLocalizations.of(context)!.emailInvite,
           press: () {
@@ -408,7 +411,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
           }));
     }
     if (user.phones!.isNotEmpty) {
-      var purl = "sms:" + user.phones!.first.value! + params;
+      var purl = "sms:${user.phones!.first.value!}$params";
       widgets.add(RoundedButton(
           text: AppLocalizations.of(context)!.smsInvite,
           press: () {
@@ -416,12 +419,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
           }));
     }
     return AlertDialog(
-        title: Text(AppLocalizations.of(context)!.invite +
-            " " +
-            user.displayName! +
-            " " +
-            AppLocalizations.of(context)!.toAnyChat),
-        content: new Column(
+        title: Text("${AppLocalizations.of(context)!.invite} ${user.displayName!} ${AppLocalizations.of(context)!.toAnyChat}"),
+        content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: widgets));
