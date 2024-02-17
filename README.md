@@ -1,6 +1,6 @@
 # anychat
 
-A new Flutter project.
+An AlphaTech Flutter project.
 
 ## Getting Started
 
