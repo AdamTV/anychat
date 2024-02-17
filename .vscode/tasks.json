@@ -1,0 +1,26 @@
+{
+	
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "increment_build_version",
+			"detail": "run increment_build_version script",
+			"type":  "shell",
+			"command": ". ./scripts/increment_build_version.ps1",
+			"group": "build",
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"appbundle"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build appbundle",
+			"detail": "",
+			"dependsOn": "increment_build_version"
+		}
+	]
+}
