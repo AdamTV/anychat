@@ -525,11 +525,11 @@ class _CallScreenState extends State<CallScreen> {
     await audioTranscriber.stopRecording();
     dispose();
     AnyChatUser.clearTranscribedMessages();
-    if (await Ads.interstitial.isLoaded ?? false) {
-      Ads.interstitial.show();
-    } else {
-      print('Interstitial ad is still laoding...');
-    }
+    // if (await Ads.interstitial.isLoaded ?? false) {
+    //   Ads.interstitial.show();
+    // } else {
+    //   print('Interstitial ad is still laoding...');
+    // }
     Navigator.pushNamed(context, '/chat');
   }
 

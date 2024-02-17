@@ -6,7 +6,7 @@ import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
 import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
-    as v1Speech;
+    as v1_speech;
 import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:google_speech/speech_to_text.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,7 +33,7 @@ class AudioTranscriber {
     // });
   }
 
-  Future<Stream<v1Speech.StreamingRecognizeResponse>> getResponseStream(
+  Future<Stream<v1_speech.StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
     stopRecording();
 
@@ -69,8 +69,8 @@ class AudioTranscriber {
       sampleRate: tSampleRate,
     );
 
-    final serviceAccount = ServiceAccount.fromString(
-        (await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json')));
+    final serviceAccount = ServiceAccount.fromString((await rootBundle
+        .loadString('assets/anychat-c414a-7669166c30f5.json')));
     final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
     final config = _getConfig();
 
@@ -102,12 +102,6 @@ class AudioTranscriber {
     // await _audioStream?.close();
     await _mRecorder.stopRecorder();
     await _mRecordingDataSubscription?.cancel();
-  }
-
-
-  @override
-  void dispose()
-  {
     _mRecorder.closeRecorder();
-    }
+  }
 }

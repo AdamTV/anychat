@@ -156,7 +156,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                           ],
                         ),
                 )),
-            Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
+            // Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
           ],
         ));
   }
@@ -402,7 +402,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       sub?.cancel();
     }
     _conversationSubscription?.cancel();
-    Ads.interstitial.dispose();
+    // Ads.interstitial.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
