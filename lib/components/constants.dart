@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 final ThemeData kDefaultTheme = ThemeData(
@@ -7,15 +6,15 @@ final ThemeData kDefaultTheme = ThemeData(
     primaryColorDark: Colors.deepPurple[900],
     primaryColorLight: Colors.white,
     brightness: Brightness.light,
-    textTheme: Typography.blackMountainView, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(secondary: Colors.deepPurple[900]).copyWith(background: const Color(0x0000008b)));
+    textTheme: Typography.blackMountainView, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(secondary: Colors.deepPurple[900]).copyWith(background: const Color(0x0000008b), brightness: Brightness.light));
 
 final ThemeData kDarkTheme = ThemeData(
     primaryColor: Colors.deepPurple,
     focusColor: Colors.black12,
     primaryColorDark: Colors.deepPurple[900],
     primaryColorLight: Colors.white,
-    brightness: debugBrightnessOverride,
-    textTheme: Typography.whiteMountainView, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(secondary: Colors.deepPurple[900]).copyWith(background: const Color(0x0000008b)));
+    brightness: Brightness.dark,
+    textTheme: Typography.whiteMountainView, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(secondary: Colors.deepPurple[900]).copyWith(background: const Color(0x0000008b), brightness: Brightness.dark));
 
 final Color? kDefaultChatBubbleColorLeft = Colors.grey[200];
 final Color? kDefaultChatBubbleColorRight = Colors.blue[200];
