@@ -11,5 +11,12 @@
     8000
   ],
 //   "postCreateCommand": "your-post-create-command",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "alexisvt.flutter-snippets"
+      ]
+    }
+  }
 }
