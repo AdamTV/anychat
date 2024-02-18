@@ -4,7 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 // import 'package:agora_rtc_engine/rtc_engine.dart';
 // import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 // import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:anychat/components/ads.dart';
+// import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';

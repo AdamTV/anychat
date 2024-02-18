@@ -313,22 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.21"
-  firebase_ml_model_downloader:
-    dependency: "direct main"
-    description:
-      name: firebase_ml_model_downloader
-      sha256: ea76edd519cba937da9da22ba0a4d72edb04a4cc886d8d7d553c925c2a40e112
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.4+13"
-  firebase_ml_model_downloader_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_ml_model_downloader_platform_interface
-      sha256: "9a39cfb8ac6c13d24252548669ca6ed14b9c609f7e5b4df092eefb60eca3f773"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.4+21"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -363,6 +347,11 @@ packages:
     version: "1.1.0"
   flutter:
     dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_driver:
+    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -549,6 +538,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.4"
+  fuchsia_remote_debug_protocol:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -710,7 +704,7 @@ packages:
     source: hosted
     version: "0.2.1+1"
   intl:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
@@ -973,6 +967,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.4"
+  process:
+    dependency: transitive
+    description:
+      name: process
+      sha256: "21e54fd2faf1b5bdd5102afd25012184a6793927648ea81eea80552ac9405b32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   protobuf:
     dependency: transitive
     description:
@@ -1138,6 +1140,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      sha256: "7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   synchronized:
     dependency: transitive
     description:
@@ -1306,6 +1316,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.2"
+  webdriver:
+    dependency: transitive
+    description:
+      name: webdriver
+      sha256: "003d7da9519e1e5f329422b36c4dcdf18d7d2978d1ba099ea4e45ba490ed845e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
   win32:
     dependency: transitive
     description:
