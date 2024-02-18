@@ -5,32 +5,6 @@ allprojects {
     }
 }
 
-//plugins {
-//    id 'com.android.application' version '7.3.0' apply false
-//    // ...
-//    id "kotlin-android"
-//    id "dev.flutter.flutter-gradle-plugin"
-//    // Add the dependency for the Google services Gradle plugin
-//    id 'com.google.gms.google-services' version '4.4.1' apply false
-//}
-
-//buildscript {
-//    ext.kotlin_version = '1.9.22'
-//    repositories {
-//        mavenCentral()
-//        google()
-//    }
-//
-//    dependencies {
-//        classpath 'com.google.gms:google-services:4.4.1'
-//
-//        classpath 'com.android.tools.build:gradle:7.4.2'
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
-//
-//    }
-//}
-
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
