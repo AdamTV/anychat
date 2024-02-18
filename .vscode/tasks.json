@@ -6,7 +6,7 @@
 			"label": "increment_build_version",
 			"detail": "run increment_build_version script",
 			"type":  "shell",
-			"command": ". ./scripts/increment_build_version.ps1",
+			"command": "/bin/bash /mnt/c/Git/repos/flutter/anychat/scritps/increment_build_version.sh",
 			"group": "build",
 		},
 		{
