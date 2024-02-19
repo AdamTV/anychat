@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+// import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_speech/config/recognition_config.dart';
 import 'package:google_speech/config/recognition_config_v1.dart';
 import 'package:google_speech/config/streaming_recognition_config.dart';
@@ -18,16 +18,17 @@ class AudioTranscriber {
   // static StreamSubscription<List<int>> _audioStreamSubscription;
   static late BehaviorSubject<List<int>> _audioStream;
   static String? isoCode;
-  final FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
+  // final FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
   StreamSubscription? _mRecordingDataSubscription;
-  late StreamController<Food> recordingDataController;
+  // late StreamController<Food> recordingDataController;
   Future<void> _openRecorder() async {
     var status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
-      throw RecordingPermissionException('Microphone permission not granted');
+      // throw RecordingPermissionException('Microphone permission not granted');
     }
-    await _mRecorder.openRecorder();
+    // await _mRecorder.openRecorder();
+
     // setState(() {
     _mRecorderIsInited = true;
     // });
@@ -52,22 +53,22 @@ class AudioTranscriber {
 
     assert(_mRecorderIsInited);
     // var sink = await createFile();
-    recordingDataController = StreamController<Food>();
-    _mRecordingDataSubscription =
-        recordingDataController.stream.listen((buffer) {
-      if (buffer is FoodData) {
-        // sink.add(buffer.data!);
-        _audioStream.add(buffer.data!);
-      }
-    }, onDone: () {
-      recordingDataController.close();
-    });
-    await _mRecorder.startRecorder(
-      toStream: recordingDataController.sink,
-      codec: Codec.pcm16,
-      numChannels: 1,
-      sampleRate: tSampleRate,
-    );
+    // recordingDataController = StreamController<Food>();
+    // _mRecordingDataSubscription =
+    // recordingDataController.stream.listen((buffer) {
+    // if (buffer is FoodData) {
+    // sink.add(buffer.data!);
+    // _audioStream.add(buffer.data!);
+    // }
+    // }, onDone: () {
+    // recordingDataController.close();
+    // });
+    // await _mRecorder.startRecorder(
+    // toStream: recordingDataController.sink,
+    // codec: Codec.pcm16,
+    // numChannels: 1,
+    // sampleRate: tSampleRate,
+    // );
 
     final serviceAccount = ServiceAccount.fromString((await rootBundle
         .loadString('assets/anychat-c414a-7669166c30f5.json')));
@@ -100,8 +101,8 @@ class AudioTranscriber {
     // await _recorder.stop();
     // await _audioStreamSubscription?.cancel();
     // await _audioStream?.close();
-    await _mRecorder.stopRecorder();
-    await _mRecordingDataSubscription?.cancel();
-    _mRecorder.closeRecorder();
+    // await _mRecorder.stopRecorder();
+    // await _mRecordingDataSubscription?.cancel();
+    // _mRecorder.closeRecorder();
   }
 }
