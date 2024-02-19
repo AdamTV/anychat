@@ -10,7 +10,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:twitter_login/twitter_login.dart';
+// import 'package:twitter_login/twitter_login.dart';
 
 import 'anychat_user.dart';
 import 'conversation.dart';
@@ -64,8 +64,7 @@ class AnyChatAuth {
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
             firebaseUser.email,
             firebaseUser.photoURL ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2),
-            []);
+            AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
@@ -121,8 +120,7 @@ class AnyChatAuth {
             googleSignInAccount!.displayName,
             googleSignInAccount!.email,
             googleSignInAccount!.photoUrl,
-            AnyChatLocale.currentLocale!.substring(0, 2),
-            []);
+            AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -173,10 +171,10 @@ class AnyChatAuth {
     }
     try {
       UserCredential userCredential = isSignUp
-          ? await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: email.trim(), password: password)
-          : await FirebaseAuth.instance
-              .signInWithEmailAndPassword(email: email.trim(), password: password);
+          ? await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email.trim(), password: password)
+          : await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email.trim(), password: password);
       var result = userCredential.user!;
 
       var snapshot = await FirebaseFirestore.instance
@@ -244,8 +242,8 @@ class AnyChatAuth {
       } else {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
-        currentUser = AnyChatUser(user.uid, user.displayName, user.email,
-            url, AnyChatLocale.currentLocale!.substring(0, 2), []);
+        currentUser = AnyChatUser(user.uid, user.displayName, user.email, url,
+            AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -258,7 +256,8 @@ class AnyChatAuth {
       key: const Key("facebookIcon"),
       iconSrc: "assets/icons/facebook.svg",
       press: () async {
-        if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
+        if (ModalRoute.of(context)!.settings.name == "/register" &&
+            !RegisterScreen.isUserAgreeToTerms()) return;
         try {
           var user = await AnyChatAuth.signInFacebook();
           if (user != null) {
@@ -280,7 +279,8 @@ class AnyChatAuth {
     return SocialIcon(
         iconSrc: "assets/icons/google-plus.svg",
         press: () async {
-          if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
+          if (ModalRoute.of(context)!.settings.name == "/register" &&
+              !RegisterScreen.isUserAgreeToTerms()) return;
           try {
             var user = await AnyChatAuth.signInGoogle();
             if (user != null) {
@@ -301,7 +301,8 @@ class AnyChatAuth {
     return SocialIcon(
         iconSrc: "assets/icons/apple.svg",
         press: () async {
-          if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
+          if (ModalRoute.of(context)!.settings.name == "/register" &&
+              !RegisterScreen.isUserAgreeToTerms()) return;
           try {
             var user = await AnyChatAuth.signInApple();
             if (user != null) {
@@ -322,7 +323,8 @@ class AnyChatAuth {
     return SocialIcon(
       iconSrc: "assets/icons/twitter.svg",
       press: () async {
-        if (ModalRoute.of(context)!.settings.name == "/register" && !RegisterScreen.isUserAgreeToTerms()) return;
+        if (ModalRoute.of(context)!.settings.name == "/register" &&
+            !RegisterScreen.isUserAgreeToTerms()) return;
         try {
           var user = await AnyChatAuth.signInTwitter();
           if (user != null) {
@@ -341,59 +343,59 @@ class AnyChatAuth {
   }
 
   static Future<AnyChatUser?> signInTwitter() async {
-    final twitterLogin = TwitterLogin(
-      // Consumer API keys
-      apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
-      // Consumer API Secret keys
-      apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
-      // Registered Callback URLs in TwitterApp
-      // Android is a deeplink
-      // iOS is a URLScheme
-      redirectURI: 'twittersdk://',
-      // Forces the user to enter their credentials
-      // to ensure the correct users account is authorized.
-    );
-    // If you want to implement Twitter account switching, set [force_login] to true
-    // login(forceLogin: true);
-    final authResult = await twitterLogin.login();
-    switch (authResult.status) {
-      case TwitterLoginStatus.loggedIn:
-        // success
-        print('====== Login success ======');
-        // Create a credential from the access token
-        final AuthCredential twitterAuthCredential =
-            TwitterAuthProvider.credential(
-                accessToken: authResult.authToken!,
-                secret: authResult.authTokenSecret!);
+    // final twitterLogin = TwitterLogin(
+    //   // Consumer API keys
+    //   apiKey: 'DsqHohkyPJCjhdDByCLwZZYGH',
+    //   // Consumer API Secret keys
+    //   apiSecretKey: 'NgxbrcVEheDa5OTee6tKS3t4gsnCceVj2awrlURxjyah9Lolii',
+    //   // Registered Callback URLs in TwitterApp
+    //   // Android is a deeplink
+    //   // iOS is a URLScheme
+    //   redirectURI: 'twittersdk://',
+    //   // Forces the user to enter their credentials
+    //   // to ensure the correct users account is authorized.
+    // );
+    // // If you want to implement Twitter account switching, set [force_login] to true
+    // // login(forceLogin: true);
+    // final authResult = await twitterLogin.login();
+    // switch (authResult.status) {
+    //   case TwitterLoginStatus.loggedIn:
+    //     // success
+    //     print('====== Login success ======');
+    //     // Create a credential from the access token
+    //     final AuthCredential twitterAuthCredential =
+    //         TwitterAuthProvider.credential(
+    //             accessToken: authResult.authToken!,
+    //             secret: authResult.authTokenSecret!);
 
-        final userCred = await FirebaseAuth.instance
-            .signInWithCredential(twitterAuthCredential);
-        final user = userCred.user!;
+    //     final userCred = await FirebaseAuth.instance
+    //         .signInWithCredential(twitterAuthCredential);
+    //     final user = userCred.user!;
 
-        var snapshot = await FirebaseFirestore.instance
-            .collection("users")
-            .doc(user.uid)
-            .get();
-        if (snapshot.exists) {
-          currentUser = AnyChatUser.fromSnapshot(snapshot);
-          linkedAccountPhotoUrl = user.photoURL;
-          return currentUser;
-        } else {
-          currentUser = AnyChatUser(user.uid, user.displayName, user.email,
-              user.photoURL, AnyChatLocale.currentLocale!.substring(0, 2), []);
-          currentUser!.addUserToFirestore();
-          return currentUser;
-        }
-      case TwitterLoginStatus.cancelledByUser:
-        // cancel
-        print('====== Login cancel ======');
-        break;
-      case TwitterLoginStatus.error:
-      default:
-        // error
-        print('====== Login error ======');
-        break;
-    }
+    //     var snapshot = await FirebaseFirestore.instance
+    //         .collection("users")
+    //         .doc(user.uid)
+    //         .get();
+    //     if (snapshot.exists) {
+    //       currentUser = AnyChatUser.fromSnapshot(snapshot);
+    //       linkedAccountPhotoUrl = user.photoURL;
+    //       return currentUser;
+    //     } else {
+    //       currentUser = AnyChatUser(user.uid, user.displayName, user.email,
+    //           user.photoURL, AnyChatLocale.currentLocale!.substring(0, 2), []);
+    //       currentUser!.addUserToFirestore();
+    //       return currentUser;
+    //     }
+    //   case TwitterLoginStatus.cancelledByUser:
+    //     // cancel
+    //     print('====== Login cancel ======');
+    //     break;
+    //   case TwitterLoginStatus.error:
+    //   default:
+    //     // error
+    //     print('====== Login error ======');
+    //     break;
+    // }
     return null;
 
     // // Create a TwitterLogin instance

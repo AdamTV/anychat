@@ -18,7 +18,7 @@ class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 
-  static bool isUserAgreeToTerms(){
+  static bool isUserAgreeToTerms() {
     return _RegisterScreenState.isUserAgreeToTerms();
   }
 }
@@ -82,8 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: const TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        launch(
-                            'https://www.alphatechnology.ca/anychat-eula');
+                        launch('https://www.alphatechnology.ca/anychat-eula');
                       },
                   ),
                 ]),
@@ -129,10 +128,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                AnyChatAuth.googleIcon(context),
+                // AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
-                AnyChatAuth.facebookIcon(context),
-                AnyChatAuth.twitterIcon(context),
+                // AnyChatAuth.facebookIcon(context),
+                // AnyChatAuth.twitterIcon(context),
               ],
             )
           ],
@@ -140,19 +139,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     ));
   }
-  static bool isUserAgreeToTerms(){
+
+  static bool isUserAgreeToTerms() {
     if (!userAgreedToTerms) {
       showDialog<void>(
           context: Utilities.globalKey.currentContext!,
           builder: (BuildContext context) {
             return AlertDialog(
                 title: Text(AppLocalizations.of(context)!.error),
-                content: Text(
-                    AppLocalizations.of(context)!.toJoinAnyChatConfirmPrivacyPolicy),
+                content: Text(AppLocalizations.of(context)!
+                    .toJoinAnyChatConfirmPrivacyPolicy),
                 actions: <Widget>[
                   TextButton(
-                    child:
-                    Text(AppLocalizations.of(context)!.cancel),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                     onPressed: () {
                       Navigator.of(context).pop();
                       Utilities.showToast(
@@ -162,7 +161,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ]);
           });
       return false;
-    } else { return true; }
+    } else {
+      return true;
+    }
   }
 }
 
