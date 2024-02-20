@@ -20,7 +20,7 @@ class AudioTranscriber {
   static String? isoCode;
   // final FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
-  StreamSubscription? _mRecordingDataSubscription;
+  // StreamSubscription? _mRecordingDataSubscription;
   // late StreamController<Food> recordingDataController;
   Future<void> _openRecorder() async {
     var status = await Permission.microphone.request();

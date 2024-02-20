@@ -17,7 +17,7 @@ final ThemeData kDarkTheme = ThemeData(
     useMaterial3: false,
     primaryColor: Colors.deepPurple,
     focusColor: Colors.black12,
-    primaryColorDark: Colors.deepPurple[900],
+    primaryColorDark: Colors.grey[800],
     primaryColorLight: Colors.white,
     brightness: Brightness.dark,
     textTheme: Typography.whiteMountainView,

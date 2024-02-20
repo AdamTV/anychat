@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,7 +33,7 @@ class Utilities {
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
     var uri = Uri.https(authority, unencodedPath, queryParameters);
     print(uri);
-    Response x = await http.post(uri);
+    http.Response x = await http.post(uri);
     String body = x.body;
     print(body);
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
@@ -67,7 +66,7 @@ class Utilities {
         var sublist = value.sublist(i, end);
         queryParameters.update("q", (v) => sublist, ifAbsent: () => sublist);
         var uri = Uri.https(authority, unencodedPath, queryParameters);
-        Response x = await http.post(uri);
+        http.Response x = await http.post(uri);
         Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
         if (matches.isNotEmpty) {
           for (var match in matches) {
