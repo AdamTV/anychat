@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "bashdb",
             "request": "launch",
@@ -8,11 +9,6 @@
             "cwd": "${workspaceFolder}",
             "program": "${command:SelectScriptName}",
             "args": []
-        },
-        {
-            "name": "anychat",
-            "request": "launch",
-            "type": "dart"
         },
         {
             "name": "anychat (debug mode)",
@@ -31,13 +27,6 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        },
-        {
-            "name": "Flutter (flutter emulator)",
-            "program": "lib/main.dart",
-            "deviceId": "emulator-5554",
-            "request": "launch",
-            "type": "dart"
         }
     ]
 }

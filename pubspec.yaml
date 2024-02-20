@@ -20,15 +20,12 @@ version: 32.0.1+203
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
-dependency_overrides:
-  intl: ^0.18.1
-
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.18.1
+  intl: any
 
   devicelocale: ^0.7.0
   google_sign_in: ^6.2.1
@@ -61,6 +58,7 @@ dependencies:
   mailto: ^2.0.0
   firebase_analytics: ^10.8.5
   firebase_crashlytics: ^3.4.14
+  http: ^1.2.0
 
 flutter_icons:
   android: "launcher_icon"

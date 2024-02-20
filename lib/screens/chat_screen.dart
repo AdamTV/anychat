@@ -63,7 +63,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
   _ChatWindowState() {
-    _chatMessageSubscription ??= ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
+    _chatMessageSubscription ??=
+        ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
 
   List<AnyChatMessage> getChatMessagesFromQuery(QuerySnapshot snapshot) {
@@ -116,16 +117,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                       AppLocalizations.of(context)!.accountDeleted,
                       null,
                       null,
-                      null,
-                      [])));
+                      null, [])));
         }
         AnyChatUser sender;
         try {
           sender = participants
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
         } catch (e) {
-          sender = AnyChatUser(null,
-              AppLocalizations.of(context)!.accountDeleted, null, null, null, []);
+          sender = AnyChatUser(
+              null,
+              AppLocalizations.of(context)!.accountDeleted,
+              null,
+              null,
+              null, []);
         }
         final language =
             _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
@@ -204,8 +208,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 text: "${AppLocalizations.of(context)!.translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
-                text:
-                    await Utilities.getGoogleTranslation(language, message.text)),
+                text: await Utilities.getGoogleTranslation(
+                    language, message.text)),
           ],
         ),
       );
@@ -297,7 +301,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         CallScreen.requestPermissionAndNavigate();
       },
     ));
-    Container container = SizedBox(
+    SizedBox container = SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -330,7 +334,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 ),
               ],
       ),
-    ) as Container;
+    );
     return Scaffold(
       appBar: AppBar(
           title: Text(Utilities.getChatterDisplayNameString(
@@ -500,7 +504,9 @@ class ChatMessage extends StatelessWidget {
   final RichText? text;
   final AnimationController? animationController;
 
-  const ChatMessage({Key? key, this.text, this.animationController, this.sender, this.id}) : super(key: key);
+  const ChatMessage(
+      {Key? key, this.text, this.animationController, this.sender, this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
