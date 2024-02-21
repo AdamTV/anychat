@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,10 +33,10 @@ class Utilities {
         ifAbsent: () => isoCode);
     queryParameters.update("q", (value) => text, ifAbsent: () => text);
     var uri = Uri.https(authority, unencodedPath, queryParameters);
-    print(uri);
+    logger.d(uri);
     http.Response x = await http.post(uri);
     String body = x.body;
-    print(body);
+    logger.d(body);
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     Iterable<Match> matches = translatedTextRegex.allMatches(body);
     if (matches.length == 1 && matches.first.groupCount == 1) {
@@ -45,7 +46,7 @@ class Utilities {
     }
   }
 
-  static const CLOUD_API_MAX_Q = 128;
+  static const cloudApiMaxQ = 128;
   static Future<Map<String?, List<String>>> getBatchGoogleTranslation(
       Map<String?, List<String?>> map) async {
     Map<String?, List<String>> translatedMap = {};
@@ -56,9 +57,9 @@ class Utilities {
       translatedMap.putIfAbsent(key, () => []);
       queryParameters.update("target", (value) => key, ifAbsent: () => key);
       var value = mapEntry.value;
-      for (int i = 0; i < value.length; i += CLOUD_API_MAX_Q) {
-        int end = i + CLOUD_API_MAX_Q;
-        if (CLOUD_API_MAX_Q > value.length) {
+      for (int i = 0; i < value.length; i += cloudApiMaxQ) {
+        int end = i + cloudApiMaxQ;
+        if (cloudApiMaxQ > value.length) {
           end = value.length;
         } else if (end > value.length) {
           end = value.length;
@@ -131,7 +132,7 @@ class Utilities {
 
   static Future<bool> handlePermission(Permission permission) async {
     final status = await permission.request();
-    print(status);
+    logger.d(status);
     return status.isGranted;
   }
 
@@ -147,7 +148,9 @@ class Utilities {
     }
     try {
       ret = ret.substring(0, ret.length - 2);
-    } catch (e) {}
+    } on Error catch (_, e) {
+      logger.e(_.toString(), time: DateTime.now(), error: _, stackTrace: e);
+    }
     return ret;
   }
 

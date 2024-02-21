@@ -8,6 +8,7 @@ import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:anychat/screens/search_chatter_by_email_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +35,7 @@ class ChatWindow extends StatefulWidget {
   const ChatWindow({Key? key}) : super(key: key);
 
   @override
-  _ChatWindowState createState() => _ChatWindowState();
+  State<ChatWindow> createState() => _ChatWindowState();
 
   static Stream<QuerySnapshot> loadAllChatMessages() {
     return FirebaseFirestore.instance
@@ -79,14 +80,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       var convo = await Conversation.getConversationById(
           AnyChatAuth.currentConversation!.id);
       var participants = <AnyChatUser>[];
-      convo.participants.forEach((element) async {
+      for (final element in convo.participants) {
         if (!AnyChatAuth.currentChatters
             .any((chatter) => chatter.id == element)) {
           AnyChatAuth.currentChatters
               .removeWhere((chatter) => chatter.id == element);
         }
         participants.add(await AnyChatUser.getUserById(element));
-      });
+      }
 
       AnyChatAuth.currentUser!.conversations =
           await ConversationInfo.getAllConversationInfo(
@@ -104,7 +105,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         }
         map[language]!.insert(0, message.text);
       }
-      print("chatMessage size: ${_chatMessages.length}");
+      logger.d("chatMessage size: ${_chatMessages.length}");
       Map<String?, List<String>> translatedMap =
           await Utilities.getBatchGoogleTranslation(map);
       for (int i = 0; i < _chatMessages.length; i++) {
@@ -119,17 +120,22 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                       null,
                       null, [])));
         }
-        AnyChatUser sender;
+        AnyChatUser sender = AnyChatUser.deletedUser();
         try {
           sender = participants
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
-        } catch (e) {
+        } on Error catch (e) {
+          logger.e("Error",
+              time: DateTime.now(), error: e, stackTrace: e.stackTrace);
           sender = AnyChatUser(
               null,
-              AppLocalizations.of(context)!.accountDeleted,
+              AppLocalizations.of(
+                      mounted ? context : Utilities.globalKey.currentContext!)!
+                  .accountDeleted,
               null,
               null,
-              null, []);
+              null,
+              []);
         }
         final language =
             _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
@@ -140,14 +146,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           text: TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(
+                    mounted ? context : Utilities.globalKey.currentContext!)
+                .textTheme
+                .bodyLarge,
             children: <TextSpan>[
               TextSpan(
-                  text: "${AppLocalizations.of(context)!.typed}: ",
+                  text:
+                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities.globalKey.currentContext!)!.typed}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: "${_chatMessages[i].text}\n\n"),
               TextSpan(
-                  text: "${AppLocalizations.of(context)!.translation}: ",
+                  text:
+                      "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: translatedMap[language]!.removeLast()),
             ],
@@ -171,7 +182,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
-      AnyChatUser sender;
+      AnyChatUser sender = AnyChatUser.deletedUser();
       try {
         sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
             .collection("users")
@@ -187,7 +198,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 AnyChatAuth.currentUser!.id);
       }
 
-      print("currentConvversation.id: ${AnyChatAuth.currentConversation!.id}");
+      logger
+          .d("currentConvversation.id: ${AnyChatAuth.currentConversation!.id}");
       var info = AnyChatAuth.currentUser!.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation!.id);
       final language =
@@ -198,14 +210,18 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         text: TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
           // Child text spans will inherit styles from parent
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: mounted
+              ? Theme.of(context).textTheme.bodyLarge
+              : Theme.of(Utilities.globalKey.currentContext!).textTheme.bodyLarge,
           children: <TextSpan>[
             TextSpan(
-                text: "${AppLocalizations.of(context)!.typed}: ",
+                text:
+                    "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities.globalKey.currentContext!)!.typed}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: "${message.text}\n\n"),
             TextSpan(
-                text: "${AppLocalizations.of(context)!.translation}: ",
+                text:
+                    "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
                 text: await Utilities.getGoogleTranslation(
@@ -319,14 +335,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ]
             : [
                 Flexible(
-                    child: Container(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(8.0),
                     reverse: true,
                     itemBuilder: (_, int index) => _messages[index],
                     itemCount: _messages.length,
                   ),
-                )),
+                ),
                 const Divider(height: 1.0),
                 Container(
                   decoration: BoxDecoration(color: Theme.of(context).cardColor),
@@ -381,7 +396,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(AppLocalizations.of(context)!.logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                  Navigator.pushNamed(context, "/welcome");
+                    Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/welcome");
                 }),
           ],
         ),
@@ -406,7 +421,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         Utilities.getLanguageFromIsoCode(info.incomingLanguage);
     String? outgoingDropdownValue =
         Utilities.getLanguageFromIsoCode(info.outgoingLanguage);
-    print(incomingDropdownValue);
+    logger.d(incomingDropdownValue);
     return AlertDialog(
       title: Text(AppLocalizations.of(context)!.selectLanguage),
       content: Column(
@@ -442,7 +457,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.incomingLanguage = AnyChatLocale.isoMap[newValue!];
                 incomingDropdownValue = newValue;
               });
-              Navigator.pushNamed(context, "/chat");
+                Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/chat");
             },
             items: AnyChatLocale.isoMap.keys
                 .map<DropdownMenuItem<String>>((String value) {
@@ -482,7 +497,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.outgoingLanguage = AnyChatLocale.isoMap[newValue!];
                 outgoingDropdownValue = newValue;
               });
-              Navigator.pushNamed(context, "/chat");
+                Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/chat");
             },
             items: AnyChatLocale.isoMap.keys
                 .map<DropdownMenuItem<String>>((String value) {

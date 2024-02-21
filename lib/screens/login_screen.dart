@@ -5,6 +5,7 @@ import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +15,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -60,18 +61,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, false);
                   if (user != null) {
-                    Utilities.initConversationScreen(context, user);
+                    Utilities.initConversationScreen(mounted ? context : Utilities.globalKey.currentContext!, user);
                   } else {
+                    Utilities.showAlertDialog(
+                        mounted ? context : Utilities.globalKey.currentContext!,
+                        AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.error,
+                        AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.invalidCredentials);
+                  }
+                } on Error catch (e) {
+                  logger.e("Error", time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+                  if (context.mounted){
                     Utilities.showAlertDialog(
                         context,
                         AppLocalizations.of(context)!.error,
-                        AppLocalizations.of(context)!.invalidCredentials);
+                        AppLocalizations.of(context)!.errorLoggingIn);
                   }
-                } catch (e) {
-                  Utilities.showAlertDialog(
-                      context,
-                      AppLocalizations.of(context)!.error,
-                      AppLocalizations.of(context)!.errorLoggingIn);
                 }
 
                 // AnyChatAuth.signInEmail(_email, _password, false)
@@ -123,10 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // AnyChatAuth.googleIcon(context),
+                AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
-                // AnyChatAuth.facebookIcon(context),
-                // AnyChatAuth.twitterIcon(context),
+                AnyChatAuth.facebookIcon(context),
+                AnyChatAuth.twitterIcon(context),
               ],
             )
           ],

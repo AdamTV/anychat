@@ -11,6 +11,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -72,7 +73,7 @@ class _CallScreenState extends State<CallScreen> {
     _transcribedChatMessageSubscription?.cancel();
     // clear transcribedMessages
     AnyChatUser.clearTranscribedMessages();
-    // print(_infoStrings);
+    // logger.d(_infoStrings);
     // clear users
     remoteUid.clear();
     // destroy sdk
@@ -255,7 +256,7 @@ class _CallScreenState extends State<CallScreen> {
       }
     }, onError: (e) async {
       // await responseStream.drain();
-      print(e);
+      logger.d(e);
       await audioTranscriber.stopRecording();
       if (mounted) {
         streamingRecognize();
@@ -528,9 +529,11 @@ class _CallScreenState extends State<CallScreen> {
     // if (await Ads.interstitial.isLoaded ?? false) {
     //   Ads.interstitial.show();
     // } else {
-    //   print('Interstitial ad is still laoding...');
+    //   logger.d('Interstitial ad is still laoding...');
     // }
-    Navigator.pushNamed(context, '/chat');
+    Navigator.pushNamed(
+        mounted ? context : Utilities.globalKey.currentContext!,
+        '/chat');
   }
 
   Future<void> _onToggleMute() async {

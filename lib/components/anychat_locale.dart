@@ -1,3 +1,4 @@
+import 'package:anychat/main.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -124,16 +125,16 @@ class AnyChatLocale {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       languages = await Devicelocale.preferredLanguages;
-      //print(languages);
+      //logger.d(languages);
     } on PlatformException {
-      print("Error obtaining preferred languages");
+      logger.d("Error obtaining preferred languages");
     }
     try {
       // var locale = Devicelocale();
       currentLocale = await Devicelocale.currentLocale;
-      print(currentLocale);
+      logger.d(currentLocale);
     } on PlatformException {
-      print("Error obtaining current locale");
+      logger.d("Error obtaining current locale");
     }
   }
 }

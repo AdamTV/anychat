@@ -4,6 +4,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/foundation.dart';
@@ -19,7 +20,7 @@ class ContactsScreen extends StatefulWidget {
   const ContactsScreen({Key? key}) : super(key: key);
 
   @override
-  _ContactsScreenState createState() => _ContactsScreenState();
+  State<ContactsScreen> createState() => _ContactsScreenState();
 }
 
 class _ContactsScreenState extends State<ContactsScreen> {
@@ -64,7 +65,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       //       .displayName
       //       .toLowerCase()
       //       .contains(_searchText.toLowerCase())) {
-      //     print(_filteredContacts[i].identifier);
+      //     logger.d(_filteredContacts[i].identifier);
       //     tempList.add(_filteredContacts[i]);
       //   }
       // }
@@ -86,7 +87,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     //   itemBuilder: (BuildContext context, int index) {
     //     return new ListTile(
     //       title: Text(_filteredContacts[index].displayName),
-    //       onTap: () => print(_filteredContacts[index].displayName),
+    //       onTap: () => logger.d(_filteredContacts[index].displayName),
     //     );
     //   },
     // );
@@ -231,7 +232,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         case FormOperationErrorCode.FORM_COULD_NOT_BE_OPEN:
         case FormOperationErrorCode.FORM_OPERATION_UNKNOWN_ERROR:
         default:
-          print(e.errorCode);
+          logger.d(e.errorCode);
       }
     }
   }
@@ -321,7 +322,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   void _launchURL(url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+      await canLaunchUrl(url) ? await launchUrl(url) : throw 'Could not launch $url';
 
   void contactOnDeviceHasBeenUpdated(AnyChatContact contact) {
     setState(() {
@@ -377,7 +378,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   });
                 }
               }
-              Navigator.pushNamed(context, "/chat");
+              if (mounted){
+                Navigator.pushNamed(context, "/chat");
+              }
             }
           : () async {
               showDialog(

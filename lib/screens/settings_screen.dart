@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'blocked_users_screen.dart';
 import 'package:mailto/mailto.dart';
@@ -21,7 +21,7 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
@@ -34,7 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('loading settings screen');
+    logger.d('loading settings screen');
     themes = [
       AppLocalizations.of(context)!.system,
       AppLocalizations.of(context)!.light,
@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ];
     dropdownValue = Utilities.getThemeDropdownValue();
 
-    return WillPopScope(
+    return PopScope(
         child: Scaffold(
           appBar: AppBar(
               title: Text(
@@ -106,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     }
                                     await AnyChatUser.updateDisplayName(
                                         displayName);
-                                    Navigator.of(context)
+                                    Navigator.of(mounted ? context : Utilities.globalKey.currentContext!)
                                         .pushReplacement(MaterialPageRoute(
                                       builder: (_) => const SettingsScreen(),
                                     ));
@@ -265,12 +265,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
-        onWillPop: () => _onWillPop());
+        onPopInvoked: (didPop) => _onPopInvoked(didPop));
   }
 // ...somewhere in your Flutter app...
   Future<void> launchMailto() async {
     final mailtoLink = Mailto(
-      to: ['alphatechnologysolutionscorp@gmail.com'],
+      to: ['admin@alphatechnology.ca'],
       // cc: ['cc1@example.com', 'cc2@example.com'],
       subject: 'Flag Objectionable Content',
       body: 'Please include your display name in AnyChat, the display name of the other person,'
@@ -279,7 +279,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Convert the Mailto instance into a string.
     // Use either Dart's string interpolation
     // or the toString() method.
-    await launch('$mailtoLink');
+    await launchUrlString('$mailtoLink');
   }
 // Image Picker
 //     List<File> _images = [];
@@ -306,7 +306,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // _images.add(File(pickedFile.path));
         _image = File(pickedFile.path); // Use if you only need a single picture
       } else {
-        print('No image selected.');
+        logger.d('No image selected.');
       }
     });
     await AnyChatUser.updatePhotoUrl(await uploadFile(_image));
@@ -318,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         FirebaseStorage.instance.ref().child('images/${image.path}');
     UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask.whenComplete(() => null);
-    print('File Uploaded');
+    logger.d('File Uploaded');
     String? returnURL;
     await storageReference.getDownloadURL().then((fileURL) {
       returnURL = fileURL;
@@ -364,13 +364,13 @@ _deleteAccount() {
 }
 
 _launchPrivacyPolicy() async {
-  await launch("https://www.alphatechnology.ca/anychat-privacy-policy");
+  await launchUrlString("https://www.alphatechnology.ca/anychat-privacy-policy");
 }
 _launchEula() async {
-  await launch("https://www.alphatechnology.ca/anychat-eula");
+  await launchUrlString("https://www.alphatechnology.ca/anychat-eula");
 }
 
-Future<bool> _onWillPop() async {
+Future<bool> _onPopInvoked(didPop) async {
   Navigator.pushNamed(Utilities.globalKey.currentContext!, '/conversations');
   return true;
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
@@ -24,9 +23,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
 
 import 'components/utilities.dart';
 import 'firebase_options.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(
+      methodCount: 2, // Number of method calls to be displayed
+      errorMethodCount: 8, // Number of method calls if stacktrace is provided
+      lineLength: 120, // Width of the output
+      colors: true, // Colorful log messages
+      printEmojis: true, // Print an emoji for each log message
+      printTime: true // Should each log print contain a timestamp
+      ),
+);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,10 +49,10 @@ void main() {
         Utilities.init().then((value) => {runApp(const AnyChat())}),
         FirebaseAuth.instance.authStateChanges().listen((User? user) async {
           if (user == null) {
-            print('User is signed out!');
+            logger.d('User is signed out!');
           } else {
-            print('User is signed in!');
-            print('User is ${user.emailVerified ? "" : "NOT "}verified!');
+            logger.d('User is signed in!');
+            logger.d('User is ${user.emailVerified ? "" : "NOT "}verified!');
             // if (!user.emailVerified) {
             //   var actionCodeSettings = ActionCodeSettings(
             //       url:
@@ -64,7 +75,7 @@ class AnyChat extends StatefulWidget {
   const AnyChat({Key? key}) : super(key: key);
 
   @override
-  _AnyChatState createState() => _AnyChatState();
+  State<AnyChat> createState() => _AnyChatState();
 }
 
 class _AnyChatState extends State<AnyChat> {
@@ -87,7 +98,8 @@ class _AnyChatState extends State<AnyChat> {
         '/liveTranslator': (context) => const LiveTranslatorScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/searchChatterByEmail': (context) => const SearchChatterByEmailScreen(),
+        '/searchChatterByEmail': (context) =>
+            const SearchChatterByEmailScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
         '/forgotPassword': (context) => const ForgotPassword(),
@@ -220,7 +232,7 @@ class _AnyChatState extends State<AnyChat> {
           if (snapshot.hasData && (!snapshot.data!.isAnonymous)) {
             _checkNetworkConnection(context);
             AnyChatLocale.init(context);
-            print(snapshot.data);
+            logger.d(snapshot.data);
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(snapshot.data!.providerData[0].providerId == 'google.com'
@@ -230,12 +242,13 @@ class _AnyChatState extends State<AnyChat> {
                 .then((value) => AnyChatUser.fromSnapshot(value))
                 .onError((error, stackTrace) => AnyChatUser.deletedUser())
                 .then((AnyChatUser user) {
-                  if(user.id == null) {
-                    return ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 1), child: const WelcomeScreen());
-                  }
+              if (user.id == null) {
+                return ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1),
+                    child: const WelcomeScreen());
+              }
               AnyChatAuth.currentUser = user;
-              print('returning ConversationsScreen');
+              logger.d('returning ConversationsScreen');
               Navigator.push(context,
                   MaterialPageRoute(builder: (BuildContext context) {
                 return ConstrainedBox(
@@ -244,9 +257,10 @@ class _AnyChatState extends State<AnyChat> {
               }));
             });
           }
-          print('returning WelcomeScreen');
+          logger.d('returning WelcomeScreen');
           return ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1), child: const WelcomeScreen());
+              constraints: const BoxConstraints(maxWidth: 1),
+              child: const WelcomeScreen());
         },
       ),
     );
@@ -262,9 +276,12 @@ Future<void> _checkNetworkConnection(BuildContext context) async {
   try {
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      print('connected');
+      logger.d('connected');
     }
-  } on SocketException catch (_) {
-    Utilities.showToast(AppLocalizations.of(context)!.notConnectedToInternet);
+  } on SocketException catch (err) {
+    logger.e(err.message.toString(), time: DateTime.now(), error: err);
+    Utilities.showToast(AppLocalizations.of(
+            context.mounted ? context : Utilities.globalKey.currentContext!)!
+        .notConnectedToInternet);
   }
 }

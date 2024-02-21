@@ -2,6 +2,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/blocked_users_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,7 +11,7 @@ class BlockChatterSearchScreen extends StatefulWidget {
   const BlockChatterSearchScreen({Key? key}) : super(key: key);
 
   @override
-  _BlockChatterSearchScreenState createState() =>
+  State<BlockChatterSearchScreen> createState() =>
       _BlockChatterSearchScreenState();
 }
 
@@ -56,15 +57,13 @@ class SearchResults extends StatefulWidget {
   const SearchResults({Key? key, this.searchValue}) : super(key: key);
 
   @override
-  _SearchResultsState createState() => _SearchResultsState(searchValue);
+  State<SearchResults> createState() => _SearchResultsState();
 }
 
 class _SearchResultsState extends State<SearchResults> {
   List<AnyChatUser> users = [];
 
-  _SearchResultsState(String? searchValue){
-    loadSearchResults(searchValue);
-  }
+  _SearchResultsState();
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +86,13 @@ class _SearchResultsState extends State<SearchResults> {
                     itemBuilder: (BuildContext ctx, int index) {
                       return ListTile(
                           onTap: () async {
-                            await AnyChatAuth.currentUser!.blockAccount(users[index].id);
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext ctx){
+                            await AnyChatAuth.currentUser!
+                                .blockAccount(users[index].id);
+                            Navigator.push(
+                                mounted
+                                    ? context
+                                    : Utilities.globalKey.currentContext!,
+                                MaterialPageRoute(builder: (BuildContext ctx) {
                               return const BlockedUsersScreen();
                             }));
                           },

@@ -1,5 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:disposables/disposables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,7 +23,7 @@ class Notifications implements Disposable {
     try {
       flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     } catch (e) {
-      print('ERROR - must be on the web');
+      logger.d('ERROR - must be on the web');
       return;
     }
     _requestPermissions();
@@ -48,7 +49,7 @@ class Notifications implements Disposable {
 
   void _configureSelectNotificationSubject() {
     selectNotificationSubject.stream.listen((String? payload) async {
-      print(payload);
+      logger.d(payload);
       var conversationId = payload!.substring(5);
       var convo = await Conversation.getConversationById(conversationId);
       AnyChatAuth.currentConversation = convo;
@@ -65,7 +66,7 @@ class Notifications implements Disposable {
   }
 
   void selectNotification(NotificationResponse payload) async {
-    print('selectNotification');
+    logger.d('selectNotification');
     flutterRingtonePlayer.stop();
     selectNotificationSubject.add(payload.payload);
 
@@ -84,7 +85,7 @@ class Notifications implements Disposable {
         !Utilities.prefs.getBool('notifications')!) {
       return;
     }
-    print('showNotification');
+    logger.d('showNotification');
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         payload.contains('ring')
             ? AndroidNotificationDetails(
@@ -124,7 +125,7 @@ class Notifications implements Disposable {
 
   Future<void> onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
-    print('received notification');
+    logger.d('received notification');
     return Future.value();
   }
 
@@ -151,7 +152,7 @@ class Notifications implements Disposable {
   void dispose() {
     selectNotificationSubject.close();
   }
-
+  
   @override
-  bool get isDisposed => isDisposed;
+  bool get isDisposed => selectNotificationSubject.isClosed;
 }
