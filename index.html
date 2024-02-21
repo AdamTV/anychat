@@ -84,8 +84,8 @@
             'performance',
           ].filter(feature => typeof app[feature] === 'function');
           loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
+        } catch (err) {
+          logger.e("Error " + err.message.toString(), DateTime.now(), err, err.stackTrace);
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
         }
       });

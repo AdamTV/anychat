@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
-    return WillPopScope(
+    return PopScope(
         child: Scaffold(
             body: WelcomeBackground(
           child: SingleChildScrollView(
@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
         )),
-        onWillPop: () async => false);
+        onPopInvoked: (didPop) async => false);
   }
 }
 

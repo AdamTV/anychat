@@ -30,7 +30,10 @@ class SocialIcon extends StatelessWidget {
           iconSrc!,
           height: size.width >= 750 ? 20 : size.width * 0.04,
           width: size.width >= 750 ? 20 : size.width * 0.04,
-          color: Theme.of(context).colorScheme.secondary,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.secondary,
+            BlendMode.srcIn,
+          )
         ),
       ),
     );

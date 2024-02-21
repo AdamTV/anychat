@@ -1,6 +1,7 @@
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:anychat/screens/login_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +12,7 @@ class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  _ForgotPasswordState createState() => _ForgotPasswordState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
@@ -46,16 +47,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             //   height: size.height * 0.45,
             // ),
             RoundedButton(
-              text: "${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}",
+              text:
+                  "${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}",
               press: () async {
                 await _passwordReset();
-                print(_email);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return const LoginScreen();
-                  }),
-                );
+                logger.d(_email);
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return const LoginScreen();
+                    }),
+                  );
+                }
               },
             ),
             RoundedButton(
@@ -75,15 +79,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       final auth = FirebaseAuth.instance;
       _formKey.currentState!.save();
       await auth.sendPasswordResetEmail(email: _email!);
-      Utilities.showToast(
-          AppLocalizations.of(context)!.emailSentToResetPassword);
+      if (mounted) {
+        Utilities.showToast(
+            AppLocalizations.of(context)!.emailSentToResetPassword);
+      }
     } catch (e) {
       if ((e is FirebaseException) && e.message != null) {
         Utilities.showToast(e.message!);
-      } else {
+      } else if (mounted) {
         Utilities.showToast(AppLocalizations.of(context)!.error);
       }
-      print(e);
+      logger.d(e);
     }
   }
 }

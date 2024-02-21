@@ -16,7 +16,7 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 
   static bool isUserAgreeToTerms() {
     return _RegisterScreenState.isUserAgreeToTerms();
@@ -69,8 +69,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: const TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        launch(
-                            'https://www.alphatechnology.ca/anychat-privacy-policy');
+                        launchUrl(Uri(
+                            scheme: 'https',
+                            host: 'alphatechnology.ca',
+                            path: 'anychat-privacy-policy'));
                       },
                   ),
                   TextSpan(
@@ -78,13 +80,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                   TextSpan(
-                    text: AppLocalizations.of(context)!.eula,
-                    style: const TextStyle(color: Colors.blue),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        launch('https://www.alphatechnology.ca/anychat-eula');
-                      },
-                  ),
+                      text: AppLocalizations.of(context)!.eula,
+                      style: const TextStyle(color: Colors.blue),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          launchUrl(Uri(
+                              scheme: 'https',
+                              host: 'alphatechnology.ca',
+                              path: 'anychat-eula'));
+                        }),
                 ]),
               ),
               value: userAgreedToTerms,
@@ -103,17 +107,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, true);
                   if (user != null) {
-                    Utilities.showToast(AppLocalizations.of(context)!
+                    Utilities.showToast(AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!
                         .accountCreatedEnterSettings);
-                    Navigator.pushNamed(context, '/settings');
+                    Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, '/settings');
                   } else {
                     throw Error();
                   }
                 } catch (e) {
                   Utilities.showAlertDialog(
-                      context,
-                      AppLocalizations.of(context)!.error,
-                      AppLocalizations.of(context)!.unableRegister);
+                      mounted ? context : Utilities.globalKey.currentContext!,
+                      AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.error,
+                      AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.unableRegister);
                 }
               },
             ),
@@ -128,10 +132,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // AnyChatAuth.googleIcon(context),
+                AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
-                // AnyChatAuth.facebookIcon(context),
-                // AnyChatAuth.twitterIcon(context),
+                AnyChatAuth.facebookIcon(context),
+                AnyChatAuth.twitterIcon(context),
               ],
             )
           ],

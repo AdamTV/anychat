@@ -11,7 +11,7 @@ class BlockedUsersScreen extends StatefulWidget {
   const BlockedUsersScreen({Key? key}) : super(key: key);
 
   @override
-  _BlockedUsersScreenState createState() => _BlockedUsersScreenState();
+  State<BlockedUsersScreen> createState() => _BlockedUsersScreenState();
 }
 
 class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
@@ -23,8 +23,8 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: (() => Navigator.of(context).pushReplacement(
+    return PopScope(
+        onPopInvoked: ((didPop) => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (BuildContext context) {
               return const SettingsScreen();
             })) as Future<bool>),

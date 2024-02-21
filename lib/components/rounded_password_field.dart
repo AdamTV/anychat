@@ -11,7 +11,7 @@ class RoundedPasswordField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RoundedPasswordFieldState createState() => _RoundedPasswordFieldState();
+  State<RoundedPasswordField> createState() => _RoundedPasswordFieldState();
 }
 
 class _RoundedPasswordFieldState extends State<RoundedPasswordField> {

@@ -1,6 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/search_chatter_by_email_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,7 +10,7 @@ class AddChatterScreen extends StatefulWidget {
   const AddChatterScreen({Key? key}) : super(key: key);
 
   @override
-  _AddChatterScreenState createState() => _AddChatterScreenState();
+  State<AddChatterScreen> createState() => _AddChatterScreenState();
 }
 
 class _AddChatterScreenState extends State<AddChatterScreen> {
@@ -60,7 +61,11 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                   title: Text(AppLocalizations.of(context)!.logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    Navigator.pushNamed(context, "/welcome");
+                    Navigator.pushNamed(
+                        context.mounted
+                            ? context
+                            : Utilities.globalKey.currentContext!,
+                        "/welcome");
                     //_handleSignOut();
                   }),
             ],

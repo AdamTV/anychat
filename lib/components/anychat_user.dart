@@ -1,5 +1,6 @@
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,14 @@ class AnyChatUser {
       this.language, this.blockedAccounts);
 
   static deletedUser() {
-    return AnyChatUser(null, AppLocalizations.of(Utilities.globalKey.currentContext!)!.accountDeleted,
-        null, null, null, []);
+    return AnyChatUser(
+        null,
+        AppLocalizations.of(Utilities.globalKey.currentContext!)!
+            .accountDeleted,
+        null,
+        null,
+        null,
+        []);
   }
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
@@ -88,8 +95,8 @@ class AnyChatUser {
     });
     AnyChatAuth.currentUser!.conversations
         .add(ConversationInfo.fromSnapshot(await userConversationInfo.get()));
-    conversation.get().then((value) => print(value.id));
-    print(conversation.id);
+    conversation.get().then((value) => logger.d(value.id));
+    logger.d(conversation.id);
     return Conversation.fromSnapshot(await conversation.get());
   }
 
@@ -100,7 +107,7 @@ class AnyChatUser {
     checkExist(id).then((value) => {
           if (!value)
             {
-              //print('!value')
+              //logger.d('!value')
 
               users.set({
                 'displayName': displayName,
@@ -212,7 +219,7 @@ class AnyChatUser {
         });
       });
     } catch (e) {
-      print(e);
+      logger.d(e);
     }
   }
 
@@ -277,7 +284,7 @@ class AnyChatUser {
   }
 
   static Future<void> addTranscribedMessage(String text) async {
-    print(AnyChatAuth.currentUser!.id);
+    logger.d(AnyChatAuth.currentUser!.id);
     final conversation = FirebaseFirestore.instance
         .collection("conversations")
         .doc(AnyChatAuth.currentConversation!.id);
@@ -330,8 +337,8 @@ class AnyChatUser {
     //     .collection("conversations")
     //     .doc(AnyChatAuth.currentConversation.id)
     //     .collection('transcribedMessages').doc(id).delete()
-    //     .then((value) => print("Messages Deleted for ${AnyChatAuth.currentConversation.id}"))
-    //     .catchError((error) => print("Failed to delete messages: $error"));
+    //     .then((value) => logger.d("Messages Deleted for ${AnyChatAuth.currentConversation.id}"))
+    //     .catchError((error) => logger.d("Failed to delete messages: $error"));
     // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
     //       .get(conversation)
@@ -410,8 +417,8 @@ class AnyChatUser {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text("${AppLocalizations.of(context)!.areYouSureYouWantToLeave} ${AppLocalizations.of(context)!
-                        .youWillNotJoinBackUnlessInvited}"),
+                Text(
+                    "${AppLocalizations.of(context)!.areYouSureYouWantToLeave} ${AppLocalizations.of(context)!.youWillNotJoinBackUnlessInvited}"),
               ],
             ),
           ),
@@ -448,12 +455,14 @@ class AnyChatUser {
         .collection('users')
         .get()
         .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                if (doc['email'] == email) {
-                  user = AnyChatUser.fromSnapshot(doc);
-                  print(doc["displayName"]);
+              for (final doc in querySnapshot.docs)
+                {
+                  if (doc['email'] == email)
+                    {
+                      user = AnyChatUser.fromSnapshot(doc),
+                      logger.d(doc["displayName"])
+                    }
                 }
-              }),
             });
     return user;
   }
@@ -464,16 +473,18 @@ class AnyChatUser {
         .collection('users')
         .get()
         .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                if (email != null &&
-                    doc['email']
-                        .toString()
-                        .toLowerCase()
-                        .contains(email.toLowerCase())) {
-                  users.add(AnyChatUser.fromSnapshot(doc));
-                  print(doc["displayName"]);
+              for (final doc in querySnapshot.docs)
+                {
+                  if (email != null &&
+                      doc['email']
+                          .toString()
+                          .toLowerCase()
+                          .contains(email.toLowerCase()))
+                    {
+                      users.add(AnyChatUser.fromSnapshot(doc)),
+                      logger.d(doc["displayName"])
+                    }
                 }
-              }),
             });
     return users;
   }
@@ -485,25 +496,27 @@ class AnyChatUser {
         .collection('users')
         .get()
         .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                if (displayName != null &&
-                    doc['displayName']
-                        .toString()
-                        .toLowerCase()
-                        .contains(displayName.toLowerCase())) {
-                  users.add(AnyChatUser.fromSnapshot(doc));
-                  print(doc["displayName"]);
+              for (final doc in querySnapshot.docs)
+                {
+                  if (displayName != null &&
+                      doc['displayName']
+                          .toString()
+                          .toLowerCase()
+                          .contains(displayName.toLowerCase()))
+                    {
+                      users.add(AnyChatUser.fromSnapshot(doc)),
+                      logger.d(doc["displayName"])
+                    }
                 }
-              }),
             });
     return users;
   }
 
   Future<void> deleteAccount() async {
     var convos = await ConversationInfo.getAllConversationInfo(id);
-    convos.forEach((element) async {
+    for(final element in convos) {
       await leaveConversation(element.id);
-    });
+    }
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       transaction
           .delete(FirebaseFirestore.instance.collection('users').doc(id));
@@ -552,5 +565,4 @@ class AnyChatUser {
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
 //     return ;
 // }
-
 }

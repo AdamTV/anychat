@@ -2,6 +2,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -9,7 +10,7 @@ class LiveTranslatorScreen extends StatefulWidget {
   const LiveTranslatorScreen({Key? key}) : super(key: key);
 
   @override
-  _LiveTranslatorScreenState createState() => _LiveTranslatorScreenState();
+  State<LiveTranslatorScreen> createState() => _LiveTranslatorScreenState();
 }
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
@@ -23,7 +24,6 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     streamingRecognize();
   }
@@ -96,7 +96,9 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   title: Text(AppLocalizations.of(context)!.logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
+                    if(context.mounted){
                     Navigator.pushNamed(context, "/welcome");
+                    }
                   }),
             ],
           ),
@@ -144,7 +146,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 dropdownValue = newValue;
               });
               isoCode = AnyChatLocale.isoMap[newValue!];
-              print(isoCode);
+              logger.d(isoCode);
               streamingRecognize();
               Navigator.pop(context);
             },
@@ -199,7 +201,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
         });
       }
     }, onError: (e) async {
-      print(e);
+      logger.d(e);
       await audioTranscriber.stopRecording();
       if (mounted) {
         streamingRecognize();

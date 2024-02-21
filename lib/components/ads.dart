@@ -51,19 +51,19 @@ class Ads {
   //     AdmobAdEvent event, Map<String, dynamic>? args, String adType) {
   //   switch (event) {
   //     case AdmobAdEvent.loaded:
-  //       print('New Admob $adType Ad loaded!');
+  //       logger.d('New Admob $adType Ad loaded!');
   //       break;
   //     case AdmobAdEvent.opened:
-  //       print('Admob $adType Ad opened!');
+  //       logger.d('Admob $adType Ad opened!');
   //       break;
   //     case AdmobAdEvent.closed:
-  //       print('Admob $adType Ad closed!');
+  //       logger.d('Admob $adType Ad closed!');
   //       if (adType == "Interstitial") {
   //         interstitial.load();
   //       }
   //       break;
   //     case AdmobAdEvent.failedToLoad:
-  //       print('Admob $adType failed to load. :(');
+  //       logger.d('Admob $adType failed to load. :(');
   //       break;
 
 
