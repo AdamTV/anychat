@@ -125,8 +125,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           sender = participants
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
         } on Error catch (e) {
-          logger.e("Error",
-              time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+          // logger.e("Error",
+          //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+          logger.e("Error", e, e.stackTrace);
           sender = AnyChatUser(
               null,
               AppLocalizations.of(
@@ -212,7 +213,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           // Child text spans will inherit styles from parent
           style: mounted
               ? Theme.of(context).textTheme.bodyLarge
-              : Theme.of(Utilities.globalKey.currentContext!).textTheme.bodyLarge,
+              : Theme.of(Utilities.globalKey.currentContext!)
+                  .textTheme
+                  .bodyLarge,
           children: <TextSpan>[
             TextSpan(
                 text:
@@ -396,7 +399,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(AppLocalizations.of(context)!.logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                    Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/welcome");
+                  Navigator.pushNamed(
+                      mounted ? context : Utilities.globalKey.currentContext!,
+                      "/welcome");
                 }),
           ],
         ),
@@ -457,7 +462,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.incomingLanguage = AnyChatLocale.isoMap[newValue!];
                 incomingDropdownValue = newValue;
               });
-                Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/chat");
+              Navigator.pushNamed(
+                  mounted ? context : Utilities.globalKey.currentContext!,
+                  "/chat");
             },
             items: AnyChatLocale.isoMap.keys
                 .map<DropdownMenuItem<String>>((String value) {
@@ -497,7 +504,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.outgoingLanguage = AnyChatLocale.isoMap[newValue!];
                 outgoingDropdownValue = newValue;
               });
-                Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, "/chat");
+              Navigator.pushNamed(
+                  mounted ? context : Utilities.globalKey.currentContext!,
+                  "/chat");
             },
             items: AnyChatLocale.isoMap.keys
                 .map<DropdownMenuItem<String>>((String value) {

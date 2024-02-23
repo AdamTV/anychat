@@ -365,7 +365,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           text = "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(language, message.text)}";
         } catch (e) {
-            text = AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.newConversation;
+          text = AppLocalizations.of(
+                  mounted ? context : Utilities.globalKey.currentContext!)!
+              .newConversation;
         }
         // } catch (e) {
         //   throw e;
@@ -454,10 +456,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           } catch (e) {
             chatters.add(AnyChatUser(
                 null,
-                AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.accountDeleted,
+                AppLocalizations.of(mounted
+                        ? context
+                        : Utilities.globalKey.currentContext!)!
+                    .accountDeleted,
                 null,
                 null,
-                null, []));
+                null,
+                []));
           }
           // }
         } else {
@@ -474,10 +480,14 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               } catch (e) {
                 chatters.add(AnyChatUser(
                     null,
-                    AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.accountDeleted,
+                    AppLocalizations.of(mounted
+                            ? context
+                            : Utilities.globalKey.currentContext!)!
+                        .accountDeleted,
                     null,
                     null,
-                    null, []));
+                    null,
+                    []));
               }
             }
           }
@@ -490,7 +500,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
               ? info.outgoingLanguage
               : info.incomingLanguage;
           final text = message.text == null
-              ? AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.thisPersonHasLeftConversation
+              ? AppLocalizations.of(
+                      mounted ? context : Utilities.globalKey.currentContext!)!
+                  .thisPersonHasLeftConversation
               : "${message.text}\n\n"
                   "${await Utilities.getGoogleTranslation(language, message.text)}";
 
@@ -506,12 +518,15 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     if (message.senderId != AnyChatAuth.currentUser!.id) {
       var sender = await AnyChatUser.getUserById(message.senderId);
       var text = message.text == null
-          ? AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.thisPersonHasLeftConversation
+          ? AppLocalizations.of(
+                  mounted ? context : Utilities.globalKey.currentContext!)!
+              .thisPersonHasLeftConversation
           : "${message.text}\n\n"
               "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}";
       if (_notification != AppLifecycleState.resumed) {
-        if (text
-            .contains(AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.isCallingYouOnAnyChat)) {
+        if (text.contains(AppLocalizations.of(
+                mounted ? context : Utilities.globalKey.currentContext!)!
+            .isCallingYouOnAnyChat)) {
           await Notifications().showNotification(
               sender.displayName, text, "ring-${conversation.id}");
         } else {
