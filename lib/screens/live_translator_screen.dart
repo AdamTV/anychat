@@ -1,10 +1,12 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/audio_transcriber.dart';
+import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:anychat/components/rounded_input_field.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   const LiveTranslatorScreen({Key? key}) : super(key: key);
@@ -17,7 +19,9 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String? isoCode = AnyChatAuth.currentUser!.language;
   String? dropdownValue =
       Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser!.language);
-  bool? recognizing;
+  bool recognizing = false;
+  bool recognizingFinished = false;
+
   String text = "";
 
   AudioTranscriber audioTranscriber = AudioTranscriber();
@@ -25,7 +29,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   @override
   void initState() {
     super.initState();
-    streamingRecognize();
+    longRunningRecognize();
   }
 
   @override
@@ -54,19 +58,19 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   });
                 })
           ],
-          // bottom: PreferredSize(
-          //   preferredSize: Size(320, 48),
-          //   child: Padding(
-          //       padding: EdgeInsets.fromLTRB(6, 0, 6, 4),
-          //       child: IconButton(
-          //           icon: const Icon(Icons.clear),
-          //           tooltip: 'Clear',
-          //           onPressed: () {
-          //             setState(() {
-          //               text = "";
-          //             });
-          //           })),
-          // ),
+          bottom: PreferredSize(
+            preferredSize: const Size(320, 48),
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
+                child: IconButton(
+                    icon: const Icon(Icons.clear),
+                    tooltip: 'Clear',
+                    onPressed: () {
+                      setState(() {
+                        text = "";
+                      });
+                    })),
+          ),
         ),
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -96,8 +100,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   title: Text(AppLocalizations.of(context)!.logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    if(context.mounted){
-                    Navigator.pushNamed(context, "/welcome");
+                    if (context.mounted) {
+                      Navigator.pushNamed(context, "/welcome");
                     }
                   }),
             ],
@@ -147,7 +151,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               });
               isoCode = AnyChatLocale.isoMap[newValue!];
               logger.d(isoCode);
-              streamingRecognize();
+              longRunningRecognize();
               Navigator.pop(context);
             },
             items: AnyChatLocale.isoMap.keys
@@ -158,56 +162,75 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               );
             }).toList(),
           ),
-          // RoundedInputField(icon: Icons.language,onChanged:(value) {language = value;}),
-          // RoundedButton(
-          //     text: "SAVE",
-          //     press: () {
-          //       Navigator.of(context).pop();
-          //     }),
+          RoundedInputField(
+              icon: Icons.language,
+              onChanged: (value) {
+                // language = value;
+              }),
+          RoundedButton(
+              text: "SAVE",
+              press: () {
+                Navigator.of(context).pop();
+              }),
         ],
       ),
-      // actions: <Widget>[
-      //   new FlatButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //     textColor: Theme.of(context).primaryColor,
-      //     child: const Text('Close'),
-      //   ),
-      // ],
+      actions: const <Widget>[
+        // new FlatButton(
+        //   onPressed: () {
+        //     Navigator.of(context).pop();
+        //   },
+        //   textColor: Theme.of(context).primaryColor,
+        //   child: const Text('Close'),
+        // ),
+      ],
     );
   }
 
-  void streamingRecognize() async {
+  void longRunningRecognize() async {
     setState(() {
       recognizing = true;
     });
 
-    String lastMessage = "";
+    // String lastMessage = "";
 
-    var responseStream = await audioTranscriber.getResponseStream(isoCode);
+    var speechToText = await audioTranscriber.getResponseStream(isoCode);
 
-    responseStream.listen((data) async {
-      if (data.results.isEmpty) return;
-      String transcribedText =
-          data.results.map((e) => e.alternatives.first.transcript).last;
-      if (lastMessage.compareTo(transcribedText) != 0 &&
-          transcribedText.isNotEmpty) {
-        lastMessage = transcribedText;
-        var newText = await Utilities.getGoogleTranslation(
-            AnyChatAuth.currentUser!.language, lastMessage);
-        setState(() {
-          text += "$newText ";
-        });
-      }
-    }, onError: (e) async {
-      logger.d(e);
-      await audioTranscriber.stopRecording();
-      if (mounted) {
-        streamingRecognize();
-      }
+    speechToText.listen((data) async {
+      setState(() {
+        text =
+            data.results.map((e) => e.alternatives.first.transcript).join('\n');
+        recognizingFinished = true;
+      });
+    }, onDone: () {
+      setState(() {
+        recognizing = false;
+      });
     });
   }
+
+  // var responseStream = await audioTranscriber.getResponseStream(isoCode);
+  //
+  // responseStream.listen((data) async {
+  //   if (data.results.isEmpty) return;
+  //   String transcribedText =
+  //       data.results.map((e) => e.alternatives.first.transcript).last;
+  //   if (lastMessage.compareTo(transcribedText) != 0 &&
+  //       transcribedText.isNotEmpty) {
+  //     lastMessage = transcribedText;
+  //     var newText = await Utilities.getGoogleTranslation(
+  //         AnyChatAuth.currentUser!.language, lastMessage);
+  //     setState(() {
+  //       text += "$newText ";
+  //     });
+  //   }
+  // }, onError: (e) async {
+  //   logger.d(e);
+  //   await audioTranscriber.stopRecording();
+  //   if (mounted) {
+  //     streamingRecognize();
+  //   }
+  // });
+  // }
 
   @override
   void dispose() {

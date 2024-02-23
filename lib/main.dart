@@ -40,35 +40,39 @@ var logger = Logger(
 );
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Notifications().init();
-  Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) => {
-        Ads.init(),
-        Utilities.init().then((value) => {runApp(const AnyChat())}),
-        FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-          if (user == null) {
-            logger.d('User is signed out!');
-          } else {
-            logger.d('User is signed in!');
-            logger.d('User is ${user.emailVerified ? "" : "NOT "}verified!');
-            // if (!user.emailVerified) {
-            //   var actionCodeSettings = ActionCodeSettings(
-            //       url:
-            //       'https://www.example.com/?email=${user.email}',
-            //       dynamicLinkDomain: "example.page.link",
-            //       androidInstallApp: true,
-            //       androidMinimumVersion: '12',
-            //       androidPackageName: "ca.alphatech.anychat",
-            //       iOSBundleId: "ca.alphatech.anychat",
-            //       handleCodeInApp: true);
-            //
-            //   await user.sendEmailVerification();
-            // }
-          }
-        }),
-      });
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Notifications().init();
+    Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ).then((value) => {
+          Ads.init(),
+          Utilities.init().then((value) => {runApp(const AnyChat())}),
+          FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+            if (user == null) {
+              logger.d('User is signed out!');
+            } else {
+              logger.d('User is signed in!');
+              logger.d('User is ${user.emailVerified ? "" : "NOT "}verified!');
+              // if (!user.emailVerified) {
+              //   var actionCodeSettings = ActionCodeSettings(
+              //       url:
+              //       'https://www.example.com/?email=${user.email}',
+              //       dynamicLinkDomain: "example.page.link",
+              //       androidInstallApp: true,
+              //       androidMinimumVersion: '12',
+              //       androidPackageName: "ca.alphatech.anychat",
+              //       iOSBundleId: "ca.alphatech.anychat",
+              //       handleCodeInApp: true);
+              //
+              //   await user.sendEmailVerification();
+              // }
+            }
+          }),
+        });
+  } on Error catch (e) {
+    logger.e("Error", e, e.stackTrace);
+  }
 }
 
 class AnyChat extends StatefulWidget {
@@ -278,8 +282,9 @@ Future<void> _checkNetworkConnection(BuildContext context) async {
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       logger.d('connected');
     }
-  } on SocketException catch (err) {
-    logger.e(err.message.toString(), time: DateTime.now(), error: err);
+  } on SocketException catch (e) {
+    // logger.e(err.message.toString(), time: DateTime.now(), error: err);
+    logger.e("Error", e);
     Utilities.showToast(AppLocalizations.of(
             context.mounted ? context : Utilities.globalKey.currentContext!)!
         .notConnectedToInternet);

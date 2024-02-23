@@ -148,8 +148,10 @@ class Utilities {
     }
     try {
       ret = ret.substring(0, ret.length - 2);
-    } on Error catch (_, e) {
-      logger.e(_.toString(), time: DateTime.now(), error: _, stackTrace: e);
+    } on Error catch (e) {
+      logger.e("Error", e, e.stackTrace);
+
+      // logger.e(_.toString(), time: DateTime.now(), error: _, stackTrace: e);
     }
     return ret;
   }
