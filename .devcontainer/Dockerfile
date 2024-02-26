@@ -65,12 +65,12 @@ RUN rm -rf /usr/lib/android-sdk/emulator* && \
     sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "emulator" "system-images;android-30;default;x86_64"
 
 # Create an Android emulator
-RUN echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-30;default;x86_64"
+RUN echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-34;default;x86_64"
 
 # Download and install Flutter SDK
 RUN git clone https://github.com/flutter/flutter.git -b stable ${FLUTTER_HOME}
 
-RUN export FLUTTER_HOME=${FLUTTER_HOME}
+RUN export FLUTTER_HOME={FLUTTER_HOME}
 
 # Run basic check to download Dart SDK
 RUN flutter doctor
