@@ -61,8 +61,8 @@ RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
 RUN yes | sdkmanager --licenses
 
 # Clean any existing emulator installations and install Android SDK components including system images for emulator
-RUN rm -rf /usr/lib/android-sdk/emulator* && \
-    sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "emulator" "system-images;android-30;default;x86_64"
+#RUN rm -rf /usr/lib/android-sdk/emulator* && \
+#    sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "emulator" "system-images;android-30;default;x86_64"
 
 # Create an Android emulator
 RUN echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-34;default;x86_64"
