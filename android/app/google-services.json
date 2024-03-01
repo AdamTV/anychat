@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "682283241991-47gskfga7u1g8hqk3d6ep2q3fd3n9h8k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.alphatech.anychat",
+            "certificate_hash": "6dd0b01a932c7af2db577a93e92122c30cfc2294"
+          }
+        },
+        {
           "client_id": "682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

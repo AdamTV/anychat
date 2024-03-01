@@ -212,6 +212,7 @@
     "successfullyLeftConversation": "ປະສົບຜົນ ສຳ ເລັດໃນການສົນທະນາ",
     "system": "ລະບົບ",
     "theme": "ຫົວຂໍ້",
+    "thisFeatureIsUnderMaintenance": "ຄຸນສົມບັດນີ້ຢູ່ໃນລະຫວ່າງການຮັກສາ, ພວກເຮົາຂໍອະໄພໃນຄວາມບໍ່ສະດວກ.",
     "thisPersonHasLeftConversation": "ບຸກຄົນນີ້ໄດ້ອອກຈາກການສົນທະນາແລ້ວ.",
     "title": "AnyChat",
     "toAnyChat": "ກັບ AnyChat",

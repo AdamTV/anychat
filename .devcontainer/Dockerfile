@@ -1,67 +1,82 @@
-FROM ubuntu:20.04
+# Use Ubuntu as the base image
+FROM ubuntu:latest
 
-ENV UID=1000
-ENV GID=1000
-ENV USER="developer"
-ENV JAVA_VERSION="21.0.2"
-ENV ANDROID_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
-ENV ANDROID_VERSION="34"
-ENV ANDROID_BUILD_TOOLS_VERSION="34.0.0"
-ENV ANDROID_ARCHITECTURE="x86_64"
-ENV ANDROID_SDK_ROOT="/home/$USER/android"
-ENV FLUTTER_CHANNEL="stable"
-ENV FLUTTER_VERSION="3.19.0"
-ENV FLUTTER_URL="https://storage.googleapis.com/flutter_infra/releases/$FLUTTER_CHANNEL/linux/flutter_linux_$FLUTTER_VERSION-$FLUTTER_CHANNEL.tar.xz"
-ENV FLUTTER_HOME="/home/$USER/flutter"
-ENV FLUTTER_WEB_PORT="8090"
-ENV FLUTTER_DEBUG_PORT="42000"
-ENV FLUTTER_EMULATOR_NAME="flutter_emulator"
-ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_HOME/bin:$PATH"
+# Set non-interactive installation mode
+ENV DEBIAN_FRONTEND=noninteractive
 
-# install all dependencies
-ENV DEBIAN_FRONTEND="noninteractive"
-RUN apt-get update \
-  && apt-get install --yes --no-install-recommends openjdk-$JAVA_VERSION-jdk curl unzip sed git bash xz-utils libglvnd0 ssh xauth x11-xserver-utils libpulse0 libxcomposite1 libgl1-mesa-glx sudo \
-  && rm -rf /var/lib/{apt,dpkg,cache,log}
+# Set environment variables for Android and Flutter
+ENV ANDROID_HOME=/usr/lib/android-sdk
+ENV ANDROID_SDK_ROOT=$ANDROID_HOME
+ENV FLUTTER_HOME=/flutter
+ENV PATH="$PATH:$FLUTTER_HOME/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
 
-# create user
-RUN groupadd --gid $GID $USER \
-  && useradd -s /bin/bash --uid $UID --gid $GID -m $USER \
-  && echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
-  && chmod 0440 /etc/sudoers.d/$USER
+# Install necessary dependencies for GUI support, Android/Flutter development, Linux development, CMake/Ninja, and Android Emulator
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    unzip \
+    xz-utils \
+    zip \
+    libglu1-mesa \
+    openjdk-21-jdk \
+    x11-apps \
+    cmake \
+    clang \
+    pkg-config \
+    libgtk-3-dev \
+    ninja-build \
+    qemu-kvm \
+    libvirt-daemon-system \
+    libvirt-clients \
+    bridge-utils \
+    libqt5widgets5 \
+    libqt5gui5 \
+    libqt5core5a \
+    libgl1-mesa-glx \
+    libqt5x11extras5 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-randr0 \
+    libxcb-render-util0 \
+    libxcb-render0 \
+    libxcb-shape0 \
+    libxcb-sync1 \
+    libxcb-xfixes0 \
+    libxcb-xinerama0 \
+    libxkbcommon-x11-0 \
+    libxkbcommon0 \
+    libxcb-xinerama0 \
+    && rm -rf /var/lib/apt/lists/*
+    
+# Download and install Android SDK
+RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+    cd ${ANDROID_HOME}/cmdline-tools && \
+    curl -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip && \
+    unzip cmdline-tools.zip && \
+    rm cmdline-tools.zip && \
+    mv cmdline-tools latest
 
-USER $USER
-WORKDIR /home/$USER
+# Accept Android SDK licenses
+RUN yes | sdkmanager --licenses
 
-# android sdk
-RUN mkdir -p $ANDROID_SDK_ROOT \
-  && mkdir -p /home/$USER/.android \
-  && touch /home/$USER/.android/repositories.cfg \
-  && curl -o android_tools.zip $ANDROID_TOOLS_URL \
-  && unzip -qq -d "$ANDROID_SDK_ROOT" android_tools.zip \
-  && rm android_tools.zip \
-  && mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/tools \
-  && mv $ANDROID_SDK_ROOT/cmdline-tools/bin $ANDROID_SDK_ROOT/cmdline-tools/tools \
-  && mv $ANDROID_SDK_ROOT/cmdline-tools/lib $ANDROID_SDK_ROOT/cmdline-tools/tools \
-  && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-  && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-  && yes "y" | sdkmanager "platform-tools" \
-  && yes "y" | sdkmanager "emulator" \
-  && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
+# Clean any existing emulator installations and install Android SDK components including system images for emulator
+RUN rm -rf /usr/lib/android-sdk/emulator* && \
+    sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "emulator" "system-images;android-30;default;x86_64"
 
-# flutter
-RUN curl -o flutter.tar.xz $FLUTTER_URL \
-  && mkdir -p $FLUTTER_HOME \
-  && tar xf flutter.tar.xz -C /home/$USER \
-  && rm flutter.tar.xz \
-  && flutter config --no-analytics \
-  && flutter precache \
-  && yes "y" | flutter doctor --android-licenses \
-  && flutter doctor \
-  && flutter emulators --create \
-  && flutter update-packages
+# Create an Android emulator
+RUN echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-34;default;x86_64"
 
-COPY entrypoint.sh /usr/local/bin/
-COPY chown.sh /usr/local/bin/
-COPY flutter-android-emulator.sh /usr/local/bin/flutter-android-emulator
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+# Download and install Flutter SDK
+RUN git clone https://github.com/flutter/flutter.git -b stable ${FLUTTER_HOME}
+
+RUN export FLUTTER_HOME={FLUTTER_HOME}
+
+# Run basic check to download Dart SDK
+RUN flutter doctor
+
+# Set the work directory
+WORKDIR /app
+
+# Expose the necessary port numbers (adjust if necessary)
+EXPOSE 8080 44300

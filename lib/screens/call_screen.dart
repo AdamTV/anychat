@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+// import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 // import 'package:agora_rtc_engine/rtc_channel.dart';
 // import 'package:agora_rtc_engine/rtc_engine.dart';
 // import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
@@ -14,7 +14,9 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:google_speech/speech_client_authenticator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:flutter/cupertino.dart';
@@ -49,9 +51,9 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
-  int? _remoteUid;
-  bool _localUserJoined = false;
-  late RtcEngine _engine;
+  // int? _remoteUid;
+  // final bool _localUserJoined = false;
+  // late RtcEngine _engine;
 
   // static final _users = <int>[];
   final _infoStrings = <String>[];
@@ -82,8 +84,8 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _dispose() async {
-    await _engine.leaveChannel();
-    await _engine.release();
+    // await _engine.leaveChannel();
+    // await _engine.release();
   }
 
   @override
@@ -98,11 +100,11 @@ class _CallScreenState extends State<CallScreen> {
     await [Permission.microphone, Permission.camera].request();
 
     //create the engine
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(const RtcEngineContext(
-      appId: agoraAppId,
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-    ));
+    // _engine = createAgoraRtcEngine();
+    // await _engine.initialize(const RtcEngineContext(
+    //   appId: agoraAppId,
+    //   channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+    // ));
 
     if (agoraAppId.isEmpty) {
       setState(() {
@@ -114,33 +116,33 @@ class _CallScreenState extends State<CallScreen> {
       return;
     }
 
-    _engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          debugPrint("local user ${connection.localUid} joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          debugPrint("remote user $remoteUid joined");
-          setState(() {
-            _remoteUid = remoteUid;
-          });
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid,
-            UserOfflineReasonType reason) {
-          debugPrint("remote user $remoteUid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-        },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          debugPrint(
-              '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
-        },
-      ),
-    );
+    // _engine.registerEventHandler(
+    //   RtcEngineEventHandler(
+    //     onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+    //       debugPrint("local user ${connection.localUid} joined");
+    //       setState(() {
+    //         _localUserJoined = true;
+    //       });
+    //     },
+    //     onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+    //       debugPrint("remote user $remoteUid joined");
+    //       setState(() {
+    //         _remoteUid = remoteUid;
+    //       });
+    //     },
+    //     onUserOffline: (RtcConnection connection, int remoteUid,
+    //         UserOfflineReasonType reason) {
+    //       debugPrint("remote user $remoteUid left channel");
+    //       setState(() {
+    //         _remoteUid = null;
+    //       });
+    //     },
+    //     onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+    //       debugPrint(
+    //           '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+    //     },
+    //   ),
+    // );
 
     //await _initAgoraRtcEngine();
     // _addAgoraEventHandlers();
@@ -263,43 +265,43 @@ class _CallScreenState extends State<CallScreen> {
       }
     });
 
-    // setState(() {
-    //   recognizing = true;
-    // });
-    // final serviceAccount = ServiceAccount.fromString(
-    //     '${(await rootBundle.loadString('assets/anychat-c414a-7669166c30f5.json'))}');
+    setState(() {
+      recognizing = true;
+    });
+    // final serviceAccount = ServiceAccount.fromString((await rootBundle
+    //     .loadString('assets/anychat-c414a-7669166c30f5.json')));
     // speechToText = SpeechToText.viaServiceAccount(serviceAccount);
-    //
+
     // final config = _getConfig();
-    //
+
     // responseStream = speechToText.streamingRecognize(
     //     StreamingRecognitionConfig(config: config, interimResults: true),
     //     await _getAudioStream());
     // String lastMessage = "";
-    // responseStream.listen((data) {
-    //   String transcribedText =
-    //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
-    //   if (lastMessage.compareTo(transcribedText) != 0 &&
-    //       transcribedText.isNotEmpty) {
-    //     lastMessage = transcribedText;
-    //     AnyChatUser.addTranscribedMessage(lastMessage);
-    //     // setState(() {
-    //     //   text =
-    //     //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
-    //     //   recognizeFinished = true;
-    //     // });
-    //   }
-    // }, onDone: () {
-    //   if (mounted) {
-    //     setState(() {
-    //       recognizing = false;
-    //     });
-    //   }
-    // }, onError: (e) {
-    //   responseStream.drain();
-    //   speechToText?.dispose();
-    //   streamingRecognize();
-    // });
+    responseStream.listen((data) {
+      String transcribedText =
+          data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      if (lastMessage.compareTo(transcribedText) != 0 &&
+          transcribedText.isNotEmpty) {
+        lastMessage = transcribedText;
+        AnyChatUser.addTranscribedMessage(lastMessage);
+        // setState(() {
+        //   text =
+        //       data.results.map((e) => e.alternatives.first.transcript).join('\n');
+        //   recognizeFinished = true;
+        // });
+      }
+    }, onDone: () {
+      if (mounted) {
+        setState(() {
+          recognizing = false;
+        });
+      }
+    }, onError: (e) {
+      responseStream.drain();
+      // speechToText?.dispose();
+      streamingRecognize();
+    });
   }
 
   /// Toolbar layout
@@ -367,23 +369,25 @@ class _CallScreenState extends State<CallScreen> {
       body: Center(
         child: Stack(
           children: <Widget>[
-            _remoteVideo(),
+            // _remoteVideo(),
             _translatedText(),
             _toolbar(),
-            Align(
+            const Align(
               alignment: Alignment.topLeft,
               child: SizedBox(
                 width: 100,
                 height: 150,
                 child: Center(
-                  child: _localUserJoined
-                      ? AgoraVideoView(
-                          controller: VideoViewController(
-                            rtcEngine: _engine,
-                            canvas: const VideoCanvas(uid: 0),
-                          ),
-                        )
-                      : const CircularProgressIndicator(),
+                  child:
+                      // _localUserJoined
+                      // ? AgoraVideoView(
+                      //     controller: VideoViewController(
+                      //       rtcEngine: _engine,
+                      //       canvas: const VideoCanvas(uid: 0),
+                      //     ),
+                      //   )
+                      // :
+                      CircularProgressIndicator(),
                 ),
               ),
             ),
@@ -423,203 +427,202 @@ class _CallScreenState extends State<CallScreen> {
   // }
 
   // Display remote user's video
-  Widget _remoteVideo() {
-    if (_remoteUid != null) {
-      return AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: _engine,
-          canvas: VideoCanvas(uid: _remoteUid),
-          connection: const RtcConnection(channelId: channel),
-        ),
-      );
-    } else {
-      return const Text(
-        'Please wait for remote user to join',
-        textAlign: TextAlign.center,
-      );
-    }
-  }
-
-  /// Video layout wrapper
-  // Widget _viewRows() {
-  //   return Column(
-  //     children: [
-  //       Expanded(
-  //         child: Stack(
-  //           children: [
-  //             SingleChildScrollView(
-  //                 scrollDirection: Axis.horizontal,
-  //                 child: Row(
-  //                   children: List.of(remoteUid.map(
-  //                     (e) => SizedBox(
-  //                       width: MediaQuery.of(context).size.width,
-  //                       height: MediaQuery.of(context).size.height,
-  //                       child: Center(
-  //                         child: _localUserJoined
-  //                             ? AgoraVideoView(
-  //                           controller: VideoViewController.remote(
-  //                             rtcEngine: _engine,
-  //                             canvas: const VideoCanvas(uid: 0),
-  //                             connection: const RtcConnection(channelId: channel),
-  //                           ),
-  //                         )
-  //                             : const CircularProgressIndicator(),
-  //                       ),
-  //                     ),
-  //                   )),
-  //                 )),
-  //             Container(
-  //               padding: const EdgeInsets.only(top: 12, left: 12),
-  //               width: 120,
-  //               height: 120,
-  //               child: Align(
-  //                   alignment: Alignment.topLeft,
-  //                   child: RtcLocalView.SurfaceView(
-  //                     channelId: _channel?.channelId,
-  //                   )),
-  //             )
-  //           ],
-  //         ),
-  //       )
-  //     ],
+  // Widget _remoteVideo() {
+  //   if (_remoteUid != null) {
+  // return AgoraVideoView(
+  //   controller: VideoViewController.remote(
+  //     rtcEngine: _engine,
+  //     canvas: VideoCanvas(uid: _remoteUid),
+  //     connection: const RtcConnection(channelId: channel),
+  //   ),
+  // );
+  // } else {
+  //   return const Text(
+  //     'Please wait for remote user to join',
+  //     textAlign: TextAlign.center,
   //   );
-
-  // var getRenderViews = _getRenderViews();
-  // final views = getRenderViews;
-  // switch (views.length) {
-  //   case 1:
-  //     return Container(
-  //         child: Column(
-  //       children: <Widget>[_videoView(views[0])],
-  //     ));
-  //   case 2:
-  //     return Container(
-  //         child: Column(
-  //       children: <Widget>[
-  //         _expandedVideoRow([views[0]]),
-  //         _expandedVideoRow([views[1]])
-  //       ],
-  //     ));
-  //   case 3:
-  //     return Container(
-  //         child: Column(
-  //       children: <Widget>[
-  //         _expandedVideoRow(views.sublist(0, 2)),
-  //         _expandedVideoRow(views.sublist(2, 3))
-  //       ],
-  //     ));
-  //   case 4:
-  //     return Container(
-  //         child: Column(
-  //       children: <Widget>[
-  //         _expandedVideoRow(views.sublist(0, 2)),
-  //         _expandedVideoRow(views.sublist(2, 4))
-  //       ],
-  //     ));
-  //   default:
-  // }
-  // return Container();
-  // }
-
-  Future<void> _onCallEnd() async {
-    muted = true;
-    await audioTranscriber.stopRecording();
-    dispose();
-    AnyChatUser.clearTranscribedMessages();
-    // if (await Ads.interstitial.isLoaded ?? false) {
-    //   Ads.interstitial.show();
-    // } else {
-    //   logger.d('Interstitial ad is still laoding...');
-    // }
-    Navigator.pushNamed(
-        mounted ? context : Utilities.globalKey.currentContext!,
-        '/chat');
-  }
-
-  Future<void> _onToggleMute() async {
-    setState(() {
-      muted = !muted;
-    });
-    await _engine.muteLocalAudioStream(muted);
-  }
-
-  void _onSwitchCamera() {
-    _engine.switchCamera();
-  }
-
-  Stream<QuerySnapshot> loadAllTranscribedMessages() {
-    return FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(AnyChatAuth.currentConversation!.id)
-        .collection('transcribedMessages')
-        .orderBy('timestamp', descending: false)
-        .snapshots();
-  }
-
-  Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
-    final message = getMessageFromQuery(snapshot);
-    if (message == null) return;
-    if (message.senderId != AnyChatAuth.currentUser!.id) {
-      final language = AnyChatAuth.currentUser!.language;
-      final translatedText =
-          await Utilities.getGoogleTranslation(language, message.text);
-      setState(() {
-        text = translatedText;
-      });
-    }
-  }
-
-  AnyChatMessage? getMessageFromQuery(QuerySnapshot snapshot) {
-    if (snapshot.docs.isEmpty) return null;
-    return snapshot.docs.map((DocumentSnapshot doc) {
-      return AnyChatMessage.fromSnapshot(doc);
-    }).last;
-  }
-
-  List<int> remoteUid = [];
-
-  // // _addListener(RtcChannel channel) {
-  // //   // String channelId = channel.channelId;
-  // //   channel.setEventHandler(
-  // //       RtcChannelEventHandler(joinChannelSuccess: (channel, uid, elapsed) {
-  // //     log('joinChannelSuccess $channel $uid $elapsed');
-  // //     // if (channelId == _channelId0) {
-  // //     //   setState(() {
-  // //     //     isJoined0 = true;
-  // //     //   });
-  // //     // } else if (channelId == _channelId1) {
-  // //     //   setState(() {
-  // //     //     isJoined1 = true;
-  // //     //   });
-  // //     // }
-  // //   }, userJoined: (uid, elapsed) {
-  // //     log('userJoined ${channel.channelId} $uid $elapsed');
-  // //   }, userOffline: (uid, reason) {
-  // //     log('userOffline ${channel.channelId} $uid $reason');
-  // //   }, leaveChannel: (stats) {
-  // //     log('leaveChannel ${channel.channelId} ${stats.toJson()}');
-  // //     // if (channelId == _channelId0) {
-  // //     //   this.setState(() {
-  // //     //     isJoined0 = false;
-  // //     //     remoteUid0.clear();
-  // //     //   });
-  // //     // } else if (channelId == _channelId1) {
-  // //     //   this.setState(() {
-  // //     //     isJoined1 = false;
-  // //     //     remoteUid1.clear();
-  // //     //   });
-  // //     // }
-  // //   }, remoteVideoStateChanged: (uid, state, reason, elapsed) {
-  // //     log('remoteVideoStateChanged $uid $state $reason $elapsed');
-  // //     if (state == VideoRemoteState.Starting) {
-  // //       setState(() {
-  // //         remoteUid.add(uid);
-  // //       });
-  // //     } else if (state == VideoRemoteState.Stopped) {
-  // //       setState(() {
-  // //         remoteUid.removeWhere((element) => element == uid);
-  // //       });
-  // //     }
-  // //   }));
   // }
 }
+
+/// Video layout wrapper
+// Widget _viewRows() {
+//   return Column(
+//     children: [
+//       Expanded(
+//         child: Stack(
+//           children: [
+//             SingleChildScrollView(
+//                 scrollDirection: Axis.horizontal,
+//                 child: Row(
+//                   children: List.of(remoteUid.map(
+//                     (e) => SizedBox(
+//                       width: MediaQuery.of(context).size.width,
+//                       height: MediaQuery.of(context).size.height,
+//                       child: Center(
+//                         child: _localUserJoined
+//                             ? AgoraVideoView(
+//                           controller: VideoViewController.remote(
+//                             rtcEngine: _engine,
+//                             canvas: const VideoCanvas(uid: 0),
+//                             connection: const RtcConnection(channelId: channel),
+//                           ),
+//                         )
+//                             : const CircularProgressIndicator(),
+//                       ),
+//                     ),
+//                   )),
+//                 )),
+//             Container(
+//               padding: const EdgeInsets.only(top: 12, left: 12),
+//               width: 120,
+//               height: 120,
+//               child: Align(
+//                   alignment: Alignment.topLeft,
+//                   child: RtcLocalView.SurfaceView(
+//                     channelId: _channel?.channelId,
+//                   )),
+//             )
+//           ],
+//         ),
+//       )
+//     ],
+//   );
+
+// var getRenderViews = _getRenderViews();
+// final views = getRenderViews;
+// switch (views.length) {
+//   case 1:
+//     return Container(
+//         child: Column(
+//       children: <Widget>[_videoView(views[0])],
+//     ));
+//   case 2:
+//     return Container(
+//         child: Column(
+//       children: <Widget>[
+//         _expandedVideoRow([views[0]]),
+//         _expandedVideoRow([views[1]])
+//       ],
+//     ));
+//   case 3:
+//     return Container(
+//         child: Column(
+//       children: <Widget>[
+//         _expandedVideoRow(views.sublist(0, 2)),
+//         _expandedVideoRow(views.sublist(2, 3))
+//       ],
+//     ));
+//   case 4:
+//     return Container(
+//         child: Column(
+//       children: <Widget>[
+//         _expandedVideoRow(views.sublist(0, 2)),
+//         _expandedVideoRow(views.sublist(2, 4))
+//       ],
+//     ));
+//   default:
+// }
+// return Container();
+// }
+
+Future<void> _onCallEnd() async {
+  // muted = true;
+  // await audioTranscriber.stopRecording();
+  // dispose();
+  // AnyChatUser.clearTranscribedMessages();
+  // // if (await Ads.interstitial.isLoaded ?? false) {
+  // //   Ads.interstitial.show();
+  // // } else {
+  // //   logger.d('Interstitial ad is still laoding...');
+  // // }
+  // Navigator.pushNamed(
+  //     mounted ? context : Utilities.globalKey.currentContext!, '/chat');
+}
+
+Future<void> _onToggleMute() async {
+  // setState(() {
+  //   muted = !muted;
+  // });
+  // await _engine.muteLocalAudioStream(muted);
+}
+
+void _onSwitchCamera() {
+  // _engine.switchCamera();
+}
+
+Stream<QuerySnapshot> loadAllTranscribedMessages() {
+  return FirebaseFirestore.instance
+      .collection('conversations')
+      .doc(AnyChatAuth.currentConversation!.id)
+      .collection('transcribedMessages')
+      .orderBy('timestamp', descending: false)
+      .snapshots();
+}
+
+Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
+  final message = getMessageFromQuery(snapshot);
+  if (message == null) return;
+  if (message.senderId != AnyChatAuth.currentUser!.id) {
+    final language = AnyChatAuth.currentUser!.language;
+    // final translatedText =
+    await Utilities.getGoogleTranslation(language, message.text);
+    // setState(() {
+    // text = translatedText;
+    // });
+  }
+}
+
+AnyChatMessage? getMessageFromQuery(QuerySnapshot snapshot) {
+  if (snapshot.docs.isEmpty) return null;
+  return snapshot.docs.map((DocumentSnapshot doc) {
+    return AnyChatMessage.fromSnapshot(doc);
+  }).last;
+}
+
+List<int> remoteUid = [];
+
+// // _addListener(RtcChannel channel) {
+// //   // String channelId = channel.channelId;
+// //   channel.setEventHandler(
+// //       RtcChannelEventHandler(joinChannelSuccess: (channel, uid, elapsed) {
+// //     log('joinChannelSuccess $channel $uid $elapsed');
+// //     // if (channelId == _channelId0) {
+// //     //   setState(() {
+// //     //     isJoined0 = true;
+// //     //   });
+// //     // } else if (channelId == _channelId1) {
+// //     //   setState(() {
+// //     //     isJoined1 = true;
+// //     //   });
+// //     // }
+// //   }, userJoined: (uid, elapsed) {
+// //     log('userJoined ${channel.channelId} $uid $elapsed');
+// //   }, userOffline: (uid, reason) {
+// //     log('userOffline ${channel.channelId} $uid $reason');
+// //   }, leaveChannel: (stats) {
+// //     log('leaveChannel ${channel.channelId} ${stats.toJson()}');
+// //     // if (channelId == _channelId0) {
+// //     //   this.setState(() {
+// //     //     isJoined0 = false;
+// //     //     remoteUid0.clear();
+// //     //   });
+// //     // } else if (channelId == _channelId1) {
+// //     //   this.setState(() {
+// //     //     isJoined1 = false;
+// //     //     remoteUid1.clear();
+// //     //   });
+// //     // }
+// //   }, remoteVideoStateChanged: (uid, state, reason, elapsed) {
+// //     log('remoteVideoStateChanged $uid $state $reason $elapsed');
+// //     if (state == VideoRemoteState.Starting) {
+// //       setState(() {
+// //         remoteUid.add(uid);
+// //       });
+// //     } else if (state == VideoRemoteState.Stopped) {
+// //       setState(() {
+// //         remoteUid.removeWhere((element) => element == uid);
+// //       });
+// //     }
+// //   }));
+// }
+// }

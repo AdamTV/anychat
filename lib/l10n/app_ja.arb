@@ -212,6 +212,7 @@
     "successfullyLeftConversation": "会話を無事に終了しました",
     "system": "システム",
     "theme": "テーマ",
+    "thisFeatureIsUnderMaintenance": "この機能は現在メンテナンス中です。ご迷惑をおかけして申し訳ございません。",
     "thisPersonHasLeftConversation": "この人は会話を離れました。",
     "title": "AnyChat",
     "toAnyChat": "AnyChatへ",

@@ -212,6 +212,7 @@
     "successfullyLeftConversation": "ออกจากการสนทนาเรียบร้อยแล้ว",
     "system": "ระบบ",
     "theme": "ธีม",
+    "thisFeatureIsUnderMaintenance": "ขณะนี้ฟีเจอร์นี้อยู่ระหว่างการบำรุงรักษา เราต้องขออภัยในความไม่สะดวก",
     "thisPersonHasLeftConversation": "บุคคลนี้ออกจากการสนทนาแล้ว",
     "title": "AnyChat",
     "toAnyChat": "ไปยัง AnyChat",

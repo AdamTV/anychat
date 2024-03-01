@@ -212,6 +212,7 @@
     "successfullyLeftConversation": "Sikeresen elhagyta a beszélgetést",
     "system": "Rendszer",
     "theme": "Téma",
+    "thisFeatureIsUnderMaintenance": "Ez a funkció jelenleg karbantartás alatt áll, elnézést kérünk a kellemetlenségért.",
     "thisPersonHasLeftConversation": "Ez a személy elhagyta a beszélgetést.",
     "title": "AnyChat",
     "toAnyChat": "az AnyChatnak",
