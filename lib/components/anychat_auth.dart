@@ -97,13 +97,17 @@ class AnyChatAuth {
             idToken: googleKey.idToken,
           );
           authResult = await auth.signInWithCredential(credential);
-        }).catchError((err) {
-          logger.e(err.message.toString(),
-              time: DateTime.now(), error: err, stackTrace: err.stackTrace);
+        }).catchError((e) {
+          logger.e("Error", e, e.stackTrace);
+
+          // logger.e(err.message.toString(),
+          //     time: DateTime.now(), error: err, stackTrace: err.stackTrace);
         });
-      }).catchError((err) {
-        logger.e(err.message.toString(),
-            time: DateTime.now(), error: err, stackTrace: err.stackTrace);
+      }).catchError((e) {
+        logger.e("Error", e, e.stackTrace);
+
+        // logger.e(err.message.toString(),
+        //     time: DateTime.now(), error: err, stackTrace: err.stackTrace);
       });
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
@@ -156,8 +160,9 @@ class AnyChatAuth {
       await _facebookAuth.logOut();
       // currently apple signin method uses firebase auth, so no need to sign out
     } on Error catch (e) {
-      logger.e(e.toString(),
-          time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+      logger.e("Error", e, e.stackTrace);
+      // logger.e(e.toString(),
+      // time: DateTime.now(), error: e, stackTrace: e.stackTrace);
     }
   }
 

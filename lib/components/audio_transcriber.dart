@@ -1,94 +1,103 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-// import 'package:flutter_sound/flutter_sound.dart';
-import 'package:google_speech/config/recognition_config.dart';
-import 'package:google_speech/config/recognition_config_v1.dart';
-import 'package:google_speech/config/streaming_recognition_config.dart';
-import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
-    as v1_speech;
-import 'package:google_speech/speech_client_authenticator.dart';
-import 'package:google_speech/speech_to_text.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:google_speech/generated/google/cloud/speech/v2/cloud_speech.pb.dart';
+import 'package:google_speech/google_speech.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
-const int tSampleRate = 44000;
+import '../main.dart';
+
+const int kAudioSampleRate = 16000;
+const int kAudioNumChannels = 1;
+
+// const int tSampleRate = 44000;
 
 class AudioTranscriber {
-  // static StreamSubscription<List<int>> _audioStreamSubscription;
-  static late BehaviorSubject<List<int>> _audioStream;
+  bool recognizing = false;
+  bool recognizeFinished = false;
+  StreamSubscription<List<int>>? _audioStreamSubscription;
+  static BehaviorSubject<List<int>> _audioStream = BehaviorSubject<List<int>>();
   static String? isoCode;
-  // final FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
-  bool _mRecorderIsInited = false;
-  // StreamSubscription? _mRecordingDataSubscription;
-  // late StreamController<Food> recordingDataController;
-  Future<void> _openRecorder() async {
-    var status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      // throw RecordingPermissionException('Microphone permission not granted');
-    }
-    // await _mRecorder.openRecorder();
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+  StreamSubscription? _mRecordingDataSubscription;
+  late StreamController<Food> recordingDataController;
 
-    // setState(() {
-    _mRecorderIsInited = true;
-    // });
-  }
-
-  Future<Stream<v1_speech.StreamingRecognizeResponse>> getResponseStream(
+  Future<Stream<StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
-    stopRecording();
+    // stopRecording();
+    await _recorder.openAudioSession();
+    // Stream to be consumed by speech recognizer
+    _audioStream = BehaviorSubject<List<int>>();
 
-    await _openRecorder();
+    // Create recording stream
+    recordingDataController = StreamController<Food>();
+    _mRecordingDataSubscription =
+        recordingDataController.stream.listen((buffer) {
+      if (buffer is FoodData) {
+        _audioStream.add(buffer.data!);
+      }
+    }, onDone: () {
+      recordingDataController.close();
+    });
+
+    // should set state of caller context?
+    recognizing = true;
 
     AudioTranscriber.isoCode = isoCode;
+    await Permission.microphone.request();
 
-    // _recorder.initialize();
-
-    _audioStream = BehaviorSubject<List<int>>();
-    // _audioStreamSubscription = _recorder.audioStream.listen((event) {
-    //   _audioStream.add(event);
-    // });
-
-    // await _recorder.start();
-
-    assert(_mRecorderIsInited);
-    // var sink = await createFile();
-    // recordingDataController = StreamController<Food>();
-    // _mRecordingDataSubscription =
-    // recordingDataController.stream.listen((buffer) {
-    // if (buffer is FoodData) {
-    // sink.add(buffer.data!);
-    // _audioStream.add(buffer.data!);
-    // }
-    // }, onDone: () {
-    // recordingDataController.close();
-    // });
-    // await _mRecorder.startRecorder(
-    // toStream: recordingDataController.sink,
-    // codec: Codec.pcm16,
-    // numChannels: 1,
-    // sampleRate: tSampleRate,
-    // );
+    await _recorder
+        .startRecorder(
+          toStream: recordingDataController.sink,
+          codec: Codec.pcm16,
+          numChannels: kAudioNumChannels,
+          // sampleRate: tSampleRate,
+          sampleRate: kAudioSampleRate,
+        )
+        .onError((error, stackTrace) => logger.e(
+            "Error Starting Recorder for Audio Transcriber",
+            error,
+            stackTrace));
 
     final serviceAccount = ServiceAccount.fromString((await rootBundle
-        .loadString('assets/anychat-c414a-7669166c30f5.json')));
-    final speechToText = SpeechToText.viaServiceAccount(serviceAccount);
-    final config = _getConfig();
-
-    return speechToText.streamingRecognize(
-        StreamingRecognitionConfig(config: config, interimResults: false),
+        .loadString('assets/anychat-c414a-c304e57544ef.json')));
+    final speechToText = SpeechToTextV2.viaServiceAccount(serviceAccount,
+        projectId: 'anychat-c414a');
+    final responseStream = speechToText.streamingRecognize(
+        StreamingRecognitionConfigV2(
+            config: _getConfig(),
+            streamingFeatures:
+                StreamingRecognitionFeatures(interimResults: true)),
         _audioStream);
+
+    //
+    // _mRecordingDataSubscription =
+    //     recordingDataController.stream.listen((buffer) {
+    //   if (buffer is FoodData) {
+    //     _audioStream.add(buffer.data as List<int>);
+    //   }
+    // });
+    //
+    // _recorder.audioStream.listen((event) {
+    //   _audioStream.add(event);
+    // });
+    //
+    // await _recorder.openAudioSession();
+
+    return responseStream;
   }
 
-  static RecognitionConfig _getConfig() => RecognitionConfig(
-      encoding: AudioEncoding.LINEAR16,
-      model: RecognitionModel.basic,
-      enableAutomaticPunctuation: true,
-      sampleRateHertz: tSampleRate,
-      languageCode: isoCode!);
+  static RecognitionConfigV2 _getConfig() => RecognitionConfigV2(
+      features: RecognitionFeatures(enableAutomaticPunctuation: true),
+      autoDecodingConfig: AutoDetectDecodingConfig(),
+      model: RecognitionModelV2.long,
+      // sampleRateHertz: tSampleRate,
+      languageCodes: [isoCode!]);
 
   // Future<Stream<List<int>>> _getAudioStream() async {
-  //   const AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
+  //   const AUDIO_FORMAT = google_speech..ENCODING_PCM_16BIT;
   //   final stream = await MicStream.microphone(
   //       audioSource: AudioSource.DEFAULT,
   //       sampleRate: 16000,
@@ -98,11 +107,11 @@ class AudioTranscriber {
   // }
 
   Future<void> stopRecording() async {
-    // await _recorder.stop();
-    // await _audioStreamSubscription?.cancel();
-    // await _audioStream?.close();
-    // await _mRecorder.stopRecorder();
-    // await _mRecordingDataSubscription?.cancel();
-    // _mRecorder.closeRecorder();
+    await _recorder.stopRecorder();
+    await _audioStreamSubscription?.cancel();
+    await _audioStream.close();
+    await _recorder.stopRecorder();
+    await _mRecordingDataSubscription?.cancel();
+    _recorder.closeAudioSession();
   }
 }

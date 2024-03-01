@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.1+211
+version: 2.0.1+220
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -29,12 +29,12 @@ dependencies:
 
   devicelocale: ^0.7.0
   google_sign_in: ^6.2.1
-#  firebase_analytics: ^8.1.0
+  #  firebase_analytics: ^8.1.0
   firebase_core: ^2.25.4
-  firebase_auth: ^4.17.4
+  firebase_auth: ^4.17.5
   firebase_storage: ^11.6.5
   cloud_firestore: ^4.15.4
-#  firebase_messaging: ^9.1.3
+  #  firebase_messaging: ^9.1.3
   agora_rtc_engine: ^6.2.6
   permission_handler: ^11.3.0
   google_speech: ^5.1.0
@@ -52,14 +52,16 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   flutter_ringtone_player: ^4.0.0+2
   disposables: ^1.0.0
-  # flutter_sound: ^9.2.13
   flutter_facebook_auth: ^6.1.0
   # twitter_login: ^4.4.2
   mailto: ^2.0.0
   firebase_analytics: ^10.8.6
   firebase_crashlytics: ^3.4.15
   http: ^1.2.0
-  logger: ^2.0.2+1
+  logger: ^1.4.0
+  #flutter_sound: ^9.2.13
+  firebase_app_check: ^0.2.1+14
+  flutter_sound_lite: ^8.5.0
 
 flutter_icons:
   android: "launcher_icon"
@@ -67,13 +69,13 @@ flutter_icons:
   image_path: "assets/icons/Icon-192.png"
 
 dev_dependencies:
-#  flutter_launcher_icons: ^0.9.0
-#  integration_test: ^1.0.0
+  #  flutter_launcher_icons: ^0.9.0
+  #  integration_test: ^1.0.0
   flutter_test:
     sdk: flutter
   # e2e: ^0.7.0+1
   flutter_driver:
-   sdk: flutter
+    sdk: flutter
 
 
 # For information on the generic Dart part of this file, see the
@@ -93,6 +95,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/anychat-c414a-7669166c30f5.json
+    - assets/anychat-c414a-c304e57544ef.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

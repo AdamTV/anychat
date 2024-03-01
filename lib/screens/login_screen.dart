@@ -61,16 +61,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, false);
                   if (user != null) {
-                    Utilities.initConversationScreen(mounted ? context : Utilities.globalKey.currentContext!, user);
+                    Utilities.initConversationScreen(
+                        mounted ? context : Utilities.globalKey.currentContext!,
+                        user);
                   } else {
                     Utilities.showAlertDialog(
                         mounted ? context : Utilities.globalKey.currentContext!,
-                        AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.error,
-                        AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.invalidCredentials);
+                        AppLocalizations.of(mounted
+                                ? context
+                                : Utilities.globalKey.currentContext!)!
+                            .error,
+                        AppLocalizations.of(mounted
+                                ? context
+                                : Utilities.globalKey.currentContext!)!
+                            .invalidCredentials);
                   }
                 } on Error catch (e) {
-                  logger.e("Error", time: DateTime.now(), error: e, stackTrace: e.stackTrace);
-                  if (context.mounted){
+                  // logger.e("Error", time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+                  logger.e("Error", e, e.stackTrace);
+                  if (context.mounted) {
                     Utilities.showAlertDialog(
                         context,
                         AppLocalizations.of(context)!.error,
