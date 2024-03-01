@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'call_screen.dart';
+// import 'call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -317,7 +317,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context)!.call,
       onPressed: () async {
-        CallScreen.requestPermissionAndNavigate();
+        Utilities.showAlertDialog(context, AppLocalizations.of(context)!.call,
+            AppLocalizations.of(context)!.thisFeatureIsUnderMaintenance);
+        // CallScreen.requestPermissionAndNavigate();
       },
     ));
     SizedBox container = SizedBox(
