@@ -35,102 +35,85 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //leading: Icon(Icons.restaurant),
-          title: Text(AppLocalizations.of(context)!.title),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.settings),
-              tooltip: AppLocalizations.of(context)!.language,
+      appBar: AppBar(
+        //leading: Icon(Icons.restaurant),
+        title: Text(AppLocalizations.of(context)!.title),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: AppLocalizations.of(context)!.language,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => _buildPopupDialog(context),
+              );
+            },
+          ),
+          IconButton(
+              icon: const Icon(Icons.delete),
+              tooltip: AppLocalizations.of(context)!.delete,
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => _buildPopupDialog(context),
-                );
-              },
-            ),
-            IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: AppLocalizations.of(context)!.delete,
-                onPressed: () {
-                  setState(() {
-                    text = "";
-                  });
-                })
-          ],
-          bottom: PreferredSize(
-            preferredSize: const Size(320, 48),
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
-                child: IconButton(
-                    icon: const Icon(Icons.clear),
-                    tooltip: 'Clear',
-                    onPressed: () {
-                      setState(() {
-                        text = "";
-                      });
-                    })),
-          ),
+                setState(() {
+                  text = "";
+                });
+              })
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size(320, 48),
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
+              child: IconButton(
+                  icon: const Icon(Icons.clear),
+                  tooltip: 'Clear',
+                  onPressed: () {
+                    setState(() {
+                      text = "";
+                    });
+                  })),
         ),
-        drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.title,
-                  style: TextStyle(color: Theme.of(context).primaryColorLight),
-                ),
+      ),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
               ),
-              ListTile(
-                  title: Text(AppLocalizations.of(context)!.back),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }),
-              ListTile(
-                  title: Text(AppLocalizations.of(context)!.logout),
-                  onTap: () async {
-                    await AnyChatAuth.signOut();
-                    if (context.mounted) {
-                      Navigator.pushNamed(context, "/welcome");
-                    }
-                  }),
-            ],
-          ),
+              child: Text(
+                AppLocalizations.of(context)!.title,
+                style: TextStyle(color: Theme.of(context).primaryColorLight),
+              ),
+            ),
+            ListTile(
+                title: Text(AppLocalizations.of(context)!.back),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }),
+            ListTile(
+                title: Text(AppLocalizations.of(context)!.logout),
+                onTap: () async {
+                  await AnyChatAuth.signOut();
+                  if (context.mounted) {
+                    Navigator.pushNamed(context, "/welcome");
+                  }
+                }),
+          ],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-          child: Text(text, style: const TextStyle(fontSize: 32)),
-        )
-        // Expanded(
-        //   flex: 1,
-        //   child: SingleChildScrollView(
-        //     scrollDirection: Axis.vertical,
-        //     child:
-        //     Padding(
-        //       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-        //       child: Wrap(
-        //         children: <Widget>[
-        //
-        //           SingleChildScrollView(
-        //             child: Text(text, style: TextStyle(fontSize: 32)),
-        //           )
-        //
-        //         ],
-        //       ),
-        //     ),
-        //   )
-        // )
-        );
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Text(text, style: const TextStyle(fontSize: 32)),
+        // child: Text(AppLocalizations.of(context)!.thisFeatureIsUnderMaintenance,
+        // style: const TextStyle(fontSize: 32)),
+      ),
+    );
   }
 
   Widget _buildPopupDialog(BuildContext context) {
@@ -174,67 +157,82 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               }),
         ],
       ),
-      actions: const <Widget>[
-        // new FlatButton(
-        //   onPressed: () {
-        //     Navigator.of(context).pop();
-        //   },
-        //   textColor: Theme.of(context).primaryColor,
-        //   child: const Text('Close'),
-        // ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).primaryColor,
+          ),
+          child: const Text('Close'),
+        ),
       ],
     );
   }
 
   void longRunningRecognize() async {
+    String lastMessage = "";
+
+    var speechToText = await audioTranscriber.getResponseStream(isoCode);
+
     setState(() {
       recognizing = true;
     });
 
-    // String lastMessage = "";
-
-    var speechToText = await audioTranscriber.getResponseStream(isoCode);
-
     speechToText.listen((data) async {
-      setState(() {
-        text =
-            data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      setState(() async {
+        text = data.results.map((e) => e.alternatives.first.transcript).last;
+        if (lastMessage.compareTo(text) != 0 && text.isNotEmpty) {
+          lastMessage = text;
+          var newText = await Utilities.getGoogleTranslation(
+              AnyChatAuth.currentUser!.language, lastMessage);
+          setState(() {
+            text += "$newText ";
+          });
+        }
         recognizingFinished = true;
       });
+    }, onError: (e, stack) async {
+      logger.e("Error: ",e, stack);
+      await audioTranscriber.stopRecording();
+      if (mounted) {
+        // longRunningRecognize();
+      }
     }, onDone: () {
       setState(() {
         recognizing = false;
       });
     });
-  }
 
-  // var responseStream = await audioTranscriber.getResponseStream(isoCode);
-  //
-  // responseStream.listen((data) async {
-  //   if (data.results.isEmpty) return;
-  //   String transcribedText =
-  //       data.results.map((e) => e.alternatives.first.transcript).last;
-  //   if (lastMessage.compareTo(transcribedText) != 0 &&
-  //       transcribedText.isNotEmpty) {
-  //     lastMessage = transcribedText;
-  //     var newText = await Utilities.getGoogleTranslation(
-  //         AnyChatAuth.currentUser!.language, lastMessage);
-  //     setState(() {
-  //       text += "$newText ";
-  //     });
-  //   }
-  // }, onError: (e) async {
-  //   logger.d(e);
-  //   await audioTranscriber.stopRecording();
-  //   if (mounted) {
-  //     streamingRecognize();
-  //   }
-  // });
-  // }
+    // var responseStream = await audioTranscriber.getResponseStream(isoCode);
 
-  @override
-  void dispose() {
-    super.dispose();
-    audioTranscriber.stopRecording();
+    // responseStream.listen((data) async {
+    //   if (data.results.isEmpty) return;
+    //   String transcribedText =
+    //       data.results.map((e) => e.alternatives.first.transcript).last;
+    //   if (lastMessage.compareTo(transcribedText) != 0 &&
+    //       transcribedText.isNotEmpty) {
+    //     lastMessage = transcribedText;
+    //     var newText = await Utilities.getGoogleTranslation(
+    //         AnyChatAuth.currentUser!.language, lastMessage);
+    //     setState(() {
+    //       text += "$newText ";
+    //     });
+    //   }
+    // }, onError: (e) async {
+    //   logger.d(e);
+    //   await audioTranscriber.stopRecording();
+    //   if (mounted) {
+    //     streamingRecognize();
+    //   }
+    // });
+    // }
+
+    @override
+    void dispose() {
+      super.dispose();
+      audioTranscriber.stopRecording();
+    }
   }
 }

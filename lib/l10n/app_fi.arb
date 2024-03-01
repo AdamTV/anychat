@@ -212,6 +212,7 @@
     "successfullyLeftConversation": "Keskustelusta poistuminen onnistui",
     "system": "Järjestelmä",
     "theme": "Teema",
+    "thisFeatureIsUnderMaintenance": "Tämä ominaisuus on tällä hetkellä huollossa, pahoittelemme häiriötä.",
     "thisPersonHasLeftConversation": "Tämä henkilö on poistunut keskustelusta.",
     "title": "AnyChat",
     "toAnyChat": "AnyChatille",
