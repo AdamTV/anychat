@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y \
     libqt5x11extras5 \
     libxcb-icccm4 \
     libxcb-image0 \
-    libxcb-keysyms1 \
+    libxcb-keysyms1 \                                                                                  
     libxcb-randr0 \
     libxcb-render-util0 \
     libxcb-render0 \
@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
     
 # Download and install Android SDK
-RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
+                                                                                                                                                                                                                                                                                                                                                              RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
     cd ${ANDROID_HOME}/cmdline-tools && \
     curl -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip && \
     unzip cmdline-tools.zip && \
@@ -61,8 +61,8 @@ RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
 RUN yes | sdkmanager --licenses
 
 # Clean any existing emulator installations and install Android SDK components including system images for emulator
-#RUN rm -rf /usr/lib/android-sdk/emulator* && \
-#    sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3" "emulator" "system-images;android-30;default;x86_64"
+RUN rm -rf /usr/lib/android-sdk/emulator* && \
+    sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" "emulator" "system-images;android-34;default;x86_64"
 
 # Create an Android emulator
 RUN echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-34;default;x86_64"
