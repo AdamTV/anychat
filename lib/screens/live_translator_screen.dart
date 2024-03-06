@@ -229,10 +229,6 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     // });
     // }
 
-    @override
-    void dispose() {
-      super.dispose();
-      audioTranscriber.stopRecording();
-    }
+
   }
 }
