@@ -7,7 +7,7 @@ import 'package:anychat/components/constants.dart';
 import 'package:anychat/screens/add_chatter_screen.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
-import 'package:anychat/screens/contacts_screen.dart';
+// import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/conversations_screen.dart';
 import 'package:anychat/screens/forgot_password.dart';
 import 'package:anychat/screens/languages_screen.dart';
@@ -115,7 +115,7 @@ class _AnyChatState extends State<AnyChat> {
         '/addChatter': (context) => const AddChatterScreen(),
         '/call': (context) => const CallScreen(),
         '/chat': (context) => const ChatScreen(),
-        '/contacts': (context) => const ContactsScreen(),
+        // '/contacts': (context) => const ContactsScreen(),
         '/conversations': (context) => const ConversationsScreen(),
         '/languages': (context) => const LanguagesScreen(),
         '/liveTranslator': (context) => const LiveTranslatorScreen(),

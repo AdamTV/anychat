@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:google_speech/generated/google/cloud/speech/v2/cloud_speech.pb.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,7 +27,7 @@ class AudioTranscriber {
   Future<Stream<StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
     // stopRecording();
-    await _recorder.openAudioSession();
+    await _recorder.openRecorder();
     // Stream to be consumed by speech recognizer
     _audioStream = BehaviorSubject<List<int>>();
 
@@ -112,6 +112,6 @@ class AudioTranscriber {
     await _audioStream.close();
     await _recorder.stopRecorder();
     await _mRecordingDataSubscription?.cancel();
-    _recorder.closeAudioSession();
+    _recorder.closeRecorder();
   }
 }
