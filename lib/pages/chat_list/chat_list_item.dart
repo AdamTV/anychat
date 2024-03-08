@@ -1,4 +1,3 @@
-import 'package:fluffychat/utils/translation_services/text_translation_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -16,8 +15,6 @@ import '../../widgets/avatar.dart';
 import '../../widgets/matrix.dart';
 
 enum ArchivedRoomAction { delete, rejoin }
-
-String? untranslatedMessage;
 
 class ChatListItem extends StatelessWidget {
   final Room room;
@@ -84,7 +81,6 @@ class ChatListItem extends StatelessWidget {
     final displayname = room.getLocalizedDisplayname(
       MatrixLocals(L10n.of(context)!),
     );
-
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
@@ -191,8 +187,7 @@ class ChatListItem extends StatelessWidget {
                             softWrap: false,
                           )
                         : FutureBuilder<String>(
-                            future: room.lastEvent
-                                    ?.calcLocalizedBody(
+                            future: room.lastEvent?.calcLocalizedBody(
                                   MatrixLocals(L10n.of(context)!),
                                   hideReply: true,
                                   hideEdit: true,
@@ -201,15 +196,7 @@ class ChatListItem extends StatelessWidget {
                                   withSenderNamePrefix: !room.isDirectChat ||
                                       room.directChatMatrixID !=
                                           room.lastEvent?.senderId,
-                                )
-                                    .then((value) {
-                                  untranslatedMessage = "$value\n---------\n";
-                                  return TextTranslationService
-                                      .getGoogleTranslation(
-                                    L10n.of(context)?.localeName,
-                                    value,
-                                  );
-                                }) ??
+                                ) ??
                                 Future.value(L10n.of(context)!.emptyChat),
                             builder: (context, snapshot) {
                               return Text(
@@ -217,22 +204,20 @@ class ChatListItem extends StatelessWidget {
                                     ? room.isDirectChat
                                         ? L10n.of(context)!.invitePrivateChat
                                         : L10n.of(context)!.inviteGroupChat
-                                    : (untranslatedMessage != null &&
-                                            untranslatedMessage!.isNotEmpty)
-                                        ? untranslatedMessage! + snapshot.data!
-                                        : room.lastEvent
-                                                ?.calcLocalizedBodyFallback(
-                                              MatrixLocals(L10n.of(context)!),
-                                              hideReply: true,
-                                              hideEdit: true,
-                                              plaintextBody: true,
-                                              removeMarkdown: true,
-                                              withSenderNamePrefix: !room
-                                                      .isDirectChat ||
+                                    : snapshot.data ??
+                                        room.lastEvent
+                                            ?.calcLocalizedBodyFallback(
+                                          MatrixLocals(L10n.of(context)!),
+                                          hideReply: true,
+                                          hideEdit: true,
+                                          plaintextBody: true,
+                                          removeMarkdown: true,
+                                          withSenderNamePrefix:
+                                              !room.isDirectChat ||
                                                   room.directChatMatrixID !=
                                                       room.lastEvent?.senderId,
-                                            ) ??
-                                            L10n.of(context)!.emptyChat,
+                                        ) ??
+                                        L10n.of(context)!.emptyChat,
                                 softWrap: false,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

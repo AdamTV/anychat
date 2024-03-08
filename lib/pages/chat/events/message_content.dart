@@ -255,13 +255,13 @@ class MessageContent extends StatelessWidget {
               builder: (context, snapshot) {
                 return Linkify(
                   text: (untranslatedMessage != null &&
-                          untranslatedMessage!.isNotEmpty) ?
-                          untranslatedMessage! + snapshot.data! 
-                      :
-                      event.calcLocalizedBodyFallback(
-                        MatrixLocals(L10n.of(context)!),
-                        hideReply: true,
-                      ),
+                          snapshot.data != null &&
+                          untranslatedMessage!.isNotEmpty)
+                      ? untranslatedMessage! + snapshot.data!
+                      : event.calcLocalizedBodyFallback(
+                          MatrixLocals(L10n.of(context)!),
+                          hideReply: true,
+                        ),
                   style: TextStyle(
                     color: textColor,
                     fontSize: bigEmotes ? fontSize * 3 : fontSize,
