@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  anychat-android:
+    image: anychat-android
+    build:
+      context: .
+      dockerfile: ./Dockerfile.android
