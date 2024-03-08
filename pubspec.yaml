@@ -1,123 +1,172 @@
-name: anychat
-description: AnyChat Translator Flutter project.
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.1+220
+name: fluffychat
+description: Chat with your friends.
+publish_to: none
+# On version bump also increase the build number for F-Droid
+version: 1.18.0+3528
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  adaptive_dialog: ^2.1.0
+  animations: ^2.0.8
+  archive: ^3.4.9
+  async: ^2.11.0
+  badges: ^3.1.2
+  blurhash_dart: ^1.2.1
+  callkeep: ^0.3.2
+  chewie: ^1.7.1
+  collection: ^1.17.2
+  cupertino_icons: any
+  desktop_drop: ^0.4.4
+  desktop_notifications: ^0.6.3
+  device_info_plus: ^9.1.0
+  dynamic_color: ^1.6.8
+  emoji_picker_flutter: ^1.6.4
+  emoji_proposal: ^0.0.1
+  emojis: ^0.9.9
+  #fcm_shared_isolate: ^0.1.0
+  file_picker: ^6.1.1
   flutter:
     sdk: flutter
+  flutter_app_badger: ^1.5.0
+  flutter_blurhash: ^0.8.2
+  flutter_cache_manager: ^3.3.0
+  flutter_file_dialog: ^3.0.2
+  flutter_foreground_task: ^6.0.0+1
+  flutter_highlighter: ^0.1.1
+  flutter_html: ^3.0.0-beta.2
+  flutter_html_table: ^3.0.0-beta.2
+  flutter_linkify: ^6.0.0
+  flutter_local_notifications: ^16.3.2
   flutter_localizations:
     sdk: flutter
-  intl: ^0.18.1
-
-  devicelocale: ^0.7.0
-  google_sign_in: ^6.2.1
-  #  firebase_analytics: ^8.1.0
-  firebase_core: ^2.25.4
-  firebase_auth: ^4.17.5
-  firebase_storage: ^11.6.5
-  cloud_firestore: ^4.15.4
-  #  firebase_messaging: ^9.1.3
-  # agora_rtc_engine: ^6.2.6
-  permission_handler: ^11.3.0
-  google_speech: ^5.1.0
-  flutter_local_notifications: ^16.3.2
-  rxdart: ^0.27.0
-  shared_preferences: ^2.0.6
-  flutter_slidable: ^3.0.1
-  fluttertoast: ^8.0.7
-  # contacts_service: ^0.6.1
-  url_launcher: ^6.0.4
-  settings_ui: ^2.0.2
-  image_picker: ^1.0.7
-  cupertino_icons: ^1.0.3
-  flutter_svg: ^2.0.9
-  sign_in_with_apple: ^6.0.0
+  flutter_map: ^4.0.0
+  flutter_math_fork: ^0.7.2
+  flutter_olm: 1.3.2 # Keep in sync with scripts/prepare-web.sh ! 1.4.0 does currently not build on Android
+  flutter_openssl_crypto: ^0.3.0
   flutter_ringtone_player: ^4.0.0+2
-  disposables: ^1.0.0
-  flutter_facebook_auth: ^6.1.0
-  # twitter_login: ^4.4.2
-  mailto: ^2.0.0
-  firebase_analytics: ^10.8.6
-  firebase_crashlytics: ^3.4.15
-  http: ^1.2.0
-  logger: ^1.4.0
-  flutter_sound: ^9.2.13
-  firebase_app_check: ^0.2.1+14
-
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icons/Icon-192.png"
+  flutter_secure_storage: ^9.0.0
+  flutter_shortcuts:
+    git: https://github.com/krille-chan/flutter_shortcuts.git
+  flutter_typeahead: ^5.2.0
+  flutter_web_auth_2: ^3.0.4
+  flutter_webrtc: ^0.9.46
+  future_loading_dialog: ^0.3.0
+  geolocator: ^7.6.2
+  go_router: ^13.1.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  html: ^0.15.4
+  http: ^0.13.6
+  image_picker: ^1.0.0
+  intl: any
+  just_audio: ^0.9.30
+  keyboard_shortcuts: ^0.1.4
+  latlong2: ^0.8.1
+  linkify: ^5.0.0
+  matrix: ^0.25.11
+  native_imaging: ^0.1.0
+  package_info_plus: ^5.0.1
+  pasteboard: ^0.2.0
+  path_provider: ^2.0.9
+  permission_handler: ^11.0.1
+  pretty_qr_code: ^3.2.1
+  provider: ^6.0.2
+  punycode: ^1.0.0
+  qr_code_scanner: ^1.0.0
+  receive_sharing_intent: ^1.4.5
+  record: 4.4.4 # Upgrade to 5 currently breaks playing on iOS
+  scroll_to_index: ^3.0.1
+  share_plus: ^7.2.1
+  shared_preferences: ^2.2.0 # Pinned because https://github.com/flutter/flutter/issues/118401
+  slugify: ^2.0.0
+  sqflite: ^2.3.0
+  sqflite_common_ffi: ^2.3.0+4
+  sqflite_sqlcipher: ^2.2.1
+  swipe_to_action: ^0.2.0
+  tor_detector_web: ^1.1.0
+  uni_links: ^0.5.1
+  unifiedpush: ^5.0.1
+  universal_html: ^2.2.4
+  url_launcher: ^6.2.1
+  vibration: ^1.8.3
+  video_compress: ^3.1.1
+  video_player: ^2.8.1
+  wakelock_plus: ^1.1.3
+  webrtc_interface: ^1.0.13
 
 dev_dependencies:
-  #  flutter_launcher_icons: ^0.9.0
-  #  integration_test: ^1.0.0
+  flutter_lints: ^3.0.0
+  flutter_native_splash: ^2.0.3+1
   flutter_test:
     sdk: flutter
-  # e2e: ^0.7.0+1
-  flutter_driver:
+  import_sorter: ^4.6.0
+  integration_test:
     sdk: flutter
+  license_checker: ^1.6.0
+  msix: ^3.6.2
+  translations_cleaner: ^0.0.5
 
+flutter_native_splash:
+  color: "#ffffff"
+  color_dark: "#000000"
+  image: "assets/info-logo.png"
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
   generate: true
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
-    - assets/icons/
-    - assets/anychat-c414a-7669166c30f5.json
-    - assets/anychat-c414a-c304e57544ef.json
+    - assets/
+    - assets/sounds/
+    - assets/js/
+    - assets/js/package/
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto/Roboto-Regular.ttf
+        - asset: fonts/Roboto/Roboto-Italic.ttf
+          style: italic
+        - asset: fonts/Roboto/Roboto-Bold.ttf
+          weight: 700
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/Roboto/RobotoMono-Regular.ttf
+    - family: NotoEmoji
+      fonts:
+        - asset: fonts/NotoEmoji/NotoColorEmoji.ttf
 
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
+msix_config:
+  display_name: FluffyChat
+  publisher_display_name: FluffyChat
+  publisher: CN=FluffyChat, O=Head of bad integration tests, L=Matrix, S=Internet, C=EU
+  identity_name: chat.fluffy.fluffychat
+  logo_path: assets\logo.png
+  capabilities: internetClient, location, microphone, webcam
+  protocol_activation: https
+  app_uri_handler_hosts: fluffychat.im, matrix.to
+  execution_alias: fluffychat
+  sign_msix: false
+  install_certificate: false
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+dependency_overrides:
+  # Until https://github.com/mogol/flutter_secure_storage/issues/616 is fixed
+  flutter_secure_storage_linux: 1.1.3
+  geolocator_android:
+    hosted:
+      name: geolocator_android
+      url: https://hanntech-gmbh.gitlab.io/free2pass/flutter-geolocator-floss
+  # waiting for null safety
+  # Upstream pull request: https://github.com/AntoineMarcel/keyboard_shortcuts/pull/13
+  keyboard_shortcuts:
+    git:
+      url: https://github.com/TheOneWithTheBraid/keyboard_shortcuts.git
+      ref: null-safety
+  # blocked upgrade of package_info_plus for null safety
+  # https://github.com/creativecreatorormaybenot/wakelock/pull/203
+  wakelock_windows:
+    git:
+      url: https://github.com/chandrabezzo/wakelock.git
+      ref: main
+      path: wakelock_windows/

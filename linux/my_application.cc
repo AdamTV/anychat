@@ -28,26 +28,39 @@ static void my_application_activate(GApplication* application) {
   // If running on Wayland assume the header bar will work (may need changing
   // if future cases occur).
   gboolean use_header_bar = TRUE;
+  // Lines added to the template start
+  // Please re-add these lines after updating the linux build files
+  // If the user explicitly requests to disable the header bar, switch back to 
+  // using a traditional title bar
+  const gchar* gtk_csd_env = g_getenv("GTK_CSD");
+  if (gtk_csd_env != nullptr && g_strcmp0(gtk_csd_env, "1") != 0)
+    use_header_bar = FALSE;
+  // Lines added to the template end
 #ifdef GDK_WINDOWING_X11
   GdkScreen* screen = gtk_window_get_screen(window);
   if (GDK_IS_X11_SCREEN(screen)) {
     const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
     if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
       use_header_bar = FALSE;
+      // Lines added to the template start
+      // Please re-add these lines after updating the linux build files
+      // Disable libhandy here, otherwise the close button disappears on KDE X11
+      g_setenv("GTK_CSD", "0", TRUE);
+      // Lines added to the template end
     }
   }
 #endif
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "anychat");
+    gtk_header_bar_set_title(header_bar, "FluffyChat");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "anychat");
+    gtk_window_set_title(window, "FluffyChat");
   }
 
-  gtk_window_set_default_size(window, 1280, 720);
+  gtk_window_set_default_size(window, 864, 680);
   gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
@@ -81,6 +94,24 @@ static gboolean my_application_local_command_line(GApplication* application, gch
   return TRUE;
 }
 
+// Implements GApplication::startup.
+static void my_application_startup(GApplication* application) {
+  //MyApplication* self = MY_APPLICATION(object);
+
+  // Perform any actions required at application startup.
+
+  G_APPLICATION_CLASS(my_application_parent_class)->startup(application);
+}
+
+// Implements GApplication::shutdown.
+static void my_application_shutdown(GApplication* application) {
+  //MyApplication* self = MY_APPLICATION(object);
+
+  // Perform any actions required at application shutdown.
+
+  G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);
+}
+
 // Implements GObject::dispose.
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
@@ -91,6 +122,8 @@ static void my_application_dispose(GObject* object) {
 static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->activate = my_application_activate;
   G_APPLICATION_CLASS(klass)->local_command_line = my_application_local_command_line;
+  G_APPLICATION_CLASS(klass)->startup = my_application_startup;
+  G_APPLICATION_CLASS(klass)->shutdown = my_application_shutdown;
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 

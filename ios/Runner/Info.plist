@@ -2,133 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>im.fluffychat.app</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>AnyChat</string>
+	<string>FluffyChat</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>af</string>
-		<string>sq</string>
-		<string>am</string>
-		<string>ar</string>
-		<string>hy</string>
-		<string>az</string>
-		<string>eu</string>
-		<string>be</string>
-		<string>bn</string>
-		<string>bs</string>
-		<string>bg</string>
-		<string>ca</string>
-		<string>ceb</string>
-		<string>zh</string>
-		<string>co</string>
-		<string>hr</string>
-		<string>cs</string>
-		<string>da</string>
-		<string>nl</string>
-		<string>en</string>
-		<string>eo</string>
-		<string>et</string>
-		<string>fi</string>
-		<string>fr</string>
-		<string>fy</string>
-		<string>gl</string>
-		<string>ka</string>
-		<string>de</string>
-		<string>el</string>
-		<string>gu</string>
-		<string>ht</string>
-		<string>ha</string>
-		<string>haw</string>
-		<string>iw</string>
-		<string>hi</string>
-		<string>hmn</string>
-		<string>hu</string>
-		<string>is</string>
-		<string>ig</string>
-		<string>id</string>
-		<string>ga</string>
-		<string>it</string>
-		<string>ja</string>
-		<string>jv</string>
-		<string>kn</string>
-		<string>kk</string>
-		<string>km</string>
-		<string>rw</string>
-		<string>ko</string>
-		<string>ku</string>
-		<string>ky</string>
-		<string>lo</string>
-		<string>la</string>
-		<string>lv</string>
-		<string>lt</string>
-		<string>lb</string>
-		<string>mk</string>
-		<string>mg</string>
-		<string>ms</string>
-		<string>ml</string>
-		<string>mt</string>
-		<string>mi</string>
-		<string>mr</string>
-		<string>mn</string>
-		<string>my</string>
-		<string>ne</string>
-		<string>no</string>
-		<string>ny</string>
-		<string>or</string>
-		<string>ps</string>
-		<string>fa</string>
-		<string>pl</string>
-		<string>pt</string>
-		<string>pa</string>
-		<string>ro</string>
-		<string>ru</string>
-		<string>sm</string>
-		<string>gd</string>
-		<string>sr</string>
-		<string>st</string>
-		<string>sn</string>
-		<string>sd</string>
-		<string>si</string>
-		<string>sk</string>
-		<string>sl</string>
-		<string>so</string>
-		<string>es</string>
-		<string>su</string>
-		<string>sw</string>
-		<string>sv</string>
-		<string>tl</string>
-		<string>tg</string>
-		<string>ta</string>
-		<string>tt</string>
-		<string>te</string>
-		<string>th</string>
-		<string>tr</string>
-		<string>tk</string>
-		<string>uk</string>
-		<string>ur</string>
-		<string>ug</string>
-		<string>uz</string>
-		<string>vi</string>
-		<string>cy</string>
-		<string>xh</string>
-		<string>yi</string>
-		<string>yo</string>
-		<string>zu</string>
-	</array>
 	<key>CFBundleName</key>
-	<string>anychat</string>
+	<string>fluffychat</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -137,53 +30,62 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>https://anychat-c414a.firebaseapp.com/__/auth/handler</string>
+			<string>im.fluffychat.app.uris</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.682283241991-iuarauj18pl568ftrhrduioqhpibp17a</string>
-				<string>fb463424718375996</string>
-				<string>app</string>
-				<string>twitterkit-DsqHohkyPJCjhdDByCLwZZYGH</string>
+				<string>ShareMedia</string>
+				<string>im.fluffychat</string>
+				<string>matrix</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>FacebookAppID</key>
-	<string>463424718375996</string>
-	<key>FacebookDisplayName</key>
-	<string>AnyChat</string>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-4494853791237895~6652191578</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-share-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
-	</array>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play audio and voice messages in the app.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Play audio and voice messages via bluetooth devices.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>AnyChat is requesting access to your bluetooth connection. This access is required so bluetooth devices can be used in video calls.</string>
+	<string>Play audio and voice messages on bluetooth devices</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Share calendar dates with your contacts in FluffyChat.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>AnyChat is requesting access to your camera. Your camera is needed for video calls.</string>
+	<string>Open the camera and take a picture to share them with your contacts on FluffyChat.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>AnyChat is requesting access to your contacts. Your contacts are needed to quickly find other people who use this app, or invite friends!</string>
+	<string>Share contacts with your contacts in FluffyChat.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>FluffyChat uses an app lock for an additional security level</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Share your location with your contacts in FluffyChat.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Share your location with your contacts in FluffyChat.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Share your location with your contacts in FluffyChat.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>AnyChat is requesting access to your microphone. Your microphone is needed for video calls and live translations.</string>
+	<string>Record voice message and share them with your contacts on FluffyChat.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Share motions with your contacts in FluffyChat.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>AnyChat is requesting access to your photos. Your photos are needed to update your profile picture.</string>
+	<string>Open photos from your gallery and share them with your contacts on FluffyChat.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>AnyChat is requesting access to recognize your speech. This access is needed to translate your communication.</string>
+	<string>Share data with your contacts in FluffyChat.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -200,6 +102,15 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+  	<key>NSAllowsArbitraryLoads</key>
+  	<true/>
+</dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
 </plist>

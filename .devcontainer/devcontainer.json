@@ -1,13 +1,13 @@
 {
   "name": "anychat-flutter",
-  "dockerFile": "Dockerfile",
+  "dockerComposeFile": ".docker/docker-compose.yml",
+  "service": "anychat-flutter",
+  "workspaceFolder": "/app",
   "customizations": {
     "vscode": {
       "extensions": [
         "dart-code.dart-code",
-        "dart-code.flutter",
-        "vscjava.vscode-gradle"
-        
+        "dart-code.flutter"
       ]
     }
   }
