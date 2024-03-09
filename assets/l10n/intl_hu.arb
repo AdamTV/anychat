@@ -474,8 +474,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -594,7 +594,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} meghívott a FluffyChat alkalmazásba. \n1. Telepítsd a FluffyChat appot: https://fluffychat.im \n2. Regisztrálj, vagy jelentkezz be. \n3. Nyisd meg a meghívó hivatkozást: {link}",
+    "inviteText": "{username} meghívott a AnyChat alkalmazásba. \n1. Telepítsd a AnyChat appot: https://anychat.im \n2. Regisztrálj, vagy jelentkezz be. \n3. Nyisd meg a meghívó hivatkozást: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -721,8 +721,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 Új FluffyChat-üzenet",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 Új AnyChat-üzenet",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -741,7 +741,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "Úgy tűnik, hogy nincsenek Google szolgáltatások a telefonodon. Ez adatvédelmi szempontból jó döntés! Ahhoz, hogy push értesítéseket fogadhass a FluffyChat alkalmazásban, a microG használatát javasoljuk: https://microg.org/.",
+    "noGoogleServicesWarning": "Úgy tűnik, hogy nincsenek Google szolgáltatások a telefonodon. Ez adatvédelmi szempontból jó döntés! Ahhoz, hogy push értesítéseket fogadhass a AnyChat alkalmazásban, a microG használatát javasoljuk: https://microg.org/.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1077,7 +1077,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",

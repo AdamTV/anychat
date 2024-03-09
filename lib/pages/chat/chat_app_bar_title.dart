@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/utils/date_time_extension.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/presence_builder.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/utils/date_time_extension.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/presence_builder.dart';
 
 class ChatAppBarTitle extends StatelessWidget {
   final ChatController controller;
@@ -53,7 +53,7 @@ class ChatAppBarTitle extends StatelessWidget {
                   ),
                 ),
                 AnimatedSize(
-                  duration: FluffyThemes.animationDuration,
+                  duration: AnyThemes.animationDuration,
                   child: PresenceBuilder(
                     userId: room.directChatMatrixID,
                     builder: (context, presence) {

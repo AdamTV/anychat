@@ -721,8 +721,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -881,7 +881,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} te je pozvao/la u FluffyChat. \n1. Posjeti strnicu fluffychat.im i instaliraj aplikaciju \n2. Registriraj ili prijavi se \n3. Otvori poveznicu poziva: \n {link}",
+    "inviteText": "{username} te je pozvao/la u AnyChat. \n1. Posjeti strnicu anychat.im i instaliraj aplikaciju \n2. Registriraj ili prijavi se \n3. Otvori poveznicu poziva: \n {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -1023,8 +1023,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 Nova poruka u FluffyChatu",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 Nova poruka u AnyChatu",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1595,7 +1595,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -2048,7 +2048,7 @@
     "@dehydrateTor": {},
     "emojis": "Emojiji",
     "@emojis": {},
-    "indexedDbErrorLong": "Spremište poruka nažalost nije standarno uključena u privatnom modusu.\nOtvori stranicu\n - about:config\n - postavi dom.indexedDB.privateBrowsing.enabled na true\nFluffyChat se inače neće moći pokrenuti.",
+    "indexedDbErrorLong": "Spremište poruka nažalost nije standarno uključena u privatnom modusu.\nOtvori stranicu\n - about:config\n - postavi dom.indexedDB.privateBrowsing.enabled na true\nAnyChat se inače neće moći pokrenuti.",
     "@indexedDbErrorLong": {},
     "storeSecurlyOnThisDevice": "Spremi sigurno na ovom uređaju",
     "@storeSecurlyOnThisDevice": {},
@@ -2218,7 +2218,7 @@
     "@foregroundServiceRunning": {},
     "callingPermissions": "Dozvole za pozivanje",
     "@callingPermissions": {},
-    "callingAccountDetails": "Omogućuje FluffyChatu korištenje izvorne Android aplikacije za pozivanje.",
+    "callingAccountDetails": "Omogućuje AnyChatu korištenje izvorne Android aplikacije za pozivanje.",
     "@callingAccountDetails": {},
     "callingAccount": "Račun za pozivanje",
     "@callingAccount": {},
@@ -2241,7 +2241,7 @@
     "@enterRoom": {},
     "screenSharingDetail": "Dijeliš svoj ekran u FuffyChatu",
     "@screenSharingDetail": {},
-    "appearOnTopDetails": "Omogućuje prikaz aplikacije ispred drugih (nije potrebno ako je FluffyChat već postavljen kao račun za pozivanje)",
+    "appearOnTopDetails": "Omogućuje prikaz aplikacije ispred drugih (nije potrebno ako je AnyChat već postavljen kao račun za pozivanje)",
     "@appearOnTopDetails": {},
     "appearOnTop": "Prikaz ispred drugih",
     "@appearOnTop": {},
@@ -2251,7 +2251,7 @@
     "@allSpaces": {},
     "screenSharingTitle": "dijeljenje ekrana",
     "@screenSharingTitle": {},
-    "otherCallingPermissions": "Mikrofon, kamera i druge FluffyChat dozvole",
+    "otherCallingPermissions": "Mikrofon, kamera i druge AnyChat dozvole",
     "@otherCallingPermissions": {},
     "enterSpace": "Uđi u prostor",
     "@enterSpace": {},

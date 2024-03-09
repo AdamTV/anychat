@@ -1002,8 +1002,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "فلافی‌چت",
-    "@fluffychat": {
+    "anychat": "فلافی‌چت",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1091,8 +1091,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 پیام جدید در فلافی‌چت",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 پیام جدید در فلافی‌چت",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1488,7 +1488,7 @@
     },
     "serverRequiresEmail": "برای ثبت‌نام، این سرور باید آدرس ایمیل شما را تایید کند.",
     "@serverRequiresEmail": {},
-    "inviteText": "{username} شما را به فلافی‌چت دعوت کرد.\n۱. فلافی‌چت را نصب کنید: https://fluffychat.im\n۲. ثبت نام کنید یا وارد شوید.\n۳. لینک دعوت را باز کنید: {link}",
+    "inviteText": "{username} شما را به فلافی‌چت دعوت کرد.\n۱. فلافی‌چت را نصب کنید: https://anychat.im\n۲. ثبت نام کنید یا وارد شوید.\n۳. لینک دعوت را باز کنید: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {

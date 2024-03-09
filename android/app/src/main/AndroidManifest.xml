@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-    package="chat.fluffy.fluffychat" android:installLocation="auto">
+    package="chat.fluffy.anychat" android:installLocation="auto">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -73,7 +73,7 @@
                <action android:name="android.intent.action.VIEW" />
                <category android:name="android.intent.category.DEFAULT" />
                <category android:name="android.intent.category.BROWSABLE" />
-               <data android:scheme="im.fluffychat" android:host="chat" />
+               <data android:scheme="im.anychat" android:host="chat" />
             </intent-filter>
             <intent-filter>
                <action android:name="android.intent.action.SEND" />
@@ -109,7 +109,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="im.fluffychat" android:host="login"/>
+                <data android:scheme="im.anychat" android:host="login"/>
             </intent-filter>
         </activity>
 

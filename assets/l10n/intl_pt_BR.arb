@@ -737,8 +737,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "fluffychat": "FluffyChat",
-  "@fluffychat": {
+  "anychat": "AnyChat",
+  "@anychat": {
     "type": "text",
     "placeholders": {}
   },
@@ -897,7 +897,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "inviteText": "{username} convidou você para o FluffyChat. \n1. Visite fluffychat.im e instale o aplicativo\n2. Entre ou crie uma conta \n3. Abra o link do convite:\n {link}",
+  "inviteText": "{username} convidou você para o AnyChat. \n1. Visite anychat.im e instale o aplicativo\n2. Entre ou crie uma conta \n3. Abra o link do convite:\n {link}",
   "@inviteText": {
     "type": "text",
     "placeholders": {
@@ -1049,8 +1049,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "newMessageInFluffyChat": "💬 Nova mensagem no FluffyChat",
-  "@newMessageInFluffyChat": {
+  "newMessageInAnyChat": "💬 Nova mensagem no AnyChat",
+  "@newMessageInAnyChat": {
     "type": "text",
     "placeholders": {}
   },
@@ -1084,7 +1084,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "noGoogleServicesWarning": "Aparentemente você não tem serviços Google no seu celular. Para receber notificações no FluffyChat, recomendamos instalar ntfy.",
+  "noGoogleServicesWarning": "Aparentemente você não tem serviços Google no seu celular. Para receber notificações no AnyChat, recomendamos instalar ntfy.",
   "@noGoogleServicesWarning": {
     "type": "text",
     "placeholders": {}
@@ -1644,7 +1644,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "title": "FluffyChat",
+  "title": "AnyChat",
   "@title": {
     "description": "Title for the application",
     "type": "text",
@@ -2121,7 +2121,7 @@
   },
   "pleaseEnterRecoveryKeyDescription": "Para destrancar suas mensagens antigas, por favor, insira sua chave de recuperação gerada numa sessão prévia. Suas chave de recuperação NÃO é sua senha.",
   "@pleaseEnterRecoveryKeyDescription": {},
-  "indexedDbErrorLong": "Infelizmente, o armazenamento de mensagens não é habilitado por padrão no modo privado.\nPor favor, visite\n- about:config\n- atribua \"true\" a \"dom.indexedDB.privateBrowsing.enabled\"\nDe outro modo, não será possível executar o FluffyChat.",
+  "indexedDbErrorLong": "Infelizmente, o armazenamento de mensagens não é habilitado por padrão no modo privado.\nPor favor, visite\n- about:config\n- atribua \"true\" a \"dom.indexedDB.privateBrowsing.enabled\"\nDe outro modo, não será possível executar o AnyChat.",
   "@indexedDbErrorLong": {},
   "users": "Usuários",
   "@users": {},
@@ -2194,13 +2194,13 @@
   "@callingPermissions": {},
   "callingAccount": "Conta para chamadas",
   "@callingAccount": {},
-  "callingAccountDetails": "Permitir que o FluffyChat use o app de chamadas nativo do Android.",
+  "callingAccountDetails": "Permitir que o AnyChat use o app de chamadas nativo do Android.",
   "@callingAccountDetails": {},
   "appearOnTop": "Aparecer no topo",
   "@appearOnTop": {},
-  "appearOnTopDetails": "Permitir que o app apareça no topo (desnecessário caso FluffyChat já esteja configurado como conta para chamadas)",
+  "appearOnTopDetails": "Permitir que o app apareça no topo (desnecessário caso AnyChat já esteja configurado como conta para chamadas)",
   "@appearOnTopDetails": {},
-  "otherCallingPermissions": "Microfone, câmera e outras permissões do FluffyChat",
+  "otherCallingPermissions": "Microfone, câmera e outras permissões do AnyChat",
   "@otherCallingPermissions": {},
   "newGroup": "Novo grupo",
   "@newGroup": {},
@@ -2234,7 +2234,7 @@
   "@whyIsThisMessageEncrypted": {},
   "screenSharingTitle": "Compartilhar tela",
   "@screenSharingTitle": {},
-  "screenSharingDetail": "Você está compartilhando sua tela no FluffyChat",
+  "screenSharingDetail": "Você está compartilhando sua tela no AnyChat",
   "@screenSharingDetail": {},
   "numChats": "{number} conversas",
   "@numChats": {

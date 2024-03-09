@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/homeserver_picker/public_homeserver.dart';
-import 'package:fluffychat/utils/localized_exception_extension.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/homeserver_picker/public_homeserver.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
 import 'homeserver_bottom_sheet.dart';
 import 'homeserver_picker.dart';
 
@@ -91,7 +91,7 @@ class HomeserverAppBar extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back),
                 )
               : null,
-          fillColor: FluffyThemes.isColumnMode(context)
+          fillColor: AnyThemes.isColumnMode(context)
               ? Theme.of(context).colorScheme.background
               : Theme.of(context).colorScheme.surfaceVariant,
           prefixText: '${L10n.of(context)!.homeserver}: ',

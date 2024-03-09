@@ -144,8 +144,8 @@
             "username": {}
         }
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1197,8 +1197,8 @@
     },
     "callingPermissions": "",
     "@callingPermissions": {},
-    "newMessageInFluffyChat": "",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },

@@ -444,8 +444,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "fluffychat": "FluffyChat",
-  "@fluffychat": {
+  "anychat": "AnyChat",
+  "@anychat": {
     "type": "text",
     "placeholders": {}
   },
@@ -549,7 +549,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "inviteText": "{username} запрошує вас у FluffyChat. \n1. Перейдіть на fluffychat.im й установіть застосунок \n2. Зареєструйтесь або ввійдіть \n3. Відкрийте запрошувальне посилання:\n {link}",
+  "inviteText": "{username} запрошує вас у AnyChat. \n1. Перейдіть на anychat.im й установіть застосунок \n2. Зареєструйтесь або ввійдіть \n3. Відкрийте запрошувальне посилання:\n {link}",
   "@inviteText": {
     "type": "text",
     "placeholders": {
@@ -666,8 +666,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "newMessageInFluffyChat": "💬 Нове повідомлення у FluffyChat",
-  "@newMessageInFluffyChat": {
+  "newMessageInAnyChat": "💬 Нове повідомлення у AnyChat",
+  "@newMessageInAnyChat": {
     "type": "text",
     "placeholders": {}
   },
@@ -963,7 +963,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "title": "FluffyChat",
+  "title": "AnyChat",
   "@title": {
     "description": "Title for the application",
     "type": "text",
@@ -2147,7 +2147,7 @@
   "@hydrateTorLong": {},
   "indexedDbErrorTitle": "Проблеми приватного режиму",
   "@indexedDbErrorTitle": {},
-  "indexedDbErrorLong": "На жаль, сховище повідомлень не ввімкнуто у приватному режимі типово.\nВідкрийте\n - about:config\n - установіть для dom.indexedDB.privateBrowsing.enabled значення true\nІнакше запустити FluffyChat буде неможливо.",
+  "indexedDbErrorLong": "На жаль, сховище повідомлень не ввімкнуто у приватному режимі типово.\nВідкрийте\n - about:config\n - установіть для dom.indexedDB.privateBrowsing.enabled значення true\nІнакше запустити AnyChat буде неможливо.",
   "@indexedDbErrorLong": {},
   "dehydrate": "Експортувати сеанс та очистити пристрій",
   "@dehydrate": {},
@@ -2188,11 +2188,11 @@
   "@callingPermissions": {},
   "callingAccount": "Обліковий запис для виклику",
   "@callingAccount": {},
-  "callingAccountDetails": "Дозволяє FluffyChat використовувати основний застосунок Android для набору номера.",
+  "callingAccountDetails": "Дозволяє AnyChat використовувати основний застосунок Android для набору номера.",
   "@callingAccountDetails": {},
   "appearOnTop": "З'являтися зверху",
   "@appearOnTop": {},
-  "appearOnTopDetails": "Дозволяє застосунку показуватися зверху (не потрібно, якщо Fluffychat вже налаштований обліковим записом для викликів)",
+  "appearOnTopDetails": "Дозволяє застосунку показуватися зверху (не потрібно, якщо Anychat вже налаштований обліковим записом для викликів)",
   "@appearOnTopDetails": {},
   "newGroup": "Нова група",
   "@newGroup": {},
@@ -2202,7 +2202,7 @@
   "@enterSpace": {},
   "enterRoom": "Увійти в кімнату",
   "@enterRoom": {},
-  "otherCallingPermissions": "Мікрофон, камера та інші дозволи FluffyChat",
+  "otherCallingPermissions": "Мікрофон, камера та інші дозволи AnyChat",
   "@otherCallingPermissions": {},
   "allSpaces": "Усі простори",
   "@allSpaces": {},

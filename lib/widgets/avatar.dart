@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/utils/string_color.dart';
-import 'package:fluffychat/widgets/mxc_image.dart';
-import 'package:fluffychat/widgets/presence_builder.dart';
+import 'package:anychat/utils/string_color.dart';
+import 'package:anychat/widgets/mxc_image.dart';
+import 'package:anychat/widgets/presence_builder.dart';
 
 class Avatar extends StatelessWidget {
   final Uri? mxContent;

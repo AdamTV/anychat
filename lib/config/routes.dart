@@ -4,35 +4,35 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/archive/archive.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/pages/chat_details/chat_details.dart';
-import 'package:fluffychat/pages/chat_encryption_settings/chat_encryption_settings.dart';
-import 'package:fluffychat/pages/chat_list/chat_list.dart';
-import 'package:fluffychat/pages/chat_members/chat_members.dart';
-import 'package:fluffychat/pages/chat_permissions_settings/chat_permissions_settings.dart';
-import 'package:fluffychat/pages/device_settings/device_settings.dart';
-import 'package:fluffychat/pages/homeserver_picker/homeserver_picker.dart';
-import 'package:fluffychat/pages/invitation_selection/invitation_selection.dart';
-import 'package:fluffychat/pages/login/login.dart';
-import 'package:fluffychat/pages/new_group/new_group.dart';
-import 'package:fluffychat/pages/new_private_chat/new_private_chat.dart';
-import 'package:fluffychat/pages/new_space/new_space.dart';
-import 'package:fluffychat/pages/settings/settings.dart';
-import 'package:fluffychat/pages/settings_3pid/settings_3pid.dart';
-import 'package:fluffychat/pages/settings_chat/settings_chat.dart';
-import 'package:fluffychat/pages/settings_emotes/settings_emotes.dart';
-import 'package:fluffychat/pages/settings_ignore_list/settings_ignore_list.dart';
-import 'package:fluffychat/pages/settings_multiple_emotes/settings_multiple_emotes.dart';
-import 'package:fluffychat/pages/settings_notifications/settings_notifications.dart';
-import 'package:fluffychat/pages/settings_password/settings_password.dart';
-import 'package:fluffychat/pages/settings_security/settings_security.dart';
-import 'package:fluffychat/pages/settings_style/settings_style.dart';
-import 'package:fluffychat/widgets/layouts/empty_page.dart';
-import 'package:fluffychat/widgets/layouts/two_column_layout.dart';
-import 'package:fluffychat/widgets/log_view.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/archive/archive.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/pages/chat_details/chat_details.dart';
+import 'package:anychat/pages/chat_encryption_settings/chat_encryption_settings.dart';
+import 'package:anychat/pages/chat_list/chat_list.dart';
+import 'package:anychat/pages/chat_members/chat_members.dart';
+import 'package:anychat/pages/chat_permissions_settings/chat_permissions_settings.dart';
+import 'package:anychat/pages/device_settings/device_settings.dart';
+import 'package:anychat/pages/homeserver_picker/homeserver_picker.dart';
+import 'package:anychat/pages/invitation_selection/invitation_selection.dart';
+import 'package:anychat/pages/login/login.dart';
+import 'package:anychat/pages/new_group/new_group.dart';
+import 'package:anychat/pages/new_private_chat/new_private_chat.dart';
+import 'package:anychat/pages/new_space/new_space.dart';
+import 'package:anychat/pages/settings/settings.dart';
+import 'package:anychat/pages/settings_3pid/settings_3pid.dart';
+import 'package:anychat/pages/settings_chat/settings_chat.dart';
+import 'package:anychat/pages/settings_emotes/settings_emotes.dart';
+import 'package:anychat/pages/settings_ignore_list/settings_ignore_list.dart';
+import 'package:anychat/pages/settings_multiple_emotes/settings_multiple_emotes.dart';
+import 'package:anychat/pages/settings_notifications/settings_notifications.dart';
+import 'package:anychat/pages/settings_password/settings_password.dart';
+import 'package:anychat/pages/settings_security/settings_security.dart';
+import 'package:anychat/pages/settings_style/settings_style.dart';
+import 'package:anychat/widgets/layouts/empty_page.dart';
+import 'package:anychat/widgets/layouts/two_column_layout.dart';
+import 'package:anychat/widgets/log_view.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 abstract class AppRoutes {
   static FutureOr<String?> loggedInRedirect(
@@ -83,7 +83,7 @@ abstract class AppRoutes {
     ShellRoute(
       pageBuilder: (context, state, child) => defaultPageBuilder(
         context,
-        FluffyThemes.isColumnMode(context) &&
+        AnyThemes.isColumnMode(context) &&
                 state.fullPath?.startsWith('/rooms/settings') == false
             ? TwoColumnLayout(
                 displayNavigationRail:
@@ -103,7 +103,7 @@ abstract class AppRoutes {
           redirect: loggedOutRedirect,
           pageBuilder: (context, state) => defaultPageBuilder(
             context,
-            FluffyThemes.isColumnMode(context)
+            AnyThemes.isColumnMode(context)
                 ? const EmptyPage()
                 : ChatList(
                     activeChat: state.pathParameters['roomid'],
@@ -157,7 +157,7 @@ abstract class AppRoutes {
             ShellRoute(
               pageBuilder: (context, state, child) => defaultPageBuilder(
                 context,
-                FluffyThemes.isColumnMode(context)
+                AnyThemes.isColumnMode(context)
                     ? TwoColumnLayout(
                         mainView: const Settings(),
                         sideView: child,
@@ -170,7 +170,7 @@ abstract class AppRoutes {
                   path: 'settings',
                   pageBuilder: (context, state) => defaultPageBuilder(
                     context,
-                    FluffyThemes.isColumnMode(context)
+                    AnyThemes.isColumnMode(context)
                         ? const EmptyPage()
                         : const Settings(),
                   ),
@@ -384,7 +384,7 @@ abstract class AppRoutes {
       CustomTransitionPage(
         child: child,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FluffyThemes.isColumnMode(context)
+            AnyThemes.isColumnMode(context)
                 ? FadeTransition(opacity: animation, child: child)
                 : CupertinoPageTransition(
                     primaryRouteAnimation: animation,

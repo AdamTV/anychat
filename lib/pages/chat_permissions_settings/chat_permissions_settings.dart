@@ -8,9 +8,9 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/pages/chat_permissions_settings/chat_permissions_settings_view.dart';
-import 'package:fluffychat/widgets/matrix.dart';
-import 'package:fluffychat/widgets/permission_slider_dialog.dart';
+import 'package:anychat/pages/chat_permissions_settings/chat_permissions_settings_view.dart';
+import 'package:anychat/widgets/matrix.dart';
+import 'package:anychat/widgets/permission_slider_dialog.dart';
 
 class ChatPermissionsSettings extends StatefulWidget {
   const ChatPermissionsSettings({super.key});

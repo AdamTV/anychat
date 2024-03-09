@@ -5,19 +5,19 @@ import 'package:animations/animations.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/pages/chat_list/chat_list.dart';
-import 'package:fluffychat/pages/chat_list/chat_list_item.dart';
-import 'package:fluffychat/pages/chat_list/search_title.dart';
-import 'package:fluffychat/pages/chat_list/space_view.dart';
-import 'package:fluffychat/pages/chat_list/status_msg_list.dart';
-import 'package:fluffychat/pages/chat_list/utils/on_chat_tap.dart';
-import 'package:fluffychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
-import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/stream_extension.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/public_room_bottom_sheet.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/pages/chat_list/chat_list.dart';
+import 'package:anychat/pages/chat_list/chat_list_item.dart';
+import 'package:anychat/pages/chat_list/search_title.dart';
+import 'package:anychat/pages/chat_list/space_view.dart';
+import 'package:anychat/pages/chat_list/status_msg_list.dart';
+import 'package:anychat/pages/chat_list/utils/on_chat_tap.dart';
+import 'package:anychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
+import 'package:anychat/utils/adaptive_bottom_sheet.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/stream_extension.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/public_room_bottom_sheet.dart';
 import '../../config/themes.dart';
 import '../../widgets/connection_status_header.dart';
 import '../../widgets/matrix.dart';
@@ -106,8 +106,8 @@ class ChatListViewBody extends StatelessWidget {
                                   userSearchResult.results.isEmpty
                               ? 0
                               : 106,
-                          duration: FluffyThemes.animationDuration,
-                          curve: FluffyThemes.animationCurve,
+                          duration: AnyThemes.animationDuration,
+                          curve: AnyThemes.animationCurve,
                           child: userSearchResult == null
                               ? null
                               : ListView.builder(
@@ -144,8 +144,8 @@ class ChatListViewBody extends StatelessWidget {
                       const ConnectionStatusHeader(),
                       AnimatedContainer(
                         height: controller.isTorBrowser ? 64 : 0,
-                        duration: FluffyThemes.animationDuration,
-                        curve: FluffyThemes.animationCurve,
+                        duration: AnyThemes.animationDuration,
+                        curve: AnyThemes.animationCurve,
                         clipBehavior: Clip.hardEdge,
                         decoration: const BoxDecoration(),
                         child: Material(
@@ -293,8 +293,8 @@ class PublicRoomsHorizontalList extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(),
       height: publicRooms == null || publicRooms.isEmpty ? 0 : 106,
-      duration: FluffyThemes.animationDuration,
-      curve: FluffyThemes.animationCurve,
+      duration: AnyThemes.animationDuration,
+      curve: AnyThemes.animationCurve,
       child: publicRooms == null
           ? null
           : ListView.builder(

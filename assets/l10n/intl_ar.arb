@@ -454,8 +454,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "fluffychat": "فلافي-شات",
-  "@fluffychat": {
+  "anychat": "فلافي-شات",
+  "@anychat": {
     "type": "text",
     "placeholders": {}
   },
@@ -564,7 +564,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "inviteText": "دعاك {username} إلى FluffyChat.\n1. قم بزيارة موقع fluffychat.im وقم بتثبيت التطبيق\n2. قم بإنشاءحساب أو تسجيل الدخول\n3. افتح رابط الدعوة:\n {link}",
+  "inviteText": "دعاك {username} إلى AnyChat.\n1. قم بزيارة موقع anychat.im وقم بتثبيت التطبيق\n2. قم بإنشاءحساب أو تسجيل الدخول\n3. افتح رابط الدعوة:\n {link}",
   "@inviteText": {
     "type": "text",
     "placeholders": {
@@ -686,8 +686,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "newMessageInFluffyChat": "💬 رسالة جديدة في FluffyChat",
-  "@newMessageInFluffyChat": {
+  "newMessageInAnyChat": "💬 رسالة جديدة في AnyChat",
+  "@newMessageInAnyChat": {
     "type": "text",
     "placeholders": {}
   },
@@ -2152,7 +2152,7 @@
   "@screenSharingTitle": {},
   "appearOnTop": "يظهر في الأعلى",
   "@appearOnTop": {},
-  "otherCallingPermissions": "الميكروفون والكاميرا وأذونات FluffyChat الأخرى",
+  "otherCallingPermissions": "الميكروفون والكاميرا وأذونات AnyChat الأخرى",
   "@otherCallingPermissions": {},
   "enterSpace": "أدخل المساحة",
   "@enterSpace": {},
@@ -2202,7 +2202,7 @@
   "@widgetUrlError": {},
   "indexedDbErrorTitle": "مشاكل الوضع الخاص",
   "@indexedDbErrorTitle": {},
-  "indexedDbErrorLong": "للأسف ، لم يتم تمكين تخزين الرسائل في الوضع الخاص افتراضيا.\nيرجى زيارة\n - حول:التكوين\n - تعيين dom.indexedDB.privateBrowsing.enabled إلى true\nخلاف ذلك ، لا يمكن تشغيل FluffyChat.",
+  "indexedDbErrorLong": "للأسف ، لم يتم تمكين تخزين الرسائل في الوضع الخاص افتراضيا.\nيرجى زيارة\n - حول:التكوين\n - تعيين dom.indexedDB.privateBrowsing.enabled إلى true\nخلاف ذلك ، لا يمكن تشغيل AnyChat.",
   "@indexedDbErrorLong": {},
   "switchToAccount": "التبديل إلى الحساب {number}",
   "@switchToAccount": {
@@ -2247,9 +2247,9 @@
   "@callingPermissions": {},
   "callingAccount": "الاتصال بالحساب",
   "@callingAccount": {},
-  "callingAccountDetails": "يسمح لـ FluffyChat باستخدام تطبيق android Dialer الأصلي.",
+  "callingAccountDetails": "يسمح لـ AnyChat باستخدام تطبيق android Dialer الأصلي.",
   "@callingAccountDetails": {},
-  "appearOnTopDetails": "يسمح للتطبيق بالظهور في الأعلى (ليست هناك حاجة إذا قمت بالفعل بإعداد Fluffychat كحساب اتصال)",
+  "appearOnTopDetails": "يسمح للتطبيق بالظهور في الأعلى (ليست هناك حاجة إذا قمت بالفعل بإعداد Anychat كحساب اتصال)",
   "@appearOnTopDetails": {},
   "numChats": "{number} الدردشات",
   "@numChats": {

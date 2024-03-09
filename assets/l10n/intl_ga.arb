@@ -44,7 +44,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -322,8 +322,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1212,7 +1212,7 @@
     },
     "scanQrCode": "Scan cód QR",
     "@scanQrCode": {},
-    "inviteText": "Thug {username} cuireadh duit chuig FluffyChat.\n1. Suiteáil FluffyChat: https://fluffychat.im\n2. Cláraigh nó sínigh isteach\n3. Oscail an nasc cuiridh: {link}",
+    "inviteText": "Thug {username} cuireadh duit chuig AnyChat.\n1. Suiteáil AnyChat: https://anychat.im\n2. Cláraigh nó sínigh isteach\n3. Oscail an nasc cuiridh: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -1228,7 +1228,7 @@
             "server2": {}
         }
     },
-    "noGoogleServicesWarning": "Dealraíonn sé nach bhfuil aon seirbhísí google agat ar do ghuthán. Sin cinneadh maith le do phríobháideacht! Chun fógraí brú a fháil i FluffyChat molaimid https://microg.org/ nó https://unifiedpush.org/ a úsáid.",
+    "noGoogleServicesWarning": "Dealraíonn sé nach bhfuil aon seirbhísí google agat ar do ghuthán. Sin cinneadh maith le do phríobháideacht! Chun fógraí brú a fháil i AnyChat molaimid https://microg.org/ nó https://unifiedpush.org/ a úsáid.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1253,8 +1253,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "Teachtaireacht nua i FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "Teachtaireacht nua i AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },

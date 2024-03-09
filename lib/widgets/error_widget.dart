@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:fluffychat/utils/error_reporter.dart';
+import 'package:anychat/utils/error_reporter.dart';
 
-class FluffyChatErrorWidget extends StatefulWidget {
+class AnyChatErrorWidget extends StatefulWidget {
   final FlutterErrorDetails details;
-  const FluffyChatErrorWidget(this.details, {super.key});
+  const AnyChatErrorWidget(this.details, {super.key});
 
   @override
-  State<FluffyChatErrorWidget> createState() => _FluffyChatErrorWidgetState();
+  State<AnyChatErrorWidget> createState() => _AnyChatErrorWidgetState();
 }
 
-class _FluffyChatErrorWidgetState extends State<FluffyChatErrorWidget> {
+class _AnyChatErrorWidgetState extends State<AnyChatErrorWidget> {
   static final Set<String> knownExceptions = {};
   @override
   void initState() {

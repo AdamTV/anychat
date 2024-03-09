@@ -1398,8 +1398,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1816,8 +1816,8 @@
     },
     "unverified": "",
     "@unverified": {},
-    "fluffychat": "",
-    "@fluffychat": {
+    "anychat": "",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },

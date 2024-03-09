@@ -6,22 +6,22 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/pages/chat/chat_app_bar_title.dart';
-import 'package:fluffychat/pages/chat/chat_event_list.dart';
-import 'package:fluffychat/pages/chat/encryption_button.dart';
-import 'package:fluffychat/pages/chat/pinned_events.dart';
-import 'package:fluffychat/pages/chat/reactions_picker.dart';
-import 'package:fluffychat/pages/chat/reply_display.dart';
-import 'package:fluffychat/pages/chat/tombstone_display.dart';
-import 'package:fluffychat/utils/account_config.dart';
-import 'package:fluffychat/widgets/chat_settings_popup_menu.dart';
-import 'package:fluffychat/widgets/connection_status_header.dart';
-import 'package:fluffychat/widgets/matrix.dart';
-import 'package:fluffychat/widgets/mxc_image.dart';
-import 'package:fluffychat/widgets/unread_rooms_badge.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/pages/chat/chat_app_bar_title.dart';
+import 'package:anychat/pages/chat/chat_event_list.dart';
+import 'package:anychat/pages/chat/encryption_button.dart';
+import 'package:anychat/pages/chat/pinned_events.dart';
+import 'package:anychat/pages/chat/reactions_picker.dart';
+import 'package:anychat/pages/chat/reply_display.dart';
+import 'package:anychat/pages/chat/tombstone_display.dart';
+import 'package:anychat/utils/account_config.dart';
+import 'package:anychat/widgets/chat_settings_popup_menu.dart';
+import 'package:anychat/widgets/connection_status_header.dart';
+import 'package:anychat/widgets/matrix.dart';
+import 'package:anychat/widgets/mxc_image.dart';
+import 'package:anychat/widgets/unread_rooms_badge.dart';
 import '../../utils/stream_extension.dart';
 import 'chat_emoji_picker.dart';
 import 'chat_input_row.dart';
@@ -135,7 +135,7 @@ class ChatView extends StatelessWidget {
         future: () => controller.room.join(),
       );
     }
-    final bottomSheetPadding = FluffyThemes.isColumnMode(context) ? 16.0 : 8.0;
+    final bottomSheetPadding = AnyThemes.isColumnMode(context) ? 16.0 : 8.0;
     final scrollUpBannerEventId = controller.scrollUpBannerEventId;
 
     final accountConfig = Matrix.of(context).client.applicationAccountConfig;
@@ -204,8 +204,8 @@ class ChatView extends StatelessWidget {
                           uri: accountConfig.wallpaperUrl,
                           fit: BoxFit.cover,
                           isThumbnail: true,
-                          width: FluffyThemes.columnWidth * 4,
-                          height: FluffyThemes.columnWidth * 4,
+                          width: AnyThemes.columnWidth * 4,
+                          height: AnyThemes.columnWidth * 4,
                           placeholder: (_) => Container(),
                         ),
                       ),
@@ -279,7 +279,7 @@ class ChatView extends StatelessWidget {
                                 right: bottomSheetPadding,
                               ),
                               constraints: const BoxConstraints(
-                                maxWidth: FluffyThemes.columnWidth * 2.5,
+                                maxWidth: AnyThemes.columnWidth * 2.5,
                               ),
                               alignment: Alignment.center,
                               child: Material(

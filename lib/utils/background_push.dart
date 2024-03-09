@@ -1,7 +1,7 @@
 /*
  *   Famedly
  *   Copyright (C) 2020, 2021 Famedly GmbH
- *   Copyright (C) 2021 Fluffychat
+ *   Copyright (C) 2021 Anychat
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU Affero General Public License as
@@ -31,8 +31,8 @@ import 'package:http/http.dart' as http;
 import 'package:matrix/matrix.dart';
 import 'package:unifiedpush/unifiedpush.dart';
 
-import 'package:fluffychat/utils/push_helper.dart';
-import 'package:fluffychat/widgets/fluffy_chat_app.dart';
+import 'package:anychat/utils/push_helper.dart';
+import 'package:anychat/widgets/any_chat_app.dart';
 import '../config/app_config.dart';
 import '../config/setting_keys.dart';
 import '../widgets/matrix.dart';
@@ -317,7 +317,7 @@ class BackgroundPush {
       }
       await client.roomsLoading;
       await client.accountDataLoading;
-      FluffyChatApp.router.go(
+      AnyChatApp.router.go(
         client.getRoomById(roomId)?.membership == Membership.invite
             ? '/rooms'
             : '/rooms/$roomId',

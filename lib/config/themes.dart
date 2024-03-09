@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/utils/platform_infos.dart';
 import 'app_config.dart';
 
-abstract class FluffyThemes {
+abstract class AnyThemes {
   static const double columnWidth = 360.0;
 
   static const double navRailWidth = 64.0;
@@ -16,7 +16,7 @@ abstract class FluffyThemes {
       isColumnModeByWidth(MediaQuery.of(context).size.width);
 
   static bool isThreeColumnMode(BuildContext context) =>
-      MediaQuery.of(context).size.width > FluffyThemes.columnWidth * 3.5;
+      MediaQuery.of(context).size.width > AnyThemes.columnWidth * 3.5;
 
   static const fallbackTextStyle = TextStyle(
     fontFamily: 'Roboto',
@@ -41,16 +41,16 @@ abstract class FluffyThemes {
 
   static LinearGradient backgroundGradient(
     BuildContext context,
-    int alpha,
+    int any,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
     return LinearGradient(
       begin: Alignment.topCenter,
       colors: [
-        colorScheme.primaryContainer.withAlpha(alpha),
-        colorScheme.secondaryContainer.withAlpha(alpha),
-        colorScheme.tertiaryContainer.withAlpha(alpha),
-        colorScheme.primaryContainer.withAlpha(alpha),
+        colorScheme.primaryContainer.withAlpha(any),
+        colorScheme.secondaryContainer.withAlpha(any),
+        colorScheme.tertiaryContainer.withAlpha(any),
+        colorScheme.primaryContainer.withAlpha(any),
       ],
     );
   }
@@ -97,7 +97,7 @@ abstract class FluffyThemes {
         filled: true,
       ),
       appBarTheme: AppBarTheme(
-        toolbarHeight: FluffyThemes.isColumnMode(context) ? 72 : 56,
+        toolbarHeight: AnyThemes.isColumnMode(context) ? 72 : 56,
         shadowColor: Colors.grey.withAlpha(64),
         surfaceTintColor: colorScheme.background,
         systemOverlayStyle: SystemUiOverlayStyle(

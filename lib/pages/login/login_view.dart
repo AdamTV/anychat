@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/widgets/layouts/login_scaffold.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/widgets/layouts/login_scaffold.dart';
+import 'package:anychat/widgets/matrix.dart';
 import 'login.dart';
 
 class LoginView extends StatelessWidget {
@@ -22,7 +22,7 @@ class LoginView extends StatelessWidget {
     final title = L10n.of(context)!.logInTo(homeserver);
     final titleParts = title.split(homeserver);
 
-    final textFieldFillColor = FluffyThemes.isColumnMode(context)
+    final textFieldFillColor = AnyThemes.isColumnMode(context)
         ? Theme.of(context).colorScheme.background
         : Theme.of(context).colorScheme.surfaceVariant;
 

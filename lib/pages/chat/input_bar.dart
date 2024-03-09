@@ -8,9 +8,9 @@ import 'package:matrix/matrix.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:slugify/slugify.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/widgets/mxc_image.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/widgets/mxc_image.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/matrix.dart';
 import 'command_hints.dart';

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:fluffychat/config/app_config.dart';
+import 'package:anychat/config/app_config.dart';
 
 class MaxWidthBody extends StatelessWidget {
   final Widget? child;

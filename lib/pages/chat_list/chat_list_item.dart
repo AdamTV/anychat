@@ -5,10 +5,10 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/room_status_extension.dart';
-import 'package:fluffychat/widgets/hover_builder.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/room_status_extension.dart';
+import 'package:anychat/widgets/hover_builder.dart';
 import '../../config/themes.dart';
 import '../../utils/date_time_extension.dart';
 import '../../widgets/avatar.dart';
@@ -167,8 +167,8 @@ class ChatListItem extends StatelessWidget {
                     width: typingText.isEmpty ? 0 : 18,
                     clipBehavior: Clip.hardEdge,
                     decoration: const BoxDecoration(),
-                    duration: FluffyThemes.animationDuration,
-                    curve: FluffyThemes.animationCurve,
+                    duration: AnyThemes.animationDuration,
+                    curve: AnyThemes.animationCurve,
                     padding: const EdgeInsets.only(right: 4),
                     child: Icon(
                       Icons.edit_outlined,
@@ -236,8 +236,8 @@ class ChatListItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   AnimatedContainer(
-                    duration: FluffyThemes.animationDuration,
-                    curve: FluffyThemes.animationCurve,
+                    duration: AnyThemes.animationDuration,
+                    curve: AnyThemes.animationCurve,
                     padding: const EdgeInsets.symmetric(horizontal: 7),
                     height: unreadBubbleSize,
                     width: !hasNotifications && !unread && !room.hasNewMessages

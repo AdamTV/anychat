@@ -66,8 +66,8 @@ class StartChatFloatingActionButton extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: scrolledToTop,
       builder: (context, scrolledToTop, _) => AnimatedSize(
-        duration: FluffyThemes.animationDuration,
-        curve: FluffyThemes.animationCurve,
+        duration: AnyThemes.animationDuration,
+        curve: AnyThemes.animationCurve,
         clipBehavior: Clip.none,
         child: scrolledToTop
             ? FloatingActionButton.extended(

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 git apply ./scripts/enable-android-google-services.patch
-FLUFFYCHAT_ORIG_GROUP="im.fluffychat"
-FLUFFYCHAT_ORIG_TEAM="4NXF6Z997G"
-#FLUFFYCHAT_NEW_GROUP="com.example.fluffychat"
-#FLUFFYCHAT_NEW_TEAM="ABCDE12345"
+ANYCHAT_ORIG_GROUP="im.anychat"
+ANYCHAT_ORIG_TEAM="4NXF6Z997G"
+#ANYCHAT_NEW_GROUP="com.example.anychat"
+#ANYCHAT_NEW_TEAM="ABCDE12345"
 
 # In some cases (ie: running beta XCode releases) some pods haven't updated their minimum version
 # but XCode will reject the package for using too old of a minimum version. 
@@ -11,21 +11,21 @@ FLUFFYCHAT_ORIG_TEAM="4NXF6Z997G"
 # export I_PROMISE_IM_REALLY_SMART=1
 
 # If you want to automatically install the app
-# export FLUFFYCHAT_INSTALL_IPA=1
+# export ANYCHAT_INSTALL_IPA=1
 
 ### Rotate IDs ###
-[ -n "${FLUFFYCHAT_NEW_GROUP}" ] && {
+[ -n "${ANYCHAT_NEW_GROUP}" ] && {
 	# App group IDs
-	sed -i "" "s/group.${FLUFFYCHAT_ORIG_GROUP}.app/group.${FLUFFYCHAT_NEW_GROUP}.app/g" "ios/FluffyChat Share/FluffyChat Share.entitlements"
-	sed -i "" "s/group.${FLUFFYCHAT_ORIG_GROUP}.app/group.${FLUFFYCHAT_NEW_GROUP}.app/g" "ios/Runner/Runner.entitlements"
-	sed -i "" "s/group.${FLUFFYCHAT_ORIG_GROUP}.app/group.${FLUFFYCHAT_NEW_GROUP}.app/g" "ios/Runner.xcodeproj/project.pbxproj"
+	sed -i "" "s/group.${ANYCHAT_ORIG_GROUP}.app/group.${ANYCHAT_NEW_GROUP}.app/g" "ios/AnyChat Share/AnyChat Share.entitlements"
+	sed -i "" "s/group.${ANYCHAT_ORIG_GROUP}.app/group.${ANYCHAT_NEW_GROUP}.app/g" "ios/Runner/Runner.entitlements"
+	sed -i "" "s/group.${ANYCHAT_ORIG_GROUP}.app/group.${ANYCHAT_NEW_GROUP}.app/g" "ios/Runner.xcodeproj/project.pbxproj"
 	# Bundle identifiers
-	sed -i "" "s/${FLUFFYCHAT_ORIG_GROUP}.app/${FLUFFYCHAT_NEW_GROUP}.app/g" "ios/Runner.xcodeproj/project.pbxproj"
+	sed -i "" "s/${ANYCHAT_ORIG_GROUP}.app/${ANYCHAT_NEW_GROUP}.app/g" "ios/Runner.xcodeproj/project.pbxproj"
 }
 
-[ -n "${FLUFFYCHAT_NEW_TEAM}" ] && {
+[ -n "${ANYCHAT_NEW_TEAM}" ] && {
 	# Code signing team
-	sed -i "" "s/${FLUFFYCHAT_ORIG_TEAM}/${FLUFFYCHAT_NEW_TEAM}/g" "ios/Runner.xcodeproj/project.pbxproj"
+	sed -i "" "s/${ANYCHAT_ORIG_TEAM}/${ANYCHAT_NEW_TEAM}/g" "ios/Runner.xcodeproj/project.pbxproj"
 }
 cat << EOHELP
 If something later in the build explodes, and looks possibly related to App IDs:
@@ -35,7 +35,7 @@ If something later in the build explodes, and looks possibly related to App IDs:
     - Ask it to repair the certificates/register app IDs/etc
 2. Fix it yourself
     - Go to https://developer.apple.com/account/resources/identifiers/list
-    - Ensure that Xcode created the App ID successfully (for fluffychat.app and fluffychat.app.FluffyChat-Share)
+    - Ensure that Xcode created the App ID successfully (for anychat.app and anychat.app.AnyChat-Share)
     - Under "App Groups", make sure it registered your group
     - Back "App IDs", check that the App Group was added to each App ID's entitlements
 EOHELP
@@ -67,12 +67,12 @@ rm -f apple_please_fix_your_coreutils
 flutter build ipa --release
 
 ### [optional] Install release build ###
-[ -n "${FLUFFYCHAT_INSTALL_IPA}" ] && {
+[ -n "${ANYCHAT_INSTALL_IPA}" ] && {
   TMPDIR=$(mktemp -d)
   # 1. Turn the xcarchive that flutter created into a dev-signed IPA
   echo '{"compileBitcode":false,"method":"development"}' | plutil -convert xml1 -o "${TMPDIR}/options.plist" -
   xcodebuild -exportArchive -archivePath ./build/ios/archive/Runner.xcarchive -exportPath "${TMPDIR}" -exportOptionsPlist "${TMPDIR}/options.plist"
   # 2. ...and install it on your connected devices
-  cfgutil --foreach install-app "${TMPDIR}/fluffychat.ipa"
+  cfgutil --foreach install-app "${TMPDIR}/anychat.ipa"
   rm -rf "${TMPDIR}"
 }

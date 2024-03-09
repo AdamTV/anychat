@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
-import 'package:fluffychat/config/setting_keys.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/utils/account_config.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/layouts/max_width_body.dart';
-import 'package:fluffychat/widgets/matrix.dart';
-import 'package:fluffychat/widgets/mxc_image.dart';
+import 'package:anychat/config/setting_keys.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/utils/account_config.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/layouts/max_width_body.dart';
+import 'package:anychat/widgets/matrix.dart';
+import 'package:anychat/widgets/mxc_image.dart';
 import '../../config/app_config.dart';
 import '../../widgets/settings_switch_list_tile.dart';
 import 'settings_style.dart';
@@ -63,7 +63,7 @@ class SettingsStyleView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(
                                         colorPickerSize,
                                       ),
-                                      gradient: FluffyThemes.backgroundGradient(
+                                      gradient: AnyThemes.backgroundGradient(
                                         context,
                                         255,
                                       ),
@@ -204,8 +204,8 @@ class SettingsStyleView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AnimatedContainer(
-                      duration: FluffyThemes.animationDuration,
-                      curve: FluffyThemes.animationCurve,
+                      duration: AnyThemes.animationDuration,
+                      curve: AnyThemes.animationCurve,
                       alignment: Alignment.centerLeft,
                       decoration: const BoxDecoration(),
                       clipBehavior: Clip.hardEdge,
@@ -218,7 +218,7 @@ class SettingsStyleView extends StatelessWidget {
                                 uri: accountConfig.wallpaperUrl,
                                 fit: BoxFit.cover,
                                 isThumbnail: true,
-                                width: FluffyThemes.columnWidth * 2,
+                                width: AnyThemes.columnWidth * 2,
                                 height: 156,
                               ),
                             ),
@@ -270,8 +270,8 @@ class SettingsStyleView extends StatelessWidget {
                       onTap: controller.setWallpaper,
                     ),
                     AnimatedSize(
-                      duration: FluffyThemes.animationDuration,
-                      curve: FluffyThemes.animationCurve,
+                      duration: AnyThemes.animationDuration,
+                      curve: AnyThemes.animationCurve,
                       child: accountConfig.wallpaperUrl != null
                           ? SwitchListTile.adaptive(
                               title: Text(L10n.of(context)!.transparent),

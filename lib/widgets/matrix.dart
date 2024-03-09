@@ -19,14 +19,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:fluffychat/utils/client_manager.dart';
-import 'package:fluffychat/utils/init_with_restore.dart';
-import 'package:fluffychat/utils/localized_exception_extension.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_file_extension.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/utils/uia_request_manager.dart';
-import 'package:fluffychat/utils/voip_plugin.dart';
-import 'package:fluffychat/widgets/fluffy_chat_app.dart';
+import 'package:anychat/utils/client_manager.dart';
+import 'package:anychat/utils/init_with_restore.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_file_extension.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/utils/uia_request_manager.dart';
+import 'package:anychat/utils/voip_plugin.dart';
+import 'package:anychat/widgets/any_chat_app.dart';
 import '../config/app_config.dart';
 import '../config/setting_keys.dart';
 import '../pages/key_verification/key_verification_dialog.dart';
@@ -170,7 +170,7 @@ class MatrixState extends State<Matrix> with WidgetsBindingObserver {
         );
         _registerSubs(_loginClientCandidate!.clientName);
         _loginClientCandidate = null;
-        FluffyChatApp.router.go('/rooms');
+        AnyChatApp.router.go('/rooms');
       });
     return candidate;
   }
@@ -216,7 +216,7 @@ class MatrixState extends State<Matrix> with WidgetsBindingObserver {
   bool webHasFocus = true;
 
   String? get activeRoomId {
-    final route = FluffyChatApp.router.routeInformationProvider.value.uri.path;
+    final route = AnyChatApp.router.routeInformationProvider.value.uri.path;
     if (!route.startsWith('/rooms/')) return null;
     return route.split('/')[2];
   }
@@ -312,11 +312,10 @@ class MatrixState extends State<Matrix> with WidgetsBindingObserver {
         );
 
         if (state != LoginState.loggedIn) {
-          FluffyChatApp.router.go('/rooms');
+          AnyChatApp.router.go('/rooms');
         }
       } else {
-        FluffyChatApp.router
-            .go(state == LoginState.loggedIn ? '/rooms' : '/home');
+        AnyChatApp.router.go(state == LoginState.loggedIn ? '/rooms' : '/home');
       }
     });
     onUiaRequest[name] ??= c.onUiaRequest.stream.listen(uiaRequestHandler);
@@ -503,7 +502,7 @@ class MatrixState extends State<Matrix> with WidgetsBindingObserver {
     );
 
     final exportFileName =
-        'fluffychat-export-${DateFormat(DateFormat.YEAR_MONTH_DAY).format(DateTime.now())}.fluffybackup';
+        'anychat-export-${DateFormat(DateFormat.YEAR_MONTH_DAY).format(DateTime.now())}.anybackup';
 
     final file = MatrixFile(bytes: exportBytes, name: exportFileName);
     file.save(context);

@@ -1048,8 +1048,8 @@
     },
     "homeserver": "Hem-servitor",
     "@homeserver": {},
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1090,7 +1090,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -1667,8 +1667,8 @@
             "rules": {}
         }
     },
-    "newMessageInFluffyChat": "",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },

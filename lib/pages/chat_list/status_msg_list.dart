@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
-import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
-import 'package:fluffychat/utils/stream_extension.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/hover_builder.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
+import 'package:anychat/utils/adaptive_bottom_sheet.dart';
+import 'package:anychat/utils/stream_extension.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/hover_builder.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 class StatusMessageList extends StatelessWidget {
   final void Function() onStatusEdit;
@@ -43,7 +43,7 @@ class StatusMessageList extends StatelessWidget {
       stream: client.onSync.stream.rateLimit(const Duration(seconds: 3)),
       builder: (context, snapshot) {
         return AnimatedSize(
-          duration: FluffyThemes.animationDuration,
+          duration: AnyThemes.animationDuration,
           curve: Curves.easeInOut,
           child: FutureBuilder(
             initialData: interestingPresences
@@ -137,8 +137,8 @@ class PresenceAvatar extends StatelessWidget {
                   builder: (context, hovered) {
                     return AnimatedScale(
                       scale: hovered ? 1.15 : 1.0,
-                      duration: FluffyThemes.animationDuration,
-                      curve: FluffyThemes.animationCurve,
+                      duration: AnyThemes.animationDuration,
+                      curve: AnyThemes.animationCurve,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(avatarSize),
                         onTap: profile == null ? null : () => onTap(profile),

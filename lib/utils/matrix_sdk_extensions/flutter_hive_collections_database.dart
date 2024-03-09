@@ -97,7 +97,7 @@ class FlutterHiveCollectionsDatabase extends HiveCollectionsDatabase {
           directory = Directory.current;
         }
       }
-      // do not destroy your stable FluffyChat in debug mode
+      // do not destroy your stable AnyChat in debug mode
       directory = Directory(
         directory.uri.resolve(kDebugMode ? 'hive_debug' : 'hive').toFilePath(),
       );

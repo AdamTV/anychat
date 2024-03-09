@@ -139,8 +139,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1178,8 +1178,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "FluffyChat에서 새로운 메시지",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "AnyChat에서 새로운 메시지",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1318,7 +1318,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -1474,7 +1474,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "이 휴대폰에 Google 서비스가 없는 것 같습니다. 프라이버시를 위해 좋은 결정이죠! FluffyChat에서 푸시 알림을 받으려면 https://microg.org/ 이나 https://unifiedpush.org/ 을 사용하는 것을 권장합니다.",
+    "noGoogleServicesWarning": "이 휴대폰에 Google 서비스가 없는 것 같습니다. 프라이버시를 위해 좋은 결정이죠! AnyChat에서 푸시 알림을 받으려면 https://microg.org/ 이나 https://unifiedpush.org/ 을 사용하는 것을 권장합니다.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1728,7 +1728,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username}이 당신을 FluffyChat에 초대했습니다.\n1. FluffyChat 설치: https://fluffychat.im\n2. 가입하거나 로그인\n3. 초대 링크 열기: {link}",
+    "inviteText": "{username}이 당신을 AnyChat에 초대했습니다.\n1. AnyChat 설치: https://anychat.im\n2. 가입하거나 로그인\n3. 초대 링크 열기: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {

@@ -4,8 +4,8 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/sticker_picker_dialog.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/sticker_picker_dialog.dart';
 import 'chat.dart';
 
 class ChatEmojiPicker extends StatelessWidget {
@@ -16,8 +16,8 @@ class ChatEmojiPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return AnimatedContainer(
-      duration: FluffyThemes.animationDuration,
-      curve: FluffyThemes.animationCurve,
+      duration: AnyThemes.animationDuration,
+      curve: AnyThemes.animationCurve,
       clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(),
       height: controller.showEmojiPicker

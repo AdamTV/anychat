@@ -614,8 +614,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -774,7 +774,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} ti ha invitato/a a FluffyChat.\n1. Installa FluffyChat: https://fluffychat.im\n2. Iscriviti o accedi\n3. Apri il collegamento di invito: {link}",
+    "inviteText": "{username} ti ha invitato/a a AnyChat.\n1. Installa AnyChat: https://anychat.im\n2. Iscriviti o accedi\n3. Apri il collegamento di invito: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -916,8 +916,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "Nuovo messaggio in FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "Nuovo messaggio in AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -951,7 +951,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "Sembra che tu non abbia servizi Google sul tuo telefono. Questa è una buona decisione per la tua riservatezza! Per ricevere notifiche push in FluffyChat consigliamo di utilizzare https://microg.org/ o https://unifiedpush.org/.",
+    "noGoogleServicesWarning": "Sembra che tu non abbia servizi Google sul tuo telefono. Questa è una buona decisione per la tua riservatezza! Per ricevere notifiche push in AnyChat consigliamo di utilizzare https://microg.org/ o https://unifiedpush.org/.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1419,7 +1419,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -1863,7 +1863,7 @@
     "@widgetJitsi": {},
     "messageType": "Tipo del Messaggio",
     "@messageType": {},
-    "indexedDbErrorLong": "Sfortunatamente l'archiviazione dei messaggi non è abilitata in modalità privata per impostazione predefinita.\nPer favore visita\n  - about:config\n  - imposta dom.indexedDB.privateBrowsing.enabled su true\nAltrimenti, non è possibile eseguire FluffyChat.",
+    "indexedDbErrorLong": "Sfortunatamente l'archiviazione dei messaggi non è abilitata in modalità privata per impostazione predefinita.\nPer favore visita\n  - about:config\n  - imposta dom.indexedDB.privateBrowsing.enabled su true\nAltrimenti, non è possibile eseguire AnyChat.",
     "@indexedDbErrorLong": {},
     "oneClientLoggedOut": "Uno dei tuoi client è stato disconnesso",
     "@oneClientLoggedOut": {},
@@ -1932,7 +1932,7 @@
     "@sendOnEnter": {},
     "youRejectedTheInvitation": "Hai rifiutato l'invito",
     "@youRejectedTheInvitation": {},
-    "otherCallingPermissions": "Microfono, fotocamera e altri permessi di FluffyChat",
+    "otherCallingPermissions": "Microfono, fotocamera e altri permessi di AnyChat",
     "@otherCallingPermissions": {},
     "messagesStyle": "Messaggi:",
     "@messagesStyle": {},
@@ -1944,7 +1944,7 @@
     "@newSpaceDescription": {},
     "chatDescription": "Descrizione della chat",
     "@chatDescription": {},
-    "callingAccountDetails": "Dai l'autorizzazione a FluffyChat di usare l'app di composizione Android nativa.",
+    "callingAccountDetails": "Dai l'autorizzazione a AnyChat di usare l'app di composizione Android nativa.",
     "@callingAccountDetails": {},
     "enterSpace": "Unirsi allo spazio",
     "@enterSpace": {},
@@ -2108,7 +2108,7 @@
             "user": {}
         }
     },
-    "appearOnTopDetails": "Permetti all'app di apparire in alto (non necessario se hai già impostato Fluffychat come account di chiamata)",
+    "appearOnTopDetails": "Permetti all'app di apparire in alto (non necessario se hai già impostato Anychat come account di chiamata)",
     "@appearOnTopDetails": {},
     "enterRoom": "Unirsi alla stanza",
     "@enterRoom": {},

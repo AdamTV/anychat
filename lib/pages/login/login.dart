@@ -7,8 +7,8 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/utils/localized_exception_extension.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../utils/platform_infos.dart';
 import 'login_view.dart';
 

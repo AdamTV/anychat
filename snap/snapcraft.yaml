@@ -1,11 +1,11 @@
-name: fluffychat
-title: FluffyChat
+name: anychat
+title: AnyChat
 base: core22
 version: git
 license: AGPL-3.0
 summary: The cutest messenger in the Matrix network
 description: |
-  FluffyChat is an open source, nonprofit and cute matrix messenger app. The app is easy to use but secure and decentralized.
+  AnyChat is an open source, nonprofit and cute matrix messenger app. The app is easy to use but secure and decentralized.
 
 
   ## Features
@@ -29,16 +29,16 @@ description: |
   - And much more...
 
 
-  ## FluffyChat comes with a dream
+  ## AnyChat comes with a dream
 
   Imagine a world where everyone can choose the messenger they like and is still able to chat with all of their friends.
 
   A world where there are no companies spying on you when you send selfies to friends and lovers.
 
-  And a world where apps are made for fluffyness and not for profit. ♥
+  And a world where apps are made for anyness and not for profit. ♥
 
-  Join the community: https://matrix.to/#/#fluffychat:matrix.org
-  Website: http://fluffychat.im
+  Join the community: https://matrix.to/#/#anychat:matrix.org
+  Website: http://anychat.im
   Microblog: https://mastodon.art/@krille
 
 grade: stable
@@ -55,7 +55,7 @@ parts:
       - -DCMAKE_INSTALL_PREFIX=/usr
     source: https://gitlab.matrix.org/matrix-org/olm.git
     source-type: git
-    source-tag: '3.2.14'
+    source-tag: "3.2.14"
     build-packages:
       - g++
 
@@ -64,7 +64,7 @@ parts:
     stage-snaps:
       - zenity-integration
 
-  fluffychat:
+  anychat:
     plugin: flutter
     source: .
     override-build: |
@@ -84,11 +84,11 @@ slots:
   dbus-svc:
     interface: dbus
     bus: session
-    name: chat.fluffy.fluffychat
+    name: chat.any.anychat
 
 apps:
-  fluffychat:
-    command: fluffychat
+  anychat:
+    command: anychat
     extensions: [gnome]
     plugs:
       - audio-playback

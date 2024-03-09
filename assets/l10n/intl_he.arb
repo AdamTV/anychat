@@ -555,8 +555,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -655,7 +655,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} הזמין אותך ל-FluffyChat.\n1. התקן את FluffyChat: https://fluffychat.im\n2. הירשם או היכנס\n3. פתח את קישור ההזמנה: {link}",
+    "inviteText": "{username} הזמין אותך ל-AnyChat.\n1. התקן את AnyChat: https://anychat.im\n2. הירשם או היכנס\n3. פתח את קישור ההזמנה: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -1186,12 +1186,12 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "הודעה חדשה ב-FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "הודעה חדשה ב-AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "נראה שאין לך שירותי גוגל בטלפון שלך. זו החלטה טובה לפרטיות שלך! כדי לקבל התרעות ב- FluffyChat אנו ממליצים להשתמש https://microg.org/ או https://unifiedpush.org/.",
+    "noGoogleServicesWarning": "נראה שאין לך שירותי גוגל בטלפון שלך. זו החלטה טובה לפרטיות שלך! כדי לקבל התרעות ב- AnyChat אנו ממליצים להשתמש https://microg.org/ או https://unifiedpush.org/.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}

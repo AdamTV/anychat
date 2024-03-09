@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/utils/room_status_extension.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/utils/room_status_extension.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 class SeenByRow extends StatelessWidget {
   final ChatController controller;
@@ -19,12 +19,11 @@ class SeenByRow extends StatelessWidget {
       alignment: Alignment.center,
       child: AnimatedContainer(
         constraints:
-            const BoxConstraints(maxWidth: FluffyThemes.columnWidth * 2.5),
+            const BoxConstraints(maxWidth: AnyThemes.columnWidth * 2.5),
         height: seenByUsers.isEmpty ? 0 : 24,
-        duration: seenByUsers.isEmpty
-            ? Duration.zero
-            : FluffyThemes.animationDuration,
-        curve: FluffyThemes.animationCurve,
+        duration:
+            seenByUsers.isEmpty ? Duration.zero : AnyThemes.animationDuration,
+        curve: AnyThemes.animationCurve,
         alignment: controller.timeline!.events.isNotEmpty &&
                 controller.timeline!.events.first.senderId ==
                     Matrix.of(context).client.userID

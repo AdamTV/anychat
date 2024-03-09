@@ -1,4 +1,4 @@
-FluffyChat 1.6.0 features a lot of bug fixes and improvements. The code base has been
+AnyChat 1.6.0 features a lot of bug fixes and improvements. The code base has been
 simplified and the drawer on the chat list page got a come-back. Some new features like
 the space hierarchy and session dump have been implemented.
 

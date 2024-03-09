@@ -6,9 +6,9 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/pages/chat/send_file_dialog.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/pages/chat/send_file_dialog.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 void onChatTap(Room room, BuildContext context) async {
   if (room.membership == Membership.invite) {
@@ -85,7 +85,7 @@ void onChatTap(Room room, BuildContext context) async {
   final shareContent = Matrix.of(context).shareContent;
   if (shareContent != null) {
     final shareFile = shareContent.tryGet<MatrixFile>('file');
-    if (shareContent.tryGet<String>('msgtype') == 'chat.fluffy.shared_file' &&
+    if (shareContent.tryGet<String>('msgtype') == 'chat.any.shared_file' &&
         shareFile != null) {
       await showDialog(
         context: context,

@@ -12,10 +12,10 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart' as ffi;
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:universal_html/html.dart' as html;
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/utils/client_manager.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/flutter_hive_collections_database.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/utils/client_manager.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/flutter_hive_collections_database.dart';
+import 'package:anychat/utils/platform_infos.dart';
 
 Future<DatabaseApi> flutterMatrixSdkDatabaseBuilder(Client client) async {
   MatrixSdkDatabase? database;

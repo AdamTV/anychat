@@ -5,12 +5,12 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:matrix/matrix.dart';
 import 'package:swipe_to_action/swipe_to_action.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/utils/date_time_extension.dart';
-import 'package:fluffychat/utils/string_color.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/hover_builder.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/utils/date_time_extension.dart';
+import 'package:anychat/utils/string_color.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/hover_builder.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../../config/app_config.dart';
 import 'message_content.dart';
 import 'message_reactions.dart';
@@ -136,8 +136,8 @@ class Message extends StatelessWidget {
         }
         return AnimatedSlide(
           offset: Offset(0, animateIn ? 1 : 0),
-          duration: FluffyThemes.animationDuration,
-          curve: FluffyThemes.animationCurve,
+          duration: AnyThemes.animationDuration,
+          curve: AnyThemes.animationCurve,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: rowMainAxisAlignment,
@@ -234,8 +234,8 @@ class Message extends StatelessWidget {
                                       event.status.isSending
                                   ? 0.5
                                   : 1,
-                          duration: FluffyThemes.animationDuration,
-                          curve: FluffyThemes.animationCurve,
+                          duration: AnyThemes.animationDuration,
+                          curve: AnyThemes.animationCurve,
                           child: Material(
                             color: noBubble ? Colors.transparent : color,
                             clipBehavior: Clip.antiAlias,
@@ -255,7 +255,7 @@ class Message extends StatelessWidget {
                                       vertical: 8,
                                     ),
                               constraints: const BoxConstraints(
-                                maxWidth: FluffyThemes.columnWidth * 1.5,
+                                maxWidth: AnyThemes.columnWidth * 1.5,
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -452,7 +452,7 @@ class Message extends StatelessWidget {
             children: [
               Container(
                 constraints: const BoxConstraints(
-                  maxWidth: FluffyThemes.columnWidth * 2.5,
+                  maxWidth: AnyThemes.columnWidth * 2.5,
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
@@ -467,10 +467,10 @@ class Message extends StatelessWidget {
                 child: AnimatedScale(
                   duration: Duration(
                     milliseconds:
-                        (FluffyThemes.animationDuration.inMilliseconds / 2)
+                        (AnyThemes.animationDuration.inMilliseconds / 2)
                             .floor(),
                   ),
-                  curve: FluffyThemes.animationCurve,
+                  curve: AnyThemes.animationCurve,
                   scale: !longPressSelect && hovered ? 1 : 0,
                   alignment: Alignment.center,
                   child: Material(

@@ -7,9 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
-import '../../utils/fluffy_share.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
+import '../../utils/any_share.dart';
 import 'chat_list.dart';
 
 class ClientChooserButton extends StatelessWidget {
@@ -264,7 +264,7 @@ class ClientChooserButton extends StatelessWidget {
           controller.createNewSpace();
           break;
         case SettingsAction.invite:
-          FluffyShare.shareInviteLink(context);
+          AnyShare.shareInviteLink(context);
           break;
         case SettingsAction.settings:
           context.go('/rooms/settings');

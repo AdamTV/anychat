@@ -1,16 +1,16 @@
-import 'package:fluffychat/utils/translation_services/text_translation_services.dart';
+import 'package:anychat/utils/translation_services/text_translation_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/pages/chat/events/video_player.dart';
-import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
-import 'package:fluffychat/utils/date_time_extension.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/pages/chat/events/video_player.dart';
+import 'package:anychat/utils/adaptive_bottom_sheet.dart';
+import 'package:anychat/utils/date_time_extension.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../../config/app_config.dart';
 import '../../../utils/platform_infos.dart';
 import '../../../utils/url_launcher.dart';

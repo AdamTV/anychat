@@ -552,8 +552,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -682,7 +682,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} t'ha convidat a FluffyChat.\n1. Instal·la FluffyChat: https://fluffychat.im\n2. Registra't o inicia sessió\n3. Obre l'enllaç d'invitació: {link}",
+    "inviteText": "{username} t'ha convidat a AnyChat.\n1. Instal·la AnyChat: https://anychat.im\n2. Registra't o inicia sessió\n3. Obre l'enllaç d'invitació: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -824,8 +824,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "Missatge nou al FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "Missatge nou al AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -849,7 +849,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "Sembla que no teniu els Serveis de Google al telèfon. Això és una bona decisió respecte a la vostra privadesa! Per a rebre notificacions automàtiques del FluffyChat, us recomanem utilitzar https://microg.org/ o https://unifiedpush.org/.",
+    "noGoogleServicesWarning": "Sembla que no teniu els Serveis de Google al telèfon. Això és una bona decisió respecte a la vostra privadesa! Per a rebre notificacions automàtiques del AnyChat, us recomanem utilitzar https://microg.org/ o https://unifiedpush.org/.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1266,7 +1266,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",

@@ -6,8 +6,8 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/widgets/permission_slider_dialog.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/widgets/permission_slider_dialog.dart';
 import '../../widgets/matrix.dart';
 import 'user_bottom_sheet_view.dart';
 
@@ -228,7 +228,7 @@ class UserBottomSheetController extends State<UserBottomSheet> {
       case UserBottomSheetAction.message:
         Navigator.of(context).pop();
         // Workaround for https://github.com/flutter/flutter/issues/27495
-        await Future.delayed(FluffyThemes.animationDuration);
+        await Future.delayed(AnyThemes.animationDuration);
 
         final roomIdResult = await showFutureLoadingDialog(
           context: widget.outerContext,
@@ -243,7 +243,7 @@ class UserBottomSheetController extends State<UserBottomSheet> {
       case UserBottomSheetAction.ignore:
         Navigator.of(context).pop();
         // Workaround for https://github.com/flutter/flutter/issues/27495
-        await Future.delayed(FluffyThemes.animationDuration);
+        await Future.delayed(AnyThemes.animationDuration);
         final userId = user?.id ?? widget.profile?.userId;
         widget.outerContext
             .go('/rooms/settings/security/ignorelist', extra: userId);

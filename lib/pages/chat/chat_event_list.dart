@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:matrix/matrix.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/pages/chat/events/message.dart';
-import 'package:fluffychat/pages/chat/seen_by_row.dart';
-import 'package:fluffychat/pages/chat/typing_indicators.dart';
-import 'package:fluffychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
-import 'package:fluffychat/utils/account_config.dart';
-import 'package:fluffychat/utils/adaptive_bottom_sheet.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/filtered_timeline_extension.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/pages/chat/events/message.dart';
+import 'package:anychat/pages/chat/seen_by_row.dart';
+import 'package:anychat/pages/chat/typing_indicators.dart';
+import 'package:anychat/pages/user_bottom_sheet/user_bottom_sheet.dart';
+import 'package:anychat/utils/account_config.dart';
+import 'package:anychat/utils/adaptive_bottom_sheet.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/filtered_timeline_extension.dart';
+import 'package:anychat/utils/platform_infos.dart';
 
 class ChatEventList extends StatelessWidget {
   final ChatController controller;
@@ -23,7 +23,7 @@ class ChatEventList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final horizontalPadding = FluffyThemes.isColumnMode(context) ? 8.0 : 0.0;
+    final horizontalPadding = AnyThemes.isColumnMode(context) ? 8.0 : 0.0;
 
     final events = controller.timeline!.events
         .where((event) => event.isVisibleInGui)

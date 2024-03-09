@@ -542,8 +542,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -662,7 +662,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} te invitó a FluffyChat.\n1. Instale FluffyChat: https://fluffychat.im\n2. Regístrate o inicia sesión \n3. Abra el enlace de invitación: {link}",
+    "inviteText": "{username} te invitó a AnyChat.\n1. Instale AnyChat: https://anychat.im\n2. Regístrate o inicia sesión \n3. Abra el enlace de invitación: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -789,8 +789,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "Nuevo mensaje en FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "Nuevo mensaje en AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -819,7 +819,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "Parece que no tienes servicios de Google en tu teléfono. ¡Esa es una buena decisión para tu privacidad! Para recibir notificaciones instantáneas en FluffyChat, recomendamos usar microG: https://microg.org/",
+    "noGoogleServicesWarning": "Parece que no tienes servicios de Google en tu teléfono. ¡Esa es una buena decisión para tu privacidad! Para recibir notificaciones instantáneas en AnyChat, recomendamos usar microG: https://microg.org/",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1185,7 +1185,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -2047,7 +2047,7 @@
             "senderName": {}
         }
     },
-    "otherCallingPermissions": "Micrófono, cámara y otros permisos de FluffyChat",
+    "otherCallingPermissions": "Micrófono, cámara y otros permisos de AnyChat",
     "@otherCallingPermissions": {},
     "emailOrUsername": "Correo electrónico o nombre de usuario",
     "@emailOrUsername": {},
@@ -2083,7 +2083,7 @@
     "@encryptThisChat": {},
     "openChat": "Abrir chat",
     "@openChat": {},
-    "screenSharingDetail": "Usted está compartiendo su pantalla en FluffyChat",
+    "screenSharingDetail": "Usted está compartiendo su pantalla en AnyChat",
     "@screenSharingDetail": {},
     "jumpToLastReadMessage": "",
     "@jumpToLastReadMessage": {},
@@ -2100,7 +2100,7 @@
     "@reportErrorDescription": {},
     "unsupportedAndroidVersion": "Versión de Android no compatible",
     "@unsupportedAndroidVersion": {},
-    "indexedDbErrorLong": "El almacenamiento de mensajes, por desgracia, no está habilitado en el modo privado por defecto.\nPor favor, visite\n - about:config\n - Establezca dom.indexedDB.privateBrowsing.enabled a true\nDe otra forma, no es posible usar FluffyChat.",
+    "indexedDbErrorLong": "El almacenamiento de mensajes, por desgracia, no está habilitado en el modo privado por defecto.\nPor favor, visite\n - about:config\n - Establezca dom.indexedDB.privateBrowsing.enabled a true\nDe otra forma, no es posible usar AnyChat.",
     "@indexedDbErrorLong": {},
     "startFirstChat": "Comience su primer chat",
     "@startFirstChat": {},
@@ -2140,7 +2140,7 @@
     "@newSpaceDescription": {},
     "chatDescription": "Descripción del chat",
     "@chatDescription": {},
-    "callingAccountDetails": "Permite a FluffyChat utilizar la aplicación de llamadas nativa de Android.",
+    "callingAccountDetails": "Permite a AnyChat utilizar la aplicación de llamadas nativa de Android.",
     "@callingAccountDetails": {},
     "enterSpace": "Unirse al espacio",
     "@enterSpace": {},

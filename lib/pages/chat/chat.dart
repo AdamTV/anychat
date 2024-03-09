@@ -21,18 +21,18 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat_view.dart';
-import 'package:fluffychat/pages/chat/event_info_dialog.dart';
-import 'package:fluffychat/pages/chat/recording_dialog.dart';
-import 'package:fluffychat/pages/chat_details/chat_details.dart';
-import 'package:fluffychat/utils/error_reporter.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/event_extension.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/widgets/app_lock.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat_view.dart';
+import 'package:anychat/pages/chat/event_info_dialog.dart';
+import 'package:anychat/pages/chat/recording_dialog.dart';
+import 'package:anychat/pages/chat_details/chat_details.dart';
+import 'package:anychat/utils/error_reporter.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/event_extension.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/widgets/app_lock.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../utils/account_bundles.dart';
 import '../../utils/localized_exception_extension.dart';
 import '../../utils/matrix_sdk_extensions/matrix_file_extension.dart';
@@ -74,10 +74,10 @@ class ChatPage extends StatelessWidget {
             shareText: shareText,
           ),
         ),
-        if (FluffyThemes.isThreeColumnMode(context) &&
+        if (AnyThemes.isThreeColumnMode(context) &&
             room.membership == Membership.join)
           Container(
-            width: FluffyThemes.columnWidth,
+            width: AnyThemes.columnWidth,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               border: Border(

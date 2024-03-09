@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/utils/platform_infos.dart';
 
 class LoginScaffold extends StatelessWidget {
   final Widget body;
@@ -23,8 +23,7 @@ class LoginScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobileMode =
-        enforceMobileMode || !FluffyThemes.isColumnMode(context);
+    final isMobileMode = enforceMobileMode || !AnyThemes.isColumnMode(context);
     final scaffold = Scaffold(
       key: const Key('LoginScaffold'),
       appBar: appBar == null
@@ -104,7 +103,7 @@ class _PrivacyButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shadowTextStyle = FluffyThemes.isColumnMode(context)
+    final shadowTextStyle = AnyThemes.isColumnMode(context)
         ? const TextStyle(
             color: Colors.white,
             shadows: [

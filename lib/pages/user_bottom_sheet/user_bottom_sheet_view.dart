@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/utils/date_time_extension.dart';
-import 'package:fluffychat/utils/fluffy_share.dart';
-import 'package:fluffychat/utils/url_launcher.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/presence_builder.dart';
+import 'package:anychat/utils/date_time_extension.dart';
+import 'package:anychat/utils/any_share.dart';
+import 'package:anychat/utils/url_launcher.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/presence_builder.dart';
 import '../../widgets/matrix.dart';
 import 'user_bottom_sheet.dart';
 
@@ -136,7 +136,7 @@ class UserBottomSheetView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton.icon(
-                        onPressed: () => FluffyShare.share(
+                        onPressed: () => AnyShare.share(
                           'https://matrix.to/#/$userId',
                           context,
                         ),
@@ -156,7 +156,7 @@ class UserBottomSheetView extends StatelessWidget {
                         ),
                       ),
                       TextButton.icon(
-                        onPressed: () => FluffyShare.share(
+                        onPressed: () => AnyShare.share(
                           userId,
                           context,
                           copyOnly: true,

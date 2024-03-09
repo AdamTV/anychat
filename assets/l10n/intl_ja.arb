@@ -622,8 +622,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -782,7 +782,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username}がFluffyChatにあなたを招待しました. \n1. FluffyChatをインストールしてください: https://fluffychat.im \n2. 新しくアカウントを作成するかサインインしてください\n3. 招待リンクを開いてください: {link}",
+    "inviteText": "{username}がAnyChatにあなたを招待しました. \n1. AnyChatをインストールしてください: https://anychat.im \n2. 新しくアカウントを作成するかサインインしてください\n3. 招待リンクを開いてください: {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -924,8 +924,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 FluffyChatに新しいメッセージがあります",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 AnyChatに新しいメッセージがあります",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1437,7 +1437,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -2010,9 +2010,9 @@
     "@storeSecurlyOnThisDevice": {},
     "whyIsThisMessageEncrypted": "このメッセージが読めない理由",
     "@whyIsThisMessageEncrypted": {},
-    "otherCallingPermissions": "マイク、カメラ、その他FluffyChatの権限",
+    "otherCallingPermissions": "マイク、カメラ、その他AnyChatの権限",
     "@otherCallingPermissions": {},
-    "appearOnTopDetails": "アプリをトップに表示できるようにする（すでに通話アカウントとしてFluffychatを設定している場合は必要ありません）",
+    "appearOnTopDetails": "アプリをトップに表示できるようにする（すでに通話アカウントとしてAnychatを設定している場合は必要ありません）",
     "@appearOnTopDetails": {},
     "dehydrateTorLong": "TOR ユーザーの場合、ウィンドウを閉じる前にセッションをエクスポートすることをお勧めします。",
     "@dehydrateTorLong": {},

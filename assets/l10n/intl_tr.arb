@@ -742,8 +742,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -902,7 +902,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} sizi FluffyChat'e davet etti.\n1. fluffychat.im adresini ziyaret edin ve uygulamayı kurun \n2. Kaydolun veya oturum açın \n3. Davet bağlantısını açın: \n {link}",
+    "inviteText": "{username} sizi AnyChat'e davet etti.\n1. anychat.im adresini ziyaret edin ve uygulamayı kurun \n2. Kaydolun veya oturum açın \n3. Davet bağlantısını açın: \n {link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -1054,8 +1054,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 FluffyChat'te yeni mesaj",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 AnyChat'te yeni mesaj",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -1649,7 +1649,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -2157,7 +2157,7 @@
     "@dehydrateWarning": {},
     "hydrateTorLong": "TOR'da en son oturumunuzu dışa aktardınız mı? Hızlıca içe aktarın ve sohbete devam edin.",
     "@hydrateTorLong": {},
-    "indexedDbErrorLong": "Mesaj saklama özelliği ne yazık ki öntanımlı olarak gizli modda etkin değildir.\nLütfen\n - about:config sayfasına gidin ve\n - dom.indexedDB.privateBrowsing.enabled seçeneğini true olarak ayarlayın\nAksi takdirde FluffyChat çalıştırılamaz.",
+    "indexedDbErrorLong": "Mesaj saklama özelliği ne yazık ki öntanımlı olarak gizli modda etkin değildir.\nLütfen\n - about:config sayfasına gidin ve\n - dom.indexedDB.privateBrowsing.enabled seçeneğini true olarak ayarlayın\nAksi takdirde AnyChat çalıştırılamaz.",
     "@indexedDbErrorLong": {},
     "user": "Kullanıcı",
     "@user": {},
@@ -2184,7 +2184,7 @@
     "@screenSharingTitle": {},
     "callingPermissions": "Arama izinleri",
     "@callingPermissions": {},
-    "callingAccountDetails": "FluffyChat'in yerel android telefon uygulamasını kullanmasına izin verir.",
+    "callingAccountDetails": "AnyChat'in yerel android telefon uygulamasını kullanmasına izin verir.",
     "@callingAccountDetails": {},
     "appearOnTop": "Üstte görün",
     "@appearOnTop": {},
@@ -2194,13 +2194,13 @@
     "@enterRoom": {},
     "allSpaces": "Tüm alanlar",
     "@allSpaces": {},
-    "otherCallingPermissions": "Mikrofon, kamera ve diğer FluffyChat izinleri",
+    "otherCallingPermissions": "Mikrofon, kamera ve diğer AnyChat izinleri",
     "@otherCallingPermissions": {},
     "foregroundServiceRunning": "Bu bildirim, ön plan hizmeti çalışırken görünür.",
     "@foregroundServiceRunning": {},
     "callingAccount": "Arama hesabı",
     "@callingAccount": {},
-    "appearOnTopDetails": "Uygulamanın üstte görünmesine izin verir (Fluffychat'ı zaten bir arama hesabı olarak ayarladıysanız gerekli değildir)",
+    "appearOnTopDetails": "Uygulamanın üstte görünmesine izin verir (Anychat'ı zaten bir arama hesabı olarak ayarladıysanız gerekli değildir)",
     "@appearOnTopDetails": {},
     "newGroup": "Yeni grup",
     "@newGroup": {},

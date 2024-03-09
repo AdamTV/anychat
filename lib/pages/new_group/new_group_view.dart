@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/new_group/new_group.dart';
-import 'package:fluffychat/utils/localized_exception_extension.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/layouts/max_width_body.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/new_group/new_group.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/layouts/max_width_body.dart';
 
 class NewGroupView extends StatelessWidget {
   final NewGroupController controller;
@@ -90,7 +90,7 @@ class NewGroupView extends StatelessWidget {
               onChanged: controller.loading ? null : controller.setPublicGroup,
             ),
             AnimatedSize(
-              duration: FluffyThemes.animationDuration,
+              duration: AnyThemes.animationDuration,
               child: controller.publicGroup
                   ? SwitchListTile.adaptive(
                       secondary: const Icon(Icons.search_outlined),
@@ -143,7 +143,7 @@ class NewGroupView extends StatelessWidget {
               ),
             ),
             AnimatedSize(
-              duration: FluffyThemes.animationDuration,
+              duration: AnyThemes.animationDuration,
               child: error == null
                   ? const SizedBox.shrink()
                   : ListTile(

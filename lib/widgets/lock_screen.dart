@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/widgets/app_lock.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/widgets/app_lock.dart';
 
 class LockScreen extends StatefulWidget {
   const LockScreen({super.key});
@@ -71,7 +71,7 @@ class _LockScreenState extends State<LockScreen> {
           padding: const EdgeInsets.all(16.0),
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: FluffyThemes.columnWidth,
+              maxWidth: AnyThemes.columnWidth,
             ),
             child: ListView(
               shrinkWrap: true,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat/chat.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat/chat.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 class TypingIndicators extends StatelessWidget {
   final ChatController controller;
@@ -22,10 +22,10 @@ class TypingIndicators extends StatelessWidget {
       alignment: Alignment.center,
       child: AnimatedContainer(
         constraints:
-            const BoxConstraints(maxWidth: FluffyThemes.columnWidth * 2.5),
+            const BoxConstraints(maxWidth: AnyThemes.columnWidth * 2.5),
         height: typingUsers.isEmpty ? 0 : Avatar.defaultSize + bottomPadding,
-        duration: FluffyThemes.animationDuration,
-        curve: FluffyThemes.animationCurve,
+        duration: AnyThemes.animationDuration,
+        curve: AnyThemes.animationCurve,
         alignment: controller.timeline!.events.isNotEmpty &&
                 controller.timeline!.events.first.senderId ==
                     Matrix.of(context).client.userID

@@ -14,22 +14,22 @@ import 'package:matrix/matrix.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat_list/chat_list_view.dart';
-import 'package:fluffychat/utils/localized_exception_extension.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat_list/chat_list_view.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/platform_infos.dart';
 import '../../../utils/account_bundles.dart';
 import '../../config/setting_keys.dart';
 import '../../utils/matrix_sdk_extensions/matrix_file_extension.dart';
 import '../../utils/url_launcher.dart';
 import '../../utils/voip/callkeep_manager.dart';
-import '../../widgets/fluffy_chat_app.dart';
+import '../../widgets/any_chat_app.dart';
 import '../../widgets/matrix.dart';
 import '../bootstrap/bootstrap_dialog.dart';
 
-import 'package:fluffychat/utils/tor_stub.dart'
+import 'package:anychat/utils/tor_stub.dart'
     if (dart.library.html) 'package:tor_detector_web/tor_detector_web.dart';
 
 enum SelectMode {
@@ -78,7 +78,7 @@ class ChatListController extends State<ChatList>
   StreamSubscription? _intentUriStreamSubscription;
 
   bool get displayNavigationBar =>
-      !FluffyThemes.isColumnMode(context) &&
+      !AnyThemes.isColumnMode(context) &&
       (spaces.isNotEmpty || AppConfig.separateChatTypes);
 
   String? activeSpaceId;
@@ -173,7 +173,7 @@ class ChatListController extends State<ChatList>
   QueryPublicRoomsResponse? roomSearchResult;
 
   bool isSearching = false;
-  static const String _serverStoreNamespace = 'im.fluffychat.search.server';
+  static const String _serverStoreNamespace = 'im.anychat.search.server';
 
   void setServer() async {
     final newServer = await showTextInputDialog(
@@ -344,7 +344,7 @@ class ChatListController extends State<ChatList>
     final file = File(files.first.path.replaceFirst('file://', ''));
 
     Matrix.of(context).shareContent = {
-      'msgtype': 'chat.fluffy.shared_file',
+      'msgtype': 'chat.any.shared_file',
       'file': MatrixFile(
         bytes: file.readAsBytesSync(),
         name: file.path,
@@ -395,8 +395,8 @@ class ChatListController extends State<ChatList>
 
     // For receiving shared Uris
     _intentUriStreamSubscription = linkStream.listen(_processIncomingUris);
-    if (FluffyChatApp.gotInitialLink == false) {
-      FluffyChatApp.gotInitialLink = true;
+    if (AnyChatApp.gotInitialLink == false) {
+      AnyChatApp.gotInitialLink = true;
       getInitialLink().then(_processIncomingUris);
     }
 

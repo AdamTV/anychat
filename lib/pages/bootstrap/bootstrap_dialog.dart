@@ -7,11 +7,11 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:matrix/encryption.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/utils/error_reporter.dart';
-import 'package:fluffychat/utils/fluffy_share.dart';
-import 'package:fluffychat/utils/localized_exception_extension.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/utils/error_reporter.dart';
+import 'package:anychat/utils/any_share.dart';
+import 'package:anychat/utils/localized_exception_extension.dart';
+import 'package:anychat/utils/platform_infos.dart';
 import '../../utils/adaptive_bottom_sheet.dart';
 import '../key_verification/key_verification_dialog.dart';
 
@@ -109,7 +109,7 @@ class BootstrapDialogState extends State<BootstrapDialog> {
         body: Center(
           child: ConstrainedBox(
             constraints:
-                const BoxConstraints(maxWidth: FluffyThemes.columnWidth * 1.5),
+                const BoxConstraints(maxWidth: AnyThemes.columnWidth * 1.5),
             child: ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
@@ -160,7 +160,7 @@ class BootstrapDialogState extends State<BootstrapDialog> {
                   value: _recoveryKeyCopied,
                   activeColor: Theme.of(context).colorScheme.primary,
                   onChanged: (b) {
-                    FluffyShare.share(key!, context);
+                    AnyShare.share(key!, context);
                     setState(() => _recoveryKeyCopied = true);
                   },
                   title: Text(L10n.of(context)!.copyToClipboard),
@@ -231,7 +231,7 @@ class BootstrapDialogState extends State<BootstrapDialog> {
             body: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  maxWidth: FluffyThemes.columnWidth * 1.5,
+                  maxWidth: AnyThemes.columnWidth * 1.5,
                 ),
                 child: ListView(
                   padding: const EdgeInsets.all(16.0),

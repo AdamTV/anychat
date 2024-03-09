@@ -6,13 +6,13 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/themes.dart';
-import 'package:fluffychat/pages/chat_list/chat_list.dart';
-import 'package:fluffychat/pages/chat_list/navi_rail_item.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/unread_rooms_badge.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/themes.dart';
+import 'package:anychat/pages/chat_list/chat_list.dart';
+import 'package:anychat/pages/chat_list/navi_rail_item.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/unread_rooms_badge.dart';
 import '../../widgets/matrix.dart';
 import 'chat_list_body.dart';
 import 'start_chat_fab.dart';
@@ -115,7 +115,7 @@ class ChatListView extends StatelessWidget {
           },
           child: Row(
             children: [
-              if (FluffyThemes.isColumnMode(context) &&
+              if (AnyThemes.isColumnMode(context) &&
                   controller.widget.displayNavigationRail) ...[
                 Builder(
                   builder: (context) {
@@ -132,7 +132,7 @@ class ChatListView extends StatelessWidget {
                     final destinations = getNavigationDestinations(context);
 
                     return SizedBox(
-                      width: FluffyThemes.navRailWidth,
+                      width: AnyThemes.navRailWidth,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: rootSpaces.length + destinations.length,

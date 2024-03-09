@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:matrix/matrix.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/utils/fluffy_share.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/utils/any_share.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 import 'settings.dart';
 
 class SettingsView extends StatelessWidget {
@@ -113,7 +113,7 @@ class SettingsView extends StatelessWidget {
                             ),
                           ),
                           TextButton.icon(
-                            onPressed: () => FluffyShare.share(mxid, context),
+                            onPressed: () => AnyShare.share(mxid, context),
                             icon: const Icon(
                               Icons.copy_outlined,
                               size: 14,

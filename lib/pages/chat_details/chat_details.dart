@@ -11,12 +11,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:matrix/matrix.dart' as matrix;
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/pages/chat_details/chat_details_view.dart';
-import 'package:fluffychat/pages/settings/settings.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/widgets/app_lock.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/pages/chat_details/chat_details_view.dart';
+import 'package:anychat/pages/settings/settings.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/widgets/app_lock.dart';
+import 'package:anychat/widgets/matrix.dart';
 
 enum AliasActions { copy, delete, setCanonical }
 

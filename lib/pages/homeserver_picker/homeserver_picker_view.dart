@@ -4,9 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/widgets/layouts/login_scaffold.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/widgets/layouts/login_scaffold.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../config/themes.dart';
 import '../../widgets/mxc_image.dart';
 import 'homeserver_app_bar.dart';
@@ -42,8 +42,8 @@ class HomeserverPickerView extends StatelessWidget {
           // usually forced to logout as TOR browser is non-persistent
           AnimatedContainer(
             height: controller.isTorBrowser ? 64 : 0,
-            duration: FluffyThemes.animationDuration,
-            curve: FluffyThemes.animationCurve,
+            duration: AnyThemes.animationDuration,
+            curve: AnyThemes.animationCurve,
             clipBehavior: Clip.hardEdge,
             decoration: const BoxDecoration(),
             child: Material(

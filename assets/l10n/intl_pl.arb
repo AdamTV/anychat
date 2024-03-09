@@ -659,8 +659,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "fluffychat": "FluffyChat",
-    "@fluffychat": {
+    "anychat": "AnyChat",
+    "@anychat": {
         "type": "text",
         "placeholders": {}
     },
@@ -794,7 +794,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "inviteText": "{username} zaprosił/-a cię do FluffyChat. \n1. Odwiedź fluffychat.im i zainstaluj aplikację\n2. Zarejestuj się lub zaloguj \n3. Otwórz link zaproszenia:\n{link}",
+    "inviteText": "{username} zaprosił/-a cię do AnyChat. \n1. Odwiedź anychat.im i zainstaluj aplikację\n2. Zarejestuj się lub zaloguj \n3. Otwórz link zaproszenia:\n{link}",
     "@inviteText": {
         "type": "text",
         "placeholders": {
@@ -931,8 +931,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newMessageInFluffyChat": "💬 Nowa wiadomość w FluffyChat",
-    "@newMessageInFluffyChat": {
+    "newMessageInAnyChat": "💬 Nowa wiadomość w AnyChat",
+    "@newMessageInAnyChat": {
         "type": "text",
         "placeholders": {}
     },
@@ -956,7 +956,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "noGoogleServicesWarning": "Wygląda na to, że nie masz usług Google w swoim telefonie. To dobra decyzja dla twojej prywatności! Aby otrzymywać powiadomienia wysyłane w FluffyChat, zalecamy korzystanie z https://microg.org/ lub https://unifiedpush.org/.",
+    "noGoogleServicesWarning": "Wygląda na to, że nie masz usług Google w swoim telefonie. To dobra decyzja dla twojej prywatności! Aby otrzymywać powiadomienia wysyłane w AnyChat, zalecamy korzystanie z https://microg.org/ lub https://unifiedpush.org/.",
     "@noGoogleServicesWarning": {
         "type": "text",
         "placeholders": {}
@@ -1248,7 +1248,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "title": "FluffyChat",
+    "title": "AnyChat",
     "@title": {
         "description": "Title for the application",
         "type": "text",
@@ -2089,13 +2089,13 @@
     "@deviceKeys": {},
     "emailOrUsername": "Adres e-mail lub nazwa użytkownika",
     "@emailOrUsername": {},
-    "indexedDbErrorLong": "Przechowywanie wiadomości niestety nie jest domyślnie włączone w trybie prywatnym.\nOdwiedź\n - about:config\n - ustaw dom.indexedDB.privateBrowsing.enabled na true\nW przeciwnym razie nie jest możliwe uruchomienie FluffyChat.",
+    "indexedDbErrorLong": "Przechowywanie wiadomości niestety nie jest domyślnie włączone w trybie prywatnym.\nOdwiedź\n - about:config\n - ustaw dom.indexedDB.privateBrowsing.enabled na true\nW przeciwnym razie nie jest możliwe uruchomienie AnyChat.",
     "@indexedDbErrorLong": {},
     "saveKeyManuallyDescription": "Zapisz ten klucz ręcznie, uruchamiając systemowe okno dialogowe udostępniania lub schowek.",
     "@saveKeyManuallyDescription": {},
     "screenSharingTitle": "udostępnianie ekranu",
     "@screenSharingTitle": {},
-    "appearOnTopDetails": "Umożliwia wyświetlanie aplikacji nad innymi (nie jest to konieczne, jeśli FluffyChat jest już ustawiony jako konto do dzwonienia)",
+    "appearOnTopDetails": "Umożliwia wyświetlanie aplikacji nad innymi (nie jest to konieczne, jeśli AnyChat jest już ustawiony jako konto do dzwonienia)",
     "@appearOnTopDetails": {},
     "noKeyForThisMessage": "Może się to zdarzyć, jeśli wiadomość została wysłana przed zalogowaniem się na to konto na tym urządzeniu.\n\nMożliwe jest również, że nadawca zablokował Twoje urządzenie lub coś poszło nie tak z połączeniem internetowym.\n\nJesteś w stanie odczytać wiadomość na innej sesji? W takim razie możesz przenieść z niej wiadomość! Wejdź w Ustawienia > Urządzenia i upewnij się, że Twoje urządzenia zweryfikowały się wzajemnie. Gdy następnym razem otworzysz pokój i obie sesje będą włączone, klucze zostaną przekazane automatycznie.\n\nNie chcesz stracić kluczy podczas wylogowania lub przełączania urządzeń? Upewnij się, że w ustawieniach masz włączoną kopię zapasową czatu.",
     "@noKeyForThisMessage": {},
@@ -2225,15 +2225,15 @@
     "@storeSecurlyOnThisDevice": {},
     "foregroundServiceRunning": "To powiadomienie pojawia się, gdy usługa w tle jest uruchomiona.",
     "@foregroundServiceRunning": {},
-    "screenSharingDetail": "Udostępniasz swój ekran w FluffyChat",
+    "screenSharingDetail": "Udostępniasz swój ekran w AnyChat",
     "@screenSharingDetail": {},
     "callingAccount": "Konto połączeń",
     "@callingAccount": {},
-    "callingAccountDetails": "Pozwala FluffyChat używać natywnej aplikacji do wykonywania połączeń w Androidzie.",
+    "callingAccountDetails": "Pozwala AnyChat używać natywnej aplikacji do wykonywania połączeń w Androidzie.",
     "@callingAccountDetails": {},
     "appearOnTop": "Wyświetlaj nad innymi",
     "@appearOnTop": {},
-    "otherCallingPermissions": "Mikrofon, kamera i inne uprawnienia FluffyChat",
+    "otherCallingPermissions": "Mikrofon, kamera i inne uprawnienia AnyChat",
     "@otherCallingPermissions": {},
     "whyIsThisMessageEncrypted": "Dlaczego nie można odczytać tej wiadomości?",
     "@whyIsThisMessageEncrypted": {},

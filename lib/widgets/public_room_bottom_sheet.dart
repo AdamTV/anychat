@@ -6,10 +6,10 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/utils/fluffy_share.dart';
-import 'package:fluffychat/utils/url_launcher.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/utils/any_share.dart';
+import 'package:anychat/utils/url_launcher.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../utils/localized_exception_extension.dart';
 
 class PublicRoomBottomSheet extends StatelessWidget {
@@ -95,7 +95,7 @@ class PublicRoomBottomSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: IconButton(
                 icon: Icon(Icons.adaptive.share_outlined),
-                onPressed: () => FluffyShare.share(
+                onPressed: () => AnyShare.share(
                   'https://matrix.to/#/${roomAlias ?? chunk?.roomId}',
                   context,
                 ),
@@ -166,7 +166,7 @@ class PublicRoomBottomSheet extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 16.0),
                     trailing: IconButton(
                       icon: const Icon(Icons.copy_outlined),
-                      onPressed: () => FluffyShare.share(
+                      onPressed: () => AnyShare.share(
                         roomAlias,
                         context,
                       ),

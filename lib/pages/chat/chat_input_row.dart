@@ -6,10 +6,10 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/matrix.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/matrix.dart';
 import '../../config/themes.dart';
 import 'chat.dart';
 import 'input_bar.dart';
@@ -102,8 +102,8 @@ class ChatInputRow extends StatelessWidget {
                     controller.onAddPopupMenuButtonSelected('file'),
                 helpLabel: L10n.of(context)!.sendFile,
                 child: AnimatedContainer(
-                  duration: FluffyThemes.animationDuration,
-                  curve: FluffyThemes.animationCurve,
+                  duration: AnyThemes.animationDuration,
+                  curve: AnyThemes.animationCurve,
                   height: 56,
                   width: controller.sendController.text.isEmpty ? 56 : 0,
                   alignment: Alignment.center,

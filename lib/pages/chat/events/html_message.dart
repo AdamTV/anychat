@@ -10,9 +10,9 @@ import 'package:html/dom.dart' as dom;
 import 'package:linkify/linkify.dart';
 import 'package:matrix/matrix.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/widgets/avatar.dart';
-import 'package:fluffychat/widgets/mxc_image.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/widgets/avatar.dart';
+import 'package:anychat/widgets/mxc_image.dart';
 import '../../../utils/url_launcher.dart';
 
 class HtmlMessage extends StatelessWidget {
@@ -219,7 +219,7 @@ class HtmlMessage extends StatelessWidget {
     'ruby',
     'rp',
     'rt',
-    // Workaround for https://github.com/krille-chan/fluffychat/issues/507
+    // Workaround for https://github.com/krille-chan/anychat/issues/507
     ...fallbackTextTags,
   };
 }

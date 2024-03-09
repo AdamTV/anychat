@@ -35,20 +35,20 @@ jobs:
       - name: Build Release Web
         run: flutter build web --dart-define=FLUTTER_WEB_CANVASKIT_URL=canvaskit/ --release --source-maps --base-href "/web/"
       - name: Create archive
-        run: tar -czf fluffychat-web.tar.gz build/web/
+        run: tar -czf anychat-web.tar.gz build/web/
       - name: Upload Web Build
         uses: actions/upload-artifact@v4
         with:
           name: Web Build
-          path: fluffychat-web.tar.gz
+          path: anychat-web.tar.gz
       - name: Upload to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: fluffychat-web.tar.gz
-          asset_name: fluffychat-web.tar.gz
+          asset_path: anychat-web.tar.gz
+          asset_name: anychat-web.tar.gz
           asset_content_type: application/gzip
       - name: Build Website
         run: |
@@ -64,7 +64,7 @@ jobs:
           personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
           publish_dir: ./public
           publish_branch: gh-pages
-          cname: fluffychat.im
+          cname: anychat.im
 
   build_apk:
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'zulu'
+          distribution: "zulu"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -100,7 +100,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: build/app/outputs/apk/release/app-release.apk
-          asset_name: fluffychat.apk
+          asset_name: anychat.apk
           asset_content_type: application/vnd.android.package-archive
 
   build_linux:
@@ -117,15 +117,15 @@ jobs:
       - run: flutter pub get
       - run: flutter build linux --release --target-platform linux-x64
       - name: Create archive
-        run: tar -czf fluffychat-linux-x64.tar.gz -C build/linux/x64/release/bundle/ .
+        run: tar -czf anychat-linux-x64.tar.gz -C build/linux/x64/release/bundle/ .
       - name: Upload to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: fluffychat-linux-x64.tar.gz
-          asset_name: fluffychat-linux-x64.tar.gz
+          asset_path: anychat-linux-x64.tar.gz
+          asset_name: anychat-linux-x64.tar.gz
           asset_content_type: application/gzip
 
   deploy_playstore:
@@ -136,7 +136,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'zulu'
+          distribution: "zulu"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -197,9 +197,9 @@ jobs:
           SNAPCRAFT_HAS_TTY: "true"
         run: |
           if [[ $GITHUB_REF_NAME == rc* ]]; then
-              yes | snapcraft promote fluffychat --from-channel edge --to-channel candidate
+              yes | snapcraft promote anychat --from-channel edge --to-channel candidate
           else
-              yes | snapcraft promote fluffychat --from-channel edge --to-channel stable
+              yes | snapcraft promote anychat --from-channel edge --to-channel stable
           fi
 
   deploy_docker:

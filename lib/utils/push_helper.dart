@@ -12,12 +12,12 @@ import 'package:flutter_shortcuts/flutter_shortcuts.dart';
 import 'package:matrix/matrix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:fluffychat/config/app_config.dart';
-import 'package:fluffychat/config/setting_keys.dart';
-import 'package:fluffychat/utils/client_manager.dart';
-import 'package:fluffychat/utils/matrix_sdk_extensions/matrix_locals.dart';
-import 'package:fluffychat/utils/platform_infos.dart';
-import 'package:fluffychat/utils/voip/callkeep_manager.dart';
+import 'package:anychat/config/app_config.dart';
+import 'package:anychat/config/setting_keys.dart';
+import 'package:anychat/utils/client_manager.dart';
+import 'package:anychat/utils/matrix_sdk_extensions/matrix_locals.dart';
+import 'package:anychat/utils/platform_infos.dart';
+import 'package:anychat/utils/voip/callkeep_manager.dart';
 
 Future<void> pushHelper(
   PushNotification notification, {
@@ -51,7 +51,7 @@ Future<void> pushHelper(
     l10n ??= lookupL10n(const Locale('en'));
     flutterLocalNotificationsPlugin.show(
       notification.roomId?.hashCode ?? 0,
-      l10n.newMessageInFluffyChat,
+      l10n.newMessageInAnyChat,
       l10n.openAppToReadMessages,
       NotificationDetails(
         iOS: const DarwinNotificationDetails(),
@@ -156,7 +156,7 @@ Future<void> _tryPushHelper(
 
   // Calculate the body
   final body = event.type == EventTypes.Encrypted
-      ? l10n.newMessageInFluffyChat
+      ? l10n.newMessageInAnyChat
       : await event.calcLocalizedBody(
           matrixLocals,
           plaintextBody: true,
