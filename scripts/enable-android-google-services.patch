@@ -82,8 +82,8 @@ index d9930f55..510e9845 100644
 --- a/android/app/src/main/kotlin/chat/any/anychat/FcmPushService.kt
 +++ b/android/app/src/main/kotlin/chat/any/anychat/FcmPushService.kt
 @@ -1,4 +1,4 @@
--/*package chat.any.anychat
-+package chat.any.anychat
+-/*package ca.alphatech.anychat
++package ca.alphatech.anychat
  
  import com.famedly.fcm_shared_isolate.FcmSharedIsolateService
  

@@ -81,6 +81,7 @@ dependencies:
   share_plus: ^7.2.1
   shared_preferences: ^2.2.0 # Pinned because https://github.com/flutter/flutter/issues/118401
   slugify: ^2.0.0
+  speech_to_text: ^6.6.0
   sqflite: ^2.3.0
   sqflite_common_ffi: ^2.3.0+4
   sqflite_sqlcipher: ^2.2.1
@@ -161,7 +162,7 @@ msix_config:
   display_name: AnyChat
   publisher_display_name: AnyChat
   publisher: CN=AnyChat, O=Head of bad integration tests, L=Matrix, S=Internet, C=EU
-  identity_name: chat.any.anychat
+  identity_name: ca.alphatech.anychat
   logo_path: assets\logo.png
   capabilities: internetClient, location, microphone, webcam
   protocol_activation: https

@@ -18,9 +18,9 @@ flutter build apk --release
 
 # install and launch APK
 flutter install
-adb shell am start -n chat.any.anychat/chat.any.anychat.MainActivity
+adb shell am start -n ca.alphatech.anychat/ca.alphatech.anychat.MainActivity
 
 sleep 5
 
 # check whether AnyChat runs
-adb shell ps | awk '{print $9}' | grep chat.any.anychat
+adb shell ps | awk '{print $9}' | grep ca.alphatech.anychat

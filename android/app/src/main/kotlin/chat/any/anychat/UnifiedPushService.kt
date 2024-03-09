@@ -1,4 +1,4 @@
-package chat.any.anychat
+package ca.alphatech.anychat
 
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor

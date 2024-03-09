@@ -56,7 +56,7 @@ abstract class AppConfig {
   static const String deepLinkPrefix = 'im.anychat://chat/';
   static const String schemePrefix = 'matrix:';
   static const String pushNotificationsChannelId = 'anychat_push';
-  static const String pushNotificationsAppId = 'chat.any.anychat';
+  static const String pushNotificationsAppId = 'ca.alphatech.anychat';
   static const String pushNotificationsGatewayUrl =
       'https://push.anychat.im/_matrix/push/v1/notify';
   static const String pushNotificationsPusherFormat = 'event_id_only';

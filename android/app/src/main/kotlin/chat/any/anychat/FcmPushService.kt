@@ -1,8 +1,8 @@
-/*package chat.any.anychat
+/*package ca.alphatech.anychat
 
 import com.famedly.fcm_shared_isolate.FcmSharedIsolateService
 
-import chat.any.anychat.MainActivity
+import ca.alphatech.anychat.MainActivity
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

@@ -50,3 +50,4 @@ app.*.map.json
 
 # Ignore Gradle build output directory
 build
+assets/anychat-c414a-bf614c5a2ddc.json

@@ -84,7 +84,7 @@ slots:
   dbus-svc:
     interface: dbus
     bus: session
-    name: chat.any.anychat
+    name: ca.alphatech.anychat
 
 apps:
   anychat:

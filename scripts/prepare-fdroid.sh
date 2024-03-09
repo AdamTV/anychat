@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cp -r android/fastlane fdroid/metadata/chat.any.anychat
+cp -r android/fastlane fdroid/metadata/ca.alphatech.anychat
 cd fdroid
 echo $FDROID_KEY | base64 --decode --ignore-garbage > key.jks
 echo $FDROID_NIGHTLY_KEY | base64 --decode --ignore-garbage > key.nightly.jks
