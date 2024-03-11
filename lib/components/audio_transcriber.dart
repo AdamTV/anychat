@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:google_speech/generated/google/cloud/speech/v2/cloud_speech.pb.dart';
+import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
+    as g_speech_gen;
+import 'package:google_speech/endless_streaming_service.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
@@ -24,7 +26,7 @@ class AudioTranscriber {
   StreamSubscription? _mRecordingDataSubscription;
   late StreamController<Food> recordingDataController;
 
-  Future<Stream<StreamingRecognizeResponse>> getResponseStream(
+  Future<Stream<g_speech_gen.StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
     // stopRecording();
     await _recorder.openRecorder();
@@ -63,15 +65,16 @@ class AudioTranscriber {
 
     final serviceAccount = ServiceAccount.fromString((await rootBundle
         .loadString('assets/anychat-c414a-c304e57544ef.json')));
-    final speechToText = SpeechToTextV2.viaServiceAccount(serviceAccount,
-        projectId: 'anychat-c414a');
-    final responseStream = speechToText.streamingRecognize(
-        StreamingRecognitionConfigV2(
-            config: _getConfig(),
-            streamingFeatures:
-                StreamingRecognitionFeatures(interimResults: true)),
-        _audioStream);
-
+    final speechToText = EndlessStreamingService.viaServiceAccount(
+      serviceAccount,
+    );
+    final config = _getConfig();
+    final responseStream = speechToText.endlessStream;
+    speechToText.endlessStreamingRecognize(
+        StreamingRecognitionConfig(config: config, interimResults: true),
+        _audioStream,
+        restartTime: const Duration(seconds: 60),
+        transitionBufferTime: const Duration(seconds: 2));
     //
     // _mRecordingDataSubscription =
     //     recordingDataController.stream.listen((buffer) {
@@ -89,12 +92,12 @@ class AudioTranscriber {
     return responseStream;
   }
 
-  static RecognitionConfigV2 _getConfig() => RecognitionConfigV2(
-      features: RecognitionFeatures(enableAutomaticPunctuation: true),
-      autoDecodingConfig: AutoDetectDecodingConfig(),
-      model: RecognitionModelV2.long,
-      // sampleRateHertz: tSampleRate,
-      languageCodes: [isoCode!]);
+  RecognitionConfig _getConfig() => RecognitionConfig(
+      encoding: AudioEncoding.LINEAR16,
+      model: RecognitionModel.basic,
+      enableAutomaticPunctuation: true,
+      sampleRateHertz: 16000,
+      languageCode: isoCode!);
 
   // Future<Stream<List<int>>> _getAudioStream() async {
   //   const AUDIO_FORMAT = google_speech..ENCODING_PCM_16BIT;
