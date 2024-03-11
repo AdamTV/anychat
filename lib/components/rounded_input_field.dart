@@ -1,3 +1,4 @@
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/text_field_container.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class RoundedInputField extends StatelessWidget {
         initialValue: initialValue,
         onChanged: onChanged,
         cursorColor: Theme.of(context).primaryColor,
+        style: TextStyle(fontSize: fontSize),
         decoration: InputDecoration(
           icon: Icon(
             icon,

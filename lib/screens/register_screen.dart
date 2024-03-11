@@ -36,11 +36,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              AppLocalizations.of(context)!.register_caps,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.03),
+            // Text(
+            //   AppLocalizations.of(context)!.register_caps,
+            //   style: const TextStyle(fontWeight: FontWeight.bold),
+            // ),
+            // SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
               "assets/icons/signup.svg",
               height:
@@ -57,47 +57,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _password = value;
               },
             ),
-            CheckboxListTile(
-              title: RichText(
-                text: TextSpan(children: [
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.byContinuingIAgree,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
-                  TextSpan(
-                    text: AppLocalizations.of(context)!.privacyPolicy,
-                    style: const TextStyle(color: Colors.blue),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        launchUrl(Uri(
-                            scheme: 'https',
-                            host: 'alphatechnology.ca',
-                            path: 'anychat-privacy-policy'));
-                      },
-                  ),
-                  TextSpan(
-                    text: " ${AppLocalizations.of(context)!.and} ",
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
-                  TextSpan(
-                      text: AppLocalizations.of(context)!.eula,
+            SizedBox(
+              width: size.width * 0.50,
+              child: CheckboxListTile(
+                title: RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                      text: AppLocalizations.of(context)!.byContinuingIAgree,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    TextSpan(
+                      text: AppLocalizations.of(context)!.privacyPolicy,
                       style: const TextStyle(color: Colors.blue),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           launchUrl(Uri(
                               scheme: 'https',
                               host: 'alphatechnology.ca',
-                              path: 'anychat-eula'));
-                        }),
-                ]),
+                              path: 'anychat-privacy-policy'));
+                        },
+                    ),
+                    TextSpan(
+                      text: " ${AppLocalizations.of(context)!.and} ",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    TextSpan(
+                        text: AppLocalizations.of(context)!.eula,
+                        style: const TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launchUrl(Uri(
+                                scheme: 'https',
+                                host: 'alphatechnology.ca',
+                                path: 'anychat-eula'));
+                          }),
+                  ]),
+                ),
+                value: userAgreedToTerms,
+                onChanged: (newValue) {
+                  setState(() {
+                    userAgreedToTerms = newValue!;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
               ),
-              value: userAgreedToTerms,
-              onChanged: (newValue) {
-                setState(() {
-                  userAgreedToTerms = newValue!;
-                });
-              },
-              controlAffinity: ListTileControlAffinity.leading,
             ),
             RoundedButton(
               text: AppLocalizations.of(context)!.register_caps,
@@ -107,17 +110,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   var user =
                       await AnyChatAuth.signInEmail(_email, _password, true);
                   if (user != null) {
-                    Utilities.showToast(AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!
+                    Utilities.showToast(AppLocalizations.of(mounted
+                            ? context
+                            : Utilities.globalKey.currentContext!)!
                         .accountCreatedEnterSettings);
-                    Navigator.pushNamed(mounted ? context : Utilities.globalKey.currentContext!, '/settings');
+                    Navigator.pushNamed(
+                        mounted ? context : Utilities.globalKey.currentContext!,
+                        '/settings');
                   } else {
                     throw Error();
                   }
                 } catch (e) {
                   Utilities.showAlertDialog(
                       mounted ? context : Utilities.globalKey.currentContext!,
-                      AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.error,
-                      AppLocalizations.of(mounted ? context : Utilities.globalKey.currentContext!)!.unableRegister);
+                      AppLocalizations.of(mounted
+                              ? context
+                              : Utilities.globalKey.currentContext!)!
+                          .error,
+                      AppLocalizations.of(mounted
+                              ? context
+                              : Utilities.globalKey.currentContext!)!
+                          .unableRegister);
                 }
               },
             ),

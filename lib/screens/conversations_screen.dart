@@ -36,6 +36,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   final List<StreamSubscription<QuerySnapshot>?> _chatMessageSubscriptions = [];
   List<Widget> conversationWidgets = [];
 
+  bool _isloadedConvos = false;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
@@ -66,9 +68,18 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         // bottomSheet: Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
         // bottomSheet: Ads.getBanner(),
         appBar: AppBar(
+          // foregroundColor: ,
           title: Text(AppLocalizations.of(context)!.title),
           actions: conversationWidgets.isEmpty
-              ? <Widget>[]
+              ? <Widget>[
+                  Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ]
               : <Widget>[
                   IconButton(
                     icon: const Icon(Icons.add),
@@ -144,22 +155,31 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                           itemCount: conversationWidgets.length,
                           itemBuilder: (_, int index) =>
                               conversationWidgets[index])
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context)!
-                                .conversationsWillAppear),
-                            RoundedButton(
-                              text: AppLocalizations.of(context)!
-                                  .startConversation,
-                              press: () {
-                                AnyChatAuth.currentConversation = null;
-                                SearchChatterByEmailScreen.addToConvo = false;
-                                Navigator.pushNamed(context, "/addChatter");
-                              },
+                      : !_isloadedConvos
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            )
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context)!
+                                    .conversationsWillAppear),
+                                RoundedButton(
+                                  text: AppLocalizations.of(context)!
+                                      .startConversation,
+                                  press: () {
+                                    AnyChatAuth.currentConversation = null;
+                                    SearchChatterByEmailScreen.addToConvo =
+                                        false;
+                                    Navigator.pushNamed(context, "/addChatter");
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
                 )),
             // Align(alignment: Alignment.bottomCenter, child: Ads.getBanner()),
           ],
@@ -252,6 +272,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         }
       }
     }
+    _isloadedConvos = true;
   }
 
   Map<String, Timestamp?> convoTimes = {};
@@ -268,6 +289,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     if (!conversation.participants.any((element) =>
         AnyChatAuth.currentUser!.blockedAccounts.contains(element))) {
       setState(() {
+        _isloadedConvos = true;
         conversationWidgets.insert(index, slidable);
       });
     }

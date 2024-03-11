@@ -1,8 +1,12 @@
 {
     "version": "0.2.0",
     "configurations": [
-    
-
+        {
+            "name": "Dart: Attach to Process",
+            "type": "dart",
+            "request": "attach"
+        },
+        
         {
             "type": "node",
             "request": "launch",
@@ -28,6 +32,12 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Flutter",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
         }
     ]
 }
