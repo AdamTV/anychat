@@ -1,19 +1,26 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:matrix/matrix.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'package:anychat/config/app_config.dart';
 import 'package:anychat/utils/platform_infos.dart';
 import 'events/audio_player.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class RecordingDialog extends StatefulWidget {
   static const String recordingFileType = 'm4a';
+  static const String transcriptionFileType = 'txt';
+
   const RecordingDialog({
     super.key,
   });
@@ -25,10 +32,13 @@ class RecordingDialog extends StatefulWidget {
 class RecordingDialogState extends State<RecordingDialog> {
   Timer? _recorderSubscription;
   Duration _duration = Duration.zero;
+  String _transcribedWords = '';
 
   bool error = false;
   String? _recordedPath;
+  String? _transcribedPath;
   final _audioRecorder = Record();
+  stt.SpeechToText speech = stt.SpeechToText();
   final List<double> amplitudeTimeline = [];
 
   static const int bitRate = 64000;
@@ -39,13 +49,21 @@ class RecordingDialogState extends State<RecordingDialog> {
       final tempDir = await getTemporaryDirectory();
       _recordedPath =
           '${tempDir.path}/recording${DateTime.now().microsecondsSinceEpoch}.${RecordingDialog.recordingFileType}';
+      _transcribedPath =
+          '${tempDir.path}/recording${DateTime.now().microsecondsSinceEpoch}.${RecordingDialog.transcriptionFileType}';
 
       final result = await _audioRecorder.hasPermission();
       if (result != true) {
         setState(() => error = true);
         return;
       }
+      final bool available = await speech.initialize(onError: _onSpeechError);
       await WakelockPlus.enable();
+      if (available) {
+        speech.listen(onResult: _onSpeechResult);
+      } else {
+        Logs().d("The user has denied the use of speech recognition.");
+      }
       await _audioRecorder.start(
         path: _recordedPath,
         bitRate: bitRate,
@@ -83,8 +101,22 @@ class RecordingDialogState extends State<RecordingDialog> {
     super.dispose();
   }
 
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _transcribedWords += result.recognizedWords;
+    });
+  }
+
+  void _onSpeechError(SpeechRecognitionError errorNotification) {
+    Logs().e("Speech Error: $errorNotification");
+  }
+
   void _stopAndSend() async {
     _recorderSubscription?.cancel();
+    final File transcriptionFile = File(_transcribedPath!);
+    transcriptionFile.writeAsString(_transcribedWords);
+    Logs().d(_transcribedWords);
+    await speech.stop();
     await _audioRecorder.stop();
     final path = _recordedPath;
     if (path == null) throw ('Recording failed!');
@@ -96,11 +128,13 @@ class RecordingDialogState extends State<RecordingDialog> {
     for (var i = 0; i < amplitudeTimeline.length; i += step) {
       waveform.add((amplitudeTimeline[i] / 100 * 1024).round());
     }
+    Logs().d("Transctiption: $_transcribedWords");
     Navigator.of(context, rootNavigator: false).pop<RecordingResult>(
       RecordingResult(
         path: path,
         duration: _duration.inMilliseconds,
         waveform: waveform,
+        transctiption: _transcribedWords,
       ),
     );
   }
@@ -211,11 +245,13 @@ class RecordingResult {
   final String path;
   final int duration;
   final List<int> waveform;
+  final String transctiption;
 
   const RecordingResult({
     required this.path,
     required this.duration,
     required this.waveform,
+    required this.transctiption,
   });
 
   factory RecordingResult.fromJson(Map<String, dynamic> json) =>
@@ -223,11 +259,13 @@ class RecordingResult {
         path: json['path'],
         duration: json['duration'],
         waveform: List<int>.from(json['waveform']),
+        transctiption: json['transcription'],
       );
 
   Map<String, dynamic> toJson() => {
         'path': path,
         'duration': duration,
         'waveform': waveform,
+        'transcription': transctiption,
       };
 }
