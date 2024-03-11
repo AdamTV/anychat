@@ -114,8 +114,6 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     if (await Utilities.handlePermission(
                             Permission.microphone) &&
                         context.mounted) {
-                      Utilities.showToast(AppLocalizations.of(context)!
-                          .listeningToMicrophoneLiveAudio);
                       Navigator.pushNamed(context, "/liveTranslator");
                     }
                   }),
