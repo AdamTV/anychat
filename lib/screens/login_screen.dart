@@ -1,4 +1,5 @@
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/rounded_button.dart';
@@ -32,11 +33,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              AppLocalizations.of(context)!.login_caps,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.03),
+            // Text(
+            //   AppLocalizations.of(context)!.login_caps,
+            //   style: const TextStyle(fontWeight: FontWeight.bold),
+            // ),
+            // SizedBox(height: size.height * 0.03),
             SvgPicture.asset(
               "assets/icons/login.svg",
               height:
@@ -124,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 AppLocalizations.of(context)!.forgotPassword,
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: fontSize! - 4.0),
               ),
             ),
             HaveAccountCheck(

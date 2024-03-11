@@ -1,3 +1,4 @@
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/text_field_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextField(
+        style: TextStyle(fontSize: fontSize),
         obscureText: obscureText,
         onChanged: widget.onChanged,
         cursorColor: Theme.of(context).primaryColor,

@@ -3,7 +3,7 @@ description: AnyChat Translator Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2.0.1+220
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -62,20 +62,32 @@ dependencies:
   flutter_sound: ^9.2.13
   firebase_app_check: ^0.2.1+14
 
-flutter_icons:
+dev_dependencies:
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/Icon-192.png"
-
-dev_dependencies:
-  #  flutter_launcher_icons: ^0.9.0
+  image_path: "assets/icons/logo-icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icons/logo-icon.png"
+    background_color: "#008080"
+    theme_color: "#008080"
+  windows:
+    generate: true
+    image_path: "assets/icons/logo-icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/logo-icon.png"
   #  integration_test: ^1.0.0
   flutter_test:
     sdk: flutter
   # e2e: ^0.7.0+1
   flutter_driver:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

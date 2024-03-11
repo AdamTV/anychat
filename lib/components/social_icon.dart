@@ -18,23 +18,22 @@ class SocialIcon extends StatelessWidget {
       onTap: press as void Function()?,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
           border: Border.all(
             width: 2,
-            color: Theme.of(context).primaryColorDark,
+            color: Theme.of(context).primaryColor,
           ),
           shape: BoxShape.circle,
         ),
-        child: SvgPicture.asset(
-          iconSrc!,
-          height: size.width >= 750 ? 20 : size.width * 0.04,
-          width: size.width >= 750 ? 20 : size.width * 0.04,
-          colorFilter: ColorFilter.mode(
-            Theme.of(context).colorScheme.secondary,
-            BlendMode.srcIn,
-          )
-        ),
+        child: SvgPicture.asset(iconSrc!,
+            height: size.width * (size.width >= 750 ? 0.035 : 0.04),
+            width: size.width * (size.width >= 750 ? 0.035 : 0.04),
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.onBackground,
+              BlendMode.srcIn,
+            )),
       ),
     );
   }

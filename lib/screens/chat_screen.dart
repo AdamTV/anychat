@@ -151,15 +151,35 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     mounted ? context : Utilities.globalKey.currentContext!)
                 .textTheme
                 .bodyLarge,
-            children: <TextSpan>[
+            children: <InlineSpan>[
               TextSpan(
                   text:
                       "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities.globalKey.currentContext!)!.typed}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: "${_chatMessages[i].text}\n\n"),
+              TextSpan(text: "${_chatMessages[i].text}\n"),
+              WidgetSpan(
+                child: Divider(
+                  indent: MediaQuery.of(mounted
+                              ? context
+                              : Utilities.globalKey.currentContext!)
+                          .size
+                          .width *
+                      0.01,
+                  endIndent: MediaQuery.of(mounted
+                              ? context
+                              : Utilities.globalKey.currentContext!)
+                          .size
+                          .width *
+                      0.01,
+                  color: Theme.of(mounted
+                          ? context
+                          : Utilities.globalKey.currentContext!)
+                      .primaryColor,
+                ),
+              ),
               TextSpan(
                   text:
-                      "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
+                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: translatedMap[language]!.removeLast()),
             ],
@@ -540,53 +560,53 @@ class ChatMessage extends StatelessWidget {
       sizeFactor:
           CurvedAnimation(parent: animationController!, curve: Curves.easeOut),
       axisAlignment: 0.0,
-      child: Container(
-        decoration: BoxDecoration(
-            color: sender!.id == AnyChatAuth.currentUser!.id
-                ? Theme.of(context).brightness == Brightness.dark
-                    ? kDarkChatBubbleColorRight
-                    : kDefaultChatBubbleColorRight
-                : Theme.of(context).brightness == Brightness.dark
-                    ? kDarkChatBubbleColorLeft
-                    : kDefaultChatBubbleColorLeft,
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        margin: EdgeInsets.fromLTRB(
-            sender!.id == AnyChatAuth.currentUser!.id
-                ? (MediaQuery.of(context).size.width * 0.25)
-                : 8,
-            8,
-            sender!.id == AnyChatAuth.currentUser!.id
-                ? 8
-                : (MediaQuery.of(context).size.width * 0.25),
-            8),
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                margin: const EdgeInsets.only(right: 16.0),
-                child: sender!.photoUrl != null
-                    ? CircleAvatar(
-                        backgroundImage: NetworkImage(sender!.photoUrl!),
-                        backgroundColor: Colors.transparent,
-                      )
-                    : CircleAvatar(
-                        child: Text(sender!.displayName!.substring(0, 1)),
-                      )),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(sender!.displayName!,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5.0),
-                    child: text,
+      child: Align(
+        alignment: sender?.id! == AnyChatAuth.currentUser?.id!
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
+        child: Container(
+          decoration: BoxDecoration(
+              color: sender!.id == AnyChatAuth.currentUser!.id
+                  ? Theme.of(context).brightness == Brightness.dark
+                      ? kDarkChatBubbleColorRight
+                      : kDefaultChatBubbleColorRight
+                  : Theme.of(context).brightness == Brightness.dark
+                      ? kDarkChatBubbleColorLeft
+                      : kDefaultChatBubbleColorLeft,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+          padding: const EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(8.0),
+          child: IntrinsicWidth(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin: const EdgeInsets.only(right: 16.0),
+                    child: sender!.photoUrl != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(sender!.photoUrl!),
+                            backgroundColor: Colors.transparent,
+                          )
+                        : CircleAvatar(
+                            child: Text(sender!.displayName!.substring(0, 1)),
+                          )),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(sender!.displayName!,
+                          style: Theme.of(context).textTheme.headlineSmall),
+                      Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: text,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

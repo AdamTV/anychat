@@ -1,3 +1,4 @@
+import 'package:anychat/components/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -17,7 +18,7 @@ class RoundedButton extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      width: size.width * 0.8,
+      width: size.width * 0.5,
       constraints: const BoxConstraints(maxWidth: 500),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(29),
@@ -29,7 +30,8 @@ class RoundedButton extends StatelessWidget {
           onPressed: press as void Function()?,
           child: Text(
             text!,
-            style: TextStyle(color: Theme.of(context).primaryColorLight),
+            style: TextStyle(
+                color: Theme.of(context).primaryColorLight, fontSize: fontSize),
           ),
         ),
       ),

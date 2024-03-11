@@ -2,7 +2,6 @@ import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -18,14 +17,17 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                SizedBox(
+                  height: size.height * 0.15,
+                  child: Image.asset(
+                      "assets/icons/anychat-text-only-${Theme.of(context).brightness == Brightness.dark ? 'dark' : 'light'}Theme.png"),
                 ),
                 SizedBox(height: size.height * 0.05),
-                SvgPicture.asset(
-                  "assets/icons/chat.svg",
+                SizedBox(
                   height: size.height * 0.45,
+                  child: Image.asset(
+                    "assets/icons/globecomplexSphere.webp",
+                  ),
                 ),
                 SizedBox(height: size.height * 0.05),
                 RoundedButton(
