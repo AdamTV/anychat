@@ -272,9 +272,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final mailtoLink = Mailto(
       to: ['admin@alphatechnology.ca'],
       // cc: ['cc1@example.com', 'cc2@example.com'],
-      subject: 'Flag Objectionable Content',
-      body: 'Please include your display name in AnyChat, the display name of the other person,'
-          'and any other information you feel is pertinent.',
+      subject: AppLocalizations.of(context)?.flagObjectionableContent,
+      body: AppLocalizations.of(context)?.flagContentEmailBody,
     );
     // Convert the Mailto instance into a string.
     // Use either Dart's string interpolation

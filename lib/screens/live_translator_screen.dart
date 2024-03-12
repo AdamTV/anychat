@@ -64,7 +64,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
                 child: IconButton(
                     icon: const Icon(Icons.clear),
-                    tooltip: 'Clear',
+                    tooltip: AppLocalizations.of(context)?.clear,
                     onPressed: () {
                       setState(() {
                         text = "";
@@ -112,11 +112,10 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           child: Text(text ?? "", style: const TextStyle(fontSize: 32)),
         ),
         floatingActionButton: ElevatedButton(
-          onPressed: recognizing ? stopRecording : longRunningRecognize,
-          child: recognizing
-              ? const Text('Stop recording')
-              : const Text('Start Streaming from mic'),
-        ));
+            onPressed: recognizing ? stopRecording : longRunningRecognize,
+            child: recognizing
+                ? Text(AppLocalizations.of(context)!.stopStreaming)
+                : Text(AppLocalizations.of(context)!.startStreaming)));
   }
 
   void stopRecording() async {
@@ -162,7 +161,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 isoCode = value;
               }),
           RoundedButton(
-              text: "SAVE",
+              text: AppLocalizations.of(context)!.saveCaps,
               press: () {
                 Navigator.of(context).pop();
               }),
@@ -176,7 +175,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor,
           ),
-          child: const Text('Close'),
+          child: Text(AppLocalizations.of(context)!.close),
         ),
       ],
     );
@@ -197,21 +196,24 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     responseStream.listen((data) async {
       final currentText =
           data.results.map((e) => e.alternatives.first.transcript).join('\n');
+      // ignore: sdk_version_since
       var newData = data.results.firstOrNull;
       var isData = newData != null;
       final newText = await Utilities.getGoogleTranslation(
           AnyChatAuth.currentUser!.language, currentText);
-      if (isData && newData!.isFinal) {
-        responseText += '\n$newText';
-        setState(() {
-          text = responseText;
-          recognizeFinished = true;
-        });
-      } else {
-        setState(() {
-          text = '$responseText\n$newText';
-          recognizeFinished = true;
-        });
+      if (mounted) {
+        if (isData && newData!.isFinal) {
+          responseText += '\n$newText';
+          setState(() {
+            text = responseText;
+            recognizeFinished = true;
+          });
+        } else {
+          setState(() {
+            text = '$responseText\n$newText';
+            recognizeFinished = true;
+          });
+        }
       }
     }, onError: (e) async {
       logger.d(e);
@@ -220,9 +222,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
         longRunningRecognize();
       }
     }, onDone: () {
-      setState(() {
-        recognizing = false;
-      });
+      if (mounted) {
+        setState(() {
+          recognizing = false;
+        });
+      }
     });
     // var responseStream = await audioTranscriber.getResponseStream(isoCode);
 
@@ -250,7 +254,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   }
 
   void showAudioRecordingToast() {
-    Utilities.showToast((recognizeFinished
+    Utilities.showToast((recognizing
         ? AppLocalizations.of(context)!.listeningToMicrophoneLiveAudio
         : AppLocalizations.of(context)!
             .noLongerListeningToMicrophoneLiveAudio));
