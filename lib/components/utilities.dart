@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:html/parser.dart';
 
 import 'anychat_locale.dart';
 import 'anychat_user.dart';
@@ -40,7 +41,7 @@ class Utilities {
     RegExp translatedTextRegex = RegExp("translatedText(?:.*?\"){2}([^\"]+)");
     Iterable<Match> matches = translatedTextRegex.allMatches(body);
     if (matches.length == 1 && matches.first.groupCount == 1) {
-      return matches.first.group(1)!.replaceAll("&#39;", "'");
+      return parseFragment(matches.first.group(1)!).text!;
     } else {
       throw Exception("Could not getGoogleTranslation -> uri: $uri");
     }
@@ -71,7 +72,7 @@ class Utilities {
         Iterable<Match> matches = translatedTextRegex.allMatches(x.body);
         if (matches.isNotEmpty) {
           for (var match in matches) {
-            translatedMap[key]!.add(match.group(1)!.replaceAll("&#39;", "'"));
+            translatedMap[key]!.add(parseFragment(match.group(1)!).text!);
           }
         } else {
           throw Exception("Could not getGoogleTranslation -> uri: $uri");

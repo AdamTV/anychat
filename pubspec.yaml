@@ -61,6 +61,7 @@ dependencies:
   logger: ^1.4.0
   flutter_sound: ^9.2.13
   firebase_app_check: ^0.2.1+14
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"

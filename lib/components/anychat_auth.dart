@@ -202,6 +202,9 @@ class AnyChatAuth {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
+        Utilities.showToast(
+            AppLocalizations.of(Utilities.globalKey.currentContext!)!
+                .pleaseChooseStrongerPassword);
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         Utilities.showToast(
