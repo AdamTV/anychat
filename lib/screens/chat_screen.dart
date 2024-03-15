@@ -113,14 +113,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             .any((element) => element.id == _chatMessages[i].senderId)) {
           participants.add(
               await AnyChatUser.getUserById(_chatMessages[i].senderId).onError(
-                  (dynamic error, stackTrace) => AnyChatUser(
-                      null,
-                      AppLocalizations.of(context)!.accountDeleted,
-                      null,
-                      null,
-                      null, [])));
+                  (dynamic error, stackTrace) => AnyChatUser.deletedUser(
+                      _chatMessages[i].senderId)));
         }
-        AnyChatUser sender = AnyChatUser.deletedUser();
+        AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
         try {
           sender = participants
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
@@ -128,15 +124,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           // logger.e("Error",
           //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
           logger.e("Error", e, e.stackTrace);
-          sender = AnyChatUser(
-              null,
-              AppLocalizations.of(
-                      mounted ? context : Utilities.globalKey.currentContext!)!
-                  .accountDeleted,
-              null,
-              null,
-              null,
-              []);
+          sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
         }
         final language =
             _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
@@ -203,14 +191,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
-      AnyChatUser sender = AnyChatUser.deletedUser();
+      AnyChatUser sender = AnyChatUser.deletedUser(message.senderId);
       try {
         sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
             .collection("users")
             .doc(_chatMessages.last.senderId)
             .get());
       } catch (e) {
-        sender = AnyChatUser.deletedUser();
+        sender = AnyChatUser.deletedUser(message.senderId);
       }
 
       if (AnyChatAuth.currentUser!.conversations.isEmpty) {
@@ -337,9 +325,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       icon: const Icon(Icons.video_call_rounded),
       tooltip: AppLocalizations.of(context)!.call,
       onPressed: () async {
-        Utilities.showAlertDialog(context, AppLocalizations.of(context)!.call,
-            AppLocalizations.of(context)!.thisFeatureIsUnderMaintenance);
-        // CallScreen.requestPermissionAndNavigate();
+        Navigator.pushNamed(
+            mounted ? context : Utilities.globalKey.currentContext!, "/call");
       },
     ));
     SizedBox container = SizedBox(
@@ -561,7 +548,7 @@ class ChatMessage extends StatelessWidget {
           CurvedAnimation(parent: animationController!, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Align(
-        alignment: sender?.id! == AnyChatAuth.currentUser?.id!
+        alignment: sender?.id == AnyChatAuth.currentUser?.id
             ? Alignment.centerRight
             : Alignment.centerLeft,
         child: Container(
@@ -582,19 +569,19 @@ class ChatMessage extends StatelessWidget {
               children: [
                 Container(
                     margin: const EdgeInsets.only(right: 16.0),
-                    child: sender!.photoUrl != null
+                    child: sender!.photoUrl != ''
                         ? CircleAvatar(
-                            backgroundImage: NetworkImage(sender!.photoUrl!),
+                            backgroundImage: NetworkImage(sender!.photoUrl),
                             backgroundColor: Colors.transparent,
                           )
                         : CircleAvatar(
-                            child: Text(sender!.displayName!.substring(0, 1)),
+                            child: Text(sender!.displayName.substring(0, 1)),
                           )),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(sender!.displayName!,
+                      Text(sender!.displayName,
                           style: Theme.of(context).textTheme.headlineSmall),
                       Container(
                         margin: const EdgeInsets.only(top: 5.0),

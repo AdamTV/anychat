@@ -143,7 +143,7 @@ class Utilities {
     for (var user in users) {
       if (user.id != AnyChatAuth.currentUser!.id && !ids.contains(user.id)) {
         ids.add(user.id);
-        ret += user.displayName!;
+        ret += user.displayName;
         ret += ", ";
       }
     }

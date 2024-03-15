@@ -200,6 +200,7 @@
     "picture": "Pictue",
     "pleaseChooseStrongerPassword": "Please choose a stronger password",
     "pleaseLoginInstead": "An account already exists with this information. Please login instead.",
+    "pleaseWaitForOthersToJoin": "Please wait for others to join.",
     "privacyPolicy": "Privacy Policy",
     "register_caps": "REGISTER",
     "register": "Register",

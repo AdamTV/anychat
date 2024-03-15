@@ -22,7 +22,7 @@ class AnyChatAuth {
   static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-  static late FacebookAuth _facebookAuth;
+  // static late FacebookAuth _facebookAuth;
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
@@ -63,7 +63,7 @@ class AnyChatAuth {
         var currentUser = AnyChatUser(
             firebaseUser.uid,
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
-            firebaseUser.email,
+            firebaseUser.email ?? "",
             firebaseUser.photoURL ?? "",
             AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser.addUserToFirestore();
@@ -120,9 +120,9 @@ class AnyChatAuth {
       } else {
         currentUser = AnyChatUser(
             authResult.user!.uid,
-            googleSignInAccount!.displayName,
+            googleSignInAccount!.displayName ?? "",
             googleSignInAccount!.email,
-            googleSignInAccount!.photoUrl,
+            googleSignInAccount!.photoUrl ?? "",
             AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
@@ -143,8 +143,8 @@ class AnyChatAuth {
 
       logger.d('signInWithGoogle succeeded: $user');
 
-      currentUser = AnyChatUser(authResult.user!.uid, user.displayName,
-          user.email, user.photoURL, AnyChatLocale.currentLocale, []);
+      currentUser = AnyChatUser(authResult.user!.uid, user.displayName ?? "",
+          user.email ?? "", user.photoURL ?? "", AnyChatLocale.currentLocale ?? "", []);
       currentUser!.addUserToFirestore();
 
       return currentUser;
@@ -157,7 +157,7 @@ class AnyChatAuth {
     try {
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
-      await _facebookAuth.logOut();
+      // await _facebookAuth.logOut();
       // currently apple signin method uses firebase auth, so no need to sign out
     } on Error catch (e) {
       logger.e("Error", e, e.stackTrace);
@@ -195,8 +195,8 @@ class AnyChatAuth {
         if (result.displayName == null) {
           displayName = result.email;
         }
-        currentUser = AnyChatUser(result.uid, displayName, result.email,
-            result.photoURL, AnyChatLocale.currentLocale!.substring(0, 2), []);
+        currentUser = AnyChatUser(result.uid, displayName ?? "", result.email ?? "",
+            result.photoURL ?? "", AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -250,7 +250,7 @@ class AnyChatAuth {
       } else {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
-        currentUser = AnyChatUser(user.uid, user.displayName, user.email, url,
+        currentUser = AnyChatUser(user.uid, user.displayName ?? "", user.email ?? "", url,
             AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;

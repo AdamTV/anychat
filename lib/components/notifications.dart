@@ -1,7 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/screens/call_screen.dart';
+// import 'package:anychat/screens/call_screen.dart';
 import 'package:disposables/disposables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -53,9 +53,7 @@ class Notifications implements Disposable {
       var conversationId = payload!.substring(5);
       var convo = await Conversation.getConversationById(conversationId);
       AnyChatAuth.currentConversation = convo;
-      if (payload.toLowerCase().contains('ring')) {
-        CallScreen.requestPermissionAndNavigate();
-      } else if (payload.toLowerCase().contains('chat')) {
+      if (payload.toLowerCase().contains('chat')) {
         var info = await ConversationInfo.getAllConversationInfo(
             AnyChatAuth.currentUser!.id);
         AnyChatAuth.currentUser!.conversations

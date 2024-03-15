@@ -200,6 +200,7 @@
     "picture": "ภาพ",
     "pleaseChooseStrongerPassword": "โปรดเลือกรหัสผ่านที่รัดกุมยิ่งขึ้น",
     "pleaseLoginInstead": "มีบัญชีที่มีข้อมูลนี้อยู่แล้ว กรุณาเข้าสู่ระบบแทน",
+    "pleaseWaitForOthersToJoin": "โปรดรอผู้อื่นเข้าร่วม",
     "privacyPolicy": "นโยบายความเป็นส่วนตัว",
     "register_caps": "ลงทะเบียน",
     "register": "ลงทะเบียน",

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Conversation {
   final String id;
-  final List<String?> participants;
+  final List<String> participants;
 
   // final List<dynamic> messages;
   final List<dynamic>? transcribedMessages;
@@ -14,7 +14,7 @@ class Conversation {
 
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        participants = List.castFrom<dynamic, String?>(
+        participants = List.castFrom<dynamic, String>(
             (snapshot.data() as Map<String, dynamic>)['participants']),
         // messages = ((snapshot.data() as Map<String, dynamic>)['messages']),
         transcribedMessages =

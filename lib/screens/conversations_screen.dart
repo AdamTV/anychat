@@ -266,7 +266,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         // }
         if (chatters.isNotEmpty && temp.timestamp != null && mounted) {
           text ??= AppLocalizations.of(context)!.newConversation;
-          insertSorted(await slidable(chatters, temp, text), temp);
+          insertSorted(slidable(chatters, temp, text), temp);
         }
       }
     }
@@ -318,7 +318,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       firstChatter = await AnyChatUser.getUserById(conversation.participants
           .firstWhere((element) => element != AnyChatAuth.currentUser!.id));
     } catch (e) {
-      logger.d(e);
+      logger.e(e);
     }
     if (AnyChatAuth.currentConversation == null) {
       await initConvoInfo();
@@ -421,7 +421,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     // }
 
     if (chatters.isNotEmpty && conversation.timestamp != null) {
-      insertSorted(await slidable(chatters, conversation, text), conversation);
+      insertSorted(slidable(chatters, conversation, text), conversation);
     }
     if (!conversationWidgets
         .any((element) => element.key == Key(conversation.id))) {
@@ -474,16 +474,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 .doc(message.senderId)
                 .get()));
           } catch (e) {
-            chatters.add(AnyChatUser(
-                null,
-                AppLocalizations.of(mounted
-                        ? context
-                        : Utilities.globalKey.currentContext!)!
-                    .accountDeleted,
-                null,
-                null,
-                null,
-                []));
+            chatters.add(AnyChatUser.deletedUser(message.senderId));
           }
           // }
         } else {
@@ -498,16 +489,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     .doc(id)
                     .get()));
               } catch (e) {
-                chatters.add(AnyChatUser(
-                    null,
-                    AppLocalizations.of(mounted
-                            ? context
-                            : Utilities.globalKey.currentContext!)!
-                        .accountDeleted,
-                    null,
-                    null,
-                    null,
-                    []));
+                chatters.add(AnyChatUser.deletedUser(message.senderId));
               }
             }
           }
@@ -519,16 +501,15 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           final language = message.senderId == AnyChatAuth.currentUser!.id
               ? info.outgoingLanguage
               : info.incomingLanguage;
-          final text = message.text == null
-              ? AppLocalizations.of(
+          final text = conversation.participants.contains(message.senderId)
+              ? "${message.text}\n\n"
+                  "${await Utilities.getGoogleTranslation(language, message.text)}"
+              : AppLocalizations.of(
                       mounted ? context : Utilities.globalKey.currentContext!)!
-                  .thisPersonHasLeftConversation
-              : "${message.text}\n\n"
-                  "${await Utilities.getGoogleTranslation(language, message.text)}";
+                  .thisPersonHasLeftConversation;
 
           if (chatters.isNotEmpty && conversation.timestamp != null) {
-            insertSorted(
-                await slidable(chatters, conversation, text), conversation);
+            insertSorted(slidable(chatters, conversation, text), conversation);
           }
         }
       }
@@ -537,12 +518,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     logger.d(_notification);
     if (message.senderId != AnyChatAuth.currentUser!.id) {
       var sender = await AnyChatUser.getUserById(message.senderId);
-      var text = message.text == null
-          ? AppLocalizations.of(
+      var text = conversation.participants.contains(message.senderId)
+          ? "${message.text}\n\n"
+              "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}"
+          : AppLocalizations.of(
                   mounted ? context : Utilities.globalKey.currentContext!)!
-              .thisPersonHasLeftConversation
-          : "${message.text}\n\n"
-              "${await Utilities.getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}";
+              .thisPersonHasLeftConversation;
       if (_notification != AppLifecycleState.resumed) {
         if (text.contains(AppLocalizations.of(
                 mounted ? context : Utilities.globalKey.currentContext!)!
@@ -566,8 +547,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .snapshots();
   }
 
-  Future<Widget> slidable(List<AnyChatUser> chatters, Conversation conversation,
-      String text) async {
+  Widget slidable(
+      List<AnyChatUser> chatters, Conversation conversation, String text) {
     logger.d("slidable: ${conversation.id}");
     var timeOfLastMessage = DateTime.fromMicrosecondsSinceEpoch(
         conversation.timestamp!.microsecondsSinceEpoch);
@@ -660,9 +641,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         child: SizedBox(
             height: avatarRadius,
             width: avatarRadius,
-            child: user.photoUrl == null
-                ? CircleAvatar(child: Text(user.displayName!.substring(0, 1)))
-                : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl!))));
+            child: user.photoUrl.isEmpty
+                ? user.displayName.isEmpty
+                    ? Container()
+                    : CircleAvatar(
+                        child: Text(user.displayName.substring(0, 1)))
+                : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl))));
   }
 
   Widget getChatterWidgetList(List<AnyChatUser> chatters) {

@@ -96,16 +96,16 @@ class _SearchResultsState extends State<SearchResults> {
                               return const BlockedUsersScreen();
                             }));
                           },
-                          leading: users[index].photoUrl == null
+                          leading: users[index].photoUrl == ''
                               ? CircleAvatar(
                                   child: Text(users[index]
-                                      .displayName!
+                                      .displayName
                                       .substring(0, 1)))
                               : CircleAvatar(
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                   backgroundImage:
-                                      NetworkImage(users[index].photoUrl!)),
+                                      NetworkImage(users[index].photoUrl)),
                           title: RichText(
                               text: TextSpan(
                                   text: users[index].displayName,

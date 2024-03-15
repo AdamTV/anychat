@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AnyChatMessage {
-  final String id;
-  final Timestamp? timestamp;
-  final String? senderId;
-  final String? text;
+  final String? id;
+  final Timestamp timestamp;
+  final String senderId;
+  final String text;
 
   final DocumentReference? reference;
 
@@ -19,6 +19,6 @@ class AnyChatMessage {
         reference = snapshot.reference;
 
   compareTo(AnyChatMessage b) {
-    return timestamp!.compareTo(b.timestamp!);
+    return timestamp.compareTo(b.timestamp);
   }
 }

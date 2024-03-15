@@ -200,6 +200,7 @@
     "picture": "Billede",
     "pleaseChooseStrongerPassword": "Vælg venligst en stærkere adgangskode",
     "pleaseLoginInstead": "Der findes allerede en konto med disse oplysninger. Log ind i stedet.",
+    "pleaseWaitForOthersToJoin": "Vent venligst på, at andre deltager.",
     "privacyPolicy": "Fortrolighedspolitik",
     "register_caps": "TILMELD",
     "register": "Tilmeld",

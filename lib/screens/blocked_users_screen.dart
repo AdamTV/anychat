@@ -67,7 +67,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
       var user = await AnyChatUser.getUserById(AnyChatAuth.currentUser!.blockedAccounts[i]);
       setState(() {
         tiles.add(SettingsTile(
-            title: Text(user.displayName!),
+            title: Text(user.displayName),
             onPressed: (BuildContext context) async {
               await AnyChatAuth.currentUser!.unblockAccount(user.id);
               getBlockedAccountNames();

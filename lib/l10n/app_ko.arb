@@ -200,6 +200,7 @@
     "picture": "Pictue",
     "pleaseChooseStrongerPassword": "더 강력한 비밀번호를 선택하세요",
     "pleaseLoginInstead": "이 정보가있는 계정이 이미 있습니다. 대신 로그인하십시오.",
+    "pleaseWaitForOthersToJoin": "다른 사람들이 참여할 때까지 기다려 주세요.",
     "privacyPolicy": "개인 정보 정책",
     "register_caps": "레지스터",
     "register": "레지스터",

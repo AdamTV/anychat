@@ -200,6 +200,7 @@
     "picture": "Pictue",
     "pleaseChooseStrongerPassword": "Пожалуйста, выберите более надежный пароль",
     "pleaseLoginInstead": "Учетная запись с этой информацией уже существует. Пожалуйста, войдите вместо этого.",
+    "pleaseWaitForOthersToJoin": "Пожалуйста, подождите, пока присоединятся другие.",
     "privacyPolicy": "Политика конфиденциальности",
     "register_caps": "РЕГИСТР",
     "register": "регистр",

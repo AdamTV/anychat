@@ -184,18 +184,18 @@ class SearchChatterByEmailScreenState
                                         context, "/chat");
                                   }
                                 },
-                                leading: AnyChatUser.fromSnapshot(users[index]).photoUrl == null
+                                leading: AnyChatUser.fromSnapshot(users[index]).photoUrl == ''
                                     ? CircleAvatar(
                                         child: Text(
                                             AnyChatUser.fromSnapshot(users[index])
-                                                .displayName!
+                                                .displayName
                                                 .substring(0, 1)))
                                     : CircleAvatar(
                                         backgroundColor:
                                             Theme.of(context).primaryColor,
                                         backgroundImage: NetworkImage(
                                             AnyChatUser.fromSnapshot(users[index])
-                                                .photoUrl!)),
+                                                .photoUrl)),
                                 title: RichText(
                                     text: TextSpan(
                                         text: AnyChatUser.fromSnapshot(users[index])
