@@ -200,6 +200,7 @@
     "picture": "Pictue",
     "pleaseChooseStrongerPassword": "より強力なパスワードを選択してください",
     "pleaseLoginInstead": "この情報を持つアカウントはすでに存在します。代わりにログインしてください。",
+    "pleaseWaitForOthersToJoin": "他の人が参加するまでお待ちください。",
     "privacyPolicy": "個人情報保護方針",
     "register_caps": "登録",
     "register": "登録",

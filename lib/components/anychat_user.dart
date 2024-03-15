@@ -11,36 +11,39 @@ import 'conversation.dart';
 import 'conversation_info.dart';
 
 class AnyChatUser {
-  final String? id;
-  final String? displayName;
-  final String? email;
-  final String? photoUrl;
-  final String? language;
-  final List<String?> blockedAccounts;
+  final String id;
+  late  String displayName = '';
+  late final String email;
+  late String photoUrl = '';
+  late final String language;
+  late final List<String> blockedAccounts;
   List<ConversationInfo> conversations = [];
 
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
       this.language, this.blockedAccounts);
 
-  static deletedUser() {
+  static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
-        null,
+        uid,
         AppLocalizations.of(Utilities.globalKey.currentContext!)!
             .accountDeleted,
-        null,
-        null,
-        null,
+        "",
+        "",
+        "",
         []);
   }
 
-  AnyChatUser.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.id,
-        displayName = (snapshot.data() as Map<String, dynamic>)['displayName'],
-        email = (snapshot.data() as Map<String, dynamic>)['email'],
-        photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'],
-        language = (snapshot.data() as Map<String, dynamic>)['language'],
-        blockedAccounts = List.castFrom<dynamic, String?>(
-            (snapshot.data() as Map<String, dynamic>)['blockedAccounts'] ?? []);
+  AnyChatUser.fromSnapshot(DocumentSnapshot snapshot) : id = snapshot.id {
+    final data = snapshot.data();
+    if (data != null){
+      displayName = (snapshot.data() as Map<String, dynamic>)['displayName'];
+      email = (snapshot.data() as Map<String, dynamic>)['email'];
+      photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'] ?? '';
+      language = (snapshot.data() as Map<String, dynamic>)['language'];
+      blockedAccounts = List.castFrom<dynamic, String>(
+          (snapshot.data() as Map<String, dynamic>)['blockedAccounts'] ?? []);
+    }
+  }
 
   static Future<AnyChatUser> getUserById(String? id) async {
     return AnyChatUser.fromSnapshot(
@@ -514,7 +517,7 @@ class AnyChatUser {
 
   Future<void> deleteAccount() async {
     var convos = await ConversationInfo.getAllConversationInfo(id);
-    for(final element in convos) {
+    for (final element in convos) {
       await leaveConversation(element.id);
     }
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
@@ -528,7 +531,7 @@ class AnyChatUser {
             .accountDeleted);
   }
 
-  Future<void> blockAccount(String? id) async {
+  Future<void> blockAccount(String id) async {
     var user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);

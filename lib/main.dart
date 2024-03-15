@@ -1,9 +1,10 @@
-import 'dart:io';
+import 'dart:async';
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
+import 'package:anychat/components/notifications.dart';
 import 'package:anychat/screens/add_chatter_screen.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
@@ -40,55 +41,60 @@ var logger = Logger(
       ),
 );
 
-void main() async{
+void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     // Notifications().init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseAppCheck.instance.activate(
-    // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-    // argument for `webProvider`
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-    // your preferred provider. Choose from:
-    // 1. Debug provider
-    // 2. Safety Net provider
-    // 3. Play Integrity provider
-    androidProvider: AndroidProvider.debug,
-    // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-        // your preferred provider. Choose from:
-        // 1. Debug provider
-        // 2. Device Check provider
-        // 3. App Attest provider
-        // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-    appleProvider: AppleProvider.appAttest,
-    ).then((value) => {
-          Ads.init(),
-          Utilities.init().then((value) => {runApp(const AnyChat())}),
-          FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-            if (user == null) {
-              logger.d('User is signed out!');
-            } else {
-              logger.d('User is signed in!');
-              logger.d('User is ${user.emailVerified ? "" : "NOT "}verified!');
-              // if (!user.emailVerified) {
-              //   var actionCodeSettings = ActionCodeSettings(
-              //       url:
-              //       'https://www.example.com/?email=${user.email}',
-              //       dynamicLinkDomain: "example.page.link",
-              //       androidInstallApp: true,
-              //       androidMinimumVersion: '12',
-              //       androidPackageName: "ca.alphatech.anychat",
-              //       iOSBundleId: "ca.alphatech.anychat",
-              //       handleCodeInApp: true);
-              //
-              //   await user.sendEmailVerification();
-              // }
-            }
-          }),
-        });
+    await FirebaseAppCheck.instance
+        .activate(
+          // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+          // argument for `webProvider`
+          webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+          // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+          // your preferred provider. Choose from:
+          // 1. Debug provider
+          // 2. Safety Net provider
+          // 3. Play Integrity provider
+          androidProvider: AndroidProvider.debug,
+          // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+          // your preferred provider. Choose from:
+          // 1. Debug provider
+          // 2. Device Check provider
+          // 3. App Attest provider
+          // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+          appleProvider: AppleProvider.appAttest,
+        )
+        .then((value) => {
+              Ads.init(),
+              Utilities.init().then((value) => {runApp(const AnyChat())}),
+              FirebaseAuth.instance
+                  .authStateChanges()
+                  .listen((User? user) async {
+                if (user == null) {
+                  logger.d('User is signed out!');
+                } else {
+                  logger.d('User is signed in!');
+                  logger.d(
+                      'User is ${user.emailVerified ? "" : "NOT "}verified!');
+                  // if (!user.emailVerified) {
+                  //   var actionCodeSettings = ActionCodeSettings(
+                  //       url:
+                  //       'https://www.example.com/?email=${user.email}',
+                  //       dynamicLinkDomain: "example.page.link",
+                  //       androidInstallApp: true,
+                  //       androidMinimumVersion: '12',
+                  //       androidPackageName: "ca.alphatech.anychat",
+                  //       iOSBundleId: "ca.alphatech.anychat",
+                  //       handleCodeInApp: true);
+                  //
+                  //   await user.sendEmailVerification();
+                  // }
+                }
+              }),
+            });
   } on Error catch (e) {
     logger.e("Error", e, e.stackTrace);
   }
@@ -102,6 +108,7 @@ class AnyChat extends StatefulWidget {
 }
 
 class _AnyChatState extends State<AnyChat> {
+  bool isLoggedIn = false;
   @override
   void initState() {
     super.initState();
@@ -253,7 +260,6 @@ class _AnyChatState extends State<AnyChat> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData && (!snapshot.data!.isAnonymous)) {
-            _checkNetworkConnection(context);
             AnyChatLocale.init(context);
             logger.d(snapshot.data);
             FirebaseFirestore.instance
@@ -263,13 +269,12 @@ class _AnyChatState extends State<AnyChat> {
                     : snapshot.data!.providerData[0].uid)
                 .get()
                 .then((value) => AnyChatUser.fromSnapshot(value))
-                .onError((error, stackTrace) => AnyChatUser.deletedUser())
-                .then((AnyChatUser user) {
-              if (user.id == null) {
-                return ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1),
-                    child: const WelcomeScreen());
-              }
+                .onError((error, stackTrace) {
+                  isLoggedIn = false;
+                  return Future.value(AnyChatUser.deletedUser(snapshot.hashCode.toString()));
+                })
+                .then((AnyChatUser user) {               
+              
               AnyChatAuth.currentUser = user;
               logger.d('returning ConversationsScreen');
               Navigator.push(context,
@@ -292,20 +297,5 @@ class _AnyChatState extends State<AnyChat> {
   @override
   void dispose() {
     super.dispose();
-  }
-}
-
-Future<void> _checkNetworkConnection(BuildContext context) async {
-  try {
-    final result = await InternetAddress.lookup('google.com');
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      logger.d('connected');
-    }
-  } on SocketException catch (e) {
-    // logger.e(err.message.toString(), time: DateTime.now(), error: err);
-    logger.e("Error", e);
-    Utilities.showToast(AppLocalizations.of(
-            context.mounted ? context : Utilities.globalKey.currentContext!)!
-        .notConnectedToInternet);
   }
 }

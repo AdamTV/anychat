@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:core';
 
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
@@ -106,7 +107,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     }
                                     await AnyChatUser.updateDisplayName(
                                         displayName);
-                                    Navigator.of(mounted ? context : Utilities.globalKey.currentContext!)
+                                    Navigator.of(mounted
+                                            ? context
+                                            : Utilities
+                                                .globalKey.currentContext!)
                                         .pushReplacement(MaterialPageRoute(
                                       builder: (_) => const SettingsScreen(),
                                     ));
@@ -118,10 +122,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingsTile(
-                      title: Text(FirebaseAuth.instance.currentUser!.emailVerified
-                          ? AppLocalizations.of(context)!.emailVerified
-                          : AppLocalizations.of(context)!.verificationEmailSent),
-                      description: Text(AnyChatAuth.currentUser!.email!),
+                      title: Text(
+                          FirebaseAuth.instance.currentUser!.emailVerified
+                              ? AppLocalizations.of(context)!.emailVerified
+                              : AppLocalizations.of(context)!
+                                  .verificationEmailSent),
+                      description: Text(AnyChatAuth.currentUser!.email),
                       leading: const Icon(Icons.email)),
                 ],
               ),
@@ -147,12 +153,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: Text(AppLocalizations.of(context)!.changePicture),
                       // enabled: changeProfilePictureEnabled,
                       leading: const Icon(Icons.photo),
-                      trailing: AnyChatAuth.currentUser!.photoUrl != null
+                      trailing: AnyChatAuth.currentUser!.photoUrl != ''
                           ? CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  AnyChatAuth.currentUser!.photoUrl!))
+                                  AnyChatAuth.currentUser!.photoUrl))
                           : CircleAvatar(
-                              child: Text(AnyChatAuth.currentUser!.displayName!
+                              child: Text(AnyChatAuth.currentUser!.displayName
                                   .substring(0, 1))))
                 ],
               ),
@@ -183,8 +189,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           });
                                           Utilities.setThemeFromDropdownValue(
                                               newValue);
-                                          Navigator.pop(context);
-                                          main();
+                                          Navigator.of(context).popUntil(
+                                              (route) => route.isFirst);
+                                          Navigator.of(context)
+                                              .pushReplacementNamed('/');
                                         },
                                         items: themes
                                             .map<DropdownMenuItem<String>>(
@@ -215,7 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         notifications = value;
                       });
                       await Utilities.prefs.setBool('notifications', value);
-                    }, initialValue: null,
+                    },
+                    initialValue: null,
                   )
                 ],
               ),
@@ -242,19 +251,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: const Text("Blocked"),
                       leading: const Icon(Icons.block),
                       onPressed: (ctx) => {
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(
-                          builder: (_) => const BlockedUsersScreen(),
-                        ))
-                      }),
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (_) => const BlockedUsersScreen(),
+                            ))
+                          }),
                   SettingsTile(
                       title: const Text("Flag Content"),
                       leading: const Icon(Icons.flag),
-                      onPressed: (ctx) async => {
-                        await launchMailto()
-                      }),
+                      onPressed: (ctx) async => {await launchMailto()}),
                   SettingsTile(
-                      title: Text(AppLocalizations.of(context)!.deleteYourAccount),
+                      title:
+                          Text(AppLocalizations.of(context)!.deleteYourAccount),
                       leading: const Icon(Icons.delete_forever),
                       onPressed: (ctx) => _deleteAccount()),
                   // SettingsTile(
@@ -265,8 +273,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
-        onPopInvoked: (didPop) => _onPopInvoked(didPop));
+        onPopInvoked: (didPop) => _onPopInvoked(context, didPop));        
   }
+
 // ...somewhere in your Flutter app...
   Future<void> launchMailto() async {
     final mailtoLink = Mailto(
@@ -280,6 +289,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // or the toString() method.
     await launchUrlString('$mailtoLink');
   }
+
 // Image Picker
 //     List<File> _images = [];
   late File _image; // Used only if you need a single picture
@@ -346,7 +356,8 @@ _deleteAccount() {
                   AppLocalizations.of(Utilities.globalKey.currentContext!)!
                       .cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context)
+                    .popUntil((route) => route.settings.name == '/');
               },
             ),
             TextButton(
@@ -363,13 +374,20 @@ _deleteAccount() {
 }
 
 _launchPrivacyPolicy() async {
-  await launchUrlString("https://www.alphatechnology.ca/anychat-privacy-policy");
+  await launchUrlString(
+      "https://www.alphatechnology.ca/anychat-privacy-policy");
 }
+
 _launchEula() async {
   await launchUrlString("https://www.alphatechnology.ca/anychat-eula");
 }
 
-Future<bool> _onPopInvoked(didPop) async {
-  Navigator.pushNamed(Utilities.globalKey.currentContext!, '/conversations');
-  return true;
+void _onPopInvoked(BuildContext context, bool didPop) {
+  try {
+    if (didPop){
+      Navigator.pushNamed(context, '/conversations');
+    }
+  } on Exception catch (e) {
+    logger.e(e.toString());
+  }
 }
