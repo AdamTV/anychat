@@ -7,9 +7,9 @@ class RoundedPasswordField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
 
   const RoundedPasswordField({
-    Key? key,
+    super.key,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<RoundedPasswordField> createState() => _RoundedPasswordFieldState();

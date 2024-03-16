@@ -4,12 +4,13 @@ import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
-  const LiveTranslatorScreen({Key? key}) : super(key: key);
+  const LiveTranslatorScreen({super.key});
 
   @override
   State<LiveTranslatorScreen> createState() => _LiveTranslatorScreenState();
@@ -163,14 +164,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           RoundedButton(
               text: AppLocalizations.of(context)!.saveCaps,
               press: () {
-                Navigator.of(context).pop();
+                NavigationService().goBack();
               }),
         ],
       ),
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            NavigationService().goBack();
           },
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor,
@@ -202,7 +203,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       final newText = await Utilities.getGoogleTranslation(
           AnyChatAuth.currentUser!.language, currentText);
       if (mounted) {
-        if (isData && newData!.isFinal) {
+        if (isData && newData.isFinal) {
           responseText += '\n$newText';
           setState(() {
             text = responseText;

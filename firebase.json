@@ -4,24 +4,68 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "build/web",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
     ]
   },
   "storage": {
     "rules": "storage.rules"
   },
-  "functions": {
-    "predeploy": [
-    ]
-  }
+  "functions": [
+    {
+      "predeploy": [],
+      "source": "functions",
+      "codebase": "default"
+    },
+    {
+      "source": "anychat",
+      "codebase": "anychat",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9069
+    },
+    "functions": {
+      "port": 5069
+    },
+    "firestore": {
+      "port": 8069
+    },
+    "database": {
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8085
+    },
+    "storage": {
+      "port": 9199
+    },
+    "eventarc": {
+      "port": 9299
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  },
+  "extensions": {}
 }

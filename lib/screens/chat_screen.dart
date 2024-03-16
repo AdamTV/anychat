@@ -10,6 +10,7 @@ import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/search_chatter_by_email_screen.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // import 'call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  const ChatScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _ChatScreenState();
@@ -32,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatWindow extends StatefulWidget {
-  const ChatWindow({Key? key}) : super(key: key);
+  const ChatWindow({super.key});
 
   @override
   State<ChatWindow> createState() => _ChatWindowState();
@@ -402,7 +403,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text(AppLocalizations.of(context)!.backToConversations),
                 onTap: () {
-                  Navigator.pushNamed(context, "/conversations");
+                  NavigationService().pushNamedAndRemoveUntil("/conversations",
+                      predicate: (Route<dynamic> route) => route.isFirst);
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context)!.logout),
@@ -538,8 +540,7 @@ class ChatMessage extends StatelessWidget {
   final AnimationController? animationController;
 
   const ChatMessage(
-      {Key? key, this.text, this.animationController, this.sender, this.id})
-      : super(key: key);
+      {super.key, this.text, this.animationController, this.sender, this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -575,7 +576,7 @@ class ChatMessage extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                           )
                         : CircleAvatar(
-                            child: Text(sender!.displayName.substring(0, 1)),
+                            child: Text(sender!.displayName.characters.first),
                           )),
                 Expanded(
                   child: Column(

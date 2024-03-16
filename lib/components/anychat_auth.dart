@@ -269,8 +269,7 @@ class AnyChatAuth {
         try {
           var user = await AnyChatAuth.signInFacebook();
           if (user != null) {
-            Utilities.initConversationScreen(
-                context.mounted ? context : Utilities.globalKey.currentContext!,
+            Utilities.initConversationScreen(                
                 user);
           }
         } catch (e) {
@@ -309,9 +308,7 @@ class AnyChatAuth {
             var user = await AnyChatAuth.signInGoogle();
             if (user != null) {
               Utilities.initConversationScreen(
-                  context.mounted
-                      ? context
-                      : Utilities.globalKey.currentContext!,
+                
                   user);
             }
           } catch (e) {
@@ -354,9 +351,7 @@ class AnyChatAuth {
             var user = await AnyChatAuth.signInApple();
             if (user != null) {
               Utilities.initConversationScreen(
-                  context.mounted
-                      ? context
-                      : Utilities.globalKey.currentContext!,
+                
                   user);
             }
           } catch (e) {
@@ -394,7 +389,7 @@ class AnyChatAuth {
           var user = await AnyChatAuth.signInTwitter();
           if (user != null) {
             Utilities.initConversationScreen(
-                context.mounted ? context : Utilities.globalKey.currentContext!,
+               
                 user);
           }
         } catch (e) {

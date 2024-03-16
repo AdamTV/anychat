@@ -7,6 +7,7 @@ import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/languages_screen.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import 'blocked_users_screen.dart';
 import 'package:mailto/mailto.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -43,237 +44,227 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ];
     dropdownValue = Utilities.getThemeDropdownValue();
 
-    return PopScope(
-        child: Scaffold(
-          appBar: AppBar(
-              title: Text(
-                  '${AppLocalizations.of(context)!.title} ${AppLocalizations.of(context)!.settings}')),
-          body: SettingsList(
-            contentPadding: const EdgeInsets.only(top: 12),
-            sections: [
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.translation),
+    return Scaffold(
+        appBar: AppBar(
+            title: Text(
+                '${AppLocalizations.of(context)!.title} ${AppLocalizations.of(context)!.settings}')),
+        body: SettingsList(
+          contentPadding: const EdgeInsets.only(top: 12),
+          sections: [
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.translation),
+              tiles: [
+                SettingsTile(
+                  title: Text(AppLocalizations.of(context)!.language),
+                  description: Text(Utilities.getLanguageFromIsoCode(
+                      AnyChatAuth.currentUser!.language)),
+                  leading: const Icon(Icons.language),
+                  onPressed: (BuildContext context) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => const LanguagesScreen(),
+                    ));
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.information),
+              tiles: [
+                SettingsTile(
+                  title: Text(AppLocalizations.of(context)!.displayName),
+                  description: Text(displayName!),
+                  leading: const Icon(Icons.drive_file_rename_outline),
+                  onPressed: (BuildContext context) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                                AppLocalizations.of(context)!.enterYourName),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  RoundedInputField(
+                                      initialValue:
+                                          AnyChatAuth.currentUser!.displayName,
+                                      icon: Icons.drive_file_rename_outline,
+                                      onChanged: (value) =>
+                                          {displayName = value}),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(AppLocalizations.of(context)!.save),
+                                onPressed: () async {
+                                  if (displayName!.isEmpty ||
+                                      displayName == null) {
+                                    Utilities.showToast(
+                                        AppLocalizations.of(context)!
+                                            .enterYourName);
+                                    return;
+                                  }
+                                  await AnyChatUser.updateDisplayName(
+                                      displayName);
+                                  Navigator.of(mounted
+                                          ? context
+                                          : Utilities.globalKey.currentContext!)
+                                      .pushReplacement(MaterialPageRoute(
+                                    builder: (_) => const SettingsScreen(),
+                                  ));
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
+                SettingsTile(
+                    title: Text(FirebaseAuth.instance.currentUser!.emailVerified
+                        ? AppLocalizations.of(context)!.emailVerified
+                        : AppLocalizations.of(context)!.verificationEmailSent),
+                    description: Text(AnyChatAuth.currentUser!.email),
+                    leading: const Icon(Icons.email)),
+              ],
+            ),
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.picture),
+              tiles: [
+                // SettingsTile.switchTile(
+                //   title: 'Profile Picture',
+                //   description: 'Use picture from linked account',
+                //   switchValue: useLinkedPicture,
+                //   onToggle: (bool value) async {
+                //     if (value == true) {
+                //       await AnyChatUser.updatePhotoUrl(AnyChatAuth.linkedAccountPhotoUrl);
+                //     }
+                //     setState(() {
+                //       useLinkedPicture = value;
+                //       changeProfilePictureEnabled = !value;
+                //     });
+                //   },
+                // ),
+                SettingsTile(
+                    onPressed: (v) => {getImage(true)},
+                    title: Text(AppLocalizations.of(context)!.changePicture),
+                    // enabled: changeProfilePictureEnabled,
+                    leading: const Icon(Icons.photo),
+                    trailing: AnyChatAuth.currentUser!.photoUrl != ''
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(AnyChatAuth.currentUser!.photoUrl))
+                        : CircleAvatar(
+                            child: Text(AnyChatAuth.currentUser!.displayName
+                                .substring(0, 1))))
+              ],
+            ),
+            SettingsSection(
+                title: Text(AppLocalizations.of(context)!.colors),
                 tiles: [
                   SettingsTile(
-                    title: Text(AppLocalizations.of(context)!.language),
-                    description: Text(Utilities.getLanguageFromIsoCode(
-                        AnyChatAuth.currentUser!.language)),
-                    leading: const Icon(Icons.language),
-                    onPressed: (BuildContext context) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (_) => const LanguagesScreen(),
-                      ));
-                    },
-                  ),
-                ],
-              ),
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.information),
-                tiles: [
-                  SettingsTile(
-                    title: Text(AppLocalizations.of(context)!.displayName),
-                    description: Text(displayName!),
-                    leading: const Icon(Icons.drive_file_rename_outline),
+                    title: Text(AppLocalizations.of(context)!.theme),
+                    description: Text(dropdownValue!),
+                    leading: const Icon(Icons.palette),
                     onPressed: (BuildContext context) {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text(
-                                  AppLocalizations.of(context)!.enterYourName),
+                              title: Text(AppLocalizations.of(context)!
+                                  .selectYourTheme),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
-                                    RoundedInputField(
-                                        initialValue: AnyChatAuth
-                                            .currentUser!.displayName,
-                                        icon: Icons.drive_file_rename_outline,
-                                        onChanged: (value) =>
-                                            {displayName = value}),
+                                    DropdownButton<String>(
+                                      value: dropdownValue,
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      onChanged: (String? newValue) async {
+                                        setState(() {
+                                          dropdownValue = newValue;
+                                        });
+                                        Utilities.setThemeFromDropdownValue(
+                                            newValue);
+                                        NavigationService().goBack();
+                                      },
+                                      items: themes
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
                                   ],
                                 ),
                               ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child:
-                                      Text(AppLocalizations.of(context)!.save),
-                                  onPressed: () async {
-                                    if (displayName!.isEmpty ||
-                                        displayName == null) {
-                                      Utilities.showToast(
-                                          AppLocalizations.of(context)!
-                                              .enterYourName);
-                                      return;
-                                    }
-                                    await AnyChatUser.updateDisplayName(
-                                        displayName);
-                                    Navigator.of(mounted
-                                            ? context
-                                            : Utilities
-                                                .globalKey.currentContext!)
-                                        .pushReplacement(MaterialPageRoute(
-                                      builder: (_) => const SettingsScreen(),
-                                    ));
-                                  },
-                                ),
-                              ],
                             );
                           });
                     },
-                  ),
-                  SettingsTile(
-                      title: Text(
-                          FirebaseAuth.instance.currentUser!.emailVerified
-                              ? AppLocalizations.of(context)!.emailVerified
-                              : AppLocalizations.of(context)!
-                                  .verificationEmailSent),
-                      description: Text(AnyChatAuth.currentUser!.email),
-                      leading: const Icon(Icons.email)),
-                ],
-              ),
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.picture),
-                tiles: [
-                  // SettingsTile.switchTile(
-                  //   title: 'Profile Picture',
-                  //   description: 'Use picture from linked account',
-                  //   switchValue: useLinkedPicture,
-                  //   onToggle: (bool value) async {
-                  //     if (value == true) {
-                  //       await AnyChatUser.updatePhotoUrl(AnyChatAuth.linkedAccountPhotoUrl);
-                  //     }
-                  //     setState(() {
-                  //       useLinkedPicture = value;
-                  //       changeProfilePictureEnabled = !value;
-                  //     });
-                  //   },
-                  // ),
-                  SettingsTile(
-                      onPressed: (v) => {getImage(true)},
-                      title: Text(AppLocalizations.of(context)!.changePicture),
-                      // enabled: changeProfilePictureEnabled,
-                      leading: const Icon(Icons.photo),
-                      trailing: AnyChatAuth.currentUser!.photoUrl != ''
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  AnyChatAuth.currentUser!.photoUrl))
-                          : CircleAvatar(
-                              child: Text(AnyChatAuth.currentUser!.displayName
-                                  .substring(0, 1))))
-                ],
-              ),
-              SettingsSection(
-                  title: Text(AppLocalizations.of(context)!.colors),
-                  tiles: [
-                    SettingsTile(
-                      title: Text(AppLocalizations.of(context)!.theme),
-                      description: Text(dropdownValue!),
-                      leading: const Icon(Icons.palette),
-                      onPressed: (BuildContext context) {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(AppLocalizations.of(context)!
-                                    .selectYourTheme),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      DropdownButton<String>(
-                                        value: dropdownValue,
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        onChanged: (String? newValue) async {
-                                          setState(() {
-                                            dropdownValue = newValue;
-                                          });
-                                          Utilities.setThemeFromDropdownValue(
-                                              newValue);
-                                          Navigator.of(context).popUntil(
-                                              (route) => route.isFirst);
-                                          Navigator.of(context)
-                                              .pushReplacementNamed('/');
-                                        },
-                                        items: themes
-                                            .map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                    )
-                  ]),
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.notifications),
-                tiles: [
-                  SettingsTile.switchTile(
-                    title: Text(AppLocalizations.of(context)!.notifications),
-                    leading: const Icon(Icons.notifications_active),
-                    // switchValue: notifications,
-                    onToggle: (value) async {
-                      setState(() {
-                        notifications = value;
-                      });
-                      await Utilities.prefs.setBool('notifications', value);
-                    },
-                    initialValue: null,
                   )
-                ],
-              ),
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.miscellaneous),
-                tiles: [
-                  SettingsTile(
-                      title: Text(AppLocalizations.of(context)!.privacyPolicy),
-                      leading: const Icon(Icons.description),
-                      onPressed: (ctx) => _launchPrivacyPolicy()),
-                  SettingsTile(
-                      title: Text(AppLocalizations.of(context)!.eula),
-                      leading: const Icon(Icons.description),
-                      onPressed: (ctx) => _launchEula()),
-                  // SettingsTile(
-                  //     title: 'Open source licenses',
-                  //     leading: Icon(Icons.collections_bookmark)),
-                ],
-              ),
-              SettingsSection(
-                title: Text(AppLocalizations.of(context)!.dangerZone),
-                tiles: [
-                  SettingsTile(
-                      title: const Text("Blocked"),
-                      leading: const Icon(Icons.block),
-                      onPressed: (ctx) => {
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (_) => const BlockedUsersScreen(),
-                            ))
-                          }),
-                  SettingsTile(
-                      title: const Text("Flag Content"),
-                      leading: const Icon(Icons.flag),
-                      onPressed: (ctx) async => {await launchMailto()}),
-                  SettingsTile(
-                      title:
-                          Text(AppLocalizations.of(context)!.deleteYourAccount),
-                      leading: const Icon(Icons.delete_forever),
-                      onPressed: (ctx) => _deleteAccount()),
-                  // SettingsTile(
-                  //     title: 'Open source licenses',
-                  //     leading: Icon(Icons.collections_bookmark)),
-                ],
-              ),
-            ],
-          ),
-        ),
-        onPopInvoked: (didPop) => _onPopInvoked(context, didPop));        
+                ]),
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.notifications),
+              tiles: [
+                SettingsTile.switchTile(
+                  title: Text(AppLocalizations.of(context)!.notifications),
+                  leading: const Icon(Icons.notifications_active),
+                  // switchValue: notifications,
+                  onToggle: (value) async {
+                    setState(() {
+                      notifications = value;
+                    });
+                    await Utilities.prefs.setBool('notifications', value);
+                  },
+                  initialValue: null,
+                )
+              ],
+            ),
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.miscellaneous),
+              tiles: [
+                SettingsTile(
+                    title: Text(AppLocalizations.of(context)!.privacyPolicy),
+                    leading: const Icon(Icons.description),
+                    onPressed: (ctx) => _launchPrivacyPolicy()),
+                SettingsTile(
+                    title: Text(AppLocalizations.of(context)!.eula),
+                    leading: const Icon(Icons.description),
+                    onPressed: (ctx) => _launchEula()),
+                // SettingsTile(
+                //     title: 'Open source licenses',
+                //     leading: Icon(Icons.collections_bookmark)),
+              ],
+            ),
+            SettingsSection(
+              title: Text(AppLocalizations.of(context)!.dangerZone),
+              tiles: [
+                SettingsTile(
+                    title: const Text("Blocked"),
+                    leading: const Icon(Icons.block),
+                    onPressed: (ctx) => {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (_) => const BlockedUsersScreen(),
+                          ))
+                        }),
+                SettingsTile(
+                    title: const Text("Flag Content"),
+                    leading: const Icon(Icons.flag),
+                    onPressed: (ctx) async => {await launchMailto()}),
+                SettingsTile(
+                    title:
+                        Text(AppLocalizations.of(context)!.deleteYourAccount),
+                    leading: const Icon(Icons.delete_forever),
+                    onPressed: (ctx) => _deleteAccount()),
+                // SettingsTile(
+                //     title: 'Open source licenses',
+                //     leading: Icon(Icons.collections_bookmark)),
+              ],
+            ),
+          ],
+        ));
   }
 
 // ...somewhere in your Flutter app...
@@ -356,8 +347,8 @@ _deleteAccount() {
                   AppLocalizations.of(Utilities.globalKey.currentContext!)!
                       .cancel),
               onPressed: () {
-                Navigator.of(context)
-                    .popUntil((route) => route.settings.name == '/');
+                NavigationService().pushNamedAndRemoveUntil("/",
+                    predicate: (Route<dynamic> route) => route.isFirst);
               },
             ),
             TextButton(
@@ -374,20 +365,9 @@ _deleteAccount() {
 }
 
 _launchPrivacyPolicy() async {
-  await launchUrlString(
-      "https://www.alphatechnology.ca/anychat-privacy-policy");
+  await launchUrlString("https://anychat.ca/privacy-policy");
 }
 
 _launchEula() async {
-  await launchUrlString("https://www.alphatechnology.ca/anychat-eula");
-}
-
-void _onPopInvoked(BuildContext context, bool didPop) {
-  try {
-    if (didPop){
-      Navigator.pushNamed(context, '/conversations');
-    }
-  } on Exception catch (e) {
-    logger.e(e.toString());
-  }
+  await launchUrlString("https://anychat.ca/eula");
 }

@@ -21,39 +21,43 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
-  const ConversationsScreen({Key? key}) : super(key: key);
+  static const ConversationsScreen _instance = ConversationsScreen._internal();
+  factory ConversationsScreen() {
+    return _instance;
+  }
+  const ConversationsScreen._internal();
+
+  const ConversationsScreen.named({super.key});
 
   @override
   State<ConversationsScreen> createState() => _ConversationsScreenState();
 }
 
-class _ConversationsScreenState extends State<ConversationsScreen>
-    with WidgetsBindingObserver {
-  AppLifecycleState _notification = AppLifecycleState.resumed;
+class _ConversationsScreenState extends State<ConversationsScreen> {
+  // AppLifecycleState _notification = AppLifecycleState.resumed;
 
   bool loaded = false;
   StreamSubscription<QuerySnapshot>? _conversationSubscription;
   final List<StreamSubscription<QuerySnapshot>?> _chatMessageSubscriptions = [];
-  List<Widget> conversationWidgets = [];
+  List<Slidable> conversationWidgets = [];
 
   bool _isloadedConvos = false;
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _notification = state;
-      logger.d(_notification);
-    });
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   setState(() {
+  //     _notification = state;
+  //     logger.d(_notification);
+  //   });
+  // }
 
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   _ConversationsScreenState() {
-    conversationWidgets.clear();
+    // conversationWidgets.clear();
     // _chatMessageSubscriptions.clear();
     _conversationSubscription ??=
         ChatWindow.loadAllConversations().listen(_updateConversations);
@@ -225,7 +229,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
             } catch (e) {
               logger.d(e);
             }
-            if (mounted) {
+            if (mounted && AnyChatAuth.currentConversation != null) {
               AnyChatMessage message;
               try {
                 message = snapshot.docs.map((DocumentSnapshot doc) {
@@ -275,7 +279,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   Map<String, Timestamp?> convoTimes = {};
 
-  void insertSorted(Widget slidable, Conversation conversation) {
+  void insertSorted(Slidable slidable, Conversation conversation) {
     convoTimes.addEntries({MapEntry(conversation.id, conversation.timestamp)});
     var sortedTimes = convoTimes.keys.toList(growable: false)
       ..sort((k1, k2) => convoTimes[k2]!.compareTo(convoTimes[k1]!));
@@ -423,13 +427,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     if (chatters.isNotEmpty && conversation.timestamp != null) {
       insertSorted(slidable(chatters, conversation, text), conversation);
     }
-    if (!conversationWidgets
-        .any((element) => element.key == Key(conversation.id))) {
-      _chatMessageSubscriptions
-          .add(loadAllChatMessages(conversation.id).listen(_sendNotification));
-      logger.d('added conversation widget');
-      logger.d(conversationWidgets);
-    }
+    // if (!conversationWidgets
+    //     .any((element) => element.key == Key(conversation.id))) {
+    //   _chatMessageSubscriptions
+    //       .add(loadAllChatMessages(conversation.id).listen(_sendNotification));
+    //   logger.d('added conversation widget');
+    //   logger.d(conversationWidgets);
+    // }
   }
 
   @override
@@ -439,7 +443,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     }
     _conversationSubscription?.cancel();
     // Ads.interstitial.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -514,8 +518,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         }
       }
     }
-    logger.d("_notification");
-    logger.d(_notification);
+    // logger.d("_notification");
+    // logger.d(_notification);
     if (message.senderId != AnyChatAuth.currentUser!.id) {
       var sender = await AnyChatUser.getUserById(message.senderId);
       var text = conversation.participants.contains(message.senderId)
@@ -524,17 +528,17 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           : AppLocalizations.of(
                   mounted ? context : Utilities.globalKey.currentContext!)!
               .thisPersonHasLeftConversation;
-      if (_notification != AppLifecycleState.resumed) {
-        if (text.contains(AppLocalizations.of(
-                mounted ? context : Utilities.globalKey.currentContext!)!
-            .isCallingYouOnAnyChat)) {
-          await Notifications().showNotification(
-              sender.displayName, text, "ring-${conversation.id}");
-        } else {
-          await Notifications().showNotification(
-              sender.displayName, text, "chat-${conversation.id}");
-        }
+      // if (_notification != AppLifecycleState.resumed) {
+      if (text.contains(AppLocalizations.of(
+              mounted ? context : Utilities.globalKey.currentContext!)!
+          .isCallingYouOnAnyChat)) {
+        await Notifications().showNotification(
+            sender.displayName, text, "ring-${conversation.id}");
+      } else {
+        await Notifications().showNotification(
+            sender.displayName, text, "chat-${conversation.id}");
       }
+      // }
     }
   }
 
@@ -547,7 +551,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         .snapshots();
   }
 
-  Widget slidable(
+  Slidable slidable(
       List<AnyChatUser> chatters, Conversation conversation, String text) {
     logger.d("slidable: ${conversation.id}");
     var timeOfLastMessage = DateTime.fromMicrosecondsSinceEpoch(
@@ -645,7 +649,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 ? user.displayName.isEmpty
                     ? Container()
                     : CircleAvatar(
-                        child: Text(user.displayName.substring(0, 1)))
+                        child: Text(user.displayName.characters.first))
                 : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl))));
   }
 

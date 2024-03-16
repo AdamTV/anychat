@@ -2,13 +2,13 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/block_chatter_search_screen.dart';
-import 'package:anychat/screens/settings_screen.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class BlockedUsersScreen extends StatefulWidget {
-  const BlockedUsersScreen({Key? key}) : super(key: key);
+  const BlockedUsersScreen({super.key});
 
   @override
   State<BlockedUsersScreen> createState() => _BlockedUsersScreenState();
@@ -23,21 +23,13 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        onPopInvoked: ((didPop) => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return const SettingsScreen();
-            })) as Future<bool>),
-        child: Scaffold(
+    return Scaffold(
           appBar: AppBar(
               leading: Builder(builder: (BuildContext context) {
                 return IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const SettingsScreen();
-                    }));
+                    NavigationService().goBack();
                   },
                   tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 );
@@ -48,7 +40,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               SettingsSection(tiles: tiles),
             ],
           ),
-        ));
+        );
   }
   List<SettingsTile> tiles = [];
   Future<void> getBlockedAccountNames() async {

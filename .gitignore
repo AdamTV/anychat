@@ -31,9 +31,8 @@
 .pub/
 /build/
 
-# Web related
-lib/generated_plugin_registrant.dart
-
+# Web related (can't include for CI/CD)
+/anychat/
 # Symbolication related
 app.*.symbols
 

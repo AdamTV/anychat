@@ -7,10 +7,10 @@ class HaveAccountCheck extends StatelessWidget {
   final Function? press;
 
   const HaveAccountCheck({
-    Key? key,
+    super.key,
     this.login = true,
     this.press,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
