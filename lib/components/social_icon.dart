@@ -6,10 +6,10 @@ class SocialIcon extends StatelessWidget {
   final Function? press;
 
   const SocialIcon({
-    Key? key,
+    super.key,
     this.iconSrc,
     this.press,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

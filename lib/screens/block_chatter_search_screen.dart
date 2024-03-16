@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BlockChatterSearchScreen extends StatefulWidget {
-  const BlockChatterSearchScreen({Key? key}) : super(key: key);
+  const BlockChatterSearchScreen({super.key});
 
   @override
   State<BlockChatterSearchScreen> createState() =>
@@ -54,7 +54,7 @@ class _BlockChatterSearchScreenState extends State<BlockChatterSearchScreen> {
 class SearchResults extends StatefulWidget {
   final String? searchValue;
 
-  const SearchResults({Key? key, this.searchValue}) : super(key: key);
+  const SearchResults({super.key, this.searchValue});
 
   @override
   State<SearchResults> createState() => _SearchResultsState();

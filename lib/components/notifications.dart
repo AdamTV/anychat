@@ -111,11 +111,11 @@ class Notifications implements Disposable {
       await init();
     }
     if (payload.contains("ring")) {
-      () async {
-        flutterRingtonePlayer.playRingtone();
-        await Future.delayed(
-            const Duration(seconds: 15), () => flutterRingtonePlayer.stop());
-      }.call();
+      // () async {
+      //   flutterRingtonePlayer.playRingtone();
+      //   await Future.delayed(
+      //       const Duration(seconds: 15), () => flutterRingtonePlayer.stop());
+      // }.call();
     }
     await flutterLocalNotificationsPlugin!
         .show(0, title, body, platformChannelSpecifics, payload: payload);

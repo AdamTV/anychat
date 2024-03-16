@@ -9,12 +9,12 @@ class RoundedInputField extends StatelessWidget {
   final String? initialValue;
 
   const RoundedInputField({
-    Key? key,
+    super.key,
     this.hintText,
     this.icon = Icons.person,
     this.onChanged,
     this.initialValue = "",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

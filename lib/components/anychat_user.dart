@@ -1,6 +1,7 @@
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'conversation_info.dart';
 
 class AnyChatUser {
   final String id;
-  late  String displayName = '';
+  late String displayName = '';
   late final String email;
   late String photoUrl = '';
   late final String language;
@@ -35,7 +36,7 @@ class AnyChatUser {
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot) : id = snapshot.id {
     final data = snapshot.data();
-    if (data != null){
+    if (data != null) {
       displayName = (snapshot.data() as Map<String, dynamic>)['displayName'];
       email = (snapshot.data() as Map<String, dynamic>)['email'];
       photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'] ?? '';
@@ -429,7 +430,7 @@ class AnyChatUser {
             TextButton(
               child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () {
-                Navigator.of(context).pop();
+                NavigationService().goBack();
                 Utilities.showToast(AppLocalizations.of(context)!.cancelled);
               },
             ),
@@ -438,12 +439,13 @@ class AnyChatUser {
               onPressed: () {
                 AnyChatAuth.currentUser!.conversations
                     .removeWhere((element) => element.id == id);
-                Navigator.of(context).pop();
+                NavigationService().goBack();
                 AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser!.leaveConversation(id);
                 Utilities.showToast(
                     AppLocalizations.of(context)!.successfullyLeftConversation);
-                Navigator.pushReplacementNamed(context, "/conversations");
+                NavigationService().pushNamedAndRemoveUntil("/conversations",
+                    predicate: (Route<dynamic> route) => route.isFirst);
               },
             ),
           ],

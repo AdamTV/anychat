@@ -1,62 +1,66 @@
+import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
+    AnyChatLocale.init(context);
     Size size = MediaQuery.of(context).size;
-    // This size provide us total height and width of our screen
-    return PopScope(
-        child: Scaffold(
-            body: WelcomeBackground(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: size.height * 0.15,
-                  child: Image.asset(
-                      "assets/icons/anychat-text-only-${Theme.of(context).brightness == Brightness.dark ? 'dark' : 'light'}Theme.png"),
-                ),
-                SizedBox(height: size.height * 0.05),
-                SizedBox(
-                  height: size.height * 0.45,
-                  child: Image.asset(
-                    "assets/icons/globecomplexSphere.webp",
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 1),
+      child: PopScope(
+          child: Scaffold(
+              body: WelcomeBackground(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: size.height * 0.15,
+                    child: Image.asset(
+                        "assets/icons/anychat-text-only-${Theme.of(context).brightness == Brightness.dark ? 'dark' : 'light'}Theme.png"),
                   ),
-                ),
-                SizedBox(height: size.height * 0.05),
-                RoundedButton(
-                  text: AppLocalizations.of(context)!.login_caps,
-                  press: () {
-                    Navigator.pushNamed(context, "/login");
-                  },
-                ),
-                RoundedButton(
-                  text: AppLocalizations.of(context)!.register_caps,
-                  press: () {
-                    Navigator.pushNamed(context, "/register");
-                  },
-                ),
-              ],
+                  SizedBox(height: size.height * 0.05),
+                  SizedBox(
+                    height: size.height * 0.45,
+                    child: Image.asset(
+                      "assets/icons/globecomplexSphere.webp",
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.05),
+                  RoundedButton(
+                    text: AppLocalizations.of(context)!.login_caps,
+                    press: () {
+                      Navigator.pushNamed(context, "/login");
+                    },
+                  ),
+                  RoundedButton(
+                    text: AppLocalizations.of(context)!.register_caps,
+                    press: () {
+                      Navigator.pushNamed(context, "/register");
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        )),
-        onPopInvoked: (didPop) async => false);
+          )),
+          onPopInvoked: (didPop) async => false),
+    );
   }
 }
-
 class WelcomeBackground extends StatelessWidget {
   final Widget child;
 
   const WelcomeBackground({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

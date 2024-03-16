@@ -9,7 +9,7 @@
 				"command": "/bin/bash scritps/increment_build_version.sh"
 			},
 			"windows": {
-				"command": "bash scripts/increment_build_version.sh"
+				"command": "pwsh.exe scripts/increment_build_version.ps1"
 			},
 			"group": "build",
 		},

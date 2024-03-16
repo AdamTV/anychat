@@ -13,7 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       await AnyChatAuth.signInEmail(_email, _password, false);
                   if (user != null) {
                     Utilities.initConversationScreen(
-                        mounted ? context : Utilities.globalKey.currentContext!,
+                      
                         user);
                   } else {
                     Utilities.showAlertDialog(
@@ -156,9 +156,9 @@ class LoginBackground extends StatelessWidget {
   final Widget child;
 
   const LoginBackground({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

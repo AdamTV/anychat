@@ -4,9 +4,9 @@ class TextFieldContainer extends StatelessWidget {
   final Widget? child;
 
   const TextFieldContainer({
-    Key? key,
+    super.key,
     this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

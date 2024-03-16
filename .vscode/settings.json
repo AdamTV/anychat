@@ -13,4 +13,5 @@
     "terminal.integrated.mouseWheelZoom": true,
     "dart.openDevTools": "flutter",
     "cloudcode.project": "anychat-c414a",
+    "editor.accessibilitySupport": "off",
 }

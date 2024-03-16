@@ -1,5 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,7 +16,7 @@ class SearchChatterByEmailScreen extends StatefulWidget {
     return searchValue;
   }
 
-  const SearchChatterByEmailScreen({Key? key}) : super(key: key);
+  const SearchChatterByEmailScreen({super.key});
 
   @override
   SearchChatterByEmailScreenState createState() =>
@@ -81,7 +82,10 @@ class SearchChatterByEmailScreenState
                           title: Text(AppLocalizations.of(context)!
                               .backToConversations),
                           onTap: () {
-                            Navigator.pushNamed(context, "/conversations");
+                            NavigationService().pushNamedAndRemoveUntil(
+                                "/conversations",
+                                predicate: (Route<dynamic> route) =>
+                                    route.isFirst);
                           }),
                       ListTile(
                           title: Text(AppLocalizations.of(context)!.logout),
@@ -125,7 +129,10 @@ class SearchChatterByEmailScreenState
                         title: Text(
                             AppLocalizations.of(context)!.backToConversations),
                         onTap: () {
-                          Navigator.pushNamed(context, "/conversations");
+                          NavigationService().pushNamedAndRemoveUntil(
+                              "/conversations",
+                              predicate: (Route<dynamic> route) =>
+                                  route.isFirst);
                         }),
                     ListTile(
                         title: Text(AppLocalizations.of(context)!.logout),

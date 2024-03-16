@@ -6,7 +6,6 @@
             "type": "dart",
             "request": "attach"
         },
-        
         {
             "type": "node",
             "request": "launch",
@@ -32,6 +31,12 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Flutter",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
         },
         {
             "name": "Flutter",

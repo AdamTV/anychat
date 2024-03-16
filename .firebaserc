@@ -1,5 +1,11 @@
 {
   "projects": {
     "default": "anychat-c414a"
+  },
+  "targets": {},
+  "etags": {
+    "anychat-c414a": {
+      "extensionInstances": {}
+    }
   }
 }

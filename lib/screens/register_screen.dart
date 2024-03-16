@@ -5,6 +5,7 @@ import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -170,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextButton(
                     child: Text(AppLocalizations.of(context)!.cancel),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      NavigationService().goBack();
                       Utilities.showToast(
                           AppLocalizations.of(context)!.cancelled);
                     },
@@ -188,9 +189,9 @@ class SignupBackground extends StatelessWidget {
   final Widget child;
 
   const SignupBackground({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
