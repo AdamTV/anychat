@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <!--
       If you are serving your web app in a path other than the root, change the
       href value below to reflect the base path you are serving from.
@@ -11,92 +11,88 @@
       Fore more details:
       * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
     -->
-    <base href="/">
+    <base href="/" />
 
-    <meta content="682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com"
-          name="google-signin-client_id">
+    <meta
+      content="682283241991-3e18pgio7gce2514gs8q1e2vpecgtiil.apps.googleusercontent.com"
+      name="google-signin-client_id"
+    />
 
-
-    <meta charset="UTF-8">
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta content="A new Flutter project." name="description">
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta content="A new Flutter project." name="description" />
 
     <!-- iOS meta tags & icons -->
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="anychat" name="apple-mobile-web-app-title">
-    <link href="icons/Icon-192.png" rel="apple-touch-icon">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="anychat" name="apple-mobile-web-app-title" />
+    <link href="icons/Icon-192.png" rel="apple-touch-icon" />
 
     <!-- Favicon -->
-    <link href="favicon.png" rel="icon" type="image/png"/>
+    <link href="favicon.png" rel="icon" type="image/png" />
 
     <title>anychat</title>
-    <link href="manifest.json" rel="manifest">
-</head>
-<body>
-<!-- This script installs service_worker.js to provide PWA functionality to
+    <link href="manifest.json" rel="manifest" />
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO"></script>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/10.6.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/10.6.0/firebase-auth.js"></script>
+    <!-- <script defer src="/__/firebase/10.6.0/firebase-database.js"></script> -->
+    <script defer src="/__/firebase/10.6.0/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/10.6.0/firebase-functions.js"></script>
+    <!-- <script defer src="/__/firebase/10.6.0/firebase-messaging.js"></script> -->
+    <script defer src="/__/firebase/10.6.0/firebase-storage.js"></script>
+    <script defer src="/__/firebase/10.6.0/firebase-analytics.js"></script>
+    <!-- <script defer src="/__/firebase/10.6.0/firebase-remote-config.js"></script> -->
+    <!-- <script defer src="/__/firebase/10.6.0/firebase-performance.js"></script> -->
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  </head>
+  <body>
+    <!-- This script installs service_worker.js to provide PWA functionality to
      application. For more information, see:
      https://developers.google.com/web/fundamentals/primers/service-workers -->
-<script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('flutter-first-frame', function () {
-        navigator.serviceWorker.register('flutter_service_worker.js');
-      });
-    }
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("flutter-first-frame", function () {
+          navigator.serviceWorker.register("flutter_service_worker.js");
+        });
+      }
+    </script>
 
-
-
-</script>
-
-<!--  TESTING CODE-->
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
-
-<!-- Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
-<!--  TODO: WATCH FIRESTORE VERSION-->
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-storage.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-functions.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyARHKCHpgRLksCRW8rS6NwLb2--E5Mg_Ck",
-    authDomain: "anychat-c414a.firebaseapp.com",
-    databaseURL: "https://anychat-c414a-default-rtdb.firebaseio.com",
-    projectId: "anychat-c414a",
-    storageBucket: "anychat-c414a.appspot.com",
-    messagingSenderId: "682283241991",
-    appId: "1:682283241991:web:305bb8b183f12c71abd0a2",
-    measurementId: "G-XBVJP56RHW"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-
-
-
-</script>
-<!--  /TESTING CODE-->
-
-<!--  PRODUCTION CODE-->
-<!--  &lt;!&ndash; The core Firebase JS SDK is always required and must be listed first &ndash;&gt;-->
-<!--  <script src="/__/firebase/8.2.3/firebase-app.js"></script>-->
-
-<!--  &lt;!&ndash; Add SDKs for Firebase products that you want to use-->
-<!--       https://firebase.google.com/docs/web/setup#available-libraries &ndash;&gt;-->
-<!--  <script src="/__/firebase/8.2.3/firebase-analytics.js"></script>-->
-<!--  <script src="/__/firebase/8.2.3/firebase-auth.js"></script>-->
-<!--  <script src="/__/firebase/7.22.1/firebase-firestore.js"></script>-->
-<!--  <script src="/__/firebase/8.2.3/firebase-storage.js"></script>-->
-
-<!--  &lt;!&ndash; Initialize Firebase &ndash;&gt;-->
-<!--  <script src="/__/firebase/init.js"></script>-->
-<!--  /PRODUCTION CODE-->
-<script src="main.dart.js" type="application/javascript"></script>
-</body>
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyARHKCHpgRLksCRW8rS6NwLb2--E5Mg_Ck",
+        authDomain: "anychat-c414a.firebaseapp.com",
+        databaseURL: "https://anychat-c414a-default-rtdb.firebaseio.com",
+        projectId: "anychat-c414a",
+        storageBucket: "anychat-c414a.appspot.com",
+        messagingSenderId: "682283241991",
+        appId: "1:682283241991:web:305bb8b183f12c71abd0a2",
+        measurementId: "G-XBVJP56RHW",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+    <script src="main.dart.js" type="application/javascript"></script>
+    <script>
+      function onClick(e) {
+        e.preventDefault();
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute(
+            "6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO",
+            { action: "LOGIN" }
+          );
+        });
+      }
+    </script>
+  </body>
 </html>

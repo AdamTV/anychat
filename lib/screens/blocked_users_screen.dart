@@ -24,39 +24,42 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-              leading: Builder(builder: (BuildContext context) {
-                return IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    NavigationService().goBack();
-                  },
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                );
-              }),
-              title: Text(AppLocalizations.of(context)!.blockAccount)),
-          body: SettingsList(
-            sections: [
-              SettingsSection(tiles: tiles),
-            ],
-          ),
-        );
+      appBar: AppBar(
+          leading: Builder(builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                NavigationService().goBack();
+              },
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            );
+          }),
+          title: Text(AppLocalizations.of(context)!.blockAccount)),
+      body: SettingsList(
+        sections: [
+          SettingsSection(tiles: tiles),
+        ],
+      ),
+    );
   }
+
   List<SettingsTile> tiles = [];
   Future<void> getBlockedAccountNames() async {
     tiles.clear();
     tiles.add(SettingsTile(
-        title: Text(AppLocalizations.of(Utilities.globalKey.currentContext!)!.blockAccount),
+        title: Text(AppLocalizations.of(Utilities().globalKey.currentContext!)!
+            .blockAccount),
         leading: const Icon(Icons.add),
         onPressed: (ctx) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (BuildContext context) {
-                return const BlockChatterSearchScreen();
-              }));
+            return const BlockChatterSearchScreen();
+          }));
         }));
 
-    for (int i = 0; i < AnyChatAuth.currentUser!.blockedAccounts.length; i++){
-      var user = await AnyChatUser.getUserById(AnyChatAuth.currentUser!.blockedAccounts[i]);
+    for (int i = 0; i < AnyChatAuth.currentUser!.blockedAccounts.length; i++) {
+      var user = await AnyChatUser.getUserById(
+          AnyChatAuth.currentUser!.blockedAccounts[i]);
       setState(() {
         tiles.add(SettingsTile(
             title: Text(user.displayName),

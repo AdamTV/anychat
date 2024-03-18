@@ -31,7 +31,7 @@ class Ads {
   //   return AdmobBanner(
   //       adUnitId: getBannerAdUnitId(),
   //       adSize:
-  //           AdmobBannerSize.SMART_BANNER(Utilities.globalKey.currentContext!),
+  //           AdmobBannerSize.SMART_BANNER(Utilities().globalKey.currentContext!),
   //       listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
   //         handleEvent(event, args, 'Banner');
   //         if (event == AdmobAdEvent.opened) {
@@ -66,34 +66,31 @@ class Ads {
   //       logger.d('Admob $adType failed to load. :(');
   //       break;
 
-
-
-
-      // case AdmobAdEvent.rewarded:
-      //   showDialog(
-      //     context: scaffoldState.currentContext,
-      //     builder: (BuildContext context) {
-      //       return WillPopScope(
-      //         child: AlertDialog(
-      //           content: Column(
-      //             mainAxisSize: MainAxisSize.min,
-      //             children: <Widget>[
-      //               Text('Reward callback fired. Thanks Andrew!'),
-      //               Text('Type: ${args['type']}'),
-      //               Text('Amount: ${args['amount']}'),
-      //             ],
-      //           ),
-      //         ),
-      //         onWillPop: () async {
-      //           scaffoldState.currentState.hideCurrentSnackBar();
-      //           return true;
-      //         },
-      //       );
-      //     },
-      //   );
-      //   break;
-      // default:
-    // }
+  // case AdmobAdEvent.rewarded:
+  //   showDialog(
+  //     context: scaffoldState.currentContext,
+  //     builder: (BuildContext context) {
+  //       return WillPopScope(
+  //         child: AlertDialog(
+  //           content: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               Text('Reward callback fired. Thanks Andrew!'),
+  //               Text('Type: ${args['type']}'),
+  //               Text('Amount: ${args['amount']}'),
+  //             ],
+  //           ),
+  //         ),
+  //         onWillPop: () async {
+  //           scaffoldState.currentState.hideCurrentSnackBar();
+  //           return true;
+  //         },
+  //       );
+  //     },
+  //   );
+  //   break;
+  // default:
+  // }
   // }
 
   // static String getBannerAdUnitId() {

@@ -121,14 +121,14 @@
 
 //   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
 //     if (permissionStatus == PermissionStatus.denied) {
-//       Utilities.showToast(
+//       Utilities().showToast(
 //           AppLocalizations.of(context)!.accessContactDataDisabled);
 //       // throw PlatformException(
 //       //     code: AppLocalizations.of(context).permissionDenied,
 //       //     message: AppLocalizations.of(context).accessContactDataDenied,
 //       //     details: null);
 //     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-//       Utilities.showToast(
+//       Utilities().showToast(
 //           AppLocalizations.of(context)!.accessContactDataDisabled);
 //       // throw PlatformException(
 //       //     code: AppLocalizations.of(context).permissionDisabled,

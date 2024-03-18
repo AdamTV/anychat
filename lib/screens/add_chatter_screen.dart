@@ -67,7 +67,7 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                     Navigator.pushNamed(
                         context.mounted
                             ? context
-                            : Utilities.globalKey.currentContext!,
+                            : Utilities().globalKey.currentContext!,
                         "/welcome");
                     //_handleSignOut();
                   }),
@@ -87,9 +87,9 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                           onChanged: (value) {
                             searchValue = value;
                           }),
-                      RoundedButton(
-                          text: AppLocalizations.of(context)!.search,
-                          press: () {
+                      ElevatedButton(
+                          child: Text(AppLocalizations.of(context)!.search),
+                          onPressed: () {
                             // SearchChatterByEmailScreen.email = email;
                             SearchChatterByEmailScreen.searchValue =
                                 searchValue;
@@ -99,9 +99,9 @@ class _AddChatterScreenState extends State<AddChatterScreen> {
                       const Divider(height: 100),
                       Text(AppLocalizations.of(context)!
                           .seeWhoIsAlreadyOnAnyChat),
-                      RoundedButton(
-                          text: AppLocalizations.of(context)!.contacts,
-                          press: () {
+                      ElevatedButton(
+                          child: Text(AppLocalizations.of(context)!.contacts),
+                          onPressed: () {
                             Navigator.pushNamed(context, "/contacts");
                           }),
                     ],

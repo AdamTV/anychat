@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
@@ -22,11 +24,12 @@ class AnyChatAuth {
   static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-  // static late FacebookAuth _facebookAuth;
+  static late FacebookAuth _facebookAuth;
+
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',
-      //'https://www.googleapis.com/auth/contacts.readonly',
+      'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
 
@@ -70,8 +73,8 @@ class AnyChatAuth {
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
       } else {
-        Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext!)!
+        Utilities().showToast(
+            AppLocalizations.of(Utilities().globalKey.currentContext!)!
                 .emailInUse);
         return null;
       }
@@ -143,8 +146,12 @@ class AnyChatAuth {
 
       logger.d('signInWithGoogle succeeded: $user');
 
-      currentUser = AnyChatUser(authResult.user!.uid, user.displayName ?? "",
-          user.email ?? "", user.photoURL ?? "", AnyChatLocale.currentLocale ?? "", []);
+      currentUser = AnyChatUser(
+          authResult.user!.uid,
+          user.displayName ?? "",
+          user.email ?? "",
+          user.photoURL ?? "",
+          AnyChatLocale.currentLocale ?? "", []);
       currentUser!.addUserToFirestore();
 
       return currentUser;
@@ -155,6 +162,7 @@ class AnyChatAuth {
 
   static Future<void> signOut() async {
     try {
+      AnyChatAuth.currentUser!.cancelAllSubscriptions();
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
       // await _facebookAuth.logOut();
@@ -195,20 +203,24 @@ class AnyChatAuth {
         if (result.displayName == null) {
           displayName = result.email;
         }
-        currentUser = AnyChatUser(result.uid, displayName ?? "", result.email ?? "",
-            result.photoURL ?? "", AnyChatLocale.currentLocale!.substring(0, 2), []);
+        currentUser = AnyChatUser(
+            result.uid,
+            displayName ?? "",
+            result.email ?? "",
+            result.photoURL ?? "",
+            AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext!)!
+        Utilities().showToast(
+            AppLocalizations.of(Utilities().globalKey.currentContext!)!
                 .pleaseChooseStrongerPassword);
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        Utilities.showToast(
-            AppLocalizations.of(Utilities.globalKey.currentContext!)!
+        Utilities().showToast(
+            AppLocalizations.of(Utilities().globalKey.currentContext!)!
                 .pleaseLoginInstead);
         throw Exception('The account already exists for that email.');
       }
@@ -250,7 +262,11 @@ class AnyChatAuth {
       } else {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
-        currentUser = AnyChatUser(user.uid, user.displayName ?? "", user.email ?? "", url,
+        currentUser = AnyChatUser(
+            user.uid,
+            user.displayName ?? "",
+            user.email ?? "",
+            url,
             AnyChatLocale.currentLocale!.substring(0, 2), []);
         currentUser!.addUserToFirestore();
         return currentUser;
@@ -269,29 +285,28 @@ class AnyChatAuth {
         try {
           var user = await AnyChatAuth.signInFacebook();
           if (user != null) {
-            Utilities.initConversationScreen(                
-                user);
+            Utilities().initConversationScreen(user);
           }
         } catch (e) {
-          Utilities.showAlertDialog(
-              context.mounted ? context : Utilities.globalKey.currentContext!,
+          Utilities().showAlertDialog(
+              context.mounted ? context : Utilities().globalKey.currentContext!,
               AppLocalizations.of(context.mounted
                       ? context
-                      : Utilities.globalKey.currentContext!)!
+                      : Utilities().globalKey.currentContext!)!
                   .error,
               ModalRoute.of(context.mounted
                               ? context
-                              : Utilities.globalKey.currentContext!)!
+                              : Utilities().globalKey.currentContext!)!
                           .settings
                           .name ==
                       "/login"
                   ? AppLocalizations.of(context.mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)!
+                          : Utilities().globalKey.currentContext!)!
                       .errorLoggingInFacebook
                   : AppLocalizations.of(context.mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)!
+                          : Utilities().globalKey.currentContext!)!
                       .unableRegisterFacebook);
         }
       },
@@ -307,30 +322,30 @@ class AnyChatAuth {
           try {
             var user = await AnyChatAuth.signInGoogle();
             if (user != null) {
-              Utilities.initConversationScreen(
-                
-                  user);
+              Utilities().initConversationScreen(user);
             }
           } catch (e) {
-            Utilities.showAlertDialog(
-                context.mounted ? context : Utilities.globalKey.currentContext!,
+            Utilities().showAlertDialog(
+                context.mounted
+                    ? context
+                    : Utilities().globalKey.currentContext!,
                 AppLocalizations.of(context.mounted
                         ? context
-                        : Utilities.globalKey.currentContext!)!
+                        : Utilities().globalKey.currentContext!)!
                     .error,
                 ModalRoute.of(context.mounted
                                 ? context
-                                : Utilities.globalKey.currentContext!)!
+                                : Utilities().globalKey.currentContext!)!
                             .settings
                             .name ==
                         "/login"
                     ? AppLocalizations.of(context.mounted
                             ? context
-                            : Utilities.globalKey.currentContext!)!
+                            : Utilities().globalKey.currentContext!)!
                         .errorLoggingInGoogle
                     : AppLocalizations.of(context.mounted
                             ? context
-                            : Utilities.globalKey.currentContext!)!
+                            : Utilities().globalKey.currentContext!)!
                         .unableRegisterGoogle);
           }
         });
@@ -342,7 +357,7 @@ class AnyChatAuth {
         press: () async {
           if (ModalRoute.of(context.mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)!
+                          : Utilities().globalKey.currentContext!)!
                       .settings
                       .name ==
                   "/register" &&
@@ -350,30 +365,30 @@ class AnyChatAuth {
           try {
             var user = await AnyChatAuth.signInApple();
             if (user != null) {
-              Utilities.initConversationScreen(
-                
-                  user);
+              Utilities().initConversationScreen(user);
             }
           } catch (e) {
-            Utilities.showAlertDialog(
-                context.mounted ? context : Utilities.globalKey.currentContext!,
+            Utilities().showAlertDialog(
+                context.mounted
+                    ? context
+                    : Utilities().globalKey.currentContext!,
                 AppLocalizations.of(context.mounted
                         ? context
-                        : Utilities.globalKey.currentContext!)!
+                        : Utilities().globalKey.currentContext!)!
                     .error,
                 ModalRoute.of(context.mounted
                                 ? context
-                                : Utilities.globalKey.currentContext!)!
+                                : Utilities().globalKey.currentContext!)!
                             .settings
                             .name ==
                         "/login"
                     ? AppLocalizations.of(context.mounted
                             ? context
-                            : Utilities.globalKey.currentContext!)!
+                            : Utilities().globalKey.currentContext!)!
                         .errorLoggingInApple
                     : AppLocalizations.of(context.mounted
                             ? context
-                            : Utilities.globalKey.currentContext!)!
+                            : Utilities().globalKey.currentContext!)!
                         .unableRegisterApple);
           }
         });
@@ -388,30 +403,28 @@ class AnyChatAuth {
         try {
           var user = await AnyChatAuth.signInTwitter();
           if (user != null) {
-            Utilities.initConversationScreen(
-               
-                user);
+            Utilities().initConversationScreen(user);
           }
         } catch (e) {
-          Utilities.showAlertDialog(
-              context.mounted ? context : Utilities.globalKey.currentContext!,
+          Utilities().showAlertDialog(
+              context.mounted ? context : Utilities().globalKey.currentContext!,
               AppLocalizations.of(context.mounted
                       ? context
-                      : Utilities.globalKey.currentContext!)!
+                      : Utilities().globalKey.currentContext!)!
                   .error,
               ModalRoute.of(context.mounted
                               ? context
-                              : Utilities.globalKey.currentContext!)!
+                              : Utilities().globalKey.currentContext!)!
                           .settings
                           .name ==
                       "/login"
                   ? AppLocalizations.of(context.mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)!
+                          : Utilities().globalKey.currentContext!)!
                       .errorLoggingInTwitter
                   : AppLocalizations.of(context.mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)!
+                          : Utilities().globalKey.currentContext!)!
                       .unableRegisterTwitter);
         }
       },

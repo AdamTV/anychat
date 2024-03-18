@@ -37,9 +37,9 @@ class _BlockChatterSearchScreenState extends State<BlockChatterSearchScreen> {
                           onChanged: (value) {
                             searchValue = value;
                           }),
-                      RoundedButton(
-                          text: AppLocalizations.of(context)!.search,
-                          press: () {
+                      ElevatedButton(
+                          child: Text(AppLocalizations.of(context)!.search),
+                          onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context) {
                               return SearchResults(searchValue: searchValue);
@@ -91,16 +91,15 @@ class _SearchResultsState extends State<SearchResults> {
                             Navigator.push(
                                 mounted
                                     ? context
-                                    : Utilities.globalKey.currentContext!,
+                                    : Utilities().globalKey.currentContext!,
                                 MaterialPageRoute(builder: (BuildContext ctx) {
                               return const BlockedUsersScreen();
                             }));
                           },
                           leading: users[index].photoUrl == ''
                               ? CircleAvatar(
-                                  child: Text(users[index]
-                                      .displayName
-                                      .substring(0, 1)))
+                                  child: Text(
+                                      users[index].displayName.substring(0, 1)))
                               : CircleAvatar(
                                   backgroundColor:
                                       Theme.of(context).primaryColor,

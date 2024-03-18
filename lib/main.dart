@@ -30,7 +30,7 @@ var logger = Logger(
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    Notifications().init();
+    // Notifications().init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -53,10 +53,11 @@ void main() async {
           // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
           appleProvider: AppleProvider.appAttest,
         )
-        .then((value) => {
+        .then((value) async => {
               Ads.init(),
-              Utilities.init().then((value) => {runApp(const AnyChat())}),
-              AuthService.listenToAuthChanges()
+              await Utilities().initSharedPrefs(),
+              runApp(const AnyChat()),
+              AuthService.listenToAuthChanges(),
             });
   } on Error catch (e) {
     logger.e("Error", e, e.stackTrace);
@@ -92,14 +93,19 @@ class _AnyChatState extends State<AnyChat> {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AnyChatLocale.supportedLocales,
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale?.languageCode ||
+                supportedLocale.countryCode == locale?.countryCode) {
+              return supportedLocale;
+            }
+          }
+          return supportedLocales.first;
+        },
         theme: kDefaultTheme,
         darkTheme: kDarkTheme,
-        themeMode: Utilities.getThemeMode(),
+        themeMode: Utilities().getThemeMode(),
         home: const WelcomeScreen());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

@@ -19,7 +19,7 @@ class LiveTranslatorScreen extends StatefulWidget {
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String? isoCode = AnyChatAuth.currentUser!.language;
   String? dropdownValue =
-      Utilities.getLanguageFromIsoCode(AnyChatAuth.currentUser!.language);
+      Utilities().getLanguageFromIsoCode(AnyChatAuth.currentUser!.language);
   bool recognizing = false;
   bool recognizeFinished = false;
 
@@ -161,9 +161,9 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               onChanged: (value) {
                 isoCode = value;
               }),
-          RoundedButton(
-              text: AppLocalizations.of(context)!.saveCaps,
-              press: () {
+          ElevatedButton(
+              child: Text(AppLocalizations.of(context)!.saveCaps),
+              onPressed: () {
                 NavigationService().goBack();
               }),
         ],
@@ -200,8 +200,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       // ignore: sdk_version_since
       var newData = data.results.firstOrNull;
       var isData = newData != null;
-      final newText = await Utilities.getGoogleTranslation(
-          AnyChatAuth.currentUser!.language, currentText);
+      final newText = await Utilities()
+          .getGoogleTranslation(AnyChatAuth.currentUser!.language, currentText);
       if (mounted) {
         if (isData && newData.isFinal) {
           responseText += '\n$newText';
@@ -238,7 +238,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     //   if (lastMessage.compareTo(transcribedText) != 0 &&
     //       transcribedText.isNotEmpty) {
     //     lastMessage = transcribedText;
-    //     var newText = await Utilities.getGoogleTranslation(
+    //     var newText = await Utilities().getGoogleTranslation(
     //         AnyChatAuth.currentUser!.language, lastMessage);
     //     setState(() {
     //       text += "$newText ";
@@ -255,7 +255,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   }
 
   void showAudioRecordingToast() {
-    Utilities.showToast((recognizing
+    Utilities().showToast((recognizing
         ? AppLocalizations.of(context)!.listeningToMicrophoneLiveAudio
         : AppLocalizations.of(context)!
             .noLongerListeningToMicrophoneLiveAudio));

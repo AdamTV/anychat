@@ -28,7 +28,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? isoCode;
-  bool notifications = Utilities.prefs.getBool('notifications') ?? true;
+  bool notifications = Utilities().prefs.getBool('notifications') ?? true;
   String? displayName = AnyChatAuth.currentUser!.displayName;
   ThemeMode? themeMode;
   late List<String> themes;
@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       AppLocalizations.of(context)!.light,
       AppLocalizations.of(context)!.dark
     ];
-    dropdownValue = Utilities.getThemeDropdownValue();
+    dropdownValue = Utilities().getThemeDropdownValue();
 
     return Scaffold(
         appBar: AppBar(
@@ -56,13 +56,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               tiles: [
                 SettingsTile(
                   title: Text(AppLocalizations.of(context)!.language),
-                  description: Text(Utilities.getLanguageFromIsoCode(
+                  description: Text(Utilities().getLanguageFromIsoCode(
                       AnyChatAuth.currentUser!.language)),
                   leading: const Icon(Icons.language),
                   onPressed: (BuildContext context) {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const LanguagesScreen(),
-                    ));
+                    Navigator.of(context).pushNamed('/languages');
                   },
                 ),
               ],
@@ -99,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 onPressed: () async {
                                   if (displayName!.isEmpty ||
                                       displayName == null) {
-                                    Utilities.showToast(
+                                    Utilities().showToast(
                                         AppLocalizations.of(context)!
                                             .enterYourName);
                                     return;
@@ -108,7 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       displayName);
                                   Navigator.of(mounted
                                           ? context
-                                          : Utilities.globalKey.currentContext!)
+                                          : Utilities()
+                                              .globalKey
+                                              .currentContext!)
                                       .pushReplacement(MaterialPageRoute(
                                     builder: (_) => const SettingsScreen(),
                                   ));
@@ -183,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         setState(() {
                                           dropdownValue = newValue;
                                         });
-                                        Utilities.setThemeFromDropdownValue(
+                                        Utilities().setThemeFromDropdownValue(
                                             newValue);
                                         NavigationService().goBack();
                                       },
@@ -210,12 +210,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.switchTile(
                   title: Text(AppLocalizations.of(context)!.notifications),
                   leading: const Icon(Icons.notifications_active),
-                  // switchValue: notifications,
+                  enabled: notifications,
                   onToggle: (value) async {
                     setState(() {
                       notifications = value;
                     });
-                    await Utilities.prefs.setBool('notifications', value);
+                    await Utilities().prefs.setBool('notifications', value);
                   },
                   initialValue: null,
                 )
@@ -270,7 +270,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 // ...somewhere in your Flutter app...
   Future<void> launchMailto() async {
     final mailtoLink = Mailto(
-      to: ['admin@alphatechnology.ca'],
+      to: ['info@anychat.ca'],
       // cc: ['cc1@example.com', 'cc2@example.com'],
       subject: AppLocalizations.of(context)?.flagObjectionableContent,
       body: AppLocalizations.of(context)?.flagContentEmailBody,
@@ -329,7 +329,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 _deleteAccount() {
   showDialog(
-      context: Utilities.globalKey.currentContext!,
+      context: Utilities().globalKey.currentContext!,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(AppLocalizations.of(context)!.deleteYourAccount),
@@ -344,7 +344,7 @@ _deleteAccount() {
           actions: <Widget>[
             TextButton(
               child: Text(
-                  AppLocalizations.of(Utilities.globalKey.currentContext!)!
+                  AppLocalizations.of(Utilities().globalKey.currentContext!)!
                       .cancel),
               onPressed: () {
                 NavigationService().pushNamedAndRemoveUntil("/",
@@ -353,7 +353,7 @@ _deleteAccount() {
             ),
             TextButton(
               child: Text(
-                  AppLocalizations.of(Utilities.globalKey.currentContext!)!
+                  AppLocalizations.of(Utilities().globalKey.currentContext!)!
                       .approve),
               onPressed: () async {
                 AnyChatAuth.currentUser!.deleteAccount();

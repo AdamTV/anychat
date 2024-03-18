@@ -25,8 +25,9 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String? _email;
-  String? _password;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   static bool userAgreedToTerms = false;
   @override
   Widget build(BuildContext context) {
@@ -42,21 +43,104 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //   style: const TextStyle(fontWeight: FontWeight.bold),
             // ),
             // SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              "assets/icons/signup.svg",
-              height:
-                  size.height < 750 ? size.height * 0.25 : size.height * 0.35,
-            ),
-            RoundedInputField(
-              hintText: AppLocalizations.of(context)!.email,
-              onChanged: (value) {
-                _email = value;
-              },
-            ),
-            RoundedPasswordField(
-              onChanged: (value) {
-                _password = value;
-              },
+            // SvgPicture.asset(
+            //   "assets/icons/signup.svg",
+            //   height:
+            //       size.height < 750 ? size.height * 0.25 : size.height * 0.35,
+            // ),
+            Center(
+              // Center the content vertically and horizontally
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                width: 300, // Specify the width of the Container
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // Use the minimum space
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, // Center the content vertically
+                    children: <Widget>[
+                      TextFormField(
+                        controller:
+                            _emailController, // Attach the email controller here
+                        autovalidateMode: AutovalidateMode
+                            .onUserInteraction, // Enable live validation
+                        validator: (value) =>
+                            _validateEmail(value), // Validate the email
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.email,
+                          hintText: 'Enter your email',
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller:
+                            _passwordController, // Attach the password controller here
+                        autovalidateMode: AutovalidateMode
+                            .onUserInteraction, // Enable live validation
+                        validator: (value) =>
+                            _validatePassword(value), // Validate the password
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                        ),
+                        obscureText: true, // Hide the input
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate() &&
+                              isUserAgreeToTerms()) {
+                            // If the form is valid, display a Snackbar.
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Loading')));
+                            try {
+                              var user = await AnyChatAuth.signInEmail(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  true);
+                              if (user != null) {
+                                Utilities().showToast(AppLocalizations.of(
+                                        mounted
+                                            ? context
+                                            : Utilities()
+                                                .globalKey
+                                                .currentContext!)!
+                                    .accountCreatedEnterSettings);
+                                Navigator.pushNamed(
+                                    mounted
+                                        ? context
+                                        : Utilities().globalKey.currentContext!,
+                                    '/settings');
+                              } else {
+                                throw Error();
+                              }
+                            } catch (e) {
+                              Utilities().showAlertDialog(
+                                  mounted
+                                      ? context
+                                      : Utilities().globalKey.currentContext!,
+                                  AppLocalizations.of(mounted
+                                          ? context
+                                          : Utilities()
+                                              .globalKey
+                                              .currentContext!)!
+                                      .error,
+                                  AppLocalizations.of(mounted
+                                          ? context
+                                          : Utilities()
+                                              .globalKey
+                                              .currentContext!)!
+                                      .unableRegister);
+                            }
+                          }
+                        },
+                        child: Text(AppLocalizations.of(context)!.register),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               width: size.width * 0.50,
@@ -74,8 +158,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ..onTap = () {
                           launchUrl(Uri(
                               scheme: 'https',
-                              host: 'alphatechnology.ca',
-                              path: 'anychat-privacy-policy'));
+                              host: 'anychat.ca',
+                              path: 'privacy-policy'));
                         },
                     ),
                     TextSpan(
@@ -89,8 +173,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ..onTap = () {
                             launchUrl(Uri(
                                 scheme: 'https',
-                                host: 'alphatechnology.ca',
-                                path: 'anychat-eula'));
+                                host: 'anychat.ca',
+                                path: 'eula'));
                           }),
                   ]),
                 ),
@@ -103,38 +187,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controlAffinity: ListTileControlAffinity.leading,
               ),
             ),
-            RoundedButton(
-              text: AppLocalizations.of(context)!.register_caps,
-              press: () async {
-                if (!isUserAgreeToTerms()) return;
-                try {
-                  var user =
-                      await AnyChatAuth.signInEmail(_email, _password, true);
-                  if (user != null) {
-                    Utilities.showToast(AppLocalizations.of(mounted
-                            ? context
-                            : Utilities.globalKey.currentContext!)!
-                        .accountCreatedEnterSettings);
-                    Navigator.pushNamed(
-                        mounted ? context : Utilities.globalKey.currentContext!,
-                        '/settings');
-                  } else {
-                    throw Error();
-                  }
-                } catch (e) {
-                  Utilities.showAlertDialog(
-                      mounted ? context : Utilities.globalKey.currentContext!,
-                      AppLocalizations.of(mounted
-                              ? context
-                              : Utilities.globalKey.currentContext!)!
-                          .error,
-                      AppLocalizations.of(mounted
-                              ? context
-                              : Utilities.globalKey.currentContext!)!
-                          .unableRegister);
-                }
-              },
-            ),
+            // ElevatedButton(
+            //   child: Text(AppLocalizations.of(context)!.register_caps),
+            //   onPressed: () async {
+            //     if (!isUserAgreeToTerms()) return;
+            //     try {
+            //       var user =
+            //           await AnyChatAuth.signInEmail(_email, _password, true);
+            //       if (user != null) {
+            //         Utilities().showToast(AppLocalizations.of(mounted
+            //                 ? context
+            //                 : Utilities().globalKey.currentContext!)!
+            //             .accountCreatedEnterSettings);
+            //         Navigator.pushNamed(
+            //             mounted
+            //                 ? context
+            //                 : Utilities().globalKey.currentContext!,
+            //             '/settings');
+            //       } else {
+            //         throw Error();
+            //       }
+            //     } catch (e) {
+            //       Utilities().showAlertDialog(
+            //           mounted ? context : Utilities().globalKey.currentContext!,
+            //           AppLocalizations.of(mounted
+            //                   ? context
+            //                   : Utilities().globalKey.currentContext!)!
+            //               .error,
+            //           AppLocalizations.of(mounted
+            //                   ? context
+            //                   : Utilities().globalKey.currentContext!)!
+            //               .unableRegister);
+            //     }
+            //   },
+            // ),
             SizedBox(height: size.height * 0.03),
             HaveAccountCheck(
               login: false,
@@ -158,10 +244,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ));
   }
 
+  @override
+  void dispose() {
+    // Dispose of the controllers when the widget is removed from the widget tree
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    final regex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    if (value == null || value.isEmpty) {
+      return 'Email cannot be empty';
+    } else if (!regex.hasMatch(value)) {
+      return 'Enter a valid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+
   static bool isUserAgreeToTerms() {
     if (!userAgreedToTerms) {
       showDialog<void>(
-          context: Utilities.globalKey.currentContext!,
+          context: Utilities().globalKey.currentContext!,
           builder: (BuildContext context) {
             return AlertDialog(
                 title: Text(AppLocalizations.of(context)!.error),
@@ -172,8 +285,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text(AppLocalizations.of(context)!.cancel),
                     onPressed: () {
                       NavigationService().goBack();
-                      Utilities.showToast(
-                          AppLocalizations.of(context)!.cancelled);
+                      Utilities()
+                          .showToast(AppLocalizations.of(context)!.cancelled);
                     },
                   )
                 ]);

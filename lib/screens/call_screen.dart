@@ -19,7 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 String? appId = 'ddc4507c13b04c1d8f4a334c5c5fab95';
 String channelId = 'test';
 String token =
-    '007eJxTYMh+pai1ZJ3vVK7I5o5rH65q27a1K9d6/Y+8p3Xnf+AnvlAFBnMjU1PLpFSDJAtLE5NEi7Qkc4NEc3OjFENLMwNzi+TUKTO/pjYEMjLoWHxhZmSAQBCfhaEktbiEgQEAavUgHg==';
+    '007eJxTYDi+98WU1yq5q/d0nNplWez6dsXGST18uSv3/s0rvnmt71CIAoO5kampZVKqQZKFpYlJokVakrlBorm5UYqhpZmBuUVyKoPc99SGQEaGh8tXMDEyQCCIz8JQklpcwsAAAHS6IyE=';
 final uid = AnyChatAuth.currentUser!.id.hashCode;
 
 class CallScreen extends StatefulWidget {
@@ -33,12 +33,8 @@ class CallScreen extends StatefulWidget {
 class _CallScreenState extends State<CallScreen> {
   late final RtcEngine _engine;
 
-  bool isJoined = false,
-      switchCamera = true,
-      switchRender = true,
-      openCamera = true,
-      muted = false,
-      muteAllRemoteVideo = false;
+  bool isJoined = false, switchCamera = true, muted = false;
+
   Set<int> remoteUid = {};
   final ChannelProfileType _channelProfileType =
       ChannelProfileType.channelProfileLiveBroadcasting;
@@ -60,16 +56,18 @@ class _CallScreenState extends State<CallScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _transcribedChatMessageSubscription =
         loadAllTranscribedMessages().listen(_updateCallScreen);
+    AnyChatUser.addMessageToConversation(
+        "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isCallingYouOnAnyChat}");
   }
 
   @override
   void dispose() {
     _transcribedChatMessageSubscription?.cancel();
     AnyChatUser.clearTranscribedMessages();
-    super.dispose();
     _dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    super.dispose();
   }
 
   Future<void> _dispose() async {
@@ -161,9 +159,7 @@ class _CallScreenState extends State<CallScreen> {
 
     await _engine.leaveChannel();
     setState(() {
-      openCamera = true;
       muted = false;
-      muteAllRemoteVideo = false;
     });
     NavigationService().goBack();
   }
@@ -182,7 +178,7 @@ class _CallScreenState extends State<CallScreen> {
   //   });
   // }
 
-  _muteLocalVideoStream() async {
+  _muteLocalAudioStream() async {
     await _engine.muteLocalAudioStream(!muted);
     setState(() {
       muted = !muted;
@@ -202,11 +198,10 @@ class _CallScreenState extends State<CallScreen> {
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        textDirection: Directionality.of(context),
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextButton(
-            onPressed: _muteLocalVideoStream,
+            onPressed: _muteLocalAudioStream,
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith((states) {
                   if (muted) {
@@ -258,8 +253,6 @@ class _CallScreenState extends State<CallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AnyChatUser.addMessageToConversation(
-        "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(context)!.isCallingYouOnAnyChat}");
     return Stack(
       children: [
         AgoraVideoView(
@@ -273,9 +266,7 @@ class _CallScreenState extends State<CallScreen> {
           },
         ),
         Align(
-          alignment: Directionality.of(context) == TextDirection.ltr
-              ? Alignment.topLeft
-              : Alignment.topRight,
+          alignment: Alignment.bottomLeft,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -336,7 +327,7 @@ class _CallScreenState extends State<CallScreen> {
   // }
 
   Container _translatedText() {
-    var biDirectionalText = Utilities.biDirectionalText(
+    var biDirectionalText = Utilities().biDirectionalText(
       context,
       text,
       style: const TextStyle(
@@ -410,7 +401,7 @@ class _CallScreenState extends State<CallScreen> {
     if (message.senderId != AnyChatAuth.currentUser!.id) {
       final language = AnyChatAuth.currentUser!.language;
       final translatedText =
-          await Utilities.getGoogleTranslation(language, message.text);
+          await Utilities().getGoogleTranslation(language, message.text);
       setState(() {
         text = translatedText;
       });
