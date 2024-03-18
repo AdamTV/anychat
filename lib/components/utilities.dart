@@ -16,19 +16,28 @@ import 'anychat_locale.dart';
 import 'anychat_user.dart';
 
 class Utilities {
-  static late SharedPreferences prefs;
-  static const String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
-  static const String authority = "translation.googleapis.com";
-  static const String unencodedPath = "/language/translate/v2";
-  static Map<String, dynamic> queryParameters = {};
-  static GlobalKey<NavigatorState> globalKey = NavigationService().navigatorKey;
+  late SharedPreferences prefs;
+  final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
+  final String authority = "translation.googleapis.com";
+  final String unencodedPath = "/language/translate/v2";
+  Map<String, dynamic> queryParameters = {};
+  GlobalKey<NavigatorState> globalKey = NavigationService().navigatorKey;
 
-  static Future<void> init() async {
+  Utilities._privateConstructor();
+  static final Utilities _instance = Utilities._privateConstructor();
+
+  // Factory constructor to return the same instance
+  factory Utilities() {
+    return _instance;
+  }
+
+  Future<void> initSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
 
-  static Future<String> getGoogleTranslation(
-      String? language, String? text) async {
+  
+
+  Future<String> getGoogleTranslation(String? language, String? text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
     String? isoCode = language;
     queryParameters.update("target", (value) => isoCode,
@@ -49,7 +58,7 @@ class Utilities {
   }
 
   static const cloudApiMaxQ = 128;
-  static Future<Map<String?, List<String>>> getBatchGoogleTranslation(
+  Future<Map<String?, List<String>>> getBatchGoogleTranslation(
       Map<String?, List<String?>> map) async {
     Map<String?, List<String>> translatedMap = {};
     queryParameters.putIfAbsent("key", () => apiKey);
@@ -83,7 +92,7 @@ class Utilities {
     return translatedMap;
   }
 
-  static Future<void> showAlertDialog(
+  Future<void> showAlertDialog(
       BuildContext context, String title, String text) async {
     return showDialog<void>(
       context: context,
@@ -111,7 +120,7 @@ class Utilities {
     );
   }
 
-  static void initConversationScreen(AnyChatUser value) {
+  void initConversationScreen(AnyChatUser value) {
     // Check if user has conversations
     FirebaseFirestore.instance
         .collection("users")
@@ -128,7 +137,7 @@ class Utilities {
             });
   }
 
-  static String getLanguageFromIsoCode(String? language) {
+  String getLanguageFromIsoCode(String? language) {
     for (String key in AnyChatLocale.isoMap.keys) {
       if (AnyChatLocale.isoMap[key] == language) {
         return key;
@@ -137,13 +146,13 @@ class Utilities {
     return "Error";
   }
 
-  static Future<bool> handlePermission(Permission permission) async {
+  Future<bool> handlePermission(Permission permission) async {
     final status = await permission.request();
     logger.d(status);
     return status.isGranted;
   }
 
-  static String getChatterDisplayNameString(List<AnyChatUser> users) {
+  String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
     var ids = <String?>[];
     for (var user in users) {
@@ -163,7 +172,7 @@ class Utilities {
     return ret;
   }
 
-  static ThemeMode getThemeMode() {
+  ThemeMode getThemeMode() {
     switch (prefs.getString('theme')?.toLowerCase() ?? 'system') {
       case 'system':
         return ThemeMode.system;
@@ -176,20 +185,20 @@ class Utilities {
     }
   }
 
-  static String getThemeDropdownValue() {
+  String getThemeDropdownValue() {
     var pref = prefs.getString('theme') ?? 'system';
     if (pref.toLowerCase() == 'system') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.system;
+      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.system;
     } else if (pref.toLowerCase() == 'dark') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.dark;
+      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark;
     } else if (pref.toLowerCase() == 'light') {
-      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.light;
+      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.light;
     } else {
-      return AppLocalizations.of(Utilities.globalKey.currentContext!)!.system;
+      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.system;
     }
   }
 
-  static void showToast(String msg) {
+  void showToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_LONG,
@@ -198,19 +207,19 @@ class Utilities {
         fontSize: 16.0);
   }
 
-  static void setThemeFromDropdownValue(String? newValue) {
+  void setThemeFromDropdownValue(String? newValue) {
     var newPref = 'system';
     if (newValue ==
-        AppLocalizations.of(Utilities.globalKey.currentContext!)!.light) {
+        AppLocalizations.of(Utilities().globalKey.currentContext!)!.light) {
       newPref = 'light';
     } else if (newValue ==
-        AppLocalizations.of(Utilities.globalKey.currentContext!)!.dark) {
+        AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark) {
       newPref = 'dark';
     }
     prefs.setString('theme', newPref);
   }
 
-  static Text biDirectionalText(
+  Text biDirectionalText(
     BuildContext context,
     String data, {
     Key? key,

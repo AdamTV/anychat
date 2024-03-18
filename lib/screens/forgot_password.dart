@@ -46,10 +46,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             //   "assets/icons/chat.svg",
             //   height: size.height * 0.45,
             // ),
-            RoundedButton(
-              text:
-                  "${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}",
-              press: () async {
+            ElevatedButton(
+              child:
+                  Text("${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}"),
+              onPressed: () async {
                 await _passwordReset();
                 logger.d(_email);
                 if (context.mounted) {
@@ -62,9 +62,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 }
               },
             ),
-            RoundedButton(
-              text: AppLocalizations.of(context)!.login,
-              press: () {
+            ElevatedButton(
+              child: Text(AppLocalizations.of(context)!.login),
+              onPressed: () {
                 Navigator.pushNamed(context, "/login");
               },
             ),
@@ -80,14 +80,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       _formKey.currentState!.save();
       await auth.sendPasswordResetEmail(email: _email!);
       if (mounted) {
-        Utilities.showToast(
-            AppLocalizations.of(context)!.emailSentToResetPassword);
+        Utilities()
+            .showToast(AppLocalizations.of(context)!.emailSentToResetPassword);
       }
     } catch (e) {
       if ((e is FirebaseException) && e.message != null) {
-        Utilities.showToast(e.message!);
+        Utilities().showToast(e.message!);
       } else if (mounted) {
-        Utilities.showToast(AppLocalizations.of(context)!.error);
+        Utilities().showToast(AppLocalizations.of(context)!.error);
       }
       logger.d(e);
     }

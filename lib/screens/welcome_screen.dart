@@ -8,7 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {   
+  Widget build(BuildContext context) {
     AnyChatLocale.init(context);
     Size size = MediaQuery.of(context).size;
 
@@ -34,15 +34,21 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: size.height * 0.05),
-                  RoundedButton(
-                    text: AppLocalizations.of(context)!.login_caps,
-                    press: () {
+                  TextButton(
+                    child: Text(
+                      textScaler: const TextScaler.linear(2.0),
+                      AppLocalizations.of(context)!.login_caps,
+                    ),
+                    onPressed: () {
                       Navigator.pushNamed(context, "/login");
                     },
                   ),
-                  RoundedButton(
-                    text: AppLocalizations.of(context)!.register_caps,
-                    press: () {
+                  TextButton(
+                    child: Text(
+                      textScaler: const TextScaler.linear(2.0),
+                      AppLocalizations.of(context)!.register_caps,
+                    ),
+                    onPressed: () {
                       Navigator.pushNamed(context, "/register");
                     },
                   ),
@@ -54,6 +60,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
+
 class WelcomeBackground extends StatelessWidget {
   final Widget child;
 

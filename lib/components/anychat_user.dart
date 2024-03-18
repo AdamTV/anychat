@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
@@ -19,6 +21,7 @@ class AnyChatUser {
   late final String language;
   late final List<String> blockedAccounts;
   List<ConversationInfo> conversations = [];
+  List<StreamSubscription> _subscriptions = [];
 
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
       this.language, this.blockedAccounts);
@@ -26,7 +29,7 @@ class AnyChatUser {
   static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
         uid,
-        AppLocalizations.of(Utilities.globalKey.currentContext!)!
+        AppLocalizations.of(Utilities().globalKey.currentContext!)!
             .accountDeleted,
         "",
         "",
@@ -53,8 +56,8 @@ class AnyChatUser {
 
   static Future<Conversation?> createConversation(String? id) async {
     if (id == AnyChatAuth.currentUser!.id) {
-      Utilities.showToast(
-          AppLocalizations.of(Utilities.globalKey.currentContext!)!
+      Utilities().showToast(
+          AppLocalizations.of(Utilities().globalKey.currentContext!)!
               .canNotCreateConvoWithSelf);
       return null;
     }
@@ -122,8 +125,8 @@ class AnyChatUser {
             }
           else
             {
-              Utilities.showToast(
-                  AppLocalizations.of(Utilities.globalKey.currentContext!)!
+              Utilities().showToast(
+                  AppLocalizations.of(Utilities().globalKey.currentContext!)!
                       .pleaseLoginInstead)
             }
         });
@@ -149,27 +152,33 @@ class AnyChatUser {
     }
   }
 
-  static Future<String> addMessageToConversation(String text) async {
-    final conversation = FirebaseFirestore.instance
-        .collection("conversations")
-        .doc(AnyChatAuth.currentConversation!.id);
-    final newMessage = conversation.collection('messages').doc();
-
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+  static Future<void> addMessageToConversation(String text) async {
+    return await FirebaseFirestore.instance
+        .runTransaction((Transaction transaction) {
       return transaction
-          .get(conversation)
+          .get(FirebaseFirestore.instance
+              .collection("conversations")
+              .doc(AnyChatAuth.currentConversation!.id))
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
-        transaction
-            .update(conversation, {'timestamp': FieldValue.serverTimestamp()});
-        transaction.set(newMessage, {
-          'timestamp': FieldValue.serverTimestamp(),
-          'senderId': AnyChatAuth.currentUser!.id,
-          'text': text,
-        });
+        transaction.update(
+            FirebaseFirestore.instance
+                .collection("conversations")
+                .doc(AnyChatAuth.currentConversation!.id),
+            {'timestamp': FieldValue.serverTimestamp()});
+        transaction.set(
+            FirebaseFirestore.instance
+                .collection("conversations")
+                .doc(AnyChatAuth.currentConversation!.id)
+                .collection('messages')
+                .doc(),
+            {
+              'timestamp': FieldValue.serverTimestamp(),
+              'senderId': AnyChatAuth.currentUser!.id,
+              'text': text,
+            });
       });
     });
-    return newMessage.id;
   }
 
   Future<void> leaveConversation(String conversationId) async {
@@ -217,7 +226,7 @@ class AnyChatUser {
           transaction.set(newMessage, {
             'timestamp': FieldValue.serverTimestamp(),
             'senderId': AnyChatAuth.currentUser!.id,
-            'text': AppLocalizations.of(Utilities.globalKey.currentContext!)!
+            'text': AppLocalizations.of(Utilities().globalKey.currentContext!)!
                 .thisPersonHasLeftConversation,
           });
         });
@@ -246,7 +255,7 @@ class AnyChatUser {
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+    FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
@@ -371,8 +380,8 @@ class AnyChatUser {
         .doc(AnyChatAuth.currentConversation!.id);
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
     if (conversation.participants.contains(user.id)) {
-      Utilities.showToast(
-          "${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext!)!.isAlreadyInThisConversation}");
+      Utilities().showToast(
+          "${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isAlreadyInThisConversation}");
       return false;
     }
     final newMessage = conversationRef.collection('messages').doc();
@@ -388,7 +397,7 @@ class AnyChatUser {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser!.id,
           'text':
-              "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext!)!.hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities.globalKey.currentContext!)!.toTheConversation}",
+              "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.toTheConversation}",
         });
       });
     });
@@ -431,7 +440,7 @@ class AnyChatUser {
               child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () {
                 NavigationService().goBack();
-                Utilities.showToast(AppLocalizations.of(context)!.cancelled);
+                Utilities().showToast(AppLocalizations.of(context)!.cancelled);
               },
             ),
             TextButton(
@@ -442,7 +451,7 @@ class AnyChatUser {
                 NavigationService().goBack();
                 AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser!.leaveConversation(id);
-                Utilities.showToast(
+                Utilities().showToast(
                     AppLocalizations.of(context)!.successfullyLeftConversation);
                 NavigationService().pushNamedAndRemoveUntil("/conversations",
                     predicate: (Route<dynamic> route) => route.isFirst);
@@ -527,9 +536,9 @@ class AnyChatUser {
           .delete(FirebaseFirestore.instance.collection('users').doc(id));
       return;
     } as Future Function(Transaction));
-    Navigator.pushReplacementNamed(Utilities.globalKey.currentContext!, '/');
-    Utilities.showToast(
-        AppLocalizations.of(Utilities.globalKey.currentContext!)!
+    Navigator.pushReplacementNamed(Utilities().globalKey.currentContext!, '/');
+    Utilities().showToast(
+        AppLocalizations.of(Utilities().globalKey.currentContext!)!
             .accountDeleted);
   }
 
@@ -565,6 +574,15 @@ class AnyChatUser {
       });
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
+  }
+
+  void addSubscription(
+      StreamSubscription<QuerySnapshot<Object?>>? subscription) {
+    _subscriptions.add(subscription!);
+  }
+
+  void cancelAllSubscriptions() {
+    _subscriptions.clear(); // Clear the list after canceling all subscriptions
   }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {

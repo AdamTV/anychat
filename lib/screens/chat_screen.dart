@@ -50,6 +50,7 @@ class ChatWindow extends StatefulWidget {
   static Stream<QuerySnapshot> loadAllConversations() {
     return FirebaseFirestore.instance
         .collection('conversations')
+        .where('participants', arrayContains: AnyChatAuth.currentUser!.id)
         .orderBy('timestamp', descending: false)
         .snapshots();
   }
@@ -57,14 +58,16 @@ class ChatWindow extends StatefulWidget {
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   final _textController = TextEditingController();
-  final List<ChatMessage> _messages = [];
+  final List<MessageWidget> _messages = [];
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
   StreamSubscription<QuerySnapshot>? _chatMessageSubscription;
 
   List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
 
-  _ChatWindowState() {
+  @override
+  void initState() {
+    super.initState();
     _chatMessageSubscription ??=
         ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
   }
@@ -108,14 +111,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       }
       logger.d("chatMessage size: ${_chatMessages.length}");
       Map<String?, List<String>> translatedMap =
-          await Utilities.getBatchGoogleTranslation(map);
+          await Utilities().getBatchGoogleTranslation(map);
       for (int i = 0; i < _chatMessages.length; i++) {
         if (!participants
             .any((element) => element.id == _chatMessages[i].senderId)) {
           participants.add(
               await AnyChatUser.getUserById(_chatMessages[i].senderId).onError(
-                  (dynamic error, stackTrace) => AnyChatUser.deletedUser(
-                      _chatMessages[i].senderId)));
+                  (dynamic error, stackTrace) =>
+                      AnyChatUser.deletedUser(_chatMessages[i].senderId)));
         }
         AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
         try {
@@ -137,44 +140,44 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
             style: Theme.of(
-                    mounted ? context : Utilities.globalKey.currentContext!)
+                    mounted ? context : Utilities().globalKey.currentContext!)
                 .textTheme
                 .bodyLarge,
             children: <InlineSpan>[
               TextSpan(
                   text:
-                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities.globalKey.currentContext!)!.typed}: ",
+                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: "${_chatMessages[i].text}\n"),
               WidgetSpan(
                 child: Divider(
                   indent: MediaQuery.of(mounted
                               ? context
-                              : Utilities.globalKey.currentContext!)
+                              : Utilities().globalKey.currentContext!)
                           .size
                           .width *
                       0.01,
                   endIndent: MediaQuery.of(mounted
                               ? context
-                              : Utilities.globalKey.currentContext!)
+                              : Utilities().globalKey.currentContext!)
                           .size
                           .width *
                       0.01,
                   color: Theme.of(mounted
                           ? context
-                          : Utilities.globalKey.currentContext!)
+                          : Utilities().globalKey.currentContext!)
                       .primaryColor,
                 ),
               ),
               TextSpan(
                   text:
-                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
+                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: translatedMap[language]!.removeLast()),
             ],
           ),
         );
-        final chatMessage = ChatMessage(
+        final chatMessage = MessageWidget(
           text: text,
           animationController: AnimationController(
             duration: const Duration(milliseconds: 0),
@@ -222,26 +225,26 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           // Child text spans will inherit styles from parent
           style: mounted
               ? Theme.of(context).textTheme.bodyLarge
-              : Theme.of(Utilities.globalKey.currentContext!)
+              : Theme.of(Utilities().globalKey.currentContext!)
                   .textTheme
                   .bodyLarge,
           children: <TextSpan>[
             TextSpan(
                 text:
-                    "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities.globalKey.currentContext!)!.typed}: ",
+                    "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: "${message.text}\n\n"),
             TextSpan(
                 text:
-                    "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities.globalKey.currentContext!)!.translation}: ",
+                    "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
-                text: await Utilities.getGoogleTranslation(
-                    language, message.text)),
+                text: await Utilities()
+                    .getGoogleTranslation(language, message.text)),
           ],
         ),
       );
-      final chatMessage = ChatMessage(
+      final chatMessage = MessageWidget(
         text: text,
         animationController: AnimationController(
           duration: const Duration(milliseconds: 700),
@@ -327,7 +330,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       tooltip: AppLocalizations.of(context)!.call,
       onPressed: () async {
         Navigator.pushNamed(
-            mounted ? context : Utilities.globalKey.currentContext!, "/call");
+            mounted ? context : Utilities().globalKey.currentContext!, "/call");
       },
     ));
     SizedBox container = SizedBox(
@@ -365,8 +368,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     );
     return Scaffold(
       appBar: AppBar(
-          title: Text(Utilities.getChatterDisplayNameString(
-              AnyChatAuth.currentChatters)),
+          title: Text(Utilities()
+              .getChatterDisplayNameString(AnyChatAuth.currentChatters)),
           elevation:
               Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
           actions: widgets),
@@ -411,7 +414,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 onTap: () async {
                   await AnyChatAuth.signOut();
                   Navigator.pushNamed(
-                      mounted ? context : Utilities.globalKey.currentContext!,
+                      mounted ? context : Utilities().globalKey.currentContext!,
                       "/welcome");
                 }),
           ],
@@ -424,7 +427,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   @override
   void dispose() {
     _chatMessageSubscription?.cancel();
-    for (ChatMessage message in _messages) {
+    for (MessageWidget message in _messages) {
       message.animationController!.dispose();
     }
     super.dispose();
@@ -434,9 +437,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     var info = AnyChatAuth.currentUser!.conversations.firstWhere(
         (element) => element.id == AnyChatAuth.currentConversation!.id);
     String? incomingDropdownValue =
-        Utilities.getLanguageFromIsoCode(info.incomingLanguage);
+        Utilities().getLanguageFromIsoCode(info.incomingLanguage);
     String? outgoingDropdownValue =
-        Utilities.getLanguageFromIsoCode(info.outgoingLanguage);
+        Utilities().getLanguageFromIsoCode(info.outgoingLanguage);
     logger.d(incomingDropdownValue);
     return AlertDialog(
       title: Text(AppLocalizations.of(context)!.selectLanguage),
@@ -474,7 +477,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 incomingDropdownValue = newValue;
               });
               Navigator.pushNamed(
-                  mounted ? context : Utilities.globalKey.currentContext!,
+                  mounted ? context : Utilities().globalKey.currentContext!,
                   "/chat");
             },
             items: AnyChatLocale.isoMap.keys
@@ -516,7 +519,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 outgoingDropdownValue = newValue;
               });
               Navigator.pushNamed(
-                  mounted ? context : Utilities.globalKey.currentContext!,
+                  mounted ? context : Utilities().globalKey.currentContext!,
                   "/chat");
             },
             items: AnyChatLocale.isoMap.keys
@@ -533,13 +536,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   }
 }
 
-class ChatMessage extends StatelessWidget {
+class MessageWidget extends StatelessWidget {
   final String? id;
   final AnyChatUser? sender;
   final RichText? text;
   final AnimationController? animationController;
 
-  const ChatMessage(
+  const MessageWidget(
       {super.key, this.text, this.animationController, this.sender, this.id});
 
   @override

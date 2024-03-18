@@ -36,7 +36,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                NavigationService().pushNamedAndRemoveUntil('/settings');
+                NavigationService().goBack();
               },
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             );
@@ -57,11 +57,31 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   }
 
   Future<void> changeLanguage(int index) async {
-    setState(() {
-      languageIndex = index;
-    });
-    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]);
-    NavigationService().pushNamedAndRemoveUntil('/settings');
+    var title = 'dummy title';
+    var content = 'dummy content';
+    var result = await showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(AppLocalizations.of(context)!.approve),
+          ),
+        ],
+      ),
+    );
+    if (result ?? false) {
+      setState(() {
+        languageIndex = index;
+      });
+      await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]);
+    }
   }
 
   List<SettingsTile> getLanguageTiles() {
