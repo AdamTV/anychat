@@ -7,8 +7,6 @@ import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
-import 'package:anychat/components/notifications.dart';
-import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/chat_screen.dart';
@@ -18,7 +16,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ConversationsScreen extends StatefulWidget {
@@ -59,7 +56,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     _chatMessageSubscriptions.clear();
     _conversationSubscription ??=
         ChatWindow.loadAllConversations().listen(_updateConversations);
-    AnyChatAuth.currentUser?.addSubscription(_conversationSubscription);
+    // AnyChatAuth.currentUser?.addSubscription(_conversationSubscription);
     initChatSubscriptions();
   }
 
@@ -74,14 +71,15 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           // foregroundColor: ,
           title: Text(AppLocalizations.of(context)!.title),
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add),
-              tooltip: AppLocalizations.of(context)!.createConversation,
-              onPressed: () {
-                AnyChatAuth.currentConversation = null;
-                Navigator.pushNamed(context, "/addChatter");
-              },
-            ),
+            if (conversationWidgets.isNotEmpty)
+              IconButton(
+                icon: const Icon(Icons.add),
+                tooltip: AppLocalizations.of(context)!.createConversation,
+                onPressed: () {
+                  AnyChatAuth.currentConversation = null;
+                  Navigator.pushNamed(context, "/searchChatter");
+                },
+              ),
           ],
         ),
         drawer: Drawer(
@@ -129,9 +127,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         body: Stack(
           children: [
             Align(
-                alignment: _isLoadedConversations
-                    ? Alignment.topCenter
-                    : Alignment.center,
+                alignment: conversationWidgets.isEmpty
+                    ? Alignment.center
+                    : Alignment.topCenter,
                 child: Container(
                     constraints: const BoxConstraints(maxWidth: 1280),
                     child: _isLoadedConversations
@@ -139,17 +137,15 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                             ? Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text(AppLocalizations.of(context)!
-                                      .conversationsWillAppear),
                                   ElevatedButton(
                                     child: Text(AppLocalizations.of(context)!
                                         .startConversation),
                                     onPressed: () {
                                       AnyChatAuth.currentConversation = null;
-                                      SearchChatterByEmailScreen.addToConvo =
+                                      SearchChatterScreen.addToConvo =
                                           false;
                                       Navigator.pushNamed(
-                                          context, "/addChatter");
+                                          context, "/searchChatter");
                                     },
                                   ),
                                 ],
@@ -265,9 +261,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         }
       }
     }
-    setState(() {
-      _isLoadedConversations = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoadedConversations = true;
+      });
+    }
   }
 
   Map<String, Timestamp?> convoTimes = {};
@@ -515,7 +513,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     // logger.d("_notification");
     // logger.d(_notification);
     if (message.senderId != AnyChatAuth.currentUser!.id) {
-      var sender = await AnyChatUser.getUserById(message.senderId);
       var text = conversation.participants.contains(message.senderId)
           ? "${message.text}\n\n"
               "${await Utilities().getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}"
@@ -840,10 +837,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     await initConvoInfo();
     _chatMessageSubscriptions.clear();
     for (var conversationInfo in AnyChatAuth.currentUser!.conversations) {
-      var sub =
-          loadAllChatMessages(conversationInfo.id).listen(_sendNotification);
-      _chatMessageSubscriptions.add(sub);
-      AnyChatAuth.currentUser!.addSubscription(sub);
+      _chatMessageSubscriptions.add(
+          loadAllChatMessages(conversationInfo.id).listen(_sendNotification));
+      // AnyChatAuth.currentUser!.addSubscription(sub);
     }
   }
 }

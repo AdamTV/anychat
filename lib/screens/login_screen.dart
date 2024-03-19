@@ -1,16 +1,12 @@
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
-import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/rounded_input_field.dart';
-import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: LoginBackground(
       child: SingleChildScrollView(
@@ -63,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: 'Enter your email',
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         controller:
                             _passwordController, // Attach the password controller here
@@ -72,18 +67,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) =>
                             _validatePassword(value), // Validate the password
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: AppLocalizations.of(context)!.password,
                           hintText: 'Enter your password',
                         ),
                         obscureText: true, // Hide the input
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             // If the form is valid, display a Snackbar.
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Loading')));
+                                const SnackBar(content: Text('Loading')));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -96,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mounted
                                         ? context
                                         : Utilities().globalKey.currentContext!,
-                                    AppLocalizations.of(mounted
-                                            ? context
-                                            : Utilities()
+                                    AppLocalizations.of(Utilities()
                                                 .globalKey
                                                 .currentContext!)!
                                         .error,
@@ -138,14 +131,13 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 AppLocalizations.of(context)!.forgotPassword,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: fontSize! - 4.0),
+                style:  Theme.of(context).textTheme.bodyLarge!
+                .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             HaveAccountCheck(
               press: () {
-                Navigator.pushNamed(context, "/register");
+                NavigationService().pushNamedReplacement("/register");
               },
             ),
             const OrDivider(),
@@ -155,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
                 AnyChatAuth.facebookIcon(context),
-                AnyChatAuth.twitterIcon(context),
+                // AnyChatAuth.twitterIcon(context),
               ],
             )
           ],
@@ -185,8 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.length < 8) {
-      return 'Password must be at least 8 characters';
+    if (value == null) {
+      return 'Password must not be empty';
     }
     return null;
   }

@@ -24,7 +24,6 @@ class AnyChatAuth {
   static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
 
-  static late FacebookAuth _facebookAuth;
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -162,7 +161,6 @@ class AnyChatAuth {
 
   static Future<void> signOut() async {
     try {
-      AnyChatAuth.currentUser!.cancelAllSubscriptions();
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
       // await _facebookAuth.logOut();

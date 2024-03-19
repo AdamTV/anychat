@@ -1,4 +1,3 @@
-import 'package:anychat/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,9 +18,9 @@ class OrDivider extends StatelessWidget {
             child: Text(
               AppLocalizations.of(context)!.or_caps,
               style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
-                  fontSize: fontSize),
+                  fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize),
             ),
           ),
           buildDivider(),

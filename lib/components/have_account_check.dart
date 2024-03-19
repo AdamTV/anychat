@@ -1,10 +1,9 @@
-import 'package:anychat/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HaveAccountCheck extends StatelessWidget {
   final bool login;
-  final Function? press;
+  final Function()? press;
 
   const HaveAccountCheck({
     super.key,
@@ -21,22 +20,16 @@ class HaveAccountCheck extends StatelessWidget {
           login
               ? "${AppLocalizations.of(context)!.doNotHaveAccount} "
               : "${AppLocalizations.of(context)!.haveAccount} ",
-          style: TextStyle(
-              color: Theme.of(context).primaryColor, fontSize: fontSize! - 4.0),
+          style: Theme.of(context).textTheme.bodyLarge
         ),
-        GestureDetector(
-          onTap: press as void Function()?,
-          child: Text(
+          TextButton(
+    onPressed: press,
+    child: Text(
             login
                 ? AppLocalizations.of(context)!.register
                 : AppLocalizations.of(context)!.login,
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: fontSize! - 4.0,
-            ),
-          ),
-        )
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
+            )),
       ],
     );
   }

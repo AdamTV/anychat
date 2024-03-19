@@ -1,37 +1,78 @@
 import 'package:flutter/material.dart';
 
-final ThemeData kDefaultTheme = ThemeData(
-    useMaterial3: true,
-    // primaryColor: Colors.deepPurple,
-    // focusColor: Colors.black12,
-    // primaryColorDark: Colors.deepPurple[900],
-    // primaryColorLight: Colors.white,
-    // brightness: Brightness.light,
-    // textTheme: Typography.blackHelsinki,
-    brightness: Brightness.light,
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.purple.shade300, brightness: Brightness.light
-        // background: const Color.fromARGB(50, 0, 0, 139),
-        ));
+var kLightTheme = ThemeData.from(colorScheme: const ColorScheme(
+        brightness: Brightness.light,
+        primary: Color(0xFF744C9D),
+        onPrimary: Color(0xFFFFFFFF),
+        primaryContainer: Color(0xFFF0DBFF),
+        onPrimaryContainer: Color(0xFF2C0051),
+        secondary: Color(0xFF3D52C8),
+        onSecondary: Color(0xFFFFFFFF),
+        secondaryContainer: Color(0xFFDEE0FF),
+        onSecondaryContainer: Color(0xFF000F5D),
+        tertiary: Color(0xFF715C00),
+        onTertiary: Color(0xFFFFFFFF),
+        tertiaryContainer: Color(0xFFFFE17A),
+        onTertiaryContainer: Color(0xFF231B00),
+        error: Color(0xFFBA1A1A),
+        errorContainer: Color(0xFFFFDAD6),
+        onError: Color(0xFFFFFFFF),
+        onErrorContainer: Color(0xFF410002),
+        background: Color(0xFFFFFBFF),
+        onBackground: Color(0xFF1D1B1E),
+        surface: Color(0xFFFFFBFF),
+        onSurface: Color(0xFF1D1B1E),
+        surfaceVariant: Color(0xFFE9DFEB),
+        onSurfaceVariant: Color(0xFF4A454E),
+        outline: Color(0xFF7C757E),
+        onInverseSurface: Color(0xFFF5EFF4),
+        inverseSurface: Color(0xFF322F33),
+        inversePrimary: Color(0xFFDDB8FF),
+        shadow: Color(0xFF000000),
+        surfaceTint: Color(0xFF744C9D),
+        outlineVariant: Color(0xFFCCC4CE),
+        scrim: Color(0xFF000000),
+));
 
-final ThemeData kDarkTheme = ThemeData(
-    useMaterial3: true,
-    // primaryColor: Colors.deepPurple,
-    // focusColor: Colors.black12,
-    // primaryColorDark: Colors.deepPurple[900],
-    // primaryColorLight: Colors.white,
-    // brightness: Brightness.dark,
-    // textTheme: Typography.whiteHelsinki,
-    brightness: Brightness.dark,
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepPurple.shade600, brightness: Brightness.dark
-        // background: const Color.fromARGB(50, 0, 0, 139),
-        ));
+var kDarkTheme = ThemeData.from(colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        primary: Color(0xFFDDB8FF),
+        onPrimary: Color(0xFF431A6B),
+        primaryContainer: Color(0xFF5B3383),
+        onPrimaryContainer: Color(0xFFF0DBFF),
+        secondary: Color(0xFFBBC3FF),
+        onSecondary: Color(0xFF001E92),
+        secondaryContainer: Color(0xFF2138AF),
+        onSecondaryContainer: Color(0xFFDEE0FF),
+        tertiary: Color(0xFFE5C449),
+        onTertiary: Color(0xFF3B2F00),
+        tertiaryContainer: Color(0xFF554500),
+        onTertiaryContainer: Color(0xFFFFE17A),
+        error: Color(0xFFFFB4AB),
+        errorContainer: Color(0xFF93000A),
+        onError: Color(0xFF690005),
+        onErrorContainer: Color(0xFFFFDAD6),
+        background: Color(0xFF1D1B1E),
+        onBackground: Color(0xFFE7E1E5),
+        surface: Color(0xFF1D1B1E),
+        onSurface: Color(0xFFE7E1E5),
+        surfaceVariant: Color(0xFF4A454E),
+        onSurfaceVariant: Color(0xFFCCC4CE),
+        outline: Color(0xFF968E98),
+        onInverseSurface: Color(0xFF1D1B1E),
+        inverseSurface: Color(0xFFE7E1E5),
+        inversePrimary: Color(0xFF744C9D),
+        shadow: Color(0xFF000000),
+        surfaceTint: Color(0xFFDDB8FF),
+        outlineVariant: Color(0xFF4A454E),
+        scrim: Color(0xFF000000),
+));
 
-final Color? kDefaultChatBubbleColorLeft = Colors.grey[200];
-final Color? kDefaultChatBubbleColorRight = Colors.blue[200];
-final Color? kDarkChatBubbleColorLeft = Colors.grey[800];
-const Color kDarkChatBubbleColorRight = Color.fromARGB(214, 69, 39, 160);
+
+// final Color? kDefaultChatBubbleColorLeft = Colors.grey[200];
+// final Color? kDefaultChatBubbleColorRight = Colors.blue[200];
+// final Color? kDarkChatBubbleColorLeft = Colors.grey[800];
+// const Color kDarkChatBubbleColorRight = Color.fromARGB(214, 69, 39, 160);
 
 double? fontSize = 24;
 
