@@ -1,7 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/audio_transcriber.dart';
-import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';

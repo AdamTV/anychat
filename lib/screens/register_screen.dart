@@ -1,16 +1,12 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
-import 'package:anychat/components/rounded_button.dart';
-import 'package:anychat/components/rounded_input_field.dart';
-import 'package:anychat/components/rounded_password_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -72,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintText: 'Enter your email',
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         controller:
                             _passwordController, // Attach the password controller here
@@ -80,20 +76,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             .onUserInteraction, // Enable live validation
                         validator: (value) =>
                             _validatePassword(value), // Validate the password
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Password',
                           hintText: 'Enter your password',
                         ),
                         obscureText: true, // Hide the input
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate() &&
                               isUserAgreeToTerms()) {
                             // If the form is valid, display a Snackbar.
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Loading')));
+                                const SnackBar(content: Text('Loading')));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -149,11 +145,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   text: TextSpan(children: [
                     TextSpan(
                       text: AppLocalizations.of(context)!.byContinuingIAgree,
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      style: Theme.of(context).textTheme.bodyLarge
                     ),
                     TextSpan(
                       text: AppLocalizations.of(context)!.privacyPolicy,
-                      style: const TextStyle(color: Colors.blue),
+                      style:  Theme.of(context).textTheme.bodyLarge
+                          ?.copyWith(color: Colors.blue),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           launchUrl(Uri(
@@ -164,12 +161,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     TextSpan(
                       text: " ${AppLocalizations.of(context)!.and} ",
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                        style: Theme.of(context).textTheme.bodyLarge
                     ),
                     TextSpan(
                         text: AppLocalizations.of(context)!.eula,
-                        style: const TextStyle(color: Colors.blue),
-                        recognizer: TapGestureRecognizer()
+                        style:  Theme.of(context).textTheme.bodyLarge
+                            ?.copyWith(color: Colors.blue),                        recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             launchUrl(Uri(
                                 scheme: 'https',
@@ -187,40 +184,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controlAffinity: ListTileControlAffinity.leading,
               ),
             ),
-            // ElevatedButton(
-            //   child: Text(AppLocalizations.of(context)!.register_caps),
-            //   onPressed: () async {
-            //     if (!isUserAgreeToTerms()) return;
-            //     try {
-            //       var user =
-            //           await AnyChatAuth.signInEmail(_email, _password, true);
-            //       if (user != null) {
-            //         Utilities().showToast(AppLocalizations.of(mounted
-            //                 ? context
-            //                 : Utilities().globalKey.currentContext!)!
-            //             .accountCreatedEnterSettings);
-            //         Navigator.pushNamed(
-            //             mounted
-            //                 ? context
-            //                 : Utilities().globalKey.currentContext!,
-            //             '/settings');
-            //       } else {
-            //         throw Error();
-            //       }
-            //     } catch (e) {
-            //       Utilities().showAlertDialog(
-            //           mounted ? context : Utilities().globalKey.currentContext!,
-            //           AppLocalizations.of(mounted
-            //                   ? context
-            //                   : Utilities().globalKey.currentContext!)!
-            //               .error,
-            //           AppLocalizations.of(mounted
-            //                   ? context
-            //                   : Utilities().globalKey.currentContext!)!
-            //               .unableRegister);
-            //     }
-            //   },
-            // ),
             SizedBox(height: size.height * 0.03),
             HaveAccountCheck(
               login: false,
@@ -235,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 AnyChatAuth.googleIcon(context),
                 AnyChatAuth.appleIcon(context),
                 AnyChatAuth.facebookIcon(context),
-                AnyChatAuth.twitterIcon(context),
+                // AnyChatAuth.twitterIcon(context),
               ],
             )
           ],
@@ -265,10 +228,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String? _validatePassword(String? value) {
+    final regex = RegExp(
+      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+    );
     if (value == null || value.length < 8) {
       return 'Password must be at least 8 characters';
+    } else if (!regex.hasMatch(value)) {
+      return 'Password must contain a:\n'
+          'Upper case letter\n'
+          'Lower case letter\n'
+          'Number\n'
+          'Special character (~!@#\$%^&*()_)';
+    } else {
+      Map<String, int> charCounts = {};
+      for (int i = 0; i < value.length; i++) {
+        charCounts[value[i]] = (charCounts[value[i]] ?? 0) + 1;
+        if (charCounts[value[i]]! > 2) {
+          return "Characters must not \n"
+              "repeat more than twice."; // Found a character that repeats more than twice
+        }
+      }
     }
+
     return null;
+
   }
 
   static bool isUserAgreeToTerms() {

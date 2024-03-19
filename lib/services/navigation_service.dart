@@ -1,4 +1,3 @@
-import 'package:anychat/screens/add_chatter_screen.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
 import 'package:anychat/screens/conversations_screen.dart';
@@ -26,7 +25,7 @@ class NavigationService {
   // get textDirection => navigatorKey.
 
   get routes => {
-        '/addChatter': (context) => const AddChatterScreen(),
+        // '/addChatter': (context) => const AddChatterScreen(),
         '/call': (context) => const CallScreen(),
         '/chat': (context) => const ChatScreen(),
         // '/contacts': (context) => const ContactsScreen(),
@@ -35,8 +34,8 @@ class NavigationService {
         '/liveTranslator': (context) => const LiveTranslatorScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/searchChatterByEmail': (context) =>
-            const SearchChatterByEmailScreen(),
+        '/searchChatter': (context) =>
+            const SearchChatterScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
         '/forgotPassword': (context) => const ForgotPassword(),
@@ -54,6 +53,10 @@ class NavigationService {
       {bool Function(Route<dynamic>)? predicate}) {
     return navigatorKey.currentState!.pushNamedAndRemoveUntil(
         routeName, predicate ?? (Route<dynamic> route) => false);
+  }
+
+  Future<Object?> pushNamedReplacement(String s) {
+    return navigatorKey.currentState!.pushReplacementNamed(s);
   }
 
 }

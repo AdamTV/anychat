@@ -21,7 +21,6 @@ class AnyChatUser {
   late final String language;
   late final List<String> blockedAccounts;
   List<ConversationInfo> conversations = [];
-  List<StreamSubscription> _subscriptions = [];
 
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
       this.language, this.blockedAccounts);
@@ -54,16 +53,18 @@ class AnyChatUser {
         await FirebaseFirestore.instance.collection("users").doc(id).get());
   }
 
-  static Future<Conversation?> createConversation(String? id) async {
-    if (id == AnyChatAuth.currentUser!.id) {
+  static Future<Conversation?> createConversation(AnyChatUser user) async {
+    final chatter = FirebaseFirestore.instance.collection("users").doc(user.id);
+
+    if (user.id == AnyChatAuth.currentUser!.id) {
       Utilities().showToast(
           AppLocalizations.of(Utilities().globalKey.currentContext!)!
               .canNotCreateConvoWithSelf);
       return null;
     }
     final conversation =
-        await FirebaseFirestore.instance.collection("conversations").add({
-      'participants': [id, AnyChatAuth.currentUser!.id],
+    await FirebaseFirestore.instance.collection("conversations").add({
+      'participants': [user.id, AnyChatAuth.currentUser!.id],
       'timestamp': FieldValue.serverTimestamp()
     });
     AnyChatAuth.currentConversation =
@@ -72,11 +73,9 @@ class AnyChatUser {
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);
     final userConversationInfo =
-        currentUser.collection("conversations").doc(conversation.id);
-    final chatter = FirebaseFirestore.instance.collection("users").doc(id);
-    var user = AnyChatUser.fromSnapshot(await chatter.get());
+    currentUser.collection("conversations").doc(conversation.id);
     final chatterConversationInfo =
-        chatter.collection("conversations").doc(conversation.id);
+    chatter.collection("conversations").doc(conversation.id);
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
@@ -104,7 +103,21 @@ class AnyChatUser {
         .add(ConversationInfo.fromSnapshot(await userConversationInfo.get()));
     conversation.get().then((value) => logger.d(value.id));
     logger.d(conversation.id);
-    return Conversation.fromSnapshot(await conversation.get());
+
+    AnyChatAuth.currentConversation =
+        Conversation.fromSnapshot(await conversation.get());
+    List<AnyChatUser> temp = <AnyChatUser>[];
+    for (var id in AnyChatAuth.currentConversation!.participants) {
+      if (id != AnyChatAuth.currentUser!.id) {
+        temp.add(AnyChatUser.fromSnapshot(
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(id)
+                .get()));
+      }
+     AnyChatAuth.currentChatters = temp;
+    }
+    return AnyChatAuth.currentConversation!;
   }
 
   addUserToFirestore() {
@@ -282,6 +295,7 @@ class AnyChatUser {
   }
 
   static Future<void> updateEmail(String email) async {
+
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);
@@ -290,7 +304,7 @@ class AnyChatUser {
           .get(user)
           .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
           .then((AnyChatUser fresh) {
-        transaction.update(user, {'email': email});
+        transaction.update(user, {'email': email, 'emailVerified': false});
       });
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
@@ -417,6 +431,7 @@ class AnyChatUser {
         });
       });
     });
+    AnyChatAuth.currentChatters.add(user);
     return true;
   }
 
@@ -576,14 +591,15 @@ class AnyChatUser {
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
   }
 
-  void addSubscription(
-      StreamSubscription<QuerySnapshot<Object?>>? subscription) {
-    _subscriptions.add(subscription!);
-  }
-
-  void cancelAllSubscriptions() {
-    _subscriptions.clear(); // Clear the list after canceling all subscriptions
-  }
+  // void addSubscription(
+  //     String name,
+  //     StreamSubscription<QuerySnapshot<Object?>>? subscription) {
+  //   _subscriptions.putIfAbsent(name, subscription as StreamSubscription Function());
+  // }
+  //
+  // void cancelAllSubscriptions() {
+  //   _subscriptions.clear(); // Clear the list after canceling all subscriptions
+  // }
 
 // static Stream<QuerySnapshot> findUserByEmail(String email) {
 //     return ;

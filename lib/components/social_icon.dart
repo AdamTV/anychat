@@ -20,19 +20,20 @@ class SocialIcon extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.secondary,
           border: Border.all(
             width: 2,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.secondary,
           ),
           shape: BoxShape.circle,
         ),
         child: SvgPicture.asset(iconSrc!,
-            height: size.width * (size.width >= 750 ? 0.035 : 0.04),
-            width: size.width * (size.width >= 750 ? 0.035 : 0.04),
+            height: size.width * (size.width >= 750 ? 0.025 : 0.04),
+            width: size.width * (size.width >= 750 ? 0.025 : 0.04),
             colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.onBackground,
-              BlendMode.srcIn,
+              Theme.of(context).colorScheme.onSecondaryContainer,
+              BlendMode.dst
+              ,
             )),
       ),
     );

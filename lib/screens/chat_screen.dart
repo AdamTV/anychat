@@ -142,12 +142,15 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             style: Theme.of(
                     mounted ? context : Utilities().globalKey.currentContext!)
                 .textTheme
-                .bodyLarge,
+                .bodyLarge?.copyWith(
+              color: Theme.of(Utilities().globalKey.currentContext!).colorScheme.onPrimaryContainer
+            ),
             children: <InlineSpan>[
               TextSpan(
                   text:
                       "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style:  Theme.of(Utilities().globalKey.currentContext!).textTheme
+                      .bodyLarge?.copyWith(color: Theme.of(Utilities().globalKey.currentContext!).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold)),
               TextSpan(text: "${_chatMessages[i].text}\n"),
               WidgetSpan(
                 child: Divider(
@@ -394,8 +397,8 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(
                     AppLocalizations.of(context)!.addSomeoneToConversation),
                 onTap: () {
-                  SearchChatterByEmailScreen.addToConvo = true;
-                  Navigator.pushNamed(context, "/addChatter");
+                  SearchChatterScreen.addToConvo = true;
+                  Navigator.pushNamed(context, "/searchChatter");
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context)!.leaveConversation),
@@ -559,11 +562,11 @@ class MessageWidget extends StatelessWidget {
           decoration: BoxDecoration(
               color: sender!.id == AnyChatAuth.currentUser!.id
                   ? Theme.of(context).brightness == Brightness.dark
-                      ? kDarkChatBubbleColorRight
-                      : kDefaultChatBubbleColorRight
+                      ? kDarkTheme.colorScheme.primaryContainer
+                      : kLightTheme.colorScheme.primaryContainer
                   : Theme.of(context).brightness == Brightness.dark
-                      ? kDarkChatBubbleColorLeft
-                      : kDefaultChatBubbleColorLeft,
+                      ? kDarkTheme.colorScheme.secondaryContainer
+                      : kLightTheme.colorScheme.secondaryContainer,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.all(8.0),

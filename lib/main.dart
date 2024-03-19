@@ -30,7 +30,7 @@ var logger = Logger(
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    // Notifications().init();
+    Notifications().init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -103,7 +103,7 @@ class _AnyChatState extends State<AnyChat> {
           }
           return supportedLocales.first;
         },
-        theme: kDefaultTheme,
+        theme: kLightTheme,
         darkTheme: kDarkTheme,
         themeMode: Utilities().getThemeMode(),
         home: const WelcomeScreen());

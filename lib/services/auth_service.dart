@@ -1,3 +1,4 @@
+
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/screens/conversations_screen.dart';
@@ -24,7 +25,6 @@ class AuthService {
       return const WelcomeScreen();
     }
   }
-
   static void listenToAuthChanges() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user == null) return;
@@ -40,7 +40,6 @@ class AuthService {
         NavigationService()
             .pushNamedAndRemoveUntil('/welcome', predicate: (p0) => p0.isFirst);
       }
-
       //     .get()
       //     .then((value) => AnyChatUser.fromSnapshot(value))
       // .then((AnyChatUser user) {

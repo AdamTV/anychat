@@ -1,6 +1,5 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/rounded_button.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/blocked_users_screen.dart';

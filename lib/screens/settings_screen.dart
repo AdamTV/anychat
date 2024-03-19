@@ -6,7 +6,6 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/screens/languages_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -30,6 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? isoCode;
   bool notifications = Utilities().prefs.getBool('notifications') ?? true;
   String? displayName = AnyChatAuth.currentUser!.displayName;
+  String? email = AnyChatAuth.currentUser!.email;
   ThemeMode? themeMode;
   late List<String> themes;
   String? dropdownValue;
@@ -120,11 +120,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 SettingsTile(
-                    title: Text(FirebaseAuth.instance.currentUser!.emailVerified
-                        ? AppLocalizations.of(context)!.emailVerified
-                        : AppLocalizations.of(context)!.verificationEmailSent),
-                    description: Text(AnyChatAuth.currentUser!.email),
-                    leading: const Icon(Icons.email)),
+                  title: Text(FirebaseAuth.instance.currentUser!.emailVerified
+                      ? AppLocalizations.of(context)!.emailVerified
+                      : AppLocalizations.of(context)!.verificationEmailSent),
+                  description: Text(AnyChatAuth.currentUser!.email),
+                  leading: const Icon(Icons.email),
+                  onPressed: (BuildContext context) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                                AppLocalizations.of(context)!.enterYourEmail),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  RoundedInputField(
+                                      initialValue:
+                                          AnyChatAuth.currentUser!.email,
+                                      icon: Icons.drive_file_rename_outline,
+                                      onChanged: (value) =>
+                                          {email = value}),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(AppLocalizations.of(context)!.save),
+                                onPressed: () async {
+                                  if (email!.isEmpty ||
+                                      email == null) {
+                                    Utilities().showToast(
+                                        AppLocalizations.of(context)!
+                                            .enterYourEmail);
+                                    return;
+                                  }
+                                  await AnyChatUser.updateEmail(email!);
+                                  Navigator.of(mounted
+                                          ? context
+                                          : Utilities()
+                                              .globalKey
+                                              .currentContext!)
+                                      .pushReplacement(MaterialPageRoute(
+                                    builder: (_) => const SettingsScreen(),
+                                  ));
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
               ],
             ),
             SettingsSection(
