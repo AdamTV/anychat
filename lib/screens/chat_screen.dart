@@ -119,82 +119,92 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               await AnyChatUser.getUserById(_chatMessages[i].senderId).onError(
                   (dynamic error, stackTrace) =>
                       AnyChatUser.deletedUser(_chatMessages[i].senderId)));
-        }
-        AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
-        try {
-          sender = participants
+}
+          AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
+          try {
+            sender = participants
               .firstWhere((element) => element.id == _chatMessages[i].senderId);
-        } on Error catch (e) {
-          // logger.e("Error",
-          //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
-          logger.e("Error", e, e.stackTrace);
-          sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
-        }
-        final language =
-            _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
-                ? info.outgoingLanguage
-                : info.incomingLanguage;
-        if (translatedMap[language]!.isEmpty) break;
-        var text = RichText(
-          text: TextSpan(
-            // Note: Styles for TextSpans must be explicitly defined.
-            // Child text spans will inherit styles from parent
-            style: Theme.of(
-                    mounted ? context : Utilities().globalKey.currentContext!)
-                .textTheme
-                .bodyLarge?.copyWith(
-              color: Theme.of(Utilities().globalKey.currentContext!).colorScheme.onPrimaryContainer
-            ),
-            children: <InlineSpan>[
-              TextSpan(
-                  text:
-                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
-                  style:  Theme.of(Utilities().globalKey.currentContext!).textTheme
-                      .bodyLarge?.copyWith(color: Theme.of(Utilities().globalKey.currentContext!).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold)),
-              TextSpan(text: "${_chatMessages[i].text}\n"),
-              WidgetSpan(
-                child: Divider(
-                  indent: MediaQuery.of(mounted
-                              ? context
-                              : Utilities().globalKey.currentContext!)
-                          .size
-                          .width *
-                      0.01,
-                  endIndent: MediaQuery.of(mounted
-                              ? context
-                              : Utilities().globalKey.currentContext!)
-                          .size
-                          .width *
-                      0.01,
-                  color: Theme.of(mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)
-                      .primaryColor,
+          } on Error catch (e) {
+            // logger.e("Error",
+            //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+            logger.e("Error", e, e.stackTrace);
+            sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
+          }
+          final language =
+              _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
+                  ? info.outgoingLanguage
+                  : info.incomingLanguage;
+          if (translatedMap[language]!.isEmpty) break;
+          var text = RichText(
+            text: TextSpan(
+              // Note: Styles for TextSpans must be explicitly defined.
+              // Child text spans will inherit styles from parent
+              style: Theme.of(
+                      mounted ? context : Utilities().globalKey.currentContext!)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(
+                      color: Theme.of(Utilities().globalKey.currentContext!)
+                          .colorScheme
+                          .onPrimaryContainer),
+              children: <InlineSpan>[
+                TextSpan(
+                    text:
+                        "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
+                    style: Theme.of(Utilities().globalKey.currentContext!)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(
+                            color:
+                                Theme.of(Utilities().globalKey.currentContext!)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                            fontWeight: FontWeight.bold)),
+                TextSpan(text: "${_chatMessages[i].text}\n"),
+                WidgetSpan(
+                  child: Divider(
+                    indent: MediaQuery.of(mounted
+                                ? context
+                                : Utilities().globalKey.currentContext!)
+                            .size
+                            .width *
+                        0.01,
+                    endIndent: MediaQuery.of(mounted
+                                ? context
+                                : Utilities().globalKey.currentContext!)
+                            .size
+                            .width *
+                        0.01,
+                    color: Theme.of(mounted
+                            ? context
+                            : Utilities().globalKey.currentContext!)
+                        .primaryColor,
+                  ),
                 ),
-              ),
-              TextSpan(
-                  text:
-                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: translatedMap[language]!.removeLast()),
-            ],
-          ),
-        );
-        final chatMessage = MessageWidget(
-          text: text,
-          animationController: AnimationController(
-            duration: const Duration(milliseconds: 0),
-            vsync: this,
-          ),
-          sender: sender,
-        );
-        _messages.insert(0, chatMessage);
-        chatMessage.animationController!.forward();
-      }
+                TextSpan(
+                    text:
+                        "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: translatedMap[language]!.removeLast()),
+              ],
+            ),
+          );
+          final chatMessage = MessageWidget(
+            text: text,
+            animationController: AnimationController(
+              duration: const Duration(milliseconds: 0),
+              vsync: this,
+            ),
+            sender: sender,
+          );
+          _messages.insert(0, chatMessage);
+          chatMessage.animationController!.forward();
+        }
 
-      setState(() {
-        _isLoading = false;
-      });
+        setState(() {
+          _isLoading = false;
+        });
+      
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;

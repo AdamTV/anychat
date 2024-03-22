@@ -7,6 +7,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/http_service.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -14,13 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-String? appId = 'ddc4507c13b04c1d8f4a334c5c5fab95';
-String channelId = 'test';
-String token =
-    '007eJxTYDi+98WU1yq5q/d0nNplWez6dsXGST18uSv3/s0rvnmt71CIAoO5kampZVKqQZKFpYlJokVakrlBorm5UYqhpZmBuUVyKoPc99SGQEaGh8tXMDEyQCCIz8JQklpcwsAAAHS6IyE=';
+String? appId = '72559be0b8944a8fb70a772d196078ce';
+String channelId = AnyChatAuth.currentConversation!.id;
 final uid = AnyChatAuth.currentUser!.id.hashCode;
+String token = '';
 
 class CallScreen extends StatefulWidget {
   /// Construct the [CallScreen]
@@ -56,8 +54,8 @@ class _CallScreenState extends State<CallScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _transcribedChatMessageSubscription =
         loadAllTranscribedMessages().listen(_updateCallScreen);
-    AnyChatUser.addMessageToConversation(
-        "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isCallingYouOnAnyChat}");
+    // AnyChatUser.addMessageToConversation(
+    //     "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isCallingYouOnAnyChat}");
   }
 
   @override
@@ -79,6 +77,7 @@ class _CallScreenState extends State<CallScreen> {
   Future<void> _initEngine() async {
     logger.d('Entering method: _initEngine())');
     _engine = createAgoraRtcEngine();
+    token = await agoraAuth();
     await _engine.initialize(RtcEngineContext(
       appId: appId,
     ));
@@ -129,7 +128,6 @@ class _CallScreenState extends State<CallScreen> {
 
     await _engine.enableVideo();
     await _engine.startPreview();
-    logger.d('token: $token');
     logger.d('trying to join Channel');
     _joinChannel();
     streamingRecognize();
