@@ -5,13 +5,16 @@ import 'package:anychat/components/notifications.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/auth_service.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/services/notifier_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 import 'components/utilities.dart';
 import 'firebase_options.dart';
@@ -25,42 +28,54 @@ var logger = Logger(
         printEmojis: true, // Print an emoji for each log message
         printTime: true // Should each log print contain a timestamp
         ),
-    level: Level.debug);
+    level: Level.info);
 
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+    await CacheManager().initSharedPrefs();
     Notifications().init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseAppCheck.instance
-        .activate(
-          // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-          // argument for `webProvider`
-          webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-          // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-          // your preferred provider. Choose from:
-          // 1. Debug provider
-          // 2. Safety Net provider
-          // 3. Play Integrity provider
-          androidProvider: AndroidProvider.debug,
-          // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-          // your preferred provider. Choose from:
-          // 1. Debug provider
-          // 2. Device Check provider
-          // 3. App Attest provider
-          // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
-          appleProvider: AppleProvider.appAttest,
-        )
-        .then((value) async => {
-              Ads.init(),
-              await Utilities().initSharedPrefs(),
-              runApp(const AnyChat()),
-              AuthService.listenToAuthChanges(),
-            });
+    try {
+      await FirebaseAppCheck.instance
+          .activate(
+            // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+            // argument for `webProvider`
+            webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+            // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+            // your preferred provider. Choose from:
+            // 1. Debug provider
+            // 2. Safety Net provider
+            // 3. Play Integrity provider
+            androidProvider: AndroidProvider.debug,
+            // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+            // your preferred provider. Choose from:
+            // 1. Debug provider
+            // 2. Device Check provider
+            // 3. App Attest provider
+            // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+            appleProvider: AppleProvider.appAttest,
+          )
+          .then((value) async => {
+                Ads.init(),
+                runApp(
+                    ChangeNotifierProvider<NotifierService>(
+                      create: (context) => NotifierService(),
+                      child: const AnyChat(),
+                  )
+                ),
+                AuthService.listenToAuthChanges(),
+              })
+          .catchError((onError) => {
+          logger.e("Error in main 3", onError, onError)
+      });
+    } on Exception catch (e, s) {
+      logger.e("Error in main 2", e, s);
+    }
   } on Error catch (e) {
-    logger.e("Error", e, e.stackTrace);
+    logger.e("Error in main 1", e, e.stackTrace);
   }
 }
 
@@ -79,33 +94,40 @@ class _AnyChatState extends State<AnyChat> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        navigatorKey:
-            NavigationService().navigatorKey, // Use the navigatorKey here
-        routes: NavigationService().routes,
-        debugShowCheckedModeBanner: false,
-        onGenerateTitle: (BuildContext context) =>
-            AppLocalizations.of(context)!.title,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AnyChatLocale.supportedLocales,
-        localeResolutionCallback: (locale, supportedLocales) {
-          // Check if the current device locale is supported
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale?.languageCode ||
-                supportedLocale.countryCode == locale?.countryCode) {
-              return supportedLocale;
+    logger.d("Entering _AnyChatState.build");
+    final notifierService = Provider.of<NotifierService>(context);
+
+    // return Consumer<NotifierService>(builder: (context, settings, child) {
+      return MaterialApp(
+          navigatorKey:
+          NavigationService().navigatorKey,
+          // Use the navigatorKey here
+          routes: NavigationService().routes,
+          debugShowCheckedModeBanner: false,
+          onGenerateTitle: (BuildContext context) =>
+          AppLocalizations.of(context)!.title,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AnyChatLocale.supportedLocales,
+          localeResolutionCallback: (locale, supportedLocales) {
+            // Check if the current device locale is supported
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale?.languageCode ||
+                  supportedLocale.countryCode == locale?.countryCode) {
+                return supportedLocale;
+              }
             }
-          }
-          return supportedLocales.first;
-        },
-        theme: kLightTheme,
-        darkTheme: kDarkTheme,
-        themeMode: Utilities().getThemeMode(),
-        home: const WelcomeScreen());
+            return supportedLocales.first;
+          },
+          locale: notifierService.locale,
+          theme: kLightTheme,
+          darkTheme: kDarkTheme,
+          themeMode: notifierService.themeData.brightness == Brightness.light ? ThemeMode.light : ThemeMode.dark,
+          home: const WelcomeScreen());
+    // });
   }
 }

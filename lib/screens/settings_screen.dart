@@ -6,6 +6,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -27,7 +28,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? isoCode;
-  bool notifications = Utilities().prefs.getBool('notifications') ?? true;
+  bool notifications =
+      CacheManager().getCachedUserData()?.notificationsEnabled ?? true;
   String? displayName = AnyChatAuth.currentUser!.displayName;
   String? email = AnyChatAuth.currentUser!.email;
   ThemeMode? themeMode;
@@ -42,7 +44,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       AppLocalizations.of(context)!.light,
       AppLocalizations.of(context)!.dark
     ];
-    dropdownValue = Utilities().getThemeDropdownValue();
+    dropdownValue =
+        UserData.themeToString(CacheManager().getCachedUserData()?.theme);
 
     return Scaffold(
         appBar: AppBar(
@@ -57,10 +60,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile(
                   title: Text(AppLocalizations.of(context)!.language),
                   description: Text(Utilities().getLanguageFromIsoCode(
-                      AnyChatAuth.currentUser!.language)),
+                      CacheManager().getCachedUserData()!.locale.languageCode)),
                   leading: const Icon(Icons.language),
                   onPressed: (BuildContext context) {
-                    Navigator.of(context).pushNamed('/languages');
+                      Navigator.of(context).pushNamed('/languages');
                   },
                 ),
               ],
@@ -94,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             actions: <Widget>[
                               TextButton(
                                 child: Text(AppLocalizations.of(context)!.save),
-                                onPressed: () async {
+                                onPressed: () {
                                   if (displayName!.isEmpty ||
                                       displayName == null) {
                                     Utilities().showToast(
@@ -102,16 +105,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             .enterYourName);
                                     return;
                                   }
-                                  await AnyChatUser.updateDisplayName(
-                                      displayName);
-                                  Navigator.of(mounted
-                                          ? context
-                                          : Utilities()
-                                              .globalKey
-                                              .currentContext!)
-                                      .pushReplacement(MaterialPageRoute(
-                                    builder: (_) => const SettingsScreen(),
-                                  ));
+                                  AnyChatUser.updateDisplayName(displayName)
+                                      .then((value) => {
+                                            NavigationService()
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const SettingsScreen(),
+                                            ))
+                                          });
                                 },
                               ),
                             ],
@@ -139,8 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       initialValue:
                                           AnyChatAuth.currentUser!.email,
                                       icon: Icons.drive_file_rename_outline,
-                                      onChanged: (value) =>
-                                          {email = value}),
+                                      onChanged: (value) => {email = value}),
                                 ],
                               ),
                             ),
@@ -148,22 +149,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               TextButton(
                                 child: Text(AppLocalizations.of(context)!.save),
                                 onPressed: () async {
-                                  if (email!.isEmpty ||
-                                      email == null) {
+                                  if (email!.isEmpty || email == null) {
                                     Utilities().showToast(
                                         AppLocalizations.of(context)!
                                             .enterYourEmail);
                                     return;
                                   }
-                                  await AnyChatUser.updateEmail(email!);
-                                  Navigator.of(mounted
-                                          ? context
-                                          : Utilities()
-                                              .globalKey
-                                              .currentContext!)
-                                      .pushReplacement(MaterialPageRoute(
-                                    builder: (_) => const SettingsScreen(),
-                                  ));
+                                  await AnyChatUser.updateEmail(email!)
+                                      .then((value) => {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                    MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const SettingsScreen(),
+                                            ))
+                                          });
                                 },
                               ),
                             ],
@@ -256,14 +256,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.switchTile(
                   title: Text(AppLocalizations.of(context)!.notifications),
                   leading: const Icon(Icons.notifications_active),
-                  enabled: notifications,
                   onToggle: (value) async {
                     setState(() {
                       notifications = value;
                     });
-                    await Utilities().prefs.setBool('notifications', value);
+                    var user = await CacheManager()
+                        .getUserDataWithCache(AnyChatAuth.currentUser!.id);
+                    user.notificationsEnabled = notifications;
                   },
-                  initialValue: null,
+                  initialValue:
+                      CacheManager().getCachedUserData()?.notificationsEnabled,
                 )
               ],
             ),
@@ -351,11 +353,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (pickedFile != null) {
         // _images.add(File(pickedFile.path));
         _image = File(pickedFile.path); // Use if you only need a single picture
+        uploadFile(_image)
+            .then((value) => {AnyChatUser.updatePhotoUrl(value)})
+            .onError((error, stackTrace) {
+          logger.e("Error changing user profile image.", error, stackTrace);
+          return {};
+        });
       } else {
         logger.d('No image selected.');
       }
     });
-    await AnyChatUser.updatePhotoUrl(await uploadFile(_image));
     setState(() {});
   }
 

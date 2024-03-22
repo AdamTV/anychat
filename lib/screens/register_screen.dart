@@ -139,17 +139,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             SizedBox(
-              width: size.width * 0.50,
+              // width: size.width * 0.50,
               child: CheckboxListTile(
                 title: RichText(
                   text: TextSpan(children: [
                     TextSpan(
                       text: AppLocalizations.of(context)!.byContinuingIAgree,
-                      style: Theme.of(context).textTheme.bodyLarge
+                      style: Theme.of(context).textTheme.bodyMedium
                     ),
                     TextSpan(
                       text: AppLocalizations.of(context)!.privacyPolicy,
-                      style:  Theme.of(context).textTheme.bodyLarge
+                      style:  Theme.of(context).textTheme.bodyMedium
                           ?.copyWith(color: Colors.blue),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
@@ -161,12 +161,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     TextSpan(
                       text: " ${AppLocalizations.of(context)!.and} ",
-                        style: Theme.of(context).textTheme.bodyLarge
+                        style: Theme.of(context).textTheme.bodyMedium
                     ),
                     TextSpan(
                         text: AppLocalizations.of(context)!.eula,
-                        style:  Theme.of(context).textTheme.bodyLarge
-                            ?.copyWith(color: Colors.blue),                        recognizer: TapGestureRecognizer()
+                        style:  Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             launchUrl(Uri(
                                 scheme: 'https',

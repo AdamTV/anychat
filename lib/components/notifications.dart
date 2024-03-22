@@ -1,6 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/cache_maanger.dart';
 // import 'package:anychat/screens/call_screen.dart';
 import 'package:disposables/disposables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -79,8 +80,8 @@ class Notifications implements Disposable {
 
   Future<void> showNotification(
       String? title, String body, String payload) async {
-    if (Utilities().prefs.getBool('notifications') != null &&
-        !Utilities().prefs.getBool('notifications')!) {
+    if (CacheManager().getCachedUserData()?.notificationsEnabled != null &&
+        ! CacheManager().getCachedUserData()!.notificationsEnabled) {
       return;
     }
     logger.d('showNotification');
