@@ -144,7 +144,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
                     }else{
                       await AnyChatUser.createConversation(user);
                     }
-                    NavigationService().pushNamedReplacement("/chat");
+                    NavigationService().pushReplacementNamed("/chat");
                     },
                 );
               },

@@ -1,6 +1,9 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
+import 'package:anychat/screens/settings_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +17,8 @@ class LanguagesScreen extends StatefulWidget {
 }
 
 class _LanguagesScreenState extends State<LanguagesScreen> {
-  final List languages = Set.from(AnyChatLocale.isoMap.keys).toList();
+  final List<String> languages =
+      Set<String>.from(AnyChatLocale.isoMap.keys).toList();
   int languageIndex = 0;
 
   @override
@@ -52,16 +56,17 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
 
   Widget trailingWidget(int index) {
     return (languageIndex == index)
-        ? Icon(Icons.check)
+        ? const Icon(Icons.check)
         : const Icon(null);
   }
 
   Future<void> changeLanguage(int index) async {
-      setState(() {
-        languageIndex = index;
-      });
-      await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]);
-    }
+    setState(() {
+      languageIndex = index;
+    });
+    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]!);
+    NavigationService().goBack();
+  }
 
   List<SettingsTile> getLanguageTiles() {
     List<SettingsTile> tiles = [];

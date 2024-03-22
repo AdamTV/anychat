@@ -34,8 +34,7 @@ class NavigationService {
         '/liveTranslator': (context) => const LiveTranslatorScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/searchChatter': (context) =>
-            const SearchChatterScreen(),
+        '/searchChatter': (context) => const SearchChatterScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
         '/forgotPassword': (context) => const ForgotPassword(),
@@ -55,8 +54,14 @@ class NavigationService {
         routeName, predicate ?? (Route<dynamic> route) => false);
   }
 
-  Future<Object?> pushNamedReplacement(String s) {
+  Future<Object?> pushReplacementNamed(String s) {
     return navigatorKey.currentState!.pushReplacementNamed(s);
   }
 
+  Future<dynamic> pushReplacement(Route<dynamic> newRoute, {dynamic result}) {
+    return navigatorKey.currentState!.pushReplacement(newRoute, result: result);
+  }
+  Future<dynamic> pushAndRemoveUntil(Route<dynamic> newRoute, bool Function(Route<dynamic>) predicate){
+    return navigatorKey.currentState!.pushAndRemoveUntil(newRoute, predicate);
+  }
 }

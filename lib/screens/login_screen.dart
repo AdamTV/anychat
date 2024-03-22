@@ -137,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             HaveAccountCheck(
               press: () {
-                NavigationService().pushNamedReplacement("/register");
+                NavigationService().pushReplacementNamed("/register");
               },
             ),
             const OrDivider(),

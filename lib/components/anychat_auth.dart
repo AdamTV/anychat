@@ -5,10 +5,11 @@ import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/register_screen.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -67,7 +68,10 @@ class AnyChatAuth {
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
             firebaseUser.email ?? "",
             firebaseUser.photoURL ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2), []);
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+            true,
+            []);
         currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
         return currentUser;
@@ -125,7 +129,8 @@ class AnyChatAuth {
             googleSignInAccount!.displayName ?? "",
             googleSignInAccount!.email,
             googleSignInAccount!.photoUrl ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2), []);
+            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),             true, []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -150,7 +155,10 @@ class AnyChatAuth {
           user.displayName ?? "",
           user.email ?? "",
           user.photoURL ?? "",
-          AnyChatLocale.currentLocale ?? "", []);
+          AnyChatLocale.currentLocale ?? "",
+          UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+          true,
+          []);
       currentUser!.addUserToFirestore();
 
       return currentUser;
@@ -187,7 +195,20 @@ class AnyChatAuth {
           : await FirebaseAuth.instance.signInWithEmailAndPassword(
               email: email.trim(), password: password);
       var result = userCredential.user!;
-
+      var acs = ActionCodeSettings(
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be whitelisted in the Firebase Console.
+          url: 'https://app.anychat.ca/__/auth/action',
+          // This must be true
+          handleCodeInApp: true,
+          iOSBundleId: 'ca.alphatech.anychat',
+          androidPackageName: 'ca.alphatech.anychat',
+          // installIfNotAvailable
+          androidInstallApp: true,
+          // minimumVersion
+          androidMinimumVersion: '12');
+      FirebaseAuth.instance.sendSignInLinkToEmail(email: result.email!, actionCodeSettings: acs);
+      Utilities().showToast("Please verify your email.");
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(result.uid)
@@ -206,7 +227,9 @@ class AnyChatAuth {
             displayName ?? "",
             result.email ?? "",
             result.photoURL ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2), []);
+            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),            true,
+            []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }
@@ -265,7 +288,9 @@ class AnyChatAuth {
             user.displayName ?? "",
             user.email ?? "",
             url,
-            AnyChatLocale.currentLocale!.substring(0, 2), []);
+            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),            true,
+            []);
         currentUser!.addUserToFirestore();
         return currentUser;
       }

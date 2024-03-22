@@ -3,6 +3,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/screens/conversations_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +29,7 @@ class AuthService {
   static void listenToAuthChanges() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user == null) return;
+      CacheManager().getUserDataWithCache(user.uid);
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(user.uid)

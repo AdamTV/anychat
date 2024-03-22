@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +10,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/parser.dart';
 
 import 'anychat_locale.dart';
 import 'anychat_user.dart';
 
 class Utilities {
-  late SharedPreferences prefs;
   final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
   final String authority = "translation.googleapis.com";
   final String unencodedPath = "/language/translate/v2";
@@ -30,12 +29,6 @@ class Utilities {
   factory Utilities() {
     return _instance;
   }
-
-  Future<void> initSharedPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-  }
-
-  
 
   Future<String> getGoogleTranslation(String? language, String? text) async {
     queryParameters.putIfAbsent("key", () => apiKey);
@@ -141,9 +134,10 @@ class Utilities {
     for (String key in AnyChatLocale.isoMap.keys) {
       if (AnyChatLocale.isoMap[key] == language) {
         return key;
+        //return AppLocalizations.of(globalKey.currentContext)!;
       }
     }
-    return "Error";
+    throw Exception("Could not determine language from ISO code.");
   }
 
   Future<bool> handlePermission(Permission permission) async {
@@ -172,32 +166,6 @@ class Utilities {
     return ret;
   }
 
-  ThemeMode getThemeMode() {
-    switch (prefs.getString('theme')?.toLowerCase() ?? 'system') {
-      case 'system':
-        return ThemeMode.system;
-      case 'dark':
-        return ThemeMode.dark;
-      case 'light':
-        return ThemeMode.light;
-      default:
-        return ThemeMode.system;
-    }
-  }
-
-  String getThemeDropdownValue() {
-    var pref = prefs.getString('theme') ?? 'system';
-    if (pref.toLowerCase() == 'system') {
-      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.system;
-    } else if (pref.toLowerCase() == 'dark') {
-      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark;
-    } else if (pref.toLowerCase() == 'light') {
-      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.light;
-    } else {
-      return AppLocalizations.of(Utilities().globalKey.currentContext!)!.system;
-    }
-  }
-
   void showToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
@@ -208,15 +176,17 @@ class Utilities {
   }
 
   void setThemeFromDropdownValue(String? newValue) {
-    var newPref = 'system';
+    var user = CacheManager().getCachedUserData();
+    var newPref = user?.theme.brightness;
     if (newValue ==
         AppLocalizations.of(Utilities().globalKey.currentContext!)!.light) {
-      newPref = 'light';
+      newPref = Brightness.light;
     } else if (newValue ==
         AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark) {
-      newPref = 'dark';
+      newPref = Brightness.dark;
     }
-    prefs.setString('theme', newPref);
+    user?.theme = user.theme.copyWith(brightness: newPref);
+    CacheManager().cacheUserData(user!);
   }
 
   Text biDirectionalText(

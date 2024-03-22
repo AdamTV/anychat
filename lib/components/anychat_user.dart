@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,16 +15,25 @@ import 'conversation.dart';
 import 'conversation_info.dart';
 
 class AnyChatUser {
-  final String id;
+  late String id;
   late String displayName = '';
   late final String email;
   late String photoUrl = '';
   late final String language;
   late final List<String> blockedAccounts;
   List<ConversationInfo> conversations = [];
+  late String theme;
+  late bool notificationsEnabled;
 
-  AnyChatUser(this.id, this.displayName, this.email, this.photoUrl,
-      this.language, this.blockedAccounts);
+  AnyChatUser(
+      this.id,
+      this.displayName,
+      this.email,
+      this.language,
+      this.photoUrl,
+      this.theme,
+      this.notificationsEnabled,
+      this.blockedAccounts);
 
   static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
@@ -33,6 +43,8 @@ class AnyChatUser {
         "",
         "",
         "",
+        "",
+        false,
         []);
   }
 
@@ -45,6 +57,10 @@ class AnyChatUser {
       language = (snapshot.data() as Map<String, dynamic>)['language'];
       blockedAccounts = List.castFrom<dynamic, String>(
           (snapshot.data() as Map<String, dynamic>)['blockedAccounts'] ?? []);
+      theme = (snapshot.data() as Map<String, dynamic>)['theme'] ?? 'system';
+      notificationsEnabled =
+          (snapshot.data() as Map<String, dynamic>)['notificationsEnabled'] ??
+              false;
     }
   }
 
@@ -63,7 +79,7 @@ class AnyChatUser {
       return null;
     }
     final conversation =
-    await FirebaseFirestore.instance.collection("conversations").add({
+        await FirebaseFirestore.instance.collection("conversations").add({
       'participants': [user.id, AnyChatAuth.currentUser!.id],
       'timestamp': FieldValue.serverTimestamp()
     });
@@ -73,9 +89,9 @@ class AnyChatUser {
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);
     final userConversationInfo =
-    currentUser.collection("conversations").doc(conversation.id);
+        currentUser.collection("conversations").doc(conversation.id);
     final chatterConversationInfo =
-    chatter.collection("conversations").doc(conversation.id);
+        chatter.collection("conversations").doc(conversation.id);
 
     await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
       return transaction
@@ -109,13 +125,12 @@ class AnyChatUser {
     List<AnyChatUser> temp = <AnyChatUser>[];
     for (var id in AnyChatAuth.currentConversation!.participants) {
       if (id != AnyChatAuth.currentUser!.id) {
-        temp.add(AnyChatUser.fromSnapshot(
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(id)
-                .get()));
+        temp.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
+            .collection('users')
+            .doc(id)
+            .get()));
       }
-     AnyChatAuth.currentChatters = temp;
+      AnyChatAuth.currentChatters = temp;
     }
     return AnyChatAuth.currentConversation!;
   }
@@ -264,7 +279,7 @@ class AnyChatUser {
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
   }
 
-  static Future<void> updateLanguage(String? language) async {
+  static Future<void> updateLanguage(String language) async {
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser!.id);
@@ -277,6 +292,10 @@ class AnyChatUser {
       });
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
+    var userData =
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser!.id);
+    userData.locale = UserData.localeFromString(language);
+    await CacheManager().cacheUserData(userData);
   }
 
   static Future<void> updateDisplayName(String? displayName) async {
@@ -295,19 +314,41 @@ class AnyChatUser {
   }
 
   static Future<void> updateEmail(String email) async {
-
-    final user = FirebaseFirestore.instance
-        .collection("users")
-        .doc(AnyChatAuth.currentUser!.id);
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-      return transaction
-          .get(user)
-          .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
-          .then((AnyChatUser fresh) {
-        transaction.update(user, {'email': email, 'emailVerified': false});
-      });
-    });
-    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser!.id);
+    Utilities().showToast("Please verify your email");
+    var acs = ActionCodeSettings(
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be whitelisted in the Firebase Console.
+        url: 'https://app.anychat.ca/__/auth/action',
+        // This must be true
+        handleCodeInApp: true,
+        iOSBundleId: 'ca.alphatech.anychat',
+        androidPackageName: 'ca.alphatech.anychat',
+        // installIfNotAvailable
+        androidInstallApp: true,
+        // minimumVersion
+        androidMinimumVersion: '12');
+    FirebaseAuth.instance.currentUser
+        ?.sendEmailVerification(acs)
+        .then((value) async => {
+              await FirebaseFirestore.instance
+                  .runTransaction((Transaction transaction) {
+                return transaction
+                    .get(FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(AnyChatAuth.currentUser!.id))
+                    .then(
+                        (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+                    .then((AnyChatUser fresh) {
+                  transaction.update(
+                      FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(AnyChatAuth.currentUser!.id),
+                      {'email': email, 'emailVerified': true});
+                });
+              }),
+              AnyChatAuth.currentUser =
+                  await getUserById(AnyChatAuth.currentUser!.id)
+            });
   }
 
   static Future<void> addTranscribedMessage(String text) async {
