@@ -52,37 +52,16 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
 
   Widget trailingWidget(int index) {
     return (languageIndex == index)
-        ? Icon(Icons.check, color: Theme.of(context).primaryColor)
+        ? Icon(Icons.check)
         : const Icon(null);
   }
 
   Future<void> changeLanguage(int index) async {
-    var title = 'dummy title';
-    var content = 'dummy content';
-    var result = await showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(AppLocalizations.of(context)!.approve),
-          ),
-        ],
-      ),
-    );
-    if (result ?? false) {
       setState(() {
         languageIndex = index;
       });
       await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]);
     }
-  }
 
   List<SettingsTile> getLanguageTiles() {
     List<SettingsTile> tiles = [];
