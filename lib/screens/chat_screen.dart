@@ -9,7 +9,7 @@ import 'package:anychat/components/conversation.dart';
 import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/screens/search_chatter_by_email_screen.dart';
+import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,7 +50,7 @@ class ChatWindow extends StatefulWidget {
   static Stream<QuerySnapshot> loadAllConversations() {
     return FirebaseFirestore.instance
         .collection('conversations')
-        .where('participants', arrayContains: AnyChatAuth.currentUser!.id)
+        .where('participants', arrayContains: AnyChatAuth.currentUser.id)
         .orderBy('timestamp', descending: false)
         .snapshots();
   }
@@ -93,15 +93,15 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         participants.add(await AnyChatUser.getUserById(element));
       }
 
-      AnyChatAuth.currentUser!.conversations =
+      AnyChatAuth.currentUser.conversations =
           await ConversationInfo.getAllConversationInfo(
-              AnyChatAuth.currentUser!.id);
-      var info = AnyChatAuth.currentUser!.conversations.firstWhere(
+              AnyChatAuth.currentUser.id);
+      var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation!.id);
       // divide all chat messages into language for translation -> translate
       Map<String?, List<String?>> map = {};
       for (var message in _chatMessages) {
-        final language = message.senderId == AnyChatAuth.currentUser!.id
+        final language = message.senderId == AnyChatAuth.currentUser.id
             ? info.outgoingLanguage
             : info.incomingLanguage;
         if (!map.containsKey(language)) {
@@ -119,92 +119,89 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               await AnyChatUser.getUserById(_chatMessages[i].senderId).onError(
                   (dynamic error, stackTrace) =>
                       AnyChatUser.deletedUser(_chatMessages[i].senderId)));
-}
-          AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
-          try {
-            sender = participants
-              .firstWhere((element) => element.id == _chatMessages[i].senderId);
-          } on Error catch (e) {
-            // logger.e("Error",
-            //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
-            logger.e("Error", e, e.stackTrace);
-            sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
-          }
-          final language =
-              _chatMessages[i].senderId == AnyChatAuth.currentUser!.id
-                  ? info.outgoingLanguage
-                  : info.incomingLanguage;
-          if (translatedMap[language]!.isEmpty) break;
-          var text = RichText(
-            text: TextSpan(
-              // Note: Styles for TextSpans must be explicitly defined.
-              // Child text spans will inherit styles from parent
-              style: Theme.of(
-                      mounted ? context : Utilities().globalKey.currentContext!)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(
-                      color: Theme.of(Utilities().globalKey.currentContext!)
-                          .colorScheme
-                          .onPrimaryContainer),
-              children: <InlineSpan>[
-                TextSpan(
-                    text:
-                        "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
-                    style: Theme.of(Utilities().globalKey.currentContext!)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(
-                            color:
-                                Theme.of(Utilities().globalKey.currentContext!)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                            fontWeight: FontWeight.bold)),
-                TextSpan(text: "${_chatMessages[i].text}\n"),
-                WidgetSpan(
-                  child: Divider(
-                    indent: MediaQuery.of(mounted
-                                ? context
-                                : Utilities().globalKey.currentContext!)
-                            .size
-                            .width *
-                        0.01,
-                    endIndent: MediaQuery.of(mounted
-                                ? context
-                                : Utilities().globalKey.currentContext!)
-                            .size
-                            .width *
-                        0.01,
-                    color: Theme.of(mounted
-                            ? context
-                            : Utilities().globalKey.currentContext!)
-                        .primaryColor,
-                  ),
-                ),
-                TextSpan(
-                    text:
-                        "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: translatedMap[language]!.removeLast()),
-              ],
-            ),
-          );
-          final chatMessage = MessageWidget(
-            text: text,
-            animationController: AnimationController(
-              duration: const Duration(milliseconds: 0),
-              vsync: this,
-            ),
-            sender: sender,
-          );
-          _messages.insert(0, chatMessage);
-          chatMessage.animationController!.forward();
         }
+        AnyChatUser sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
+        try {
+          sender = participants
+              .firstWhere((element) => element.id == _chatMessages[i].senderId);
+        } on Error catch (e) {
+          // logger.e("Error",
+          //     time: DateTime.now(), error: e, stackTrace: e.stackTrace);
+          logger.e("Error", e, e.stackTrace);
+          sender = AnyChatUser.deletedUser(_chatMessages[i].senderId);
+        }
+        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
+            ? info.outgoingLanguage
+            : info.incomingLanguage;
+        if (translatedMap[language]!.isEmpty) break;
+        var text = RichText(
+          text: TextSpan(
+            // Note: Styles for TextSpans must be explicitly defined.
+            // Child text spans will inherit styles from parent
+            style: Theme.of(
+                    mounted ? context : Utilities().globalKey.currentContext!)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(
+                    color: Theme.of(Utilities().globalKey.currentContext!)
+                        .colorScheme
+                        .onPrimaryContainer),
+            children: <InlineSpan>[
+              TextSpan(
+                  text:
+                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
+                  style: Theme.of(Utilities().globalKey.currentContext!)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(
+                          color: Theme.of(Utilities().globalKey.currentContext!)
+                              .colorScheme
+                              .onPrimaryContainer,
+                          fontWeight: FontWeight.bold)),
+              TextSpan(text: "${_chatMessages[i].text}\n"),
+              WidgetSpan(
+                child: Divider(
+                  indent: MediaQuery.of(mounted
+                              ? context
+                              : Utilities().globalKey.currentContext!)
+                          .size
+                          .width *
+                      0.01,
+                  endIndent: MediaQuery.of(mounted
+                              ? context
+                              : Utilities().globalKey.currentContext!)
+                          .size
+                          .width *
+                      0.01,
+                  color: Theme.of(mounted
+                          ? context
+                          : Utilities().globalKey.currentContext!)
+                      .primaryColor,
+                ),
+              ),
+              TextSpan(
+                  text:
+                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: translatedMap[language]!.removeLast()),
+            ],
+          ),
+        );
+        final chatMessage = MessageWidget(
+          text: text,
+          animationController: AnimationController(
+            duration: const Duration(milliseconds: 0),
+            vsync: this,
+          ),
+          sender: sender,
+        );
+        _messages.insert(0, chatMessage);
+        chatMessage.animationController!.forward();
+      }
 
-        setState(() {
-          _isLoading = false;
-        });
-      
+      setState(() {
+        _isLoading = false;
+      });
     } else if (!_messages
         .any((element) => element.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
@@ -218,20 +215,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         sender = AnyChatUser.deletedUser(message.senderId);
       }
 
-      if (AnyChatAuth.currentUser!.conversations.isEmpty) {
-        AnyChatAuth.currentUser!.conversations =
+      if (AnyChatAuth.currentUser.conversations.isEmpty) {
+        AnyChatAuth.currentUser.conversations =
             await ConversationInfo.getAllConversationInfo(
-                AnyChatAuth.currentUser!.id);
+                AnyChatAuth.currentUser.id);
       }
 
       logger
           .d("currentConvversation.id: ${AnyChatAuth.currentConversation!.id}");
-      var info = AnyChatAuth.currentUser!.conversations.firstWhere(
+      var info = AnyChatAuth.currentUser.conversations.firstWhere(
           (element) => element.id == AnyChatAuth.currentConversation!.id);
-      final language =
-          _chatMessages.last.senderId == AnyChatAuth.currentUser!.id
-              ? info.outgoingLanguage
-              : info.incomingLanguage;
+      final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
+          ? info.outgoingLanguage
+          : info.incomingLanguage;
       var text = RichText(
         text: TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
@@ -407,8 +403,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(
                     AppLocalizations.of(context)!.addSomeoneToConversation),
                 onTap: () {
-                  SearchChatterScreen.addToConvo = true;
-                  Navigator.pushNamed(context, "/searchChatter");
+                  NavigationService().push(MaterialPageRoute(
+                    builder: (_) => const SearchChatterScreen(true, false),
+                  ));
                 }),
             ListTile(
                 title: Text(AppLocalizations.of(context)!.leaveConversation),
@@ -447,7 +444,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   }
 
   _buildPopupDialog(BuildContext context) {
-    var info = AnyChatAuth.currentUser!.conversations.firstWhere(
+    var info = AnyChatAuth.currentUser.conversations.firstWhere(
         (element) => element.id == AnyChatAuth.currentConversation!.id);
     String? incomingDropdownValue =
         Utilities().getLanguageFromIsoCode(info.incomingLanguage);
@@ -471,7 +468,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   .runTransaction((Transaction transaction) {
                 var user = FirebaseFirestore.instance
                     .collection('users')
-                    .doc(AnyChatAuth.currentUser!.id);
+                    .doc(AnyChatAuth.currentUser.id);
                 var userConversationInfo = user
                     .collection('conversations')
                     .doc(AnyChatAuth.currentConversation!.id);
@@ -513,7 +510,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                   .runTransaction((Transaction transaction) {
                 var user = FirebaseFirestore.instance
                     .collection('users')
-                    .doc(AnyChatAuth.currentUser!.id);
+                    .doc(AnyChatAuth.currentUser.id);
                 var userConversationInfo = user
                     .collection('conversations')
                     .doc(AnyChatAuth.currentConversation!.id);
@@ -565,12 +562,12 @@ class MessageWidget extends StatelessWidget {
           CurvedAnimation(parent: animationController!, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Align(
-        alignment: sender?.id == AnyChatAuth.currentUser?.id
+        alignment: sender?.id == AnyChatAuth.currentUser.id
             ? Alignment.centerRight
             : Alignment.centerLeft,
         child: Container(
           decoration: BoxDecoration(
-              color: sender!.id == AnyChatAuth.currentUser!.id
+              color: sender!.id == AnyChatAuth.currentUser.id
                   ? Theme.of(context).brightness == Brightness.dark
                       ? kDarkTheme.colorScheme.primaryContainer
                       : kLightTheme.colorScheme.primaryContainer

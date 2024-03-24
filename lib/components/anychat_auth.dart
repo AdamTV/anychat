@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:twitter_login/twitter_login.dart';
@@ -20,11 +21,10 @@ import 'anychat_user.dart';
 import 'conversation.dart';
 
 class AnyChatAuth {
-  static AnyChatUser? currentUser;
+  static late AnyChatUser currentUser;
   static String? linkedAccountPhotoUrl;
   static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
-
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -32,6 +32,17 @@ class AnyChatAuth {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
+
+  static bool isUserInitialized() {
+    try {
+      var x = AnyChatAuth.currentUser.id;
+      logger.i("Current User Id: $x");
+      return true;
+    } catch (e) {
+      logger.e("Caught exception in isUserInitialized: $e");
+      return false;
+    }
+  }
 
   static Future<AnyChatUser?> signInApple() async {
     final appleIdCredential = await SignInWithApple.getAppleIDCredential(
@@ -60,6 +71,7 @@ class AnyChatAuth {
       var currentUser = AnyChatUser.fromSnapshot(snapshot);
       linkedAccountPhotoUrl = "";
       AnyChatAuth.currentUser = currentUser;
+
       return currentUser;
     } else {
       if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
@@ -69,11 +81,13 @@ class AnyChatAuth {
             firebaseUser.email ?? "",
             firebaseUser.photoURL ?? "",
             AnyChatLocale.currentLocale!.substring(0, 2),
-            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+            UserData.themeToString(
+                Theme.of(Utilities().globalKey.currentContext!)),
             true,
             []);
         currentUser.addUserToFirestore();
         AnyChatAuth.currentUser = currentUser;
+
         return currentUser;
       } else {
         Utilities().showToast(
@@ -121,6 +135,7 @@ class AnyChatAuth {
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
+
         linkedAccountPhotoUrl = googleSignInAccount!.photoUrl;
         return currentUser;
       } else {
@@ -129,9 +144,13 @@ class AnyChatAuth {
             googleSignInAccount!.displayName ?? "",
             googleSignInAccount!.email,
             googleSignInAccount!.photoUrl ?? "",
-            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),             true, []);
-        currentUser!.addUserToFirestore();
+            UserData.themeToString(
+                Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            true,
+            []);
+        currentUser.addUserToFirestore();
+
         return currentUser;
       }
     } else {
@@ -156,10 +175,11 @@ class AnyChatAuth {
           user.email ?? "",
           user.photoURL ?? "",
           AnyChatLocale.currentLocale ?? "",
-          UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+          UserData.themeToString(
+              Theme.of(Utilities().globalKey.currentContext!)),
           true,
           []);
-      currentUser!.addUserToFirestore();
+      currentUser.addUserToFirestore();
 
       return currentUser;
     } else {
@@ -171,6 +191,7 @@ class AnyChatAuth {
     try {
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
+      await CacheManager().clearUserData();
       // await _facebookAuth.logOut();
       // currently apple signin method uses firebase auth, so no need to sign out
     } on Error catch (e) {
@@ -196,8 +217,8 @@ class AnyChatAuth {
               email: email.trim(), password: password);
       var result = userCredential.user!;
       var acs = ActionCodeSettings(
-        // URL you want to redirect back to. The domain (www.example.com) for this
-        // URL must be whitelisted in the Firebase Console.
+          // URL you want to redirect back to. The domain (www.example.com) for this
+          // URL must be whitelisted in the Firebase Console.
           url: 'https://app.anychat.ca/__/auth/action',
           // This must be true
           handleCodeInApp: true,
@@ -207,7 +228,8 @@ class AnyChatAuth {
           androidInstallApp: true,
           // minimumVersion
           androidMinimumVersion: '12');
-      FirebaseAuth.instance.sendSignInLinkToEmail(email: result.email!, actionCodeSettings: acs);
+      FirebaseAuth.instance
+          .sendSignInLinkToEmail(email: result.email!, actionCodeSettings: acs);
       Utilities().showToast("Please verify your email.");
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
@@ -215,6 +237,7 @@ class AnyChatAuth {
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
+
         linkedAccountPhotoUrl = result.photoURL;
         return currentUser;
       } else {
@@ -227,10 +250,13 @@ class AnyChatAuth {
             displayName ?? "",
             result.email ?? "",
             result.photoURL ?? "",
-            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),            true,
+            UserData.themeToString(
+                Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            true,
             []);
-        currentUser!.addUserToFirestore();
+
+        currentUser.addUserToFirestore();
         return currentUser;
       }
     } on FirebaseAuthException catch (e) {
@@ -278,6 +304,7 @@ class AnyChatAuth {
           .get();
       if (snapshot.exists) {
         currentUser = AnyChatUser.fromSnapshot(snapshot);
+
         linkedAccountPhotoUrl = user.photoURL;
         return currentUser;
       } else {
@@ -288,10 +315,13 @@ class AnyChatAuth {
             user.displayName ?? "",
             user.email ?? "",
             url,
-            UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),            true,
+            UserData.themeToString(
+                Theme.of(Utilities().globalKey.currentContext!)),
+            AnyChatLocale.currentLocale!.substring(0, 2),
+            true,
             []);
-        currentUser!.addUserToFirestore();
+
+        currentUser.addUserToFirestore();
         return currentUser;
       }
     }

@@ -150,7 +150,7 @@ class Utilities {
     var ret = "";
     var ids = <String?>[];
     for (var user in users) {
-      if (user.id != AnyChatAuth.currentUser!.id && !ids.contains(user.id)) {
+      if (user.id != AnyChatAuth.currentUser.id && !ids.contains(user.id)) {
         ids.add(user.id);
         ret += user.displayName;
         ret += ", ";
@@ -175,9 +175,9 @@ class Utilities {
         fontSize: 16.0);
   }
 
-  void setThemeFromDropdownValue(String? newValue) {
-    var user = CacheManager().getCachedUserData();
-    var newPref = user?.theme.brightness;
+  void setThemeFromDropdownValue(String? newValue) async {
+    var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    var newPref = user.theme.brightness;
     if (newValue ==
         AppLocalizations.of(Utilities().globalKey.currentContext!)!.light) {
       newPref = Brightness.light;
@@ -185,8 +185,8 @@ class Utilities {
         AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark) {
       newPref = Brightness.dark;
     }
-    user?.theme = user.theme.copyWith(brightness: newPref);
-    CacheManager().cacheUserData(user!);
+    user.theme = user.theme.copyWith(brightness: newPref);
+    CacheManager().cacheUserData(user);
   }
 
   Text biDirectionalText(

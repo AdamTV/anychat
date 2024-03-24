@@ -16,9 +16,9 @@ class LiveTranslatorScreen extends StatefulWidget {
 }
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
-  String? isoCode = AnyChatAuth.currentUser!.language;
+  String? isoCode = AnyChatAuth.currentUser.language;
   String? dropdownValue =
-      Utilities().getLanguageFromIsoCode(AnyChatAuth.currentUser!.language);
+      Utilities().getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
   bool recognizing = false;
   bool recognizeFinished = false;
 
@@ -155,8 +155,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               );
             }).toList(),
           ),
-          RoundedInputField(
-              icon: Icons.language,
+          TextField(
+              // icon: Icons.language,
               onChanged: (value) {
                 isoCode = value;
               }),
@@ -200,7 +200,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       var newData = data.results.firstOrNull;
       var isData = newData != null;
       final newText = await Utilities()
-          .getGoogleTranslation(AnyChatAuth.currentUser!.language, currentText);
+          .getGoogleTranslation(AnyChatAuth.currentUser.language, currentText);
       if (mounted) {
         if (isData && newData.isFinal) {
           responseText += '\n$newText';

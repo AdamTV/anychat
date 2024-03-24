@@ -1,3 +1,4 @@
+import 'package:anychat/screens/blocked_users_screen.dart';
 import 'package:anychat/screens/call_screen.dart';
 import 'package:anychat/screens/chat_screen.dart';
 import 'package:anychat/screens/conversations_screen.dart';
@@ -6,7 +7,7 @@ import 'package:anychat/screens/languages_screen.dart';
 import 'package:anychat/screens/live_translator_screen.dart';
 import 'package:anychat/screens/login_screen.dart';
 import 'package:anychat/screens/register_screen.dart';
-import 'package:anychat/screens/search_chatter_by_email_screen.dart';
+import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/screens/settings_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class NavigationService {
 
   get routes => {
         // '/addChatter': (context) => const AddChatterScreen(),
+        '/blockedUsers': (context) => const BlockedUsersScreen(),
         '/call': (context) => const CallScreen(),
         '/chat': (context) => const ChatScreen(),
         // '/contacts': (context) => const ContactsScreen(),
@@ -34,7 +36,7 @@ class NavigationService {
         '/liveTranslator': (context) => const LiveTranslatorScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/searchChatter': (context) => const SearchChatterScreen(),
+        '/searchChatter': (context) => const SearchChatterScreen(false, false),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
         '/forgotPassword': (context) => const ForgotPassword(),
@@ -46,6 +48,10 @@ class NavigationService {
 
   void goBack() {
     return navigatorKey.currentState!.pop();
+  }
+
+  Future<dynamic> push(Route<dynamic> newRoute) {
+    return navigatorKey.currentState!.push(newRoute);
   }
 
   Future<dynamic> pushNamedAndRemoveUntil(String routeName,

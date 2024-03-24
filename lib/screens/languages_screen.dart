@@ -1,9 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/utilities.dart';
-import 'package:anychat/main.dart';
-import 'package:anychat/screens/settings_screen.dart';
+import 'package:anychat/services/cache_maanger.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,20 +18,23 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   final List<String> languages =
       Set<String>.from(AnyChatLocale.isoMap.keys).toList();
   int languageIndex = 0;
+  String userLanguage = '';
 
   @override
   void initState() {
     super.initState();
-    for (var value in AnyChatLocale.isoMap.values) {
-      if (value == AnyChatAuth.currentUser!.language) {
-        break;
-      }
-      languageIndex++;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    getUserLanguage();
+    languageIndex = 0;
+    for (var value in AnyChatLocale.isoMap.values) {
+      if (value == userLanguage) {
+        break;
+      }
+      languageIndex++;
+    }
     return Scaffold(
       appBar: AppBar(
           leading: Builder(builder: (BuildContext context) {
@@ -61,11 +62,11 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   }
 
   Future<void> changeLanguage(int index) async {
+    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]!);
     setState(() {
       languageIndex = index;
+      NavigationService().goBack();
     });
-    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]!);
-    NavigationService().goBack();
   }
 
   List<SettingsTile> getLanguageTiles() {
@@ -79,5 +80,12 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
           }));
     }
     return tiles;
+  }
+
+  Future<void> getUserLanguage() async{
+    var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    setState(() {
+      userLanguage = user.locale.languageCode;
+    });
   }
 }

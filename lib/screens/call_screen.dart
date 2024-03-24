@@ -17,7 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 String? appId = '72559be0b8944a8fb70a772d196078ce';
 String channelId = AnyChatAuth.currentConversation!.id;
-final uid = AnyChatAuth.currentUser!.id.hashCode;
+final uid = AnyChatAuth.currentUser.id.hashCode;
 String token = '';
 
 class CallScreen extends StatefulWidget {
@@ -363,7 +363,7 @@ class _CallScreenState extends State<CallScreen> {
     String lastMessage = "";
 
     var responseStream = await audioTranscriber
-        .getResponseStream(AnyChatAuth.currentUser!.language);
+        .getResponseStream(AnyChatAuth.currentUser.language);
 
     responseStream.listen((data) async {
       if (data.results.isEmpty || muted) return;
@@ -396,8 +396,8 @@ class _CallScreenState extends State<CallScreen> {
   Future<void> _updateCallScreen(QuerySnapshot snapshot) async {
     final message = getMessageFromQuery(snapshot);
     if (message == null) return;
-    if (message.senderId != AnyChatAuth.currentUser!.id) {
-      final language = AnyChatAuth.currentUser!.language;
+    if (message.senderId != AnyChatAuth.currentUser.id) {
+      final language = AnyChatAuth.currentUser.language;
       final translatedText =
           await Utilities().getGoogleTranslation(language, message.text);
       setState(() {

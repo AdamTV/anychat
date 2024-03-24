@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,21 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:async/async.dart';
 
 class SearchChatterScreen extends StatefulWidget {
+  final bool addToConvo;
+  final bool blockUser;
 
-  static bool addToConvo = false;
-
-  const SearchChatterScreen({super.key});
+  const SearchChatterScreen(this.addToConvo, this.blockUser, {super.key});
 
   @override
   SearchChatterScreenState createState() => SearchChatterScreenState();
 }
 
 class SearchChatterScreenState extends State<SearchChatterScreen> {
-
   final TextEditingController _searchController = TextEditingController();
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _searchSubscription;
   List<AnyChatUser> _users = [];
   Timer? _debounce;
+
+  bool get addToConvo => super.widget.addToConvo;
+  bool get blockUser => super.widget.blockUser;
 
   _onSearchChanged() {
     _searchSubscription?.cancel();
@@ -31,7 +34,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
       _searchSubscription = searchUsersDynamically(_searchController.text)
           ?.listen((QuerySnapshot snapshot) {
         final List<AnyChatUser> newUsers =
-        snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
+            snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
         setState(() {
           _users = newUsers;
         });
@@ -41,7 +44,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? searchUsersDynamically(
       String searchText) {
-    if(searchText.isEmpty) return null;
+    if (searchText.isEmpty) return null;
     final usersRef = FirebaseFirestore.instance.collection('users');
     String searchUpperBound = searchText.substring(0, searchText.length - 1) +
         String.fromCharCode(searchText.codeUnitAt(searchText.length - 1) + 1);
@@ -89,7 +92,12 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          padding: EdgeInsets.only(
+              right: 20,
+              left: MediaQuery.of(context).orientation == Orientation.landscape
+                  ? 20
+                  : 0),
+          // padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             NavigationService().goBack();
@@ -130,22 +138,25 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
                     width: avatarRadius,
                     child: user.photoUrl.isEmpty
                         ? (user.displayName.isEmpty
-                        ? Container()
+                            ? Container()
+                            : CircleAvatar(
+                                child: Text(user.displayName.characters.first),
+                              ))
                         : CircleAvatar(
-                      child: Text(user.displayName.characters.first),
-                    ))
-                        : CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoUrl),
-                    ),
+                            backgroundImage: NetworkImage(user.photoUrl),
+                          ),
                   ),
                   onTap: () async {
-                    if (SearchChatterScreen.addToConvo) {
+                    if (blockUser) {
+                      await AnyChatAuth.currentUser.blockAccount(user.id);
+                      NavigationService().pushReplacementNamed("/blockedUsers");
+                    } else if (addToConvo) {
                       await AnyChatUser.addUserToConversation(user);
-                    }else{
+                    } else {
                       await AnyChatUser.createConversation(user);
                     }
                     NavigationService().pushReplacementNamed("/chat");
-                    },
+                  },
                 );
               },
             ),

@@ -56,8 +56,8 @@ class Notifications implements Disposable {
       AnyChatAuth.currentConversation = convo;
       if (payload.toLowerCase().contains('chat')) {
         var info = await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser!.id);
-        AnyChatAuth.currentUser!.conversations
+            AnyChatAuth.currentUser.id);
+        AnyChatAuth.currentUser.conversations
             .add(info.firstWhere((element) => element.id == conversationId));
         await Utilities().globalKey.currentState!.pushNamed('/chat');
       }
@@ -80,8 +80,8 @@ class Notifications implements Disposable {
 
   Future<void> showNotification(
       String? title, String body, String payload) async {
-    if (CacheManager().getCachedUserData()?.notificationsEnabled != null &&
-        ! CacheManager().getCachedUserData()!.notificationsEnabled) {
+    var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    if (!user.notificationsEnabled) {
       return;
     }
     logger.d('showNotification');
