@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/notifier_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +17,6 @@ class CacheManager {
   late final notifierService = Provider.of<NotifierService>(
       Utilities().globalKey.currentContext!,
       listen: false);
-
   CacheManager._privateConstructor();
   static final CacheManager _instance = CacheManager._privateConstructor();
 
@@ -30,15 +32,18 @@ class CacheManager {
   Future<void> cacheUserData(UserData data) async {
     try {
       String serializedData = jsonEncode(data.toJson());
+      if (_getCachedUserData()?.theme != data.theme) {
+        notifierService.updateTheme(data.theme);
+      } else if (_getCachedUserData()?.locale != data.locale){
+        notifierService.updateLocale(data.locale);
+      }
       await prefs.setString('user_data', serializedData);
-      notifierService.updateLocale(data.locale);
-      notifierService.updateTheme(data.theme);
     } catch (e) {
       logger.e('Error caching user data: $e');
     }
   }
 
-  UserData? getCachedUserData() {
+  UserData? _getCachedUserData() {
     String? serializedData = prefs.getString('user_data');
     return serializedData != null
         ? UserData.fromJson(jsonDecode(serializedData))
@@ -47,19 +52,18 @@ class CacheManager {
 
   Future<UserData> getUserDataWithCache(String userId) async {
     // Try to get data from cache first
-    UserData? cachedData = getCachedUserData();
+    UserData? cachedData = _getCachedUserData();
     if (cachedData != null) {
       return cachedData;
     }
 
     // If cache miss, fetch from database and update cache
-    UserData dataFromDb = await fetchUserDataFromDatabase(userId);
+    UserData dataFromDb = await _fetchUserDataFromDatabase(userId);
     await cacheUserData(dataFromDb);
     return dataFromDb;
   }
 
-  // Placeholder for fetching data from a database
-  Future<UserData> fetchUserDataFromDatabase(String userId) async {
+  Future<UserData> _fetchUserDataFromDatabase(String userId) async {
     AnyChatUser user = await AnyChatUser.getUserById(userId);
     return UserData(
         id: user.id,
@@ -68,6 +72,42 @@ class CacheManager {
         theme: UserData.themeFromString(user.theme),
         locale: UserData.localeFromString(user.language),
         notificationsEnabled: user.notificationsEnabled);
+  }
+
+  Future<ThemeData> loadThemeFromCache() async {
+    try {
+      if (AnyChatAuth.isUserInitialized()) {
+        UserData userData =
+            await getUserDataWithCache(AnyChatAuth.currentUser.id);
+        return userData.theme;
+      } else {
+        UserData? userData = _getCachedUserData();
+        return userData!.theme;
+      }
+    } catch (e) {
+      logger.e("Unable to load theme from cache: ", e.toString());
+      return kLightTheme;
+    }
+  }
+
+  loadLocaleFromCache() async {
+    try {
+      if (AnyChatAuth.isUserInitialized()) {
+        UserData userData =
+            await getUserDataWithCache(AnyChatAuth.currentUser.id);
+        return userData.locale;
+      } else {
+        UserData? userData = _getCachedUserData();
+        return userData?.locale;
+      }
+    } catch (e) {
+      logger.e("Unable to load theme from cache: ", e);
+      return UserData.localeFromString('en');
+    }
+  }
+
+  clearUserData() async {
+    await prefs.setString("user_data", "");
   }
 }
 
@@ -80,12 +120,24 @@ class UserData {
   bool notificationsEnabled;
 
   static ThemeData themeFromString(String themeStr) {
-    return themeStr == 'dark' ? ThemeData.dark() : ThemeData.light();
+    if (Utilities().globalKey.currentContext != null) {
+      return themeStr == 'dark' ? ThemeData.dark() : ThemeData.light();
+    } else {
+      return ThemeData.light();
+    }
+  }
+
+  static String themeToString(ThemeData? theme) {
+    return theme?.brightness == Brightness.dark ? 'dark' : 'light';
   }
 
   static Locale localeFromString(String localeStr) {
     var parts = localeStr.split('_');
     return Locale(parts[0], parts.length > 1 ? parts[1] : null);
+  }
+
+  static String localeToString(Locale locale) {
+    return locale.languageCode.toString();
   }
 
   ThemeMode getThemeMode() {
@@ -135,11 +187,5 @@ class UserData {
       locale: locale,
       notificationsEnabled: notificationsEnabled,
     );
-  }
-
-  static themeToString(ThemeData? theme) {
-    return theme?.brightness == Brightness.dark
-        ? AppLocalizations.of(Utilities().globalKey.currentContext!)?.dark
-        : AppLocalizations.of(Utilities().globalKey.currentContext!)?.light;
   }
 }

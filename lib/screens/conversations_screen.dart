@@ -10,7 +10,7 @@ import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/chat_screen.dart';
-import 'package:anychat/screens/search_chatter_by_email_screen.dart';
+import 'package:anychat/screens/search_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +96,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.title,
-                  style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
               ),
               ListTile(
@@ -142,8 +141,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                                         .startConversation),
                                     onPressed: () {
                                       AnyChatAuth.currentConversation = null;
-                                      SearchChatterScreen.addToConvo =
-                                          false;
                                       Navigator.pushNamed(
                                           context, "/searchChatter");
                                     },
@@ -158,7 +155,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                                       endIndent:
                                           MediaQuery.of(context).size.width *
                                               0.25,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context).dividerColor,
                                     ),
                                 itemCount: conversationWidgets.length,
                                 itemBuilder: (_, int index) =>
@@ -177,10 +174,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   Future<void> loadConversations() async {
     var ids = <String>[];
-    AnyChatAuth.currentUser!.conversations =
+    AnyChatAuth.currentUser.conversations =
         await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser!.id);
-    for (final conversation in AnyChatAuth.currentUser!.conversations) {
+            AnyChatAuth.currentUser.id);
+    for (final conversation in AnyChatAuth.currentUser.conversations) {
       Conversation temp;
       temp = Conversation.fromSnapshot(await FirebaseFirestore.instance
           .collection("conversations")
@@ -191,7 +188,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         logger.d(temp.id);
         ids.add(temp.id);
         List<String?> users = temp.participants;
-        logger.d(AnyChatAuth.currentUser!.id);
+        logger.d(AnyChatAuth.currentUser.id);
         var chatters = <AnyChatUser>[];
         String? text;
         var snapshot = await FirebaseFirestore.instance
@@ -201,7 +198,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             .orderBy('timestamp', descending: false)
             .get();
         for (var i = 0; i < temp.participants.length; i++) {
-          if (users[i] != AnyChatAuth.currentUser!.id) {
+          if (users[i] != AnyChatAuth.currentUser.id) {
             try {
               var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
                   .instance
@@ -222,10 +219,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                 message = snapshot.docs.map((DocumentSnapshot doc) {
                   return AnyChatMessage.fromSnapshot(doc);
                 }).last;
-                var info = AnyChatAuth.currentUser!.conversations.firstWhere(
+                var info = AnyChatAuth.currentUser.conversations.firstWhere(
                     (element) =>
                         element.id == AnyChatAuth.currentConversation!.id);
-                final language = message.senderId == AnyChatAuth.currentUser!.id
+                final language = message.senderId == AnyChatAuth.currentUser.id
                     ? info.outgoingLanguage
                     : info.incomingLanguage;
                 text = "${message.text}\n\n"
@@ -255,10 +252,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         //       .get()));
         //   text = message.text;
         // }
-        if (chatters.isNotEmpty && temp.timestamp != null && mounted) {
-          text ??= AppLocalizations.of(context)!.newConversation;
-          insertSorted(slidable(chatters, temp, text), temp);
-        }
+
+        // if (chatters.isNotEmpty && temp.timestamp != null && mounted) {
+        //   text ??= AppLocalizations.of(context)!.newConversation;
+        //   insertSorted(slidable(chatters, temp, text), temp);
+        // }
       }
     }
     if (mounted) {
@@ -280,7 +278,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     var index = sortedMap.keys.toList().indexOf(conversation.id);
     conversationWidgets.removeWhere((element) => element.key == slidable.key);
     if (!conversation.participants.any((element) =>
-        AnyChatAuth.currentUser!.blockedAccounts.contains(element))) {
+        AnyChatAuth.currentUser.blockedAccounts.contains(element))) {
       setState(() {
         _isLoadedConversations = true;
         conversationWidgets.insert(index, slidable);
@@ -306,24 +304,23 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       return;
     }
     Conversation conversation = conversations.last;
-    AnyChatAuth.currentUser ??=
-        await AnyChatUser.getUserById(AnyChatAuth.currentUser!.id);
+    AnyChatAuth.currentUser;
     AnyChatUser? firstChatter = AnyChatAuth.currentUser;
     try {
       firstChatter = await AnyChatUser.getUserById(conversation.participants
-          .firstWhere((element) => element != AnyChatAuth.currentUser!.id));
+          .firstWhere((element) => element != AnyChatAuth.currentUser.id));
     } catch (e) {
       logger.e(e);
     }
     if (AnyChatAuth.currentConversation == null) {
       await initConvoInfo();
     }
-    if (!AnyChatAuth.currentUser!.conversations
+    if (!AnyChatAuth.currentUser.conversations
         .any((element) => element.id == conversation.id)) {
-      if (conversation.participants.contains(AnyChatAuth.currentUser!.id)) {
-        AnyChatAuth.currentUser!.conversations.add(ConversationInfo(
+      if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
+        AnyChatAuth.currentUser.conversations.add(ConversationInfo(
             conversation.id,
-            AnyChatAuth.currentUser!.language,
+            AnyChatAuth.currentUser.language,
             firstChatter!.language));
       } else {
         logger
@@ -331,17 +328,17 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         return;
       }
     }
-    if (!conversation.participants.contains(AnyChatAuth.currentUser!.id)) {
+    if (!conversation.participants.contains(AnyChatAuth.currentUser.id)) {
       logger.d(
-          'conversation participants does not contain ${AnyChatAuth.currentUser!.id}');
+          'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
       return;
     }
     List<String?> users = conversation.participants;
     var chatters = <AnyChatUser>[];
     late String text;
     for (var i = 0; i < conversation.participants.length; i++) {
-      logger.d(AnyChatAuth.currentUser!.id);
-      if (users[i] != AnyChatAuth.currentUser!.id) {
+      logger.d(AnyChatAuth.currentUser.id);
+      if (users[i] != AnyChatAuth.currentUser.id) {
         var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
             .collection("users")
             .doc(users[i])
@@ -372,14 +369,15 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
               null);
         }
         try {
-          var info = AnyChatAuth.currentUser!.conversations
+          var info = AnyChatAuth.currentUser.conversations
               .firstWhere((element) => element.id == conversation.id);
-          final language = message.senderId == AnyChatAuth.currentUser!.id
+          final language = message.senderId == AnyChatAuth.currentUser.id
               ? info.outgoingLanguage
               : info.incomingLanguage;
           text = "${message.text}\n\n"
               "${await Utilities().getGoogleTranslation(language, message.text)}";
-        } catch (e) {
+        } catch (e, stack) {
+          logger.e("Error in _updateConversations", e, stack);
           text = AppLocalizations.of(
                   mounted ? context : Utilities().globalKey.currentContext!)!
               .newConversation;
@@ -453,7 +451,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     var conversation = Conversation.fromSnapshot(
         await snapshot.docs.last.reference.parent.parent!.get());
     if (mounted) {
-      if (AnyChatAuth.currentUser!.conversations
+      if (AnyChatAuth.currentUser.conversations
           .any((element) => element.id == conversation.id)) {
         var chatters = <AnyChatUser>[];
         if (conversation.participants.length == 1) {
@@ -474,7 +472,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           // }
         } else {
           var chatterIds = conversation.participants
-              .where((element) => element != AnyChatAuth.currentUser!.id);
+              .where((element) => element != AnyChatAuth.currentUser.id);
           for (var id in chatterIds) {
             if (chatters.where((element) => element.id == id).isEmpty) {
               try {
@@ -489,11 +487,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             }
           }
         }
-        if (AnyChatAuth.currentUser!.conversations
+        if (AnyChatAuth.currentUser.conversations
             .any((element) => element.id == conversation.id)) {
-          var info = AnyChatAuth.currentUser!.conversations
+          var info = AnyChatAuth.currentUser.conversations
               .firstWhere((element) => element.id == conversation.id);
-          final language = message.senderId == AnyChatAuth.currentUser!.id
+          final language = message.senderId == AnyChatAuth.currentUser.id
               ? info.outgoingLanguage
               : info.incomingLanguage;
           final text = conversation.participants.contains(message.senderId)
@@ -512,10 +510,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     }
     // logger.d("_notification");
     // logger.d(_notification);
-    if (message.senderId != AnyChatAuth.currentUser!.id) {
+    if (message.senderId != AnyChatAuth.currentUser.id) {
       var text = conversation.participants.contains(message.senderId)
           ? "${message.text}\n\n"
-              "${await Utilities().getGoogleTranslation(AnyChatAuth.currentUser!.language, message.text)}"
+              "${await Utilities().getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}"
           : AppLocalizations.of(
                   mounted ? context : Utilities().globalKey.currentContext!)!
               .thisPersonHasLeftConversation;
@@ -828,15 +826,15 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   }
 
   Future<void> initConvoInfo() async {
-    AnyChatAuth.currentUser!.conversations =
+    AnyChatAuth.currentUser.conversations =
         await ConversationInfo.getAllConversationInfo(
-            AnyChatAuth.currentUser!.id);
+            AnyChatAuth.currentUser.id);
   }
 
   Future<void> initChatSubscriptions() async {
     await initConvoInfo();
     _chatMessageSubscriptions.clear();
-    for (var conversationInfo in AnyChatAuth.currentUser!.conversations) {
+    for (var conversationInfo in AnyChatAuth.currentUser.conversations) {
       _chatMessageSubscriptions.add(
           loadAllChatMessages(conversationInfo.id).listen(_sendNotification));
       // AnyChatAuth.currentUser!.addSubscription(sub);

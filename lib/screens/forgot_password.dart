@@ -34,9 +34,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               AppLocalizations.of(context)!.enterYourEmail,
               style: const TextStyle(fontSize: 32),
             ),
-            RoundedInputField(
-              icon: Icons.mail,
-              hintText: AppLocalizations.of(context)!.email,
+            TextField(
+              // icon: Icons.mail,
+              decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.email),
               onChanged: (value) {
                 _email = value;
               },

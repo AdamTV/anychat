@@ -16,7 +16,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import 'components/utilities.dart';
 import 'firebase_options.dart';
 
 var logger = Logger(
@@ -33,7 +32,12 @@ var logger = Logger(
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+    final notifierService = NotifierService();
     await CacheManager().initSharedPrefs();
+    ThemeData cachedTheme = await CacheManager().loadThemeFromCache();
+    Locale locale = await CacheManager().loadLocaleFromCache();
+    notifierService.updateLocale(locale);
+    notifierService.updateTheme(cachedTheme);
     Notifications().init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -60,17 +64,14 @@ void main() async {
           )
           .then((value) async => {
                 Ads.init(),
-                runApp(
-                    ChangeNotifierProvider<NotifierService>(
-                      create: (context) => NotifierService(),
-                      child: const AnyChat(),
-                  )
-                ),
-                AuthService.listenToAuthChanges(),
+                await AuthService.listenToAuthChanges(),
+                runApp(ChangeNotifierProvider<NotifierService>(
+                  create: (context) => NotifierService(),
+                  child: const AnyChat(),
+                )),
               })
-          .catchError((onError) => {
-          logger.e("Error in main 3", onError, onError)
-      });
+          .catchError(
+              (onError) => {logger.e("Error in main 3", onError, onError)});
     } on Exception catch (e, s) {
       logger.e("Error in main 2", e, s);
     }
@@ -79,33 +80,23 @@ void main() async {
   }
 }
 
-class AnyChat extends StatefulWidget {
+class AnyChat extends StatelessWidget {
   const AnyChat({super.key});
 
   @override
-  State<AnyChat> createState() => _AnyChatState();
-}
-
-class _AnyChatState extends State<AnyChat> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    logger.d("Entering _AnyChatState.build");
+    logger.i("Entering _AnyChatState.build");
+
     final notifierService = Provider.of<NotifierService>(context);
 
-    // return Consumer<NotifierService>(builder: (context, settings, child) {
+    return Consumer<NotifierService>(builder: (context, settings, child) {
       return MaterialApp(
-          navigatorKey:
-          NavigationService().navigatorKey,
+          navigatorKey: NavigationService().navigatorKey,
           // Use the navigatorKey here
           routes: NavigationService().routes,
           debugShowCheckedModeBanner: false,
           onGenerateTitle: (BuildContext context) =>
-          AppLocalizations.of(context)!.title,
+              AppLocalizations.of(context)!.title,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -126,8 +117,14 @@ class _AnyChatState extends State<AnyChat> {
           locale: notifierService.locale,
           theme: kLightTheme,
           darkTheme: kDarkTheme,
-          themeMode: notifierService.themeData.brightness == Brightness.light ? ThemeMode.light : ThemeMode.dark,
+          themeMode: notifierService.themeData.brightness == Brightness.light
+              ? ThemeMode.light
+              : ThemeMode.dark,
           home: const WelcomeScreen());
-    // });
+    });
   }
 }
+
+// class _AnyChatState extends State<AnyChat> {
+
+// }

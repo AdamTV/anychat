@@ -2,6 +2,7 @@ import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/block_chatter_search_screen.dart';
+import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,18 +54,18 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
         onPressed: (ctx) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (BuildContext context) {
-            return const BlockChatterSearchScreen();
+            return const SearchChatterScreen(false, true);
           }));
         }));
 
-    for (int i = 0; i < AnyChatAuth.currentUser!.blockedAccounts.length; i++) {
+    for (int i = 0; i < AnyChatAuth.currentUser.blockedAccounts.length; i++) {
       var user = await AnyChatUser.getUserById(
-          AnyChatAuth.currentUser!.blockedAccounts[i]);
+          AnyChatAuth.currentUser.blockedAccounts[i]);
       setState(() {
         tiles.add(SettingsTile(
             title: Text(user.displayName),
             onPressed: (BuildContext context) async {
-              await AnyChatAuth.currentUser!.unblockAccount(user.id);
+              await AnyChatAuth.currentUser.unblockAccount(user.id);
               getBlockedAccountNames();
             }));
       });

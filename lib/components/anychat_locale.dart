@@ -237,7 +237,7 @@ class AnyChatLocale {
       languages = await Devicelocale.preferredLanguages;
       //logger.d(languages);
     } on PlatformException {
-      logger.d("Error obtaining preferred languages");
+      logger.e("Error obtaining preferred languages");
     }
     try {
       // var locale = Devicelocale();
