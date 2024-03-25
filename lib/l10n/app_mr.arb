@@ -1,5 +1,4 @@
 {
-    "@@locale": "mr",
     "accessContactDataDenied": "संपर्क डेटामध्ये प्रवेश नाकारला",
     "accessContactDataDisabled": "डिव्हाइसवर संपर्क डेटा उपलब्ध नाही",
     "accountCreatedEnterSettings": "नोंदणी यशस्वी! कृपया आपली माहिती येथे प्रविष्ट करा.",
@@ -224,7 +223,7 @@
     "theme": "थीम",
     "thisFeatureIsUnderMaintenance": "हे वैशिष्ट्य सध्या देखरेखीखाली आहे, गैरसोयीबद्दल आम्ही दिलगीर आहोत.",
     "thisPersonHasLeftConversation": "या व्यक्तीने संभाषण सोडले आहे.",
-    "title": "कोणतीही चॅट",
+    "title": "AnyChat",
     "toAnyChat": "एनीचॅटला",
     "toJoinAnyChatConfirmPrivacyPolicy": "एनीचॅटमध्ये सामील होण्यासाठी, खालील बॉक्समध्ये चेक करुन तुम्ही आमचे गोपनीयता धोरण वाचले आहे याची खात्री करुन घ्या.",
     "toTheConversation": "संभाषण करण्यासाठी.",

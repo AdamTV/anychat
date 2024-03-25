@@ -1,5 +1,4 @@
 {
-    "@@locale": "tt",
     "accessContactDataDenied": "Контакт мәгълүматларына керү рөхсәт ителмәгән",
     "accessContactDataDisabled": "Контакт мәгълүматлары җайланмада юк",
     "accountCreatedEnterSettings": "Теркәлү уңышлы! Зинһар, монда мәгълүматыгызны кертегез.",
@@ -224,7 +223,7 @@
     "theme": "Тема",
     "thisFeatureIsUnderMaintenance": "Бу үзенчәлек хәзерге вакытта төп шартларда, уңайсызлык өчен гафу үтенәбез.",
     "thisPersonHasLeftConversation": "Бу кеше сөйләшүне калдырды.",
-    "title": "Anyәр сүзнең",
+    "title": "AnyChat",
     "toAnyChat": "Anyәр сүзнең",
     "toJoinAnyChatConfirmPrivacyPolicy": "AnyChatка кушылу өчен, иң элек астагы рамканы тикшереп безнең Хосусыйлык Политикасын укыганыгызны раслагыз.",
     "toTheConversation": "әңгәмәгә.",

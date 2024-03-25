@@ -1,5 +1,4 @@
 {
-    "@@locale": "rw",
     "accessContactDataDenied": "Kubona amakuru yamakuru arahakana",
     "accessContactDataDisabled": "Amakuru yamakuru ntabwo aboneka kubikoresho",
     "accountCreatedEnterSettings": "Kwiyandikisha byagenze neza! Nyamuneka andika amakuru yawe hano.",
@@ -224,7 +223,7 @@
     "theme": "Insanganyamatsiko",
     "thisFeatureIsUnderMaintenance": "Iyi mikorere kuri ubu iri munsi yingenzi, Turasaba imbabazi kubibazo.",
     "thisPersonHasLeftConversation": "Uyu muntu yavuye mu kiganiro.",
-    "title": "Ibyo ari byo byose",
+    "title": "AnyChat",
     "toAnyChat": "Kuri Icyo ari cyo cyose",
     "toJoinAnyChatConfirmPrivacyPolicy": "Kwinjira muri AnyChat, banza wemeze ko wasomye Politiki Yibanga yawe kugenzura agasanduku kari hepfo.",
     "toTheConversation": "Kuri Ikiganiro.",

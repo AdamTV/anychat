@@ -1,5 +1,4 @@
 {
-    "@@locale": "yi",
     "accessContactDataDenied": "אַקסעס צו קאָנטאַקט דאַטן געלייקנט",
     "accessContactDataDisabled": "קאָנטאַקט דאַטן זענען נישט בנימצא אויף מיטל",
     "accountCreatedEnterSettings": "רעגיסטראַציע געראָטן! ביטע אַרייַן דיין אינפֿאָרמאַציע דאָ.",
@@ -224,7 +223,7 @@
     "theme": "טעמע",
     "thisFeatureIsUnderMaintenance": "די פונקציע איז דערווייַל אונטער וישאַלט, מיר אַנטשולדיקן פֿאַר די ינקאַנוויניאַנס.",
     "thisPersonHasLeftConversation": "דער מענטש האט פאַרלאָזן דעם שמועס.",
-    "title": "אַניטשאַט",
+    "title": "AnyChat",
     "toAnyChat": "צו אַניטשאַט",
     "toJoinAnyChatConfirmPrivacyPolicy": "ערשטער, באַשטעטיקן אַז איר האָט לייענען אונדזער פּריוואַטקייט פּאָליטיק צו טשעק צו AnyChat.",
     "toTheConversation": "צום שמועס.",

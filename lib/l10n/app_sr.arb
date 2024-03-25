@@ -1,5 +1,4 @@
 {
-    "@@locale": "sr",
     "accessContactDataDenied": "Приступ контакт подацима одбијен",
     "accessContactDataDisabled": "Подаци о контактима нису доступни на уређају",
     "accountCreatedEnterSettings": "Пријава успешна! Молимо унесите своје податке овде.",
@@ -224,7 +223,7 @@
     "theme": "Тема",
     "thisFeatureIsUnderMaintenance": "Ова функција је тренутно у фази одржавања, извињавамо се због непријатности.",
     "thisPersonHasLeftConversation": "Ова особа је напустила разговор.",
-    "title": "АниЦхат",
+    "title": "AnyChat",
     "toAnyChat": "на АниЦхат",
     "toJoinAnyChatConfirmPrivacyPolicy": "Да бисте се придружили АниЦхат-у, прво потврдите да сте прочитали нашу Политику приватности потврђивањем поља у наставку.",
     "toTheConversation": "на разговор.",

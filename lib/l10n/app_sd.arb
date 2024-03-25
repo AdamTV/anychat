@@ -1,5 +1,4 @@
 {
-    "@@locale": "sd",
     "accessContactDataDenied": "رابطي جي ڊيٽا تائين رسائي رد ڪئي وئي",
     "accessContactDataDisabled": "رابطي واري ڊيٽا ڊوائيس تي دستياب ناهي",
     "accountCreatedEnterSettings": "رجسٽريشن ڪامياب ٿي! مهرباني ڪري پنهنجي معلومات هتي داخل ڪريو.",
@@ -224,7 +223,7 @@
     "theme": "موضوع",
     "thisFeatureIsUnderMaintenance": "ھي مضمون ھن وقت سنڀالي رھيو آھي، اسان تڪليف لاءِ معافي گھرون ٿا.",
     "thisPersonHasLeftConversation": "هن شخص ڳالهين کي ڇڏي ڏنو.",
-    "title": "ڪي به",
+    "title": "AnyChat",
     "toAnyChat": "ڪي چيٽ ڏانھن",
     "toJoinAnyChatConfirmPrivacyPolicy": "AnyChat ۾ شامل ٿيڻ لاءِ ، پهرين تصديق ڪريو ته توهان هيٺ ڏنل خاني تي ٽڪ ڪري اسان جي رازداري پاليسي پڙهائي آهي.",
     "toTheConversation": "ڳالهين ڏانهن.",

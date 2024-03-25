@@ -1,5 +1,4 @@
 {
-    "@@locale": "tk",
     "accessContactDataDenied": "Aragatnaşyk maglumatlaryna girmek gadagan edildi",
     "accessContactDataDisabled": "Aragatnaşyk maglumatlary enjamda elýeterli däl",
     "accountCreatedEnterSettings": "Hasaba alyş üstünlikli! Maglumatyňyzy şu ýere ýazmagyňyzy haýyş edýäris.",
@@ -224,7 +223,7 @@
     "theme": "Mowzuk",
     "thisFeatureIsUnderMaintenance": "Bu aýratynlyk häzirki wagtda dowam etdirilýär, oňaýsyzlyk üçin ötünç soraýarys.",
     "thisPersonHasLeftConversation": "Bu adam söhbetdeşlikden çykdy.",
-    "title": "Islendik",
+    "title": "AnyChat",
     "toAnyChat": "AnyChat-a",
     "toJoinAnyChatConfirmPrivacyPolicy": "AnyChat-a goşulmak üçin ilki bilen aşakdaky gutujygy belläp, Gizlinlik Policyörelgelerimizi okandygyňyzy tassyklaň.",
     "toTheConversation": "söhbetdeşlige.",
