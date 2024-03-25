@@ -1,5 +1,4 @@
 {
-    "@@locale": "ur",
     "accessContactDataDenied": "رابطے کے ڈیٹا تک رسائی سے انکار کردیا گیا",
     "accessContactDataDisabled": "آلہ پر رابطہ کا ڈیٹا دستیاب نہیں ہے",
     "accountCreatedEnterSettings": "رجسٹریشن کامیاب! براہ کرم یہاں اپنی معلومات درج کریں۔",
@@ -224,7 +223,7 @@
     "theme": "خیالیہ",
     "thisFeatureIsUnderMaintenance": "یہ فیچر فی الحال دیکھ بھال کے تحت ہے، ہم زحمت کے لیے معذرت خواہ ہیں۔",
     "thisPersonHasLeftConversation": "اس شخص نے گفتگو چھوڑ دی ہے۔",
-    "title": "کوئی چیٹ",
+    "title": "AnyChat",
     "toAnyChat": "کوئی بھی چیٹ",
     "toJoinAnyChatConfirmPrivacyPolicy": "کسی بھی چیٹ میں شامل ہونے کے لئے ، پہلے توثیق کریں کہ آپ نے نیچے دیئے گئے باکس کو چیک کرکے ہماری رازداری کی پالیسی پڑھی ہے۔",
     "toTheConversation": "بات چیت کرنے کے لئے.",

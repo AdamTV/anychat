@@ -1,5 +1,4 @@
 {
-    "@@locale": "mi",
     "accessContactDataDenied": "Kua whakakahoretia te urunga ki nga raraunga whakapā",
     "accessContactDataDisabled": "Kaore i te waatea nga raraunga whakapā i runga i to taputapu",
     "accountCreatedEnterSettings": "Kua angitu te rehitatanga! Tena koa whakauruhia o korero ki konei.",
@@ -224,7 +223,7 @@
     "theme": "Kaupapa",
     "thisFeatureIsUnderMaintenance": "I tenei wa kei te whakamaaramatia tenei ahuatanga, Ka mihi matou mo te raru.",
     "thisPersonHasLeftConversation": "Kua waiho e tenei tangata nga korero.",
-    "title": "Tetahi",
+    "title": "AnyChat",
     "toAnyChat": "ki AnyChat",
     "toJoinAnyChatConfirmPrivacyPolicy": "Hei whakauru atu ki a AnyChat, tuatahi whakaarohia kua panuihia e koe ta maatau Kaupapahere Tūmataiti ma te tohu i te pouaka i raro nei.",
     "toTheConversation": "ki te korero.",

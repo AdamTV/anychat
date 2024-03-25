@@ -1,5 +1,4 @@
 {
-    "@@locale": "xh",
     "accessContactDataDenied": "Ukufikelela kwiinkcukacha zoqhagamshelwano kunqatshelwe",
     "accessContactDataDisabled": "Idatha yoqhakamshelwano ayifumaneki kwisixhobo",
     "accountCreatedEnterSettings": "Ubhaliso luphumelele! Nceda ufake ulwazi lwakho apha.",
@@ -224,7 +223,7 @@
     "theme": "Umxholo",
     "thisFeatureIsUnderMaintenance": "Eli nqaku ngoku liphantsi kwe-maintenace, Siyaxolisa ngenkxamleko.",
     "thisPersonHasLeftConversation": "Lomntu uyishiyile incoko.",
-    "title": "Nantoni na",
+    "title": "AnyChat",
     "toAnyChat": "kwi-AnyChat",
     "toJoinAnyChatConfirmPrivacyPolicy": "Ukujoyina i-AnyChat, qala uqinisekise ukuba uyayifunda imigaqo-nkqubo yethu yabucala ngokujonga ibhokisi engezantsi.",
     "toTheConversation": "Kwincoko.",

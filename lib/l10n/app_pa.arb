@@ -1,5 +1,4 @@
 {
-    "@@locale": "pa",
     "accessContactDataDenied": "ਸੰਪਰਕ ਡੇਟਾ ਤੱਕ ਪਹੁੰਚ ਤੋਂ ਇਨਕਾਰ ਕੀਤਾ ਗਿਆ",
     "accessContactDataDisabled": "ਸੰਪਰਕ ਡਾਟਾ ਡਿਵਾਈਸ ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ",
     "accountCreatedEnterSettings": "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ! ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਜਾਣਕਾਰੀ ਇੱਥੇ ਭਰੋ.",
@@ -224,7 +223,7 @@
     "theme": "ਥੀਮ",
     "thisFeatureIsUnderMaintenance": "ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਵਰਤਮਾਨ ਵਿੱਚ ਦੇਖਭਾਲ ਅਧੀਨ ਹੈ, ਅਸੀਂ ਅਸੁਵਿਧਾ ਲਈ ਮੁਆਫੀ ਚਾਹੁੰਦੇ ਹਾਂ।",
     "thisPersonHasLeftConversation": "ਇਸ ਵਿਅਕਤੀ ਨੇ ਗੱਲਬਾਤ ਛੱਡ ਦਿੱਤੀ ਹੈ.",
-    "title": "ਕੋਈ ਵੀ",
+    "title": "AnyChat",
     "toAnyChat": "ਕੋਈ ਵੀ",
     "toJoinAnyChatConfirmPrivacyPolicy": "ਕਿਸੇ ਵੀ ਚੀਟ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਣ ਲਈ, ਪਹਿਲਾਂ ਇਹ ਪੁਸ਼ਟੀ ਕਰੋ ਕਿ ਤੁਸੀਂ ਹੇਠਾਂ ਦਿੱਤੇ ਬਾਕਸ ਨੂੰ ਵੇਖ ਕੇ ਸਾਡੀ ਗੋਪਨੀਯਤਾ ਨੀਤੀ ਨੂੰ ਪੜਿਆ ਹੈ.",
     "toTheConversation": "ਗੱਲਬਾਤ ਕਰਨ ਲਈ.",

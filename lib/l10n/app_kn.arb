@@ -1,5 +1,4 @@
 {
-    "@@locale": "kn",
     "accessContactDataDenied": "ಸಂಪರ್ಕ ಡೇಟಾಗೆ ಪ್ರವೇಶವನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ",
     "accessContactDataDisabled": "ಸಂಪರ್ಕ ಡೇಟಾ ಸಾಧನದಲ್ಲಿ ಲಭ್ಯವಿಲ್ಲ",
     "accountCreatedEnterSettings": "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ಇಲ್ಲಿ ನಮೂದಿಸಿ.",
@@ -224,7 +223,7 @@
     "theme": "ಥೀಮ್",
     "thisFeatureIsUnderMaintenance": "ಈ ವೈಶಿಷ್ಟ್ಯವು ಪ್ರಸ್ತುತ ನಿರ್ವಹಣೆಯಲ್ಲಿದೆ, ಅನಾನುಕೂಲತೆಗಾಗಿ ನಾವು ಕ್ಷಮೆಯಾಚಿಸುತ್ತೇವೆ.",
     "thisPersonHasLeftConversation": "ಈ ವ್ಯಕ್ತಿಯು ಸಂಭಾಷಣೆಯನ್ನು ತೊರೆದಿದ್ದಾನೆ.",
-    "title": "ಎನಿಚಾಟ್",
+    "title": "AnyChat",
     "toAnyChat": "AnyChat ಗೆ",
     "toJoinAnyChatConfirmPrivacyPolicy": "AnyChat ಗೆ ಸೇರಲು, ಕೆಳಗಿನ ಪೆಟ್ಟಿಗೆಯನ್ನು ಪರಿಶೀಲಿಸುವ ಮೂಲಕ ನೀವು ನಮ್ಮ ಗೌಪ್ಯತೆ ನೀತಿಯನ್ನು ಓದಿದ್ದೀರಿ ಎಂದು ಮೊದಲು ದೃ irm ೀಕರಿಸಿ.",
     "toTheConversation": "ಸಂಭಾಷಣೆಗೆ.",

@@ -1,5 +1,4 @@
 {
-    "@@locale": "km",
     "accessContactDataDenied": "ការចូលប្រើទិន្នន័យទំនាក់ទំនងត្រូវបានបដិសេធ",
     "accessContactDataDisabled": "ទិន្នន័យទំនាក់ទំនងមិនមាននៅលើឧបករណ៍ទេ",
     "accountCreatedEnterSettings": "ការចុះឈ្មោះជោគជ័យ! សូមបញ្ចូលព័ត៌មានរបស់អ្នកនៅទីនេះ។",
@@ -224,7 +223,7 @@
     "theme": "ស្បែក",
     "thisFeatureIsUnderMaintenance": "មុខងារនេះបច្ចុប្បន្នកំពុងស្ថិតក្រោមការគ្រប់គ្រង យើងខ្ញុំសូមអភ័យទោសចំពោះភាពរអាក់រអួល។",
     "thisPersonHasLeftConversation": "មនុស្សនេះបានចាកចេញពីការសន្ទនា។",
-    "title": "អាន់ឆាត",
+    "title": "AnyChat",
     "toAnyChat": "ទៅអូខេស៊ី",
     "toJoinAnyChatConfirmPrivacyPolicy": "ដើម្បីចូលរួមជាមួយ AnyChat ដំបូងត្រូវបញ្ជាក់ថាអ្នកបានអានគោលការណ៍ភាពឯកជនរបស់យើងដោយធីកប្រអប់ខាងក្រោម។",
     "toTheConversation": "ទៅការសន្ទនា។",

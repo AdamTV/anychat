@@ -1,5 +1,4 @@
 {
-    "@@locale": "so",
     "accessContactDataDenied": "Helitaanka xogta xiriirka waa la diiday",
     "accessContactDataDisabled": "Xogta xiriirka lama heli karo qalabka",
     "accountCreatedEnterSettings": "Diiwaangelinta waa lagu guuleystay! Fadlan ku qor macluumaadkaaga halkan.",
@@ -224,7 +223,7 @@
     "theme": "Dulucda",
     "thisFeatureIsUnderMaintenance": "Muuqaalkan hadda waxa uu ku socdaa badbaado, waxaanu ka cudur daaranaynaa dhibka.",
     "thisPersonHasLeftConversation": "Qofkani wuu ka baxay wadahadalka.",
-    "title": "Xulka wararka oo dhan",
+    "title": "AnyChat",
     "toAnyChat": "ku socota AnyChat",
     "toJoinAnyChatConfirmPrivacyPolicy": "Si aad ugu soo biirto AnyChat, marka hore xaqiiji inaad aqrisay Nidaamkeenna Khaaska ah adoo calaamadeynaya sanduuqa hoose.",
     "toTheConversation": "wadahadalka.",

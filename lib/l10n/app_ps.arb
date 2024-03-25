@@ -1,5 +1,4 @@
 {
-    "@@locale": "ps",
     "accessContactDataDenied": "اړیکې ډاټا ته لاسرسی رد شو",
     "accessContactDataDisabled": "د اړیکې ډاټا په آله کې شتون نلري",
     "accountCreatedEnterSettings": "نوم لیکنه بریالۍ شوه! مهرباني وکړئ خپل معلومات دلته دننه کړئ.",
@@ -224,7 +223,7 @@
     "theme": "موضوع",
     "thisFeatureIsUnderMaintenance": "دا فیچر اوس مهال د ساتنې لاندې دی، موږ د تکلیف لپاره بخښنه غواړو.",
     "thisPersonHasLeftConversation": "دې سړی خبرو پرېښود.",
-    "title": "کوم چیټ",
+    "title": "AnyChat",
     "toAnyChat": "ته",
     "toJoinAnyChatConfirmPrivacyPolicy": "په هیڅ شیټ کې د شاملیدو لپاره ، لومړی تایید کړئ چې تاسو زموږ د محرمیت تګلاره د لاندې باکس په کلیک کولو سره لوستلئ.",
     "toTheConversation": "خبرو ته.",

@@ -1,5 +1,4 @@
 {
-    "@@locale": "su",
     "accessContactDataDenied": "Aksés pikeun kontak data ditolak",
     "accessContactDataDisabled": "Data kontak henteu sayogi dina alat",
     "accountCreatedEnterSettings": "Pendaptaran suksés! Mangga lebetkeun inpormasi anjeun didieu.",
@@ -224,7 +223,7 @@
     "theme": "Téma",
     "thisFeatureIsUnderMaintenance": "Fitur ieu ayeuna dina pangropéa, Hapunten pikeun kasulitan.",
     "thisPersonHasLeftConversation": "Jalma ieu parantos ngantunkeun paguneman.",
-    "title": "Naon waéChat",
+    "title": "AnyChat",
     "toAnyChat": "ka AnyChat",
     "toJoinAnyChatConfirmPrivacyPolicy": "Pikeun ngiluan AnyChat, pastikeun heula yén anjeun parantos maca Kawijakan Privasi kami ku mariksa kotak di handap.",
     "toTheConversation": "kana paguneman.",

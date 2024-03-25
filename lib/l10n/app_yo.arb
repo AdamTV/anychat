@@ -1,5 +1,4 @@
 {
-    "@@locale": "yo",
     "accessContactDataDenied": "Wiwọle si data olubasọrọ sẹ",
     "accessContactDataDisabled": "Kan si data ko si lori ẹrọ",
     "accountCreatedEnterSettings": "Iforukọsilẹ ṣaṣeyọri! Jọwọ tẹ alaye rẹ si ibi.",
@@ -224,7 +223,7 @@
     "theme": "Akori",
     "thisFeatureIsUnderMaintenance": "Ẹya yii wa lọwọlọwọ labẹ mainteneace, A tọrọ gafara fun aibalẹ naa.",
     "thisPersonHasLeftConversation": "Eniyan yii ti fi ibaraẹnisọrọ silẹ.",
-    "title": "Eyikeyi",
+    "title": "AnyChat",
     "toAnyChat": "si AnyChat",
     "toJoinAnyChatConfirmPrivacyPolicy": "Lati darapọ mọ AnyChat, kọkọ jẹrisi pe o ti ka Afihan Asiri wa nipa ṣayẹwo apoti ti o wa ni isalẹ.",
     "toTheConversation": "si ibaraẹnisọrọ naa.",
