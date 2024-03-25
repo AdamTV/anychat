@@ -6,7 +6,6 @@ import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:anychat/components/rounded_input_field.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   const LiveTranslatorScreen({super.key});
@@ -49,14 +48,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 );
               },
             ),
-            IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: AppLocalizations.of(context)!.delete,
-                onPressed: () {
-                  setState(() {
-                    text = "";
-                  });
-                })
+            // IconButton(
+            //     icon: const Icon(Icons.delete),
+            //     tooltip: AppLocalizations.of(context)!.delete,
+            //     onPressed: () {
+            //       setState(() {
+            //         text = "";
+            //       });
+            //     })
           ],
           bottom: PreferredSize(
             preferredSize: const Size(320, 48),
@@ -155,16 +154,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               );
             }).toList(),
           ),
-          TextField(
-              // icon: Icons.language,
-              onChanged: (value) {
-                isoCode = value;
-              }),
-          ElevatedButton(
-              child: Text(AppLocalizations.of(context)!.saveCaps),
-              onPressed: () {
-                NavigationService().goBack();
-              }),
+          // ElevatedButton(
+          //     child: Text(AppLocalizations.of(context)!.saveCaps),
+          //     onPressed: () {
+          //       NavigationService().goBack();
+          //     }),
         ],
       ),
       actions: <Widget>[
@@ -186,12 +180,12 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
     var responseStream = await audioTranscriber.getResponseStream(isoCode);
 
+    if (!recognizing) showAudioRecordingToast();
+
     setState(() {
       recognizeFinished = false;
       recognizing = true;
     });
-
-    showAudioRecordingToast();
 
     responseStream.listen((data) async {
       final currentText =

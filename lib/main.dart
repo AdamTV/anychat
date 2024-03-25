@@ -5,7 +5,7 @@ import 'package:anychat/components/notifications.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/auth_service.dart';
-import 'package:anychat/services/cache_maanger.dart';
+import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifier_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -35,7 +35,7 @@ void main() async {
     final notifierService = NotifierService();
     await CacheManager().initSharedPrefs();
     ThemeData cachedTheme = await CacheManager().loadThemeFromCache();
-    Locale locale = await CacheManager().loadLocaleFromCache();
+    Locale locale = await CacheManager().loadLocaleFromCache() ?? const Locale('en');
     notifierService.updateLocale(locale);
     notifierService.updateTheme(cachedTheme);
     Notifications().init();
@@ -104,16 +104,16 @@ class AnyChat extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AnyChatLocale.supportedLocales,
-          localeResolutionCallback: (locale, supportedLocales) {
-            // Check if the current device locale is supported
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale?.languageCode ||
-                  supportedLocale.countryCode == locale?.countryCode) {
-                return supportedLocale;
-              }
-            }
-            return supportedLocales.first;
-          },
+          // localeResolutionCallback: (locale, supportedLocales) {
+          //   // Check if the current device locale is supported
+          //   for (var supportedLocale in supportedLocales) {
+          //     if (supportedLocale.languageCode == locale?.languageCode ||
+          //         supportedLocale.countryCode == locale?.countryCode) {
+          //       return supportedLocale;
+          //     }
+          //   }
+          //   return supportedLocales.first;
+          // },
           locale: notifierService.locale,
           theme: kLightTheme,
           darkTheme: kDarkTheme,

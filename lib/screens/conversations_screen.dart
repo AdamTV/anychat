@@ -219,6 +219,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                 message = snapshot.docs.map((DocumentSnapshot doc) {
                   return AnyChatMessage.fromSnapshot(doc);
                 }).last;
+                text = message.text;
                 var info = AnyChatAuth.currentUser.conversations.firstWhere(
                     (element) =>
                         element.id == AnyChatAuth.currentConversation!.id);
@@ -254,8 +255,10 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         // }
 
         // if (chatters.isNotEmpty && temp.timestamp != null && mounted) {
-        //   text ??= AppLocalizations.of(context)!.newConversation;
-        //   insertSorted(slidable(chatters, temp, text), temp);
+        //   insertSorted(
+        //       slidable(chatters, temp,
+        //           text ?? AppLocalizations.of(context)!.newConversation),
+        //       temp);
         // }
       }
     }

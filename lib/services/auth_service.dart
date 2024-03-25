@@ -3,7 +3,7 @@ import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/conversations_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
-import 'package:anychat/services/cache_maanger.dart';
+import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devicelocale/devicelocale.dart';

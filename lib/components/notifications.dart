@@ -1,7 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/services/cache_maanger.dart';
+import 'package:anychat/services/cache_manager.dart';
 // import 'package:anychat/screens/call_screen.dart';
 import 'package:disposables/disposables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

@@ -6,6 +6,7 @@ import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/notifier_service.dart';
+import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:provider/provider.dart';
@@ -32,11 +33,8 @@ class CacheManager {
   Future<void> cacheUserData(UserData data) async {
     try {
       String serializedData = jsonEncode(data.toJson());
-      if (_getCachedUserData()?.theme != data.theme) {
-        notifierService.updateTheme(data.theme);
-      } else if (_getCachedUserData()?.locale != data.locale){
-        notifierService.updateLocale(data.locale);
-      }
+      notifierService.updateTheme(data.theme);
+      notifierService.updateLocale(data.locale);
       await prefs.setString('user_data', serializedData);
     } catch (e) {
       logger.e('Error caching user data: $e');
@@ -45,7 +43,7 @@ class CacheManager {
 
   UserData? _getCachedUserData() {
     String? serializedData = prefs.getString('user_data');
-    return serializedData != null
+    return serializedData != null && serializedData.isNotEmpty
         ? UserData.fromJson(jsonDecode(serializedData))
         : null;
   }
@@ -90,7 +88,7 @@ class CacheManager {
     }
   }
 
-  loadLocaleFromCache() async {
+  Future<Locale?> loadLocaleFromCache() async {
     try {
       if (AnyChatAuth.isUserInitialized()) {
         UserData userData =
@@ -98,7 +96,7 @@ class CacheManager {
         return userData.locale;
       } else {
         UserData? userData = _getCachedUserData();
-        return userData?.locale;
+        return userData?.locale ?? await Devicelocale.currentAsLocale;
       }
     } catch (e) {
       logger.e("Unable to load theme from cache: ", e);
