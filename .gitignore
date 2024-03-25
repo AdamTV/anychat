@@ -50,3 +50,4 @@ app.*.map.json
 # Ignore Gradle build output directory
 build
 drs-policy.yaml
+/lib/generated
