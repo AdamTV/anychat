@@ -1,17 +1,12 @@
 {
     "cmake.configureOnOpen": true,
     "cmake.sourceDirectory": "C:/git/local/source/repos/flutter/anychat/linux",
-    "workbench.colorTheme": "Dark Horizon",
     "editor.guides.bracketPairs": true,
-    "terminal.integrated.fontFamily": "Hack Nerd Font Regular",
     "editor.fontLigatures": true,
     "editor.fontFamily": "JetBrains Mono Regular, 'JetBrains Mono NL Regular', monospace",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "editor.mouseWheelZoom": true,
-    "terminal.integrated.mouseWheelZoom": true,
-    "dart.openDevTools": "flutter",
-    "cloudcode.project": "anychat-c414a",
     "editor.accessibilitySupport": "off",
 }

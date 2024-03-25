@@ -1,4 +1,4 @@
-$path_to_pubspec = "C:\Git\repos\flutter\anychat\pubspec.yaml"
+$path_to_pubspec = "D:\source\repos\flutter\anychat\pubspec.yaml"
 (Get-Content -Path $path_to_pubspec -Raw) -match 'version: (\d+\.\d+\.\d+\+\d+)' | Out-Null
 $current_version = $matches[1]
 $current_version_without_build = $current_version -replace '\+.*'

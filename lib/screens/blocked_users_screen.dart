@@ -1,7 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/screens/block_chatter_search_screen.dart';
 import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';

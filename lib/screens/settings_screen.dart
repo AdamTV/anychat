@@ -3,21 +3,16 @@ import 'dart:core';
 
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/rounded_input_field.dart';
 import 'package:anychat/components/theme_option.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/services/cache_maanger.dart';
+import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
-import 'package:anychat/services/notifier_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

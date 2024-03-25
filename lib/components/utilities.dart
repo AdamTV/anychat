@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/services/cache_maanger.dart';
+import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
