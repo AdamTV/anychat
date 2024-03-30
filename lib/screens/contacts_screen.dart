@@ -121,14 +121,14 @@
 //   void _handleInvalidPermissions(PermissionStatus permissionStatus) {
 //     if (permissionStatus == PermissionStatus.denied) {
 //       Utilities().showToast(
-//           AppLocalizations.of(context)!.accessContactDataDisabled);
+//           localizationOf(context).accessContactDataDisabled);
 //       // throw PlatformException(
 //       //     code: AppLocalizations.of(context).permissionDenied,
 //       //     message: AppLocalizations.of(context).accessContactDataDenied,
 //       //     details: null);
 //     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
 //       Utilities().showToast(
-//           AppLocalizations.of(context)!.accessContactDataDisabled);
+//           localizationOf(context).accessContactDataDisabled);
 //       // throw PlatformException(
 //       //     code: AppLocalizations.of(context).permissionDisabled,
 //       //     message: AppLocalizations.of(context).accessContactDataDisabled,
@@ -251,7 +251,7 @@
 //             hintStyle: TextStyle(
 //                 color: Theme.of(context).primaryColorLight, fontSize: 20),
 //             // icon: new Icon(Icons.search),
-//             hintText: AppLocalizations.of(context)!.searchDotDotDot,
+//             hintText: localizationOf(context).searchDotDotDot,
 //             // border: OutlineInputBorder(),
 //             border: InputBorder.none,
 //           ),
@@ -259,7 +259,7 @@
 //       } else {
 //         _searchIcon = const Icon(Icons.search);
 //         _appBarTitle =
-//             Text(AppLocalizations.of(context)!.yourContacts);
+//             Text(localizationOf(context).yourContacts);
 //         _filter.clear();
 //       }
 //       isSearch = !isSearch;
@@ -286,7 +286,7 @@
 //             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
 //           );
 //     if (!isSearch) {
-//       _appBarTitle = Text(AppLocalizations.of(context)!.yourContacts);
+//       _appBarTitle = Text(localizationOf(context).yourContacts);
 //     }
 //     return Scaffold(
 //       appBar: AppBar(
@@ -332,8 +332,8 @@
 
 //   ListTile contactListTile(AnyChatContact c) {
 //     String sub = c.isRegistered
-//         ? AppLocalizations.of(context)!.startChatting
-//         : AppLocalizations.of(context)!.inviteToAnyChat;
+//         ? localizationOf(context).startChatting
+//         : localizationOf(context).inviteToAnyChat;
 //     return ListTile(
 //       onTap: c.isRegistered
 //           ? () async {
@@ -407,7 +407,7 @@
 //       var eurl =
 //           "mailto:${user.emails!.first.value!}${params.replaceAll("+", " ")}";
 //       widgets.add(RoundedButton(
-//           text: AppLocalizations.of(context)!.emailInvite,
+//           text: localizationOf(context).emailInvite,
 //           press: () {
 //             _launchURL(eurl);
 //           }));
@@ -415,13 +415,13 @@
 //     if (user.phones!.isNotEmpty) {
 //       var purl = "sms:${user.phones!.first.value!}$params";
 //       widgets.add(RoundedButton(
-//           text: AppLocalizations.of(context)!.smsInvite,
+//           text: localizationOf(context).smsInvite,
 //           press: () {
 //             _launchURL(purl);
 //           }));
 //     }
 //     return AlertDialog(
-//         title: Text("${AppLocalizations.of(context)!.invite} ${user.displayName!} ${AppLocalizations.of(context)!.toAnyChat}"),
+//         title: Text("${localizationOf(context).invite} ${user.displayName!} ${localizationOf(context).toAnyChat}"),
 //         content: Column(
 //             mainAxisSize: MainAxisSize.min,
 //             crossAxisAlignment: CrossAxisAlignment.start,

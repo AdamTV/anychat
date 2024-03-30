@@ -54,9 +54,7 @@ class _CallScreenState extends State<CallScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _transcribedChatMessageSubscription =
         loadAllTranscribedMessages().listen(_updateCallScreen);
-    // AnyChatUser.addMessageToConversation(
-    //     "${AnyChatAuth.currentUser!.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isCallingYouOnAnyChat}");
-  }
+    }
 
   @override
   void dispose() {
@@ -87,14 +85,14 @@ class _CallScreenState extends State<CallScreen> {
         logger.e('[onError] err: $err, msg: $msg');
       },
       onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-        logger.i(
+        logger.d(
             '[onJoinChannelSuccess] connection: ${connection.toJson()} elapsed: $elapsed');
         setState(() {
           isJoined = true;
         });
       },
       onUserJoined: (RtcConnection connection, int rUid, int elapsed) {
-        logger.i(
+        logger.d(
             '[onUserJoined] connection: ${connection.toJson()} remoteUid: $rUid elapsed: $elapsed');
         setState(() {
           remoteUid.add(rUid);
@@ -102,14 +100,14 @@ class _CallScreenState extends State<CallScreen> {
       },
       onUserOffline:
           (RtcConnection connection, int rUid, UserOfflineReasonType reason) {
-        logger.i(
+        logger.d(
             '[onUserOffline] connection: ${connection.toJson()}  rUid: $rUid reason: $reason');
         setState(() {
           remoteUid.removeWhere((element) => element == rUid);
         });
       },
       onLeaveChannel: (RtcConnection connection, RtcStats stats) {
-        logger.i(
+        logger.d(
             '[onLeaveChannel] connection: ${connection.toJson()} stats: ${stats.toJson()}');
         setState(() {
           isJoined = false;
@@ -119,7 +117,7 @@ class _CallScreenState extends State<CallScreen> {
       },
       onRemoteVideoStateChanged: (RtcConnection connection, int remoteUid,
           RemoteVideoState state, RemoteVideoStateReason reason, int elapsed) {
-        logger.i(
+        logger.d(
             '[onRemoteVideoStateChanged] connection: ${connection.toJson()} remoteUid: $remoteUid state: $state reason: $reason elapsed: $elapsed');
       },
     );
@@ -312,7 +310,7 @@ class _CallScreenState extends State<CallScreen> {
   //       Center(
   //           heightFactor: 25,
   //           child: Text(
-  //             AppLocalizations.of(context)!.pleaseWaitForOthersToJoin,
+  //             localizationOf(context).pleaseWaitForOthersToJoin,
   //             textAlign: TextAlign.center,
   //           )),
   //       const Center(

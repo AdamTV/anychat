@@ -11,9 +11,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:html/parser.dart';
-
-import 'anychat_locale.dart';
 import 'anychat_user.dart';
+import 'combined_locale_info.dart';
 
 class Utilities {
   final String apiKey = "AIzaSyATyV6do7Ov4MkT55jyBKW_0gaZL8qE3Vw";
@@ -86,9 +85,9 @@ class Utilities {
   }
 
   Future<void> showAlertDialog(
-      BuildContext context, String title, String text) async {
+      BuildContext? context, String title, String text) async {
     return showDialog<void>(
-      context: context,
+      context: context ?? globalKey.currentContext!,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -102,7 +101,7 @@ class Utilities {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(AppLocalizations.of(context)!.approve),
+              child: Text(localizationOf(context).approve),
               onPressed: () {
                 NavigationService().goBack();
               },
@@ -128,16 +127,6 @@ class Utilities {
               NavigationService().pushNamedAndRemoveUntil("/conversations",
                   predicate: (Route<dynamic> route) => route.isFirst)
             });
-  }
-
-  String getLanguageFromIsoCode(String? language) {
-    for (String key in AnyChatLocale.isoMap.keys) {
-      if (AnyChatLocale.isoMap[key] == language) {
-        return key;
-        //return AppLocalizations.of(globalKey.currentContext)!;
-      }
-    }
-    throw Exception("Could not determine language from ISO code.");
   }
 
   Future<bool> handlePermission(Permission permission) async {
@@ -179,10 +168,10 @@ class Utilities {
     var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     var newPref = user.theme.brightness;
     if (newValue ==
-        AppLocalizations.of(Utilities().globalKey.currentContext!)!.light) {
+        localizationOf(Utilities().globalKey.currentContext!)!.light) {
       newPref = Brightness.light;
     } else if (newValue ==
-        AppLocalizations.of(Utilities().globalKey.currentContext!)!.dark) {
+        localizationOf(Utilities().globalKey.currentContext!)!.dark) {
       newPref = Brightness.dark;
     }
     user.theme = user.theme.copyWith(brightness: newPref);

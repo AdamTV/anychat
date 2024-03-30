@@ -136,15 +136,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
                   leading: SizedBox(
                     height: avatarRadius,
                     width: avatarRadius,
-                    child: user.photoUrl.isEmpty
-                        ? (user.displayName.isEmpty
-                            ? Container()
-                            : CircleAvatar(
-                                child: Text(user.displayName.characters.first),
-                              ))
-                        : CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoUrl),
-                          ),
+                    child: AnyChatUser.getAvatar(user),
                   ),
                   onTap: () async {
                     if (blockUser) {

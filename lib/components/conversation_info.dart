@@ -2,6 +2,8 @@
 // persisted
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../main.dart';
+
 class ConversationInfo {
   final String id;
   String? incomingLanguage;
@@ -21,17 +23,19 @@ class ConversationInfo {
   static Future<List<ConversationInfo>> getAllConversationInfo(
       String? id) async {
     var ret = <ConversationInfo>[];
+    try {
+      var test = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(id)
+          .collection("conversations")
+          .get();
 
-    var test = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(id)
-        .collection("conversations")
-        .get();
-
-    for (var doc in test.docs) {
-      ret.add(ConversationInfo.fromSnapshot(doc));
+      for (var doc in test.docs) {
+        ret.add(ConversationInfo.fromSnapshot(doc));
+      }
+    } catch (e) {
+      logger.e("Error getting conversation info: ", e);
     }
-
     return ret;
   }
 }

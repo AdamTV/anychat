@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'combined_locale_info.dart';
+
 class OrDivider extends StatelessWidget {
   const OrDivider({super.key});
 
@@ -16,7 +18,7 @@ class OrDivider extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              AppLocalizations.of(context)!.or_caps,
+              localizationOf(context).or_caps,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,

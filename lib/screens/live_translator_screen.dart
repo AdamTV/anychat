@@ -1,11 +1,12 @@
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../components/combined_locale_info.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
   const LiveTranslatorScreen({super.key});
@@ -17,7 +18,7 @@ class LiveTranslatorScreen extends StatefulWidget {
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   String? isoCode = AnyChatAuth.currentUser.language;
   String? dropdownValue =
-      Utilities().getLanguageFromIsoCode(AnyChatAuth.currentUser.language);
+  getEndonymByLocaleCode(AnyChatAuth.currentUser.language);
   bool recognizing = false;
   bool recognizeFinished = false;
 
@@ -36,11 +37,11 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.restaurant),
-          title: Text(AppLocalizations.of(context)!.title),
+          title: Text(localizationOf(context).title),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.settings),
-              tooltip: AppLocalizations.of(context)!.language,
+              tooltip: localizationOf(context).language,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -50,7 +51,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             ),
             // IconButton(
             //     icon: const Icon(Icons.delete),
-            //     tooltip: AppLocalizations.of(context)!.delete,
+            //     tooltip: localizationOf(context).delete,
             //     onPressed: () {
             //       setState(() {
             //         text = "";
@@ -63,7 +64,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
                 child: IconButton(
                     icon: const Icon(Icons.clear),
-                    tooltip: AppLocalizations.of(context)?.clear,
+                    tooltip: localizationOf(context).clear,
                     onPressed: () {
                       setState(() {
                         text = "";
@@ -84,19 +85,19 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   color: Theme.of(context).primaryColor,
                 ),
                 child: Text(
-                  AppLocalizations.of(context)!.title,
+                  localizationOf(context).title,
                   style: TextStyle(color: Theme.of(context).primaryColorLight),
                 ),
               ),
               ListTile(
-                  title: Text(AppLocalizations.of(context)!.back),
+                  title: Text(localizationOf(context).back),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   }),
               ListTile(
-                  title: Text(AppLocalizations.of(context)!.logout),
+                  title: Text(localizationOf(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
                     if (context.mounted) {
@@ -113,8 +114,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
         floatingActionButton: ElevatedButton(
             onPressed: recognizing ? stopRecording : longRunningRecognize,
             child: recognizing
-                ? Text(AppLocalizations.of(context)!.stopStreaming)
-                : Text(AppLocalizations.of(context)!.startStreaming)));
+                ? Text(localizationOf(context).stopStreaming)
+                : Text(localizationOf(context).startStreaming)));
   }
 
   void stopRecording() async {
@@ -127,7 +128,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
   Widget _buildPopupDialog(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.selectLanguage),
+      title: Text(localizationOf(context).selectLanguage),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,21 +142,24 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               setState(() {
                 dropdownValue = newValue;
               });
-              isoCode = AnyChatLocale.isoMap[newValue!];
+              // isoCode = endonymRetrievalMap.isoMap[newValue!];
               logger.d(isoCode);
               longRunningRecognize();
               Navigator.pop(context);
             },
-            items: AnyChatLocale.isoMap.keys
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items: getLanguageDropdownMenuItems(context),
+
+
+
+            // endonymRetrievalMap.values.
+            //     .map<DropdownMenuItem<String>>((String value) {
+            //   return DropdownMenuItem<String>(
+            //     value: value,
+            //     child: Text(value),
+            //   );
           ),
           // ElevatedButton(
-          //     child: Text(AppLocalizations.of(context)!.saveCaps),
+          //     child: Text(localizationOf(context).saveCaps),
           //     onPressed: () {
           //       NavigationService().goBack();
           //     }),
@@ -169,7 +173,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).primaryColor,
           ),
-          child: Text(AppLocalizations.of(context)!.close),
+          child: Text(localizationOf(context).close),
         ),
       ],
     );
@@ -249,8 +253,10 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
 
   void showAudioRecordingToast() {
     Utilities().showToast((recognizing
-        ? AppLocalizations.of(context)!.listeningToMicrophoneLiveAudio
-        : AppLocalizations.of(context)!
+        ? localizationOf(context).listeningToMicrophoneLiveAudio
+        : localizationOf(context)
             .noLongerListeningToMicrophoneLiveAudio));
   }
+
+
 }

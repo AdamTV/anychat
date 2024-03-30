@@ -1,23 +1,23 @@
 import 'dart:async';
-
-import 'package:anychat/components/anychat_locale.dart';
-import 'package:anychat/components/social_icon.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/register_screen.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:twitter_login/twitter_login.dart';
 
 import 'anychat_user.dart';
+import 'combined_locale_info.dart';
 import 'conversation.dart';
 
 class AnyChatAuth {
@@ -36,10 +36,10 @@ class AnyChatAuth {
   static bool isUserInitialized() {
     try {
       var x = AnyChatAuth.currentUser.id;
-      logger.i("Current User Id: $x");
+      logger.d("Current User Id: $x");
       return true;
     } catch (e) {
-      logger.e("Caught exception in isUserInitialized: $e");
+      logger.d("Caught exception in isUserInitialized: $e");
       return false;
     }
   }
@@ -75,14 +75,16 @@ class AnyChatAuth {
       return currentUser;
     } else {
       if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
+        var locale = await Devicelocale.currentAsLocale;
+        String localeStr = locale?.languageCode ?? 'en';
         var currentUser = AnyChatUser(
             firebaseUser.uid,
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
             firebaseUser.email ?? "",
             firebaseUser.photoURL ?? "",
-            AnyChatLocale.currentLocale!.substring(0, 2),
             UserData.themeToString(
                 Theme.of(Utilities().globalKey.currentContext!)),
+            localeStr,
             true,
             []);
         currentUser.addUserToFirestore();
@@ -91,7 +93,7 @@ class AnyChatAuth {
         return currentUser;
       } else {
         Utilities().showToast(
-            AppLocalizations.of(Utilities().globalKey.currentContext!)!
+            localizationOf(Utilities().globalKey.currentContext!)
                 .emailInUse);
         return null;
       }
@@ -139,6 +141,8 @@ class AnyChatAuth {
         linkedAccountPhotoUrl = googleSignInAccount!.photoUrl;
         return currentUser;
       } else {
+        var locale = await Devicelocale.currentAsLocale;
+        String localeStr = locale?.languageCode ?? 'en';
         currentUser = AnyChatUser(
             authResult.user!.uid,
             googleSignInAccount!.displayName ?? "",
@@ -146,7 +150,7 @@ class AnyChatAuth {
             googleSignInAccount!.photoUrl ?? "",
             UserData.themeToString(
                 Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),
+            localeStr,
             true,
             []);
         currentUser.addUserToFirestore();
@@ -168,15 +172,16 @@ class AnyChatAuth {
       assert(user.uid == authCurrentUser.uid);
 
       logger.d('signInWithGoogle succeeded: $user');
-
+      var locale = await Devicelocale.currentAsLocale;
+      String localeStr = locale?.languageCode ?? 'en';
       currentUser = AnyChatUser(
           authResult.user!.uid,
           user.displayName ?? "",
           user.email ?? "",
           user.photoURL ?? "",
-          AnyChatLocale.currentLocale ?? "",
           UserData.themeToString(
               Theme.of(Utilities().globalKey.currentContext!)),
+          localeStr,
           true,
           []);
       currentUser.addUserToFirestore();
@@ -228,9 +233,9 @@ class AnyChatAuth {
           androidInstallApp: true,
           // minimumVersion
           androidMinimumVersion: '12');
-      FirebaseAuth.instance
-          .sendSignInLinkToEmail(email: result.email!, actionCodeSettings: acs);
-      Utilities().showToast("Please verify your email.");
+      // FirebaseAuth.instance
+      //     .s(email: result.email!, actionCodeSettings: acs);
+      // Utilities().showToast("Please verify your email.");
       var snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(result.uid)
@@ -245,6 +250,8 @@ class AnyChatAuth {
         if (result.displayName == null) {
           displayName = result.email;
         }
+        var locale = await Devicelocale.currentAsLocale;
+        String localeStr = locale?.languageCode ?? 'en';
         currentUser = AnyChatUser(
             result.uid,
             displayName ?? "",
@@ -252,7 +259,7 @@ class AnyChatAuth {
             result.photoURL ?? "",
             UserData.themeToString(
                 Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),
+            localeStr,
             true,
             []);
 
@@ -262,12 +269,12 @@ class AnyChatAuth {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Utilities().showToast(
-            AppLocalizations.of(Utilities().globalKey.currentContext!)!
+            localizationOf(Utilities().globalKey.currentContext!)
                 .pleaseChooseStrongerPassword);
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         Utilities().showToast(
-            AppLocalizations.of(Utilities().globalKey.currentContext!)!
+            localizationOf(Utilities().globalKey.currentContext!)!
                 .pleaseLoginInstead);
         throw Exception('The account already exists for that email.');
       }
@@ -310,6 +317,8 @@ class AnyChatAuth {
       } else {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
+        var locale = await Devicelocale.currentAsLocale;
+        String localeStr = locale?.languageCode ?? 'en';
         currentUser = AnyChatUser(
             user.uid,
             user.displayName ?? "",
@@ -317,7 +326,7 @@ class AnyChatAuth {
             url,
             UserData.themeToString(
                 Theme.of(Utilities().globalKey.currentContext!)),
-            AnyChatLocale.currentLocale!.substring(0, 2),
+            localeStr,
             true,
             []);
 
@@ -328,161 +337,203 @@ class AnyChatAuth {
     return null;
   }
 
-  static SocialIcon facebookIcon(BuildContext context) {
-    return SocialIcon(
-      key: const Key("facebookIcon"),
-      iconSrc: "assets/icons/facebook.svg",
-      press: () async {
+  static flutterSocialButton(BuildContext context, ButtonType buttonType) {
+    return FlutterSocialButton(
+      onTap: () async {
         if (ModalRoute.of(context)!.settings.name == "/register" &&
             !RegisterScreen.isUserAgreeToTerms()) return;
         try {
-          var user = await AnyChatAuth.signInFacebook();
+          var user = await AnyChatAuth.socialSignIn(buttonType);
           if (user != null) {
             Utilities().initConversationScreen(user);
-          }
-        } catch (e) {
-          Utilities().showAlertDialog(
-              context.mounted ? context : Utilities().globalKey.currentContext!,
-              AppLocalizations.of(context.mounted
-                      ? context
-                      : Utilities().globalKey.currentContext!)!
-                  .error,
-              ModalRoute.of(context.mounted
-                              ? context
-                              : Utilities().globalKey.currentContext!)!
-                          .settings
-                          .name ==
-                      "/login"
-                  ? AppLocalizations.of(context.mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)!
-                      .errorLoggingInFacebook
-                  : AppLocalizations.of(context.mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)!
-                      .unableRegisterFacebook);
-        }
-      },
-    );
-  }
-
-  static SocialIcon googleIcon(BuildContext context) {
-    return SocialIcon(
-        iconSrc: "assets/icons/google-plus.svg",
-        press: () async {
-          if (ModalRoute.of(context)!.settings.name == "/register" &&
-              !RegisterScreen.isUserAgreeToTerms()) return;
-          try {
-            var user = await AnyChatAuth.signInGoogle();
-            if (user != null) {
-              Utilities().initConversationScreen(user);
-            }
-          } catch (e) {
-            Utilities().showAlertDialog(
+          } else {
+            await showAlertDialogFailedSocialLogin(
                 context.mounted
                     ? context
                     : Utilities().globalKey.currentContext!,
-                AppLocalizations.of(context.mounted
-                        ? context
-                        : Utilities().globalKey.currentContext!)!
-                    .error,
-                ModalRoute.of(context.mounted
-                                ? context
-                                : Utilities().globalKey.currentContext!)!
-                            .settings
-                            .name ==
-                        "/login"
-                    ? AppLocalizations.of(context.mounted
-                            ? context
-                            : Utilities().globalKey.currentContext!)!
-                        .errorLoggingInGoogle
-                    : AppLocalizations.of(context.mounted
-                            ? context
-                            : Utilities().globalKey.currentContext!)!
-                        .unableRegisterGoogle);
-          }
-        });
-  }
-
-  static SocialIcon appleIcon(BuildContext context) {
-    return SocialIcon(
-        iconSrc: "assets/icons/apple.svg",
-        press: () async {
-          if (ModalRoute.of(context.mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)!
-                      .settings
-                      .name ==
-                  "/register" &&
-              !RegisterScreen.isUserAgreeToTerms()) return;
-          try {
-            var user = await AnyChatAuth.signInApple();
-            if (user != null) {
-              Utilities().initConversationScreen(user);
-            }
-          } catch (e) {
-            Utilities().showAlertDialog(
-                context.mounted
-                    ? context
-                    : Utilities().globalKey.currentContext!,
-                AppLocalizations.of(context.mounted
-                        ? context
-                        : Utilities().globalKey.currentContext!)!
-                    .error,
-                ModalRoute.of(context.mounted
-                                ? context
-                                : Utilities().globalKey.currentContext!)!
-                            .settings
-                            .name ==
-                        "/login"
-                    ? AppLocalizations.of(context.mounted
-                            ? context
-                            : Utilities().globalKey.currentContext!)!
-                        .errorLoggingInApple
-                    : AppLocalizations.of(context.mounted
-                            ? context
-                            : Utilities().globalKey.currentContext!)!
-                        .unableRegisterApple);
-          }
-        });
-  }
-
-  static SocialIcon twitterIcon(BuildContext context) {
-    return SocialIcon(
-      iconSrc: "assets/icons/twitter.svg",
-      press: () async {
-        if (ModalRoute.of(context)!.settings.name == "/register" &&
-            !RegisterScreen.isUserAgreeToTerms()) return;
-        try {
-          var user = await AnyChatAuth.signInTwitter();
-          if (user != null) {
-            Utilities().initConversationScreen(user);
+                buttonType);
           }
         } catch (e) {
-          Utilities().showAlertDialog(
-              context.mounted ? context : Utilities().globalKey.currentContext!,
-              AppLocalizations.of(context.mounted
-                      ? context
-                      : Utilities().globalKey.currentContext!)!
-                  .error,
-              ModalRoute.of(context.mounted
-                              ? context
-                              : Utilities().globalKey.currentContext!)!
-                          .settings
-                          .name ==
-                      "/login"
-                  ? AppLocalizations.of(context.mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)!
-                      .errorLoggingInTwitter
-                  : AppLocalizations.of(context.mounted
-                          ? context
-                          : Utilities().globalKey.currentContext!)!
-                      .unableRegisterTwitter);
+          await showAlertDialogFailedSocialLogin(
+              context.mounted
+                  ? context
+                  : Utilities().globalKey.currentContext!,
+              buttonType);
         }
       },
+      mini: true,
+      buttonType: buttonType, // Button type for different type buttons
     );
   }
+
+  // static SocialIcon facebookIcon(BuildContext context) {
+  //   return SocialIcon(
+  //     key: const Key("facebookIcon"),
+  //     iconSrc: "assets/icons/facebook.svg",
+  //     press: () async {
+  //       if (ModalRoute.of(context)!.settings.name == "/register" &&
+  //           !RegisterScreen.isUserAgreeToTerms()) return;
+  //       try {
+  //         var user = await AnyChatAuth.signInFacebook();
+  //         if (user != null) {
+  //           Utilities().initConversationScreen(user);
+  //         }
+  //       } catch (e) {
+  //       }
+  //     },
+  //   );
+  // }
+
+  static showAlertDialogFailedSocialLogin(
+      BuildContext context, ButtonType buttonType) async {
+    String errorMessage = switch (buttonType) {
+      ButtonType.google => ModalRoute.of(context)!.settings.name == "/login"
+          ? localizationOf(context).errorLoggingInGoogle
+          : localizationOf(context).unableRegisterGoogle,
+      ButtonType.apple => ModalRoute.of(context)!.settings.name == "/login"
+          ? localizationOf(context).errorLoggingInApple
+          : localizationOf(context).unableRegisterApple,
+      ButtonType.facebook => ModalRoute.of(context)!.settings.name == "/login"
+          ? localizationOf(context).errorLoggingInFacebook
+          : localizationOf(context).unableRegisterFacebook,
+      ButtonType.twitter => ModalRoute.of(context)!.settings.name == "/login"
+          ? localizationOf(context).errorLoggingInTwitter
+          : localizationOf(context).unableRegisterTwitter,
+
+      // TODO: Handle this case.
+      ButtonType.linkedin => throw UnimplementedError(),
+      // TODO: Handle this case.
+      ButtonType.whatsapp => throw UnimplementedError(),
+      // TODO: Handle this case.
+      ButtonType.github => throw UnimplementedError(),
+      // TODO: Handle this case.
+      ButtonType.yahoo => throw UnimplementedError(),
+      // TODO: Handle this case.
+      ButtonType.phone => throw UnimplementedError(),
+      // TODO: Handle this case.
+      ButtonType.email => throw UnimplementedError(),
+    };
+    return await Utilities().showAlertDialog(
+        context, localizationOf(context).error, errorMessage);
+  }
+
+  // static SocialIcon googleIcon(BuildContext context) {
+  //   //   return SocialIcon(
+  //       iconSrc: "assets/icons/google-plus.svg",
+  //       press: () async {
+  //         if (ModalRoute.of(context)!.settings.name == "/register" &&
+  //             !RegisterScreen.isUserAgreeToTerms()) return;
+  //         try {
+  //           var user = await AnyChatAuth.signInGoogle();
+  //           if (user != null) {
+  //             Utilities().initConversationScreen(user);
+  //           }
+  //         } catch (e) {
+  //           Utilities().showAlertDialog(
+  //               context.mounted
+  //                   ? context
+  //                   : Utilities().globalKey.currentContext!,
+  //               AppLocalizations.of(context.mounted
+  //                       ? context
+  //                       : Utilities().globalKey.currentContext!)!
+  //                   .error,
+  //               ModalRoute.of(context.mounted
+  //                               ? context
+  //                               : Utilities().globalKey.currentContext!)!
+  //                           .settings
+  //                           .name ==
+  //                       "/login"
+  //                   ? AppLocalizations.of(context.mounted
+  //                           ? context
+  //                           : Utilities().globalKey.currentContext!)!
+  //                       .errorLoggingInGoogle
+  //                   : AppLocalizations.of(context.mounted
+  //                           ? context
+  //                           : Utilities().globalKey.currentContext!)!
+  //                       .unableRegisterGoogle);
+  //         }
+  //       });
+  // }
+  //
+  // static SocialIcon appleIcon(BuildContext context) {
+  //   return SocialIcon(
+  //       iconSrc: "assets/icons/apple.svg",
+  //       press: () async {
+  //         if (ModalRoute.of(context.mounted
+  //                         ? context
+  //                         : Utilities().globalKey.currentContext!)!
+  //                     .settings
+  //                     .name ==
+  //                 "/register" &&
+  //             !RegisterScreen.isUserAgreeToTerms()) return;
+  //         try {
+  //           var user = await AnyChatAuth.signInApple();
+  //           if (user != null) {
+  //             Utilities().initConversationScreen(user);
+  //           }
+  //         } catch (e) {
+  //           Utilities().showAlertDialog(
+  //               context.mounted
+  //                   ? context
+  //                   : Utilities().globalKey.currentContext!,
+  //               AppLocalizations.of(context.mounted
+  //                       ? context
+  //                       : Utilities().globalKey.currentContext!)!
+  //                   .error,
+  //               ModalRoute.of(context.mounted
+  //                               ? context
+  //                               : Utilities().globalKey.currentContext!)!
+  //                           .settings
+  //                           .name ==
+  //                       "/login"
+  //                   ? AppLocalizations.of(context.mounted
+  //                           ? context
+  //                           : Utilities().globalKey.currentContext!)!
+  //                       .errorLoggingInApple
+  //                   : AppLocalizations.of(context.mounted
+  //                           ? context
+  //                           : Utilities().globalKey.currentContext!)!
+  //                       .unableRegisterApple);
+  //         }
+  //       });
+  // }
+  //
+  // static SocialIcon twitterIcon(BuildContext context) {
+  //   return SocialIcon(
+  //     iconSrc: "assets/icons/twitter.svg",
+  //     press: () async {
+  //       if (ModalRoute.of(context)!.settings.name == "/register" &&
+  //           !RegisterScreen.isUserAgreeToTerms()) return;
+  //       try {
+  //         var user = await AnyChatAuth.signInTwitter();
+  //         if (user != null) {
+  //           Utilities().initConversationScreen(user);
+  //         }
+  //       } catch (e) {
+  //         Utilities().showAlertDialog(
+  //             context.mounted ? context : Utilities().globalKey.currentContext!,
+  //             AppLocalizations.of(context.mounted
+  //                     ? context
+  //                     : Utilities().globalKey.currentContext!)!
+  //                 .error,
+  //             ModalRoute.of(context.mounted
+  //                             ? context
+  //                             : Utilities().globalKey.currentContext!)!
+  //                         .settings
+  //                         .name ==
+  //                     "/login"
+  //                 ? AppLocalizations.of(context.mounted
+  //                         ? context
+  //                         : Utilities().globalKey.currentContext!)!
+  //                     .errorLoggingInTwitter
+  //                 : AppLocalizations.of(context.mounted
+  //                         ? context
+  //                         : Utilities().globalKey.currentContext!)!
+  //                     .unableRegisterTwitter);
+  //       }
+  //     },
+  //   );
+  // }
 
   static Future<AnyChatUser?> signInTwitter() async {
     // final twitterLogin = TwitterLogin(
@@ -573,5 +624,20 @@ class AnyChatAuth {
     //   currentUser.addUserToFirestore();
     //   return currentUser;
     // }
+  }
+
+  static Future<AnyChatUser?> socialSignIn(ButtonType buttonType) async {
+    switch (buttonType) {
+      case ButtonType.google:
+        return await AnyChatAuth.signInGoogle();
+      case ButtonType.apple:
+        return await AnyChatAuth.signInApple();
+      case ButtonType.facebook:
+        return await AnyChatAuth.signInFacebook();
+      case ButtonType.twitter:
+        return await AnyChatAuth.signInTwitter();
+      default:
+        return null;
+    }
   }
 }

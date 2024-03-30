@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../components/combined_locale_info.dart';
+
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 
@@ -26,16 +28,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context)!.title,
+              localizationOf(context).title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              AppLocalizations.of(context)!.enterYourEmail,
+              localizationOf(context).enterYourEmail,
               style: const TextStyle(fontSize: 32),
             ),
             TextField(
               // icon: Icons.mail,
-              decoration: InputDecoration.collapsed(hintText: AppLocalizations.of(context)!.email),
+              decoration: InputDecoration.collapsed(hintText: localizationOf(context).email),
               onChanged: (value) {
                 _email = value;
               },
@@ -46,7 +48,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             // ),
             ElevatedButton(
               child:
-                  Text("${AppLocalizations.of(context)!.send} ${AppLocalizations.of(context)!.email}"),
+                  Text("${localizationOf(context).send} ${localizationOf(context).email}"),
               onPressed: () async {
                 await _passwordReset();
                 logger.d(_email);
@@ -61,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               },
             ),
             ElevatedButton(
-              child: Text(AppLocalizations.of(context)!.login),
+              child: Text(localizationOf(context).login),
               onPressed: () {
                 Navigator.pushNamed(context, "/login");
               },
@@ -79,13 +81,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       await auth.sendPasswordResetEmail(email: _email!);
       if (mounted) {
         Utilities()
-            .showToast(AppLocalizations.of(context)!.emailSentToResetPassword);
+            .showToast(localizationOf(context).emailSentToResetPassword);
       }
     } catch (e) {
       if ((e is FirebaseException) && e.message != null) {
         Utilities().showToast(e.message!);
       } else if (mounted) {
-        Utilities().showToast(AppLocalizations.of(context)!.error);
+        Utilities().showToast(localizationOf(context).error);
       }
       logger.d(e);
     }

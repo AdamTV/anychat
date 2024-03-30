@@ -1,13 +1,19 @@
 import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../components/combined_locale_info.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -35,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Text(
-            //   AppLocalizations.of(context)!.register_caps,
+            //   localizationOf(context).register_caps,
             //   style: const TextStyle(fontWeight: FontWeight.bold),
             // ),
             // SizedBox(height: size.height * 0.03),
@@ -64,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         validator: (value) =>
                             _validateEmail(value), // Validate the email
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.email,
+                          labelText: localizationOf(context).email,
                           hintText: 'Enter your email',
                         ),
                       ),
@@ -96,13 +102,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   _passwordController.text,
                                   true);
                               if (user != null) {
-                                Utilities().showToast(AppLocalizations.of(
-                                        mounted
-                                            ? context
-                                            : Utilities()
-                                                .globalKey
-                                                .currentContext!)!
+                                Utilities().showToast(localizationOf(mounted
+                                        ? context
+                                        : Utilities().globalKey.currentContext!)
                                     .accountCreatedEnterSettings);
+                                await AnyChatUser.updateNotifications(
+                                    await NotificationUtils
+                                        .requestBasicPermissionToSendNotifications(
+                                            context));
                                 Navigator.pushNamed(
                                     mounted
                                         ? context
@@ -116,22 +123,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   mounted
                                       ? context
                                       : Utilities().globalKey.currentContext!,
-                                  AppLocalizations.of(mounted
+                                  localizationOf(mounted
                                           ? context
                                           : Utilities()
                                               .globalKey
-                                              .currentContext!)!
+                                              .currentContext!)
                                       .error,
-                                  AppLocalizations.of(mounted
+                                  localizationOf(mounted
                                           ? context
                                           : Utilities()
                                               .globalKey
-                                              .currentContext!)!
+                                              .currentContext!)
                                       .unableRegister);
                             }
                           }
                         },
-                        child: Text(AppLocalizations.of(context)!.register),
+                        child: Text(localizationOf(context).register),
                       ),
                     ],
                   ),
@@ -144,12 +151,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 title: RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                      text: AppLocalizations.of(context)!.byContinuingIAgree,
-                      style: Theme.of(context).textTheme.bodyMedium
-                    ),
+                        text: localizationOf(context).byContinuingIAgree,
+                        style: Theme.of(context).textTheme.bodyMedium),
                     TextSpan(
-                      text: AppLocalizations.of(context)!.privacyPolicy,
-                      style:  Theme.of(context).textTheme.bodyMedium
+                      text: localizationOf(context).privacyPolicy,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
                           ?.copyWith(color: Colors.blue),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
@@ -160,12 +168,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                     ),
                     TextSpan(
-                      text: " ${AppLocalizations.of(context)!.and} ",
-                        style: Theme.of(context).textTheme.bodyMedium
-                    ),
+                        text: " ${localizationOf(context).and} ",
+                        style: Theme.of(context).textTheme.bodyMedium),
                     TextSpan(
-                        text: AppLocalizations.of(context)!.eula,
-                        style:  Theme.of(context).textTheme.bodyMedium
+                        text: localizationOf(context).eula,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
                             ?.copyWith(color: Colors.blue),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -194,11 +203,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const OrDivider(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                AnyChatAuth.googleIcon(context),
-                AnyChatAuth.appleIcon(context),
-                AnyChatAuth.facebookIcon(context),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.google),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
                 // AnyChatAuth.twitterIcon(context),
               ],
             )
@@ -252,7 +261,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     return null;
-
   }
 
   static bool isUserAgreeToTerms() {
@@ -261,16 +269,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           context: Utilities().globalKey.currentContext!,
           builder: (BuildContext context) {
             return AlertDialog(
-                title: Text(AppLocalizations.of(context)!.error),
-                content: Text(AppLocalizations.of(context)!
-                    .toJoinAnyChatConfirmPrivacyPolicy),
+                title: Text(localizationOf(context).error),
+                content: Text(
+                    localizationOf(context).toJoinAnyChatConfirmPrivacyPolicy),
                 actions: <Widget>[
                   TextButton(
-                    child: Text(AppLocalizations.of(context)!.cancel),
+                    child: Text(localizationOf(context).cancel),
                     onPressed: () {
                       NavigationService().goBack();
-                      Utilities()
-                          .showToast(AppLocalizations.of(context)!.cancelled);
+                      Utilities().showToast(localizationOf(context).cancelled);
                     },
                   )
                 ]);

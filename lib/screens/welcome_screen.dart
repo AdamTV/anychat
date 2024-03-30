@@ -1,14 +1,14 @@
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../components/combined_locale_info.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    AnyChatLocale.init(context);
     Size size = MediaQuery.of(context).size;
 
     return ConstrainedBox(
@@ -36,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
                   TextButton(
                     child: Text(
                       textScaler: const TextScaler.linear(2.0),
-                      AppLocalizations.of(context)!.login_caps,
+                      localizationOf(context).login_caps,
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, "/login");
@@ -45,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                   TextButton(
                     child: Text(
                       textScaler: const TextScaler.linear(2.0),
-                      AppLocalizations.of(context)!.register_caps,
+                      localizationOf(context).register_caps,
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, "/register");

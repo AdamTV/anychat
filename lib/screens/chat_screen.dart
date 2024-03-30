@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_message.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
@@ -15,6 +14,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../components/combined_locale_info.dart';
 
 // import 'call_screen.dart';
 
@@ -149,7 +150,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             children: <InlineSpan>[
               TextSpan(
                   text:
-                      "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
+                      "${localizationOf(Utilities().globalKey.currentContext).typed}: ",
                   style: Theme.of(Utilities().globalKey.currentContext!)
                       .textTheme
                       .bodyLarge
@@ -181,7 +182,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
               TextSpan(
                   text:
-                      "\n${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
+                      "\n${localizationOf(context).translation}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: translatedMap[language]!.removeLast()),
             ],
@@ -203,7 +204,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         _isLoading = false;
       });
     } else if (!_messages
-        .any((element) => element.id == _chatMessages.last.id)) {
+        .any((element) => element.sender?.id == _chatMessages.last.id)) {
       final message = _chatMessages.last;
       AnyChatUser sender = AnyChatUser.deletedUser(message.senderId);
       try {
@@ -240,12 +241,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           children: <TextSpan>[
             TextSpan(
                 text:
-                    "${mounted ? AppLocalizations.of(context)!.typed : AppLocalizations.of(Utilities().globalKey.currentContext!)!.typed}: ",
+                    "${localizationOf(context).typed}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: "${message.text}\n\n"),
             TextSpan(
                 text:
-                    "${mounted ? AppLocalizations.of(context)!.translation : AppLocalizations.of(Utilities().globalKey.currentContext!)!.translation}: ",
+                    "${localizationOf(context).translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
                 text: await Utilities()
@@ -285,7 +286,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
                 decoration: InputDecoration.collapsed(
-                    hintText: AppLocalizations.of(context)!.send_a_messgae),
+                    hintText: localizationOf(context).send_a_messgae),
                 focusNode: _focusNode,
               ),
             ),
@@ -296,7 +297,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                         onPressed: _isComposing
                             ? () => _handleSubmitted(_textController.text)
                             : null,
-                        child: Text(AppLocalizations.of(context)!.send),
+                        child: Text(localizationOf(context).send),
                       )
                     : IconButton(
                         icon: const Icon(Icons.send),
@@ -328,7 +329,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     var widgets = <Widget>[];
     widgets.add(IconButton(
         icon: const Icon(Icons.settings),
-        tooltip: AppLocalizations.of(context)!.language,
+        tooltip: localizationOf(context).language,
         onPressed: () {
           showDialog(
               context: context,
@@ -336,10 +337,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         }));
     widgets.add(IconButton(
       icon: const Icon(Icons.video_call_rounded),
-      tooltip: AppLocalizations.of(context)!.call,
+      tooltip: localizationOf(context).call,
       onPressed: () async {
-        Navigator.pushNamed(
-            mounted ? context : Utilities().globalKey.currentContext!, "/call");
+        await AnyChatUser.addMessageToConversation(
+            "${AnyChatAuth.currentUser.displayName} ${localizationOf(context)
+                    .isCallingYouOnAnyChat}");
+        await NavigationService().pushNamed("/call");
       },
     ));
     SizedBox container = SizedBox(
@@ -395,32 +398,31 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 color: Theme.of(context).primaryColor,
               ),
               child: Text(
-                AppLocalizations.of(context)!.title,
+                localizationOf(context).title,
                 style: TextStyle(color: Theme.of(context).primaryColorLight),
               ),
             ),
             ListTile(
-                title: Text(
-                    AppLocalizations.of(context)!.addSomeoneToConversation),
+                title: Text(localizationOf(context).addSomeoneToConversation),
                 onTap: () {
                   NavigationService().push(MaterialPageRoute(
                     builder: (_) => const SearchChatterScreen(true, false),
                   ));
                 }),
             ListTile(
-                title: Text(AppLocalizations.of(context)!.leaveConversation),
+                title: Text(localizationOf(context).leaveConversation),
                 onTap: () {
                   AnyChatUser.deleteConversation(
                       context, AnyChatAuth.currentConversation!.id);
                 }),
             ListTile(
-                title: Text(AppLocalizations.of(context)!.backToConversations),
+                title: Text(localizationOf(context).backToConversations),
                 onTap: () {
                   NavigationService().pushNamedAndRemoveUntil("/conversations",
                       predicate: (Route<dynamic> route) => route.isFirst);
                 }),
             ListTile(
-                title: Text(AppLocalizations.of(context)!.logout),
+                title: Text(localizationOf(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
                   Navigator.pushNamed(
@@ -446,24 +448,26 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   _buildPopupDialog(BuildContext context) {
     var info = AnyChatAuth.currentUser.conversations.firstWhere(
         (element) => element.id == AnyChatAuth.currentConversation!.id);
+
     String? incomingDropdownValue =
-        Utilities().getLanguageFromIsoCode(info.incomingLanguage);
+        getEndonymByLocaleCode(info.incomingLanguage!, localizationOf(context));
     String? outgoingDropdownValue =
-        Utilities().getLanguageFromIsoCode(info.outgoingLanguage);
+        getEndonymByLocaleCode(info.outgoingLanguage!, localizationOf(context));
     logger.d(incomingDropdownValue);
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.selectLanguage),
+      title: Text(localizationOf(context).selectLanguage),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(AppLocalizations.of(context)!.incomingMessages),
+          Text(localizationOf(context).incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
             icon: const Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
+              var isoCode = getLocaleCodeByEndonym(newValue!, localizationOf(context));
               await FirebaseFirestore.instance
                   .runTransaction((Transaction transaction) {
                 var user = FirebaseFirestore.instance
@@ -478,34 +482,37 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                         (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
                   transaction.update(userConversationInfo, {
-                    'incomingLanguage': AnyChatLocale.isoMap[newValue!],
+                    'incomingLanguage': isoCode,
                   });
                 });
               });
               setState(() {
-                info.incomingLanguage = AnyChatLocale.isoMap[newValue!];
-                incomingDropdownValue = newValue;
+                info.incomingLanguage = isoCode;
+                    incomingDropdownValue = newValue;
               });
               Navigator.pushNamed(
                   mounted ? context : Utilities().globalKey.currentContext!,
                   "/chat");
             },
-            items: AnyChatLocale.isoMap.keys
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items: getLanguageDropdownMenuItems(context)
+
+            // AnyChatLocale.isoMap.keys
+            //     .map<DropdownMenuItem<String>>((String value) {
+            //   return DropdownMenuItem<String>(
+            //     value: value,
+            //     child: Text(value),
+            //   );
+            // }).toList(),
           ),
           const Divider(height: 25),
-          Text(AppLocalizations.of(context)!.outgoingMessages),
+          Text(localizationOf(context).outgoingMessages),
           DropdownButton<String>(
             value: outgoingDropdownValue,
             icon: const Icon(Icons.language),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
+              var isoCode = getLocaleCodeByEndonym(newValue!, localizationOf(context));
               await FirebaseFirestore.instance
                   .runTransaction((Transaction transaction) {
                 var user = FirebaseFirestore.instance
@@ -519,26 +526,22 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                     .then(
                         (DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
                     .then((AnyChatUser fresh) async {
+
                   transaction.update(userConversationInfo, {
-                    'outgoingLanguage': AnyChatLocale.isoMap[newValue!],
+
+                    'outgoingLanguage': isoCode
                   });
                 });
               });
               setState(() {
-                info.outgoingLanguage = AnyChatLocale.isoMap[newValue!];
+                info.outgoingLanguage = isoCode;
                 outgoingDropdownValue = newValue;
               });
               Navigator.pushNamed(
                   mounted ? context : Utilities().globalKey.currentContext!,
                   "/chat");
             },
-            items: AnyChatLocale.isoMap.keys
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            items: getLanguageDropdownMenuItems(context)
           ),
         ],
       ),
@@ -559,7 +562,7 @@ class MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor:
-          CurvedAnimation(parent: animationController!, curve: Curves.easeOut),
+      CurvedAnimation(parent: animationController!, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Align(
         alignment: sender?.id == AnyChatAuth.currentUser.id
@@ -569,11 +572,11 @@ class MessageWidget extends StatelessWidget {
           decoration: BoxDecoration(
               color: sender!.id == AnyChatAuth.currentUser.id
                   ? Theme.of(context).brightness == Brightness.dark
-                      ? kDarkTheme.colorScheme.primaryContainer
-                      : kLightTheme.colorScheme.primaryContainer
+                  ? kDarkTheme.colorScheme.primaryContainer
+                  : kLightTheme.colorScheme.primaryContainer
                   : Theme.of(context).brightness == Brightness.dark
-                      ? kDarkTheme.colorScheme.secondaryContainer
-                      : kLightTheme.colorScheme.secondaryContainer,
+                  ? kDarkTheme.colorScheme.secondaryContainer
+                  : kLightTheme.colorScheme.secondaryContainer,
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.all(8.0),
@@ -583,14 +586,15 @@ class MessageWidget extends StatelessWidget {
               children: [
                 Container(
                     margin: const EdgeInsets.only(right: 16.0),
-                    child: sender!.photoUrl != ''
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage(sender!.photoUrl),
-                            backgroundColor: Colors.transparent,
-                          )
-                        : CircleAvatar(
-                            child: Text(sender!.displayName.characters.first),
-                          )),
+                    child: AnyChatUser.getAvatar(sender!)),
+                    // sender!.photoUrl != ''
+                    //     ? CircleAvatar(
+                    //   backgroundImage: NetworkImage(sender!.photoUrl),
+                    //   backgroundColor: Colors.transparent,
+                    // )
+                    //     : CircleAvatar(
+                    //   child: Text(sender!.displayName.characters.first),
+                    // )),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -613,3 +617,83 @@ class MessageWidget extends StatelessWidget {
     );
   }
 }
+
+
+// TODO: FIX ANIMATION CONTROLLER FOR MESSAGE WIDGET
+// class MessageWidget extends StatefulWidget {
+//
+//   final AnyChatUser? sender;
+//   final RichText? text;
+//   final AnimationController? animationController;
+//
+//   const MessageWidget({super.key, required RichText this.text, required AnimationController this.animationController, required AnyChatUser this.sender});
+//
+//   @override
+//   State<MessageWidget> createState() => _MessageWidget();
+// }
+//
+// class _MessageWidget extends State<MessageWidget> with SingleTickerProviderStateMixin {
+//
+//   late Duration duration;
+//   late AnimationController _controller;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller = AnimationController(
+//       vsync: this, // the SingleTickerProviderStateMixin
+//       duration: Duration(milliseconds: 250),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizeTransition(
+//       sizeFactor:
+//           CurvedAnimation(parent: _controller!, curve: Curves.easeOut),
+//       axisAlignment: 0.0,
+//       child: Align(
+//         alignment: super.widget.sender?.id == AnyChatAuth.currentUser.id
+//             ? Alignment.centerRight
+//             : Alignment.centerLeft,
+//         child: Container(
+//           decoration: BoxDecoration(
+//               color: super.widget.sender!.id == AnyChatAuth.currentUser.id
+//                   ? Theme.of(context).brightness == Brightness.dark
+//                       ? kDarkTheme.colorScheme.primaryContainer
+//                       : kLightTheme.colorScheme.primaryContainer
+//                   : Theme.of(context).brightness == Brightness.dark
+//                       ? kDarkTheme.colorScheme.secondaryContainer
+//                       : kLightTheme.colorScheme.secondaryContainer,
+//               borderRadius: const BorderRadius.all(Radius.circular(20))),
+//           padding: const EdgeInsets.all(8.0),
+//           margin: const EdgeInsets.all(8.0),
+//           child: IntrinsicWidth(
+//             child: Row(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Container(
+//                     margin: const EdgeInsets.only(right: 16.0),
+//                     child: AnyChatUser.getAvatar(super.widget.sender!)),
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(super.widget.sender!.displayName,
+//                           style: Theme.of(context).textTheme.headlineSmall),
+//                       Container(
+//                         margin: const EdgeInsets.only(top: 5.0),
+//                         padding: const EdgeInsets.only(right: 16.0),
+//                         child: super.widget.text,
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

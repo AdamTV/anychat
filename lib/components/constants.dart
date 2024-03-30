@@ -67,13 +67,3 @@ var kDarkTheme = ThemeData.from(colorScheme: const ColorScheme(
         outlineVariant: Color(0xFF4A454E),
         scrim: Color(0xFF000000),
 ));
-
-
-// final Color? kDefaultChatBubbleColorLeft = Colors.grey[200];
-// final Color? kDefaultChatBubbleColorRight = Colors.blue[200];
-// final Color? kDarkChatBubbleColorLeft = Colors.grey[800];
-// const Color kDarkChatBubbleColorRight = Color.fromARGB(214, 69, 39, 160);
-
-double? fontSize = 24;
-
-const agoraAppId = '72559be0b8944a8fb70a772d196078ce';

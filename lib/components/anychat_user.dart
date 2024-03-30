@@ -1,16 +1,16 @@
 import 'dart:async';
-
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_auth.dart';
+import 'combined_locale_info.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
 
@@ -25,20 +25,13 @@ class AnyChatUser {
   late String theme;
   late bool notificationsEnabled;
 
-  AnyChatUser(
-      this.id,
-      this.displayName,
-      this.email,
-      this.photoUrl,
-      this.theme,
-      this.language,
-      this.notificationsEnabled,
-      this.blockedAccounts);
+  AnyChatUser(this.id, this.displayName, this.email, this.photoUrl, this.theme,
+      this.language, this.notificationsEnabled, this.blockedAccounts);
 
   static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
         uid,
-        AppLocalizations.of(Utilities().globalKey.currentContext!)!
+        localizationOf(Utilities().globalKey.currentContext!)
             .accountDeleted,
         "",
         "",
@@ -74,7 +67,7 @@ class AnyChatUser {
 
     if (user.id == AnyChatAuth.currentUser.id) {
       Utilities().showToast(
-          AppLocalizations.of(Utilities().globalKey.currentContext!)!
+          localizationOf(Utilities().globalKey.currentContext!)!
               .canNotCreateConvoWithSelf);
       return null;
     }
@@ -135,26 +128,28 @@ class AnyChatUser {
     return AnyChatAuth.currentConversation!;
   }
 
-  addUserToFirestore() {
+  addUserToFirestore() async {
     FirebaseAuth.instance;
+
+    var locale = await Devicelocale.currentAsLocale;
+    String localeStr = locale?.languageCode ?? 'en';
 
     final users = FirebaseFirestore.instance.collection("users").doc(id);
     checkExist(id).then((value) => {
           if (!value)
             {
               //logger.d('!value')
-
               users.set({
                 'displayName': displayName,
                 'email': email,
                 'photoUrl': photoUrl,
-                'language': AnyChatLocale.currentLocale!.substring(0, 2),
+                'language': localeStr,
               })
             }
           else
             {
               Utilities().showToast(
-                  AppLocalizations.of(Utilities().globalKey.currentContext!)!
+                  localizationOf(Utilities().globalKey.currentContext!)!
                       .pleaseLoginInstead)
             }
         });
@@ -243,7 +238,8 @@ class AnyChatUser {
             .get(conversation)
             .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
             .then((Conversation fresh) async {
-          fresh.participants.removeWhere((element) => element == AnyChatAuth.currentUser.id);
+          fresh.participants
+              .removeWhere((element) => element == AnyChatAuth.currentUser.id);
           if (fresh.participants.isEmpty) {
             transaction.delete(conversation);
             await conversation.delete();
@@ -254,7 +250,7 @@ class AnyChatUser {
           transaction.set(newMessage, {
             'timestamp': FieldValue.serverTimestamp(),
             'senderId': AnyChatAuth.currentUser.id,
-            'text': AppLocalizations.of(Utilities().globalKey.currentContext!)!
+            'text': localizationOf(Utilities().globalKey.currentContext!)!
                 .thisPersonHasLeftConversation,
           });
         });
@@ -311,14 +307,14 @@ class AnyChatUser {
       });
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
-    await NavigationService().pushReplacementNamed('/settings');
+    // await NavigationService().pushReplacementNamed('/settings');
   }
 
   static Future<void> updateEmail(String email) async {
     Utilities().showToast("Please verify your email");
     var acs = ActionCodeSettings(
-      // URL you want to redirect back to. The domain (www.example.com) for this
-      // URL must be whitelisted in the Firebase Console.
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be whitelisted in the Firebase Console.
         url: 'https://app.anychat.ca/__/auth/action',
         // This must be true
         handleCodeInApp: true,
@@ -437,7 +433,7 @@ class AnyChatUser {
     final conversation = Conversation.fromSnapshot(await conversationRef.get());
     if (conversation.participants.contains(user.id)) {
       Utilities().showToast(
-          "${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.isAlreadyInThisConversation}");
+          "${user.displayName} ${localizationOf(Utilities().globalKey.currentContext!).isAlreadyInThisConversation}");
       return false;
     }
     final newMessage = conversationRef.collection('messages').doc();
@@ -453,7 +449,7 @@ class AnyChatUser {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
           'text':
-              "${AnyChatAuth.currentUser.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.toTheConversation}",
+              "${AnyChatAuth.currentUser.displayName} ${localizationOf(Utilities().globalKey.currentContext!).hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.toTheConversation}",
         });
       });
     });
@@ -483,25 +479,25 @@ class AnyChatUser {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.deleteConversation),
+          title: Text(localizationOf(context).deleteConversation),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text(
-                    "${AppLocalizations.of(context)!.areYouSureYouWantToLeave} ${AppLocalizations.of(context)!.youWillNotJoinBackUnlessInvited}"),
+                    "${localizationOf(context).areYouSureYouWantToLeave} ${localizationOf(context).youWillNotJoinBackUnlessInvited}"),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(localizationOf(context).cancel),
               onPressed: () {
                 NavigationService().goBack();
-                Utilities().showToast(AppLocalizations.of(context)!.cancelled);
+                Utilities().showToast(localizationOf(context).cancelled);
               },
             ),
             TextButton(
-              child: Text(AppLocalizations.of(context)!.approve),
+              child: Text(localizationOf(context).approve),
               onPressed: () {
                 AnyChatAuth.currentUser.conversations
                     .removeWhere((element) => element.id == id);
@@ -509,7 +505,7 @@ class AnyChatUser {
                 AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
                 Utilities().showToast(
-                    AppLocalizations.of(context)!.successfullyLeftConversation);
+                    localizationOf(context).successfullyLeftConversation);
                 NavigationService().pushNamedAndRemoveUntil("/conversations",
                     predicate: (Route<dynamic> route) => route.isFirst);
               },
@@ -584,19 +580,44 @@ class AnyChatUser {
   }
 
   Future<void> deleteAccount() async {
-    var convos = await ConversationInfo.getAllConversationInfo(id);
-    for (final element in convos) {
-      await leaveConversation(element.id);
+    try {
+      await FirebaseAuth.instance.currentUser?.reload();
+      var convos = await ConversationInfo.getAllConversationInfo(id);
+      for (final element in convos) {
+        await leaveConversation(element.id);
+      }
+      final user = FirebaseFirestore.instance
+          .collection("users")
+          .doc(AnyChatAuth.currentUser.id);
+      await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+        return transaction
+            .get(user)
+            .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
+            .then((AnyChatUser fresh) {
+          transaction.delete(user);
+        });
+      });
+      AnyChatAuth.currentUser = deletedUser('0');
+      Navigator.pushReplacementNamed(Utilities().globalKey.currentContext!, '/');
+      Utilities().showToast(
+          localizationOf(Utilities().globalKey.currentContext!)!
+              .accountDeleted);
+      await FirebaseAuth.instance.currentUser?.delete();
+    } catch (e) {
+      if (e.runtimeType == FirebaseAuthException){
+        var a = e as FirebaseAuthException;
+        a.code == 'requires-recent-login';
+        Utilities().showAlertDialog(
+            null,
+            localizationOf(Utilities().globalKey.currentContext).approve,
+            'Please verify your account by logging in, and then try again.');
+        await AnyChatAuth.signOut();
+        Navigator.pushNamed(
+            Utilities().globalKey.currentContext!,
+            "/login");
+        return;
+      }
     }
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
-      transaction
-          .delete(FirebaseFirestore.instance.collection('users').doc(id));
-      return;
-    } as Future Function(Transaction));
-    Navigator.pushReplacementNamed(Utilities().globalKey.currentContext!, '/');
-    Utilities().showToast(
-        AppLocalizations.of(Utilities().globalKey.currentContext!)!
-            .accountDeleted);
   }
 
   Future<void> blockAccount(String id) async {
@@ -645,23 +666,25 @@ class AnyChatUser {
         transaction.update(user, {'theme': newValue.name});
       });
     });
-    var userData = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
+    var userData =
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     var newPref = userData.theme.brightness;
-    if (newValue ==
-        ThemeMode.light) {
+    if (newValue == ThemeMode.light) {
       newPref = Brightness.light;
-    } else if (newValue ==
-        ThemeMode.dark) {
+    } else if (newValue == ThemeMode.dark) {
       newPref = Brightness.dark;
-    } else{
-      newPref = MediaQuery.of(Utilities().globalKey.currentContext!).platformBrightness;
+    } else {
+      newPref = MediaQuery.of(Utilities().globalKey.currentContext!)
+          .platformBrightness;
     }
     userData.theme = userData.theme.copyWith(brightness: newPref);
     await CacheManager().cacheUserData(userData);
-    await NavigationService().pushReplacementNamed('/settings');
+    // await NavigationService().pushReplacementNamed('/settings');
   }
 
-  static void updateNotifications(bool value) async {
+  static Future<void> updateNotifications(bool value) async {
+
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
@@ -673,10 +696,36 @@ class AnyChatUser {
         transaction.update(user, {'notificationsEnabled': value});
       });
     });
-    var userData = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
+    var userData =
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     userData.notificationsEnabled = value;
     await CacheManager().cacheUserData(userData);
-    await NavigationService().pushReplacementNamed('/settings');
+    // await NavigationService().pushReplacementNamed('/settings');
+  }
+
+  static getAvatarInContainer(double avatarRadius, AnyChatUser user) {
+    return Expanded(
+        child: SizedBox(
+            height: avatarRadius,
+            width: avatarRadius,
+            child: user.photoUrl.isEmpty
+                ? user.displayName.isEmpty
+                ? const CircleAvatar()
+                : CircleAvatar(
+                child: Text(user.displayName.characters.first))
+                : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl))));
+  }
+  static CircleAvatar getAvatar(AnyChatUser sender) {
+    return sender.photoUrl != ''
+        ? CircleAvatar(
+      backgroundImage: NetworkImage(sender.photoUrl),
+      backgroundColor: Colors.transparent,
+    )
+        : CircleAvatar(
+      backgroundColor: Theme.of(Utilities().globalKey.currentContext!).secondaryHeaderColor,
+      child: Text(sender.displayName.characters.first),
+    );
   }
 
   // void addSubscription(
