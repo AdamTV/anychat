@@ -1,5 +1,4 @@
 import 'package:anychat/components/ads.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/notifications.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
@@ -7,15 +6,21 @@ import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/auth_service.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/services/notifications/notifications_controller.dart';
+import 'package:anychat/services/notifications/routes.dart';
+import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:anychat/services/notifier_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:anychat/services/notifications/notifications_controller.dart' as localNotifications;
 
+import 'components/combined_locale_info.dart';
 import 'firebase_options.dart';
 
 var logger = Logger(
@@ -29,16 +34,23 @@ var logger = Logger(
         ),
     level: Level.info);
 
-void main() async {
+void main() async{
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    final notifierService = NotifierService();
+    await NotificationsController.initializeLocalNotifications();
+    await NotificationsController.initializeIsolateReceivePort();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
+    final deviceNotifierService = DeivceNotifierService();
     await CacheManager().initSharedPrefs();
     ThemeData cachedTheme = await CacheManager().loadThemeFromCache();
     Locale locale = await CacheManager().loadLocaleFromCache() ?? const Locale('en');
-    notifierService.updateLocale(locale);
-    notifierService.updateTheme(cachedTheme);
-    Notifications().init();
+    deviceNotifierService.updateLocale(locale);
+    deviceNotifierService.updateTheme(cachedTheme);
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -65,13 +77,13 @@ void main() async {
           .then((value) async => {
                 Ads.init(),
                 await AuthService.listenToAuthChanges(),
-                runApp(ChangeNotifierProvider<NotifierService>(
-                  create: (context) => NotifierService(),
+                runApp(ChangeNotifierProvider<DeivceNotifierService>(
+                  create: (context) => DeivceNotifierService(),
                   child: const AnyChat(),
                 )),
               })
           .catchError(
-              (onError) => {logger.e("Error in main 3", onError, onError)});
+              (onError) => {logger.e("Error in main 3", onError)});
     } on Exception catch (e, s) {
       logger.e("Error in main 2", e, s);
     }
@@ -80,40 +92,50 @@ void main() async {
   }
 }
 
-class AnyChat extends StatelessWidget {
+class AnyChat extends StatefulWidget {
   const AnyChat({super.key});
+
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
+
+  @override
+  State<StatefulWidget> createState() => _AnyChatState();
+
+  }
+
+  class _AnyChatState extends State<AnyChat> {
+    @override
+    void initState() {
+      super.initState();
+      NotificationsController.initializeNotificationsEventListeners();
+    }
 
   @override
   Widget build(BuildContext context) {
-    logger.i("Entering _AnyChatState.build");
+    String initialRoute =
 
-    final notifierService = Provider.of<NotifierService>(context);
+    NotificationsController.initialCallAction == null
+        ? PAGE_HOME
+        : PAGE_PHONE_CALL;
+    logger.i("Entering _AnyChatState.build at initialRoute: $initialRoute");
 
-    return Consumer<NotifierService>(builder: (context, settings, child) {
+    final notifierService = Provider.of<DeivceNotifierService>(context);
+
+    return Consumer<DeivceNotifierService>(builder: (context, settings, child) {
       return MaterialApp(
           navigatorKey: NavigationService().navigatorKey,
           // Use the navigatorKey here
           routes: NavigationService().routes,
           debugShowCheckedModeBanner: false,
           onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.title,
+              localizationOf(context).title,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: AnyChatLocale.supportedLocales,
-          // localeResolutionCallback: (locale, supportedLocales) {
-          //   // Check if the current device locale is supported
-          //   for (var supportedLocale in supportedLocales) {
-          //     if (supportedLocale.languageCode == locale?.languageCode ||
-          //         supportedLocale.countryCode == locale?.countryCode) {
-          //       return supportedLocale;
-          //     }
-          //   }
-          //   return supportedLocales.first;
-          // },
+          supportedLocales: getSupportedLocales(),
           locale: notifierService.locale,
           theme: kLightTheme,
           darkTheme: kDarkTheme,
@@ -124,7 +146,3 @@ class AnyChat extends StatelessWidget {
     });
   }
 }
-
-// class _AnyChatState extends State<AnyChat> {
-
-// }

@@ -1,5 +1,6 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/combined_locale_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
@@ -34,7 +35,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             );
           }),
-          title: Text(AppLocalizations.of(context)!.blockAccount)),
+          title: Text(localizationOf(context).blockAccount)),
       body: SettingsList(
         sections: [
           SettingsSection(tiles: tiles),
@@ -47,7 +48,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
   Future<void> getBlockedAccountNames() async {
     tiles.clear();
     tiles.add(SettingsTile(
-        title: Text(AppLocalizations.of(Utilities().globalKey.currentContext!)!
+        title: Text(localizationOf(Utilities().globalKey.currentContext!)!
             .blockAccount),
         leading: const Icon(Icons.add),
         onPressed: (ctx) {

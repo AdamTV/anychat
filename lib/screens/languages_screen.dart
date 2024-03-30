@@ -1,11 +1,13 @@
 import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_locale.dart';
 import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:settings_ui/settings_ui.dart';
+
+import '../components/combined_locale_info.dart';
 
 class LanguagesScreen extends StatefulWidget {
   const LanguagesScreen({super.key});
@@ -15,8 +17,6 @@ class LanguagesScreen extends StatefulWidget {
 }
 
 class _LanguagesScreenState extends State<LanguagesScreen> {
-  final List<String> languages =
-      Set<String>.from(AnyChatLocale.isoMap.keys).toList();
   int languageIndex = 0;
   String userLanguage = '';
 
@@ -29,7 +29,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   Widget build(BuildContext context) {
     getUserLanguage();
     languageIndex = 0;
-    for (var value in AnyChatLocale.isoMap.values) {
+    for (var value in endonymRetrievalMap.keys) {
       if (value == userLanguage) {
         break;
       }
@@ -46,7 +46,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             );
           }),
-          title: Text(AppLocalizations.of(context)!.languages)),
+          title: Text(localizationOf(context).languages)),
       body: SettingsList(
         sections: [
           SettingsSection(tiles: getLanguageTiles()),
@@ -62,7 +62,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   }
 
   Future<void> changeLanguage(int index) async {
-    await AnyChatUser.updateLanguage(AnyChatLocale.isoMap[languages[index]]!);
+    await AnyChatUser.updateLanguage(endonymRetrievalMap.keys.elementAt(index));
     setState(() {
       languageIndex = index;
       NavigationService().goBack();
@@ -70,13 +70,16 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   }
 
   List<SettingsTile> getLanguageTiles() {
+
     List<SettingsTile> tiles = [];
-    for (var element in AnyChatLocale.isoMap.keys) {
+    for (var element in endonymRetrievalMap.values) {
+      List<String> localizedLanguages = [];
+      for (var element in endonymRetrievalMap.values) { localizedLanguages.add(element(localizationOf(context))); }
       tiles.add(SettingsTile(
-          title: Text(element),
-          trailing: trailingWidget(languages.indexOf(element)),
+          title: Text(element(localizationOf(context))),
+          trailing: trailingWidget(localizedLanguages.indexOf(element(localizationOf(context)))),
           onPressed: (BuildContext context) {
-            changeLanguage(languages.indexOf(element));
+            changeLanguage(localizedLanguages.indexOf(element(localizationOf(context))));
           }));
     }
     return tiles;

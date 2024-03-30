@@ -1,6 +1,7 @@
 import 'package:anychat/components/anychat_auth.dart';
 import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/utilities.dart';
+import 'package:anychat/main.dart';
 import 'package:anychat/screens/conversations_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/cache_manager.dart';
@@ -10,6 +11,8 @@ import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_speech/generated/google/protobuf/any.pb.dart';
+
+import 'notifications/notifications_util.dart';
 
 class AuthService {
   static Widget initState(user) {
@@ -39,11 +42,9 @@ class AuthService {
       if (snapshot.exists) {
         // On new login assume database has most up to date info
         AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(snapshot);
+
         var user = await CacheManager()
             .getUserDataWithCache(AnyChatAuth.currentUser.id);
-        // if (AnyChatAuth.currentUser.language != user.locale.languageCode.substring(0,2) ||
-        //     UserData.themeFromString(AnyChatAuth.currentUser.theme).brightness !=
-        //         user.theme.brightness) {
           user.id = AnyChatAuth.currentUser.id;
           user.username = AnyChatAuth.currentUser.displayName;
           user.email = AnyChatAuth.currentUser.email;

@@ -54,6 +54,11 @@ class NavigationService {
     return navigatorKey.currentState!.push(newRoute);
   }
 
+  Future<dynamic> pushNamed(String routeName) {
+    return navigatorKey.currentState!.pushNamed(
+        routeName);
+  }
+
   Future<dynamic> pushNamedAndRemoveUntil(String routeName,
       {bool Function(Route<dynamic>)? predicate}) {
     return navigatorKey.currentState!.pushNamedAndRemoveUntil(

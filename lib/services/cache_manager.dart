@@ -15,7 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CacheManager {
   late final SharedPreferences prefs;
-  late final notifierService = Provider.of<NotifierService>(
+  late final notifierService = Provider.of<DeivceNotifierService>(
       Utilities().globalKey.currentContext!,
       listen: false);
   CacheManager._privateConstructor();
@@ -158,14 +158,14 @@ class UserData {
       required this.notificationsEnabled});
 
   // Method to serialize UserData for database storage
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
       'id': id,
       'username': username,
       'email': email,
       'theme': UserData.themeToString(theme),
       'locale': locale.toString(),
-      'notificationsEnabled': notificationsEnabled,
+      'notificationsEnabled': notificationsEnabled.toString(),
     };
   }
 
@@ -176,7 +176,7 @@ class UserData {
     String email = json['email'];
     ThemeData theme = UserData.themeFromString(json['theme']);
     Locale locale = UserData.localeFromString(json['locale']);
-    bool notificationsEnabled = json['notificationsEnabled'];
+    bool notificationsEnabled = json['notificationsEnabled'] == 'true';
     return UserData(
       id: id,
       username: username,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'combined_locale_info.dart';
+
 class HaveAccountCheck extends StatelessWidget {
   final bool login;
   final Function()? press;
@@ -18,16 +20,16 @@ class HaveAccountCheck extends StatelessWidget {
       children: <Widget>[
         Text(
           login
-              ? "${AppLocalizations.of(context)!.doNotHaveAccount} "
-              : "${AppLocalizations.of(context)!.haveAccount} ",
+              ? "${localizationOf(context).doNotHaveAccount} "
+              : "${localizationOf(context).haveAccount} ",
           style: Theme.of(context).textTheme.bodyLarge
         ),
           TextButton(
     onPressed: press,
     child: Text(
             login
-                ? AppLocalizations.of(context)!.register
-                : AppLocalizations.of(context)!.login,
+                ? localizationOf(context).register
+                : localizationOf(context).login,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
             )),
       ],

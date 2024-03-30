@@ -7,6 +7,9 @@ import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_social_button/flutter_social_button.dart';
+
+import '../components/combined_locale_info.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Text(
-            //   AppLocalizations.of(context)!.login_caps,
+            //   localizationOf(context).login_caps,
             //   style: const TextStyle(fontWeight: FontWeight.bold),
             // ),
             // SizedBox(height: size.height * 0.03),
@@ -54,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) =>
                             _validateEmail(value), // Validate the email
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.email,
+                          labelText: localizationOf(context).email,
                           hintText: 'Enter your email',
                         ),
                       ),
@@ -67,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) =>
                             _validatePassword(value), // Validate the password
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.password,
+                          labelText: localizationOf(context).password,
                           hintText: 'Enter your password',
                         ),
                         obscureText: true, // Hide the input
@@ -91,15 +94,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     mounted
                                         ? context
                                         : Utilities().globalKey.currentContext!,
-                                    AppLocalizations.of(Utilities()
+                                    localizationOf(Utilities()
                                                 .globalKey
-                                                .currentContext!)!
+                                                .currentContext!)
                                         .error,
-                                    AppLocalizations.of(mounted
+                                    localizationOf(mounted
                                             ? context
                                             : Utilities()
                                                 .globalKey
-                                                .currentContext!)!
+                                                .currentContext!)
                                         .invalidCredentials);
                               }
                             } on Error catch (e) {
@@ -108,14 +111,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (context.mounted) {
                                 Utilities().showAlertDialog(
                                     context,
-                                    AppLocalizations.of(context)!.error,
-                                    AppLocalizations.of(context)!
+                                    localizationOf(context).error,
+                                    localizationOf(context)
                                         .errorLoggingIn);
                               }
                             }
                           }
                         },
-                        child: Text(AppLocalizations.of(context)!.login),
+                        child: Text(localizationOf(context).login),
                       ),
                     ],
                   ),
@@ -130,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               },
               child: Text(
-                AppLocalizations.of(context)!.forgotPassword,
+                localizationOf(context).forgotPassword,
                 style:  Theme.of(context).textTheme.bodyLarge!
                 .copyWith(fontWeight: FontWeight.bold),
               ),
@@ -142,12 +145,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const OrDivider(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                AnyChatAuth.googleIcon(context),
-                AnyChatAuth.appleIcon(context),
-                AnyChatAuth.facebookIcon(context),
-                // AnyChatAuth.twitterIcon(context),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.google),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
               ],
             )
           ],

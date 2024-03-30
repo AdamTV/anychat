@@ -68,6 +68,15 @@ dependencies:
   #  flutter_hooks: ^0.21.0
   async: ^2.11.0
   provider: ^6.1.2
+  flutter_social_button: ^1.1.4+1
+  awesome_notifications: ^0.8.2
+  palette_generator: ^0.3.3+3
+  device_info_plus: ^10.0.1
+  google_fonts: ^6.2.1
+  feather_icons: ^1.2.0
+  vibration: ^1.8.4
+  universal_io: ^2.2.2
+  numberpicker: ^2.1.2
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
@@ -112,8 +121,11 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/sounds/
     - assets/anychat-c414a-7669166c30f5.json
     - assets/anychat-c414a-c304e57544ef.json
+    - assets/images/animated-bell.gif
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
