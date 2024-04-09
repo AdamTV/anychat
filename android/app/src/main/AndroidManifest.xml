@@ -4,6 +4,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
     <application
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/launcher_icon"
         android:label="AnyChat">
         <meta-data

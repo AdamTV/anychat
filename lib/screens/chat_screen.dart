@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_message.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_message.dart';
+import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
-import 'package:anychat/components/conversation.dart';
-import 'package:anychat/components/conversation_info.dart';
+import 'package:anychat/database/conversation.dart';
+import 'package:anychat/database/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/search_screen.dart';
@@ -13,6 +13,7 @@ import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/combined_locale_info.dart';
@@ -425,9 +426,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 title: Text(localizationOf(context).logout),
                 onTap: () async {
                   await AnyChatAuth.signOut();
-                  Navigator.pushNamed(
-                      mounted ? context : Utilities().globalKey.currentContext!,
-                      "/welcome");
+                  NavigationService().pushNamed("/welcome");
                 }),
           ],
         ),
@@ -463,7 +462,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           Text(localizationOf(context).incomingMessages),
           DropdownButton<String>(
             value: incomingDropdownValue,
-            icon: const Icon(Icons.language),
+            icon: const Icon(Icons.translate),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
@@ -490,9 +489,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.incomingLanguage = isoCode;
                     incomingDropdownValue = newValue;
               });
-              Navigator.pushNamed(
-                  mounted ? context : Utilities().globalKey.currentContext!,
-                  "/chat");
+              NavigationService().pushNamed("/chat");
             },
             items: getLanguageDropdownMenuItems(context)
 
@@ -508,7 +505,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           Text(localizationOf(context).outgoingMessages),
           DropdownButton<String>(
             value: outgoingDropdownValue,
-            icon: const Icon(Icons.language),
+            icon: const Icon(Icons.keyboard),
             iconSize: 24,
             elevation: 16,
             onChanged: (String? newValue) async {
@@ -537,9 +534,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 info.outgoingLanguage = isoCode;
                 outgoingDropdownValue = newValue;
               });
-              Navigator.pushNamed(
-                  mounted ? context : Utilities().globalKey.currentContext!,
-                  "/chat");
+              NavigationService().pushNamed("/chat");
             },
             items: getLanguageDropdownMenuItems(context)
           ),
@@ -580,39 +575,43 @@ class MessageWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.all(8.0),
-          child: IntrinsicWidth(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                Container(
-                    margin: const EdgeInsets.only(right: 16.0),
-                    child: AnyChatUser.getAvatar(sender!)),
-                    // sender!.photoUrl != ''
-                    //     ? CircleAvatar(
-                    //   backgroundImage: NetworkImage(sender!.photoUrl),
-                    //   backgroundColor: Colors.transparent,
-                    // )
-                    //     : CircleAvatar(
-                    //   child: Text(sender!.displayName.characters.first),
-                    // )),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Container(
+                          padding: EdgeInsets.all(8),
+                          child: AnyChatUser.getAvatar(sender!)),
                       Text(sender!.displayName,
                           style: Theme.of(context).textTheme.headlineSmall),
+                    ]) ,
+                // sender!.photoUrl != ''
+                //     ? CircleAvatar(
+                //   backgroundImage: NetworkImage(sender!.photoUrl),
+                //   backgroundColor: Colors.transparent,
+                // )
+                //     : CircleAvatar(
+                //   child: Text(sender!.displayName.characters.first),
+                // )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Container(
-                        margin: const EdgeInsets.only(top: 5.0),
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: text,
+                        padding: EdgeInsets.only(right:8, top:50),
+                          child: Icon(sender!.id == AnyChatAuth.currentUser.id
+                              ? Icons.keyboard
+                              : Icons.translate)
                       ),
+                      Expanded(
+                        child: text!),
                     ],
                   ),
-                ),
+
               ],
-            ),
+            )
           ),
-        ),
       ),
     );
   }

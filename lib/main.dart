@@ -1,5 +1,6 @@
 import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/constants.dart';
+import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/notifications.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
@@ -7,7 +8,6 @@ import 'package:anychat/services/auth_service.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/notifications_controller.dart';
-import 'package:anychat/services/notifications/routes.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:anychat/services/notifier_service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -18,14 +18,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:anychat/services/notifications/notifications_controller.dart' as localNotifications;
+import 'package:anychat/services/notifications/notifications_controller.dart'
+    as localNotifications;
 
 import 'components/combined_locale_info.dart';
 import 'firebase_options.dart';
 
 var logger = Logger(
     printer: PrettyPrinter(
-        methodCount: 2, // Number of method calls to be displayed
+        methodCount: 5, // Number of method calls to be displayed
         errorMethodCount: 8, // Number of method calls if stacktrace is provided
         lineLength: 120, // Width of the output
         colors: true, // Colorful log messages
@@ -34,11 +35,14 @@ var logger = Logger(
         ),
     level: Level.info);
 
-void main() async{
+void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
+    NotificationObserver().init();
     await NotificationsController.initializeLocalNotifications();
+    // await NotificationsController.initializeRemoteNotifications();
     await NotificationsController.initializeIsolateReceivePort();
+    await NotificationsController.getInitialNotificationAction();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -48,7 +52,8 @@ void main() async{
     final deviceNotifierService = DeivceNotifierService();
     await CacheManager().initSharedPrefs();
     ThemeData cachedTheme = await CacheManager().loadThemeFromCache();
-    Locale locale = await CacheManager().loadLocaleFromCache() ?? const Locale('en');
+    Locale locale =
+        await CacheManager().loadLocaleFromCache() ?? const Locale('en');
     deviceNotifierService.updateLocale(locale);
     deviceNotifierService.updateTheme(cachedTheme);
     await Firebase.initializeApp(
@@ -82,8 +87,7 @@ void main() async{
                   child: const AnyChat(),
                 )),
               })
-          .catchError(
-              (onError) => {logger.e("Error in main 3", onError)});
+          .catchError((onError) => {logger.e("Error in main 3", onError)});
     } on Exception catch (e, s) {
       logger.e("Error in main 2", e, s);
     }
@@ -96,27 +100,24 @@ class AnyChat extends StatefulWidget {
   const AnyChat({super.key});
 
   static final GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
+      GlobalKey<NavigatorState>();
 
   @override
   State<StatefulWidget> createState() => _AnyChatState();
+}
 
+class _AnyChatState extends State<AnyChat> {
+  @override
+  void initState() {
+    super.initState();
+    NotificationsController.initializeNotificationsEventListeners();
   }
-
-  class _AnyChatState extends State<AnyChat> {
-    @override
-    void initState() {
-      super.initState();
-      NotificationsController.initializeNotificationsEventListeners();
-    }
 
   @override
   Widget build(BuildContext context) {
-    String initialRoute =
-
-    NotificationsController.initialCallAction == null
-        ? PAGE_HOME
-        : PAGE_PHONE_CALL;
+    String initialRoute = NotificationsController().initialAction == null
+        ? '/'
+        : '/call';
     logger.i("Entering _AnyChatState.build at initialRoute: $initialRoute");
 
     final notifierService = Provider.of<DeivceNotifierService>(context);

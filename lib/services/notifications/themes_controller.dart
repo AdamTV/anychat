@@ -1,6 +1,5 @@
+import 'package:anychat/components/constants.dart';
 import 'package:flutter/material.dart';
-
-import './main_complete.dart';
 
 enum Themes { light, dark }
 
@@ -9,20 +8,17 @@ class ThemesController {
     Themes.light: ThemeData(
       brightness: Brightness.light,
 
-      primaryColor: App.mainColor,
-      canvasColor: Colors.white,
-      focusColor: Colors.blueAccent,
-      disabledColor: Colors.grey,
+      primaryColor: kLightTheme.primaryColor,
+      canvasColor: kLightTheme.canvasColor,
+      focusColor: kLightTheme.focusColor,
+      disabledColor: kLightTheme.disabledColor,
 
       appBarTheme: AppBarTheme(
-          color: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData(
-            color: App.mainColor,
+            color: kLightTheme.primaryColor,
           )
       ),
-
-      fontFamily: 'Robot',
 
       // Define the default TextTheme. Use this to specify the default
       // text styling for headlines, titles, bodies of text, and more.

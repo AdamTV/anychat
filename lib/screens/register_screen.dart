@@ -1,6 +1,6 @@
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/have_account_check.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
+import 'package:anychat/database/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/services/cache_manager.dart';
@@ -198,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             HaveAccountCheck(
               login: false,
               press: () {
-                Navigator.pushNamed(context, "/login");
+                NavigationService().pushNamed("/login");
               },
             ),
             const OrDivider(),
@@ -207,7 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: <Widget>[
                 AnyChatAuth.flutterSocialButton(context, ButtonType.google),
                 AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
-                AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
+                // AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
                 // AnyChatAuth.twitterIcon(context),
               ],
             )

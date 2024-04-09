@@ -1,5 +1,6 @@
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
+import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/conversations_screen.dart';
@@ -42,7 +43,7 @@ class AuthService {
       if (snapshot.exists) {
         // On new login assume database has most up to date info
         AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(snapshot);
-
+        await NotificationObserver().initChatSubscriptions();
         var user = await CacheManager()
             .getUserDataWithCache(AnyChatAuth.currentUser.id);
           user.id = AnyChatAuth.currentUser.id;

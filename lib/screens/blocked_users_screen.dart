@@ -1,5 +1,5 @@
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/combined_locale_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/search_screen.dart';
@@ -52,7 +52,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
             .blockAccount),
         leading: const Icon(Icons.add),
         onPressed: (ctx) {
-          Navigator.of(context).pushReplacement(
+          NavigationService().pushReplacement(
               MaterialPageRoute(builder: (BuildContext context) {
             return const SearchChatterScreen(false, true);
           }));

@@ -75,4 +75,10 @@ class NavigationService {
   Future<dynamic> pushAndRemoveUntil(Route<dynamic> newRoute, bool Function(Route<dynamic>) predicate){
     return navigatorKey.currentState!.pushAndRemoveUntil(newRoute, predicate);
   }
+  void pop() {
+    return navigatorKey.currentState!.pop();
+  }
+  void popUntil(bool Function(Route<dynamic>) predicate){
+    return navigatorKey.currentState!.popUntil(predicate);
+  }
 }

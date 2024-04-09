@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
@@ -11,7 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:html/parser.dart';
-import 'anychat_user.dart';
+import '../database/anychat_user.dart';
 import 'combined_locale_info.dart';
 
 class Utilities {
@@ -137,20 +137,10 @@ class Utilities {
 
   String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
-    var ids = <String?>[];
-    for (var user in users) {
-      if (user.id != AnyChatAuth.currentUser.id && !ids.contains(user.id)) {
-        ids.add(user.id);
-        ret += user.displayName;
-        ret += ", ";
-      }
-    }
-    try {
-      ret = ret.substring(0, ret.length - 2);
-    } on Error catch (e) {
-      logger.e("Error", e, e.stackTrace);
-
-      // logger.e(_.toString(), time: DateTime.now(), error: _, stackTrace: e);
+    if (users.length == 1) {
+      ret = users[0].displayName;
+    } else if (users.length > 1) {
+      ret = 'Group Chat';
     }
     return ret;
   }

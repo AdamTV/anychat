@@ -1,5 +1,5 @@
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/have_account_check.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
@@ -127,8 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
+                NavigationService().pushNamed(
                   '/forgotPassword',
                 );
               },
@@ -149,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 AnyChatAuth.flutterSocialButton(context, ButtonType.google),
                 AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
-                AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
+                // AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
               ],
             )
           ],

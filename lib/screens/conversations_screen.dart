@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:collection';
 
 // import 'package:anychat/components/ads.dart';
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_message.dart';
-import 'package:anychat/components/anychat_user.dart';
-import 'package:anychat/components/conversation.dart';
-import 'package:anychat/components/conversation_info.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_message.dart';
+import 'package:anychat/database/anychat_user.dart';
+import 'package:anychat/database/conversation.dart';
+import 'package:anychat/database/conversation_info.dart';
 import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/notifications.dart';
 import 'package:anychat/components/utilities.dart';
@@ -245,6 +245,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                     ? info.outgoingLanguage
                     : info.incomingLanguage;
                 // text = "${message.text}\n\n"
+
                 await Utilities().getGoogleTranslation(language, message.text);
               } catch (e) {
                 logger.d(e);
@@ -385,12 +386,16 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           final language = message.senderId == AnyChatAuth.currentUser.id
               ? info.outgoingLanguage
               : info.incomingLanguage;
-          text = "${message.text}\n\n"
-              "${await Utilities().getGoogleTranslation(language, message.text)}";
+          var truncatedText = message.text;
+          if (truncatedText.length > 20) {
+            truncatedText = "${truncatedText.substring(0, 19)}...";
+          }
+          text = "${truncatedText}\n\n"
+              "${await Utilities().getGoogleTranslation(language, truncatedText)}";
         } catch (e, stack) {
           logger.d("New Conversation: $conversation.id");
           text = localizationOf(
-                  mounted ? context : Utilities().globalKey.currentContext!)!
+                  mounted ? context : Utilities().globalKey.currentContext!)
               .newConversation;
         }
         // } catch (e) {

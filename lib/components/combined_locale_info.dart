@@ -50,7 +50,7 @@ String getLocaleCodeByEndonym(String endonym,
   // Attempt to find the locale code by endonym
   var item = allEndonyms.entries.firstWhere(
         (k) => k.key.trim().toLowerCase() == endonym.trim().toLowerCase(),
-    orElse: () => const MapEntry('English', 'en0'),
+    orElse: () => const MapEntry('English', 'en'),
   );
 return item.value;
 }

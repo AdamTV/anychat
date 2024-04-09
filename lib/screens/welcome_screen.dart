@@ -1,3 +1,4 @@
+import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                       localizationOf(context).login_caps,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, "/login");
+                      NavigationService().pushNamed("/login");
                     },
                   ),
                   TextButton(
@@ -48,7 +49,7 @@ class WelcomeScreen extends StatelessWidget {
                       localizationOf(context).register_caps,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, "/register");
+                      NavigationService().pushNamed("/register");
                     },
                   ),
                 ],

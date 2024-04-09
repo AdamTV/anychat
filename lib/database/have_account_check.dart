@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'combined_locale_info.dart';
+import '../components/combined_locale_info.dart';
 
 class HaveAccountCheck extends StatelessWidget {
   final bool login;

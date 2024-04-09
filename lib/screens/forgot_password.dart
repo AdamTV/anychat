@@ -2,6 +2,7 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/login_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
+import 'package:anychat/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -52,20 +53,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               onPressed: () async {
                 await _passwordReset();
                 logger.d(_email);
-                if (context.mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return const LoginScreen();
-                    }),
-                  );
-                }
+                  NavigationService().pushNamed('/login');
               },
             ),
             ElevatedButton(
               child: Text(localizationOf(context).login),
               onPressed: () {
-                Navigator.pushNamed(context, "/login");
+                NavigationService().pushNamed("/login");
               },
             ),
           ],

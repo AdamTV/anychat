@@ -1,24 +1,46 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
+import 'package:anychat/components/constants.dart';
+import 'package:anychat/components/utilities.dart';
+import 'package:anychat/database/conversation.dart';
+import 'package:anychat/firebase_options.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/services/notifications/main_complete.dart';
-import 'package:anychat/services/notifications/routes.dart';
-import 'package:anychat/services/notifications/utils/common_functions.dart' if (dart.library.html)
-'package:awesome_notifications_example/utils/common_web_functions.dart';
+import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/services/notifications/utils/common_functions.dart'
+    if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
 import 'package:anychat/services/notifications/utils/media_player_central.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationsController {
-  static ReceivedAction? initialCallAction;
+class NotificationsController extends ChangeNotifier {
+  static final NotificationsController _instance =
+      NotificationsController._internal();
+
+  factory NotificationsController() {
+    return _instance;
+  }
+
+  NotificationsController._internal();
+
+  String _firebaseToken = '';
+  String get firebaseToken => _firebaseToken;
+
+  String _nativeToken = '';
+  String get nativeToken => _nativeToken;
+
+  ReceivedAction? initialAction;
 
   // ***************************************************************
   //    INITIALIZATIONS
@@ -27,14 +49,13 @@ class NotificationsController {
     await initializeIsolateReceivePort();
     await AwesomeNotifications().initialize(
         // 'resource://drawable/logo_icon',
-            null,
+        null,
         [
           NotificationChannel(
             channelGroupKey: 'chat',
             channelKey: 'chats',
             channelName: 'Chat Messages',
-            channelDescription:
-            'This is a simple example channel of a chat group',
+            channelDescription: 'Chat Messages',
             channelShowBadge: true,
             importance: NotificationImportance.Max,
             ledColor: Colors.white,
@@ -42,9 +63,9 @@ class NotificationsController {
           ),
           NotificationChannel(
               channelGroupKey: 'call',
-              channelKey: 'calls',
-              channelName: 'Calls Channel',
-              channelDescription: 'Channel with call ringtone',
+              channelKey: 'call_channel',
+              channelName: 'Video Calls',
+              channelDescription: 'Video Calls',
               defaultColor: const Color(0xFF9D50DD),
               importance: NotificationImportance.Max,
               ledColor: Colors.white,
@@ -235,12 +256,12 @@ class NotificationsController {
           //     vibrationPattern: lowVibrationPattern,
           //     importance: NotificationImportance.High)
         ],
-        // channelGroups: [
-        //   NotificationChannelGroup(
-        //       channelGroupKey: 'basic_tests', channelGroupName: 'Basic tests'),
-        //   NotificationChannelGroup(
-        //       channelGroupKey: 'category_tests',
-        //       channelGroupName: 'Category tests'),
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupKey: 'chat', channelGroupName: 'Chat Messages'),
+          NotificationChannelGroup(
+              channelGroupKey: 'call', channelGroupName: 'Calls')
+        ],
         //   NotificationChannelGroup(
         //       channelGroupKey: 'image_tests', channelGroupName: 'Images tests'),
         //   NotificationChannelGroup(
@@ -270,6 +291,8 @@ class NotificationsController {
         //       channelGroupName: 'Media Player tests')
         // ],
         debug: true);
+    _instance.initialAction = await AwesomeNotifications()
+        .getInitialNotificationAction(removeFromActionEvents: false);
   }
 
   static Future<void> initializeNotificationsEventListeners() async {
@@ -298,8 +321,7 @@ class NotificationsController {
 
     // This initialization only happens on main isolate
     IsolateNameServer.registerPortWithName(
-        receivePort!.sendPort,
-        'notification_action_port');
+        receivePort!.sendPort, 'notification_action_port');
   }
 
   // ***************************************************************
@@ -310,8 +332,9 @@ class NotificationsController {
   @pragma("vm:entry-point")
   static Future<void> onNotificationCreatedMethod(
       ReceivedNotification receivedNotification) async {
-    var message = 'Notification created on ${receivedNotification.createdLifeCycle?.name}';
-    logger.i("Notifications Controller ",message);
+    var message =
+        'Notification created on ${receivedNotification.createdLifeCycle?.name}';
+    logger.i("Notifications Controller ", message);
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -323,11 +346,13 @@ class NotificationsController {
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    var message1 = 'Notification displayed on ${receivedNotification.displayedLifeCycle?.name}';
-    var message2 = 'Notification displayed at ${receivedNotification.displayedDate}';
+    var message1 =
+        'Notification displayed on ${receivedNotification.displayedLifeCycle?.name}';
+    var message2 =
+        'Notification displayed at ${receivedNotification.displayedDate}';
 
-    logger.i("Notifications Controller ",message1);
-    logger.i("Notifications Controller ",message2);
+    logger.i("Notifications Controller ", message1);
+    logger.i("Notifications Controller ", message2);
     Fluttertoast.showToast(
         msg: message1,
         toastLength: Toast.LENGTH_SHORT,
@@ -339,7 +364,8 @@ class NotificationsController {
   @pragma("vm:entry-point")
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    var message = 'Notification dismissed on ${receivedAction.dismissedLifeCycle?.name}';
+    var message =
+        'Notification dismissed on ${receivedAction.dismissedLifeCycle?.name}';
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -356,24 +382,23 @@ class NotificationsController {
     } else {
       logger.i("Notifications Controller ",
           'onActionReceivedMethod was called inside a parallel dart isolate, where receivePort was never initialized.');
-      SendPort? sendPort = IsolateNameServer
-          .lookupPortByName('notification_action_port');
+      SendPort? sendPort =
+          IsolateNameServer.lookupPortByName('notification_action_port');
 
       if (sendPort != null) {
-        logger.i("Notifications Controller ",'Redirecting the execution to main isolate process in listening...');
+        logger.i("Notifications Controller ",
+            'Redirecting the execution to main isolate process in listening...');
         dynamic serializedData = receivedAction.toMap();
         sendPort.send(serializedData);
       }
     }
   }
 
-
-
   static Future<void> onActionReceivedMethodImpl(
       ReceivedAction receivedAction) async {
-    var message = 'Action ${receivedAction.actionType?.name} received on ${
-        receivedAction.actionLifeCycle?.name}';
-    logger.i("Notifications Controller ",message);
+    var message =
+        'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}';
+    logger.i("Notifications Controller ", message);
 
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
@@ -386,17 +411,22 @@ class NotificationsController {
     // UI/visual elements
     if (receivedAction.actionType != ActionType.SilentBackgroundAction) {
       Fluttertoast.showToast(
-          msg:
-              '${isSilentAction ? 'Silent action' : 'Action'}'
-                  ' received on ${receivedAction.actionLifeCycle?.name}',
+          msg: '${isSilentAction ? 'Silent action' : 'Action'}'
+              ' received on ${receivedAction.actionLifeCycle?.name}',
           toastLength: Toast.LENGTH_SHORT,
-          backgroundColor: isSilentAction ? Colors.blueAccent : App.mainColor,
+          backgroundColor:
+              isSilentAction ? Colors.blueAccent : kLightTheme.primaryColor,
           gravity: ToastGravity.BOTTOM);
     }
+    var actionBasedOnSenderCheck =
+        receivedAction.payload?['senderID'] == AnyChatAuth.currentUser.id
+            ? null
+            : receivedAction.channelKey;
 
-    switch (receivedAction.channelKey) {
-      case 'calls':
-        if (receivedAction.actionLifeCycle != NotificationLifeCycle.Terminated){
+    switch (actionBasedOnSenderCheck) {
+      case 'call_channel':
+        if (receivedAction.actionLifeCycle !=
+            NotificationLifeCycle.Terminated) {
           await receiveCallNotificationAction(receivedAction);
         }
         break;
@@ -405,23 +435,19 @@ class NotificationsController {
         await receiveAlarmNotificationAction(receivedAction);
         break;
 
-      case 'media_player':
-        await receiveMediaNotificationAction(receivedAction);
-        break;
-
       case 'chats':
         await receiveChatNotificationAction(receivedAction);
         break;
 
       default:
         if (isSilentAction) {
-          logger.i("Notifications Controller ",receivedAction.toString());
-          logger.i("Notifications Controller ","start");
+          logger.i("Notifications Controller ", receivedAction.toString());
+          logger.i("Notifications Controller ", "start");
           await Future.delayed(const Duration(seconds: 4));
           final url = Uri.parse("http://google.com");
           final re = await http.get(url);
-          logger.i("Notifications Controller ",re.body);
-          logger.i("Notifications Controller ","long task done");
+          logger.i("Notifications Controller ", re.body);
+          logger.i("Notifications Controller ", "long task done");
           break;
         }
         if (!AwesomeStringUtils.isNullOrEmpty(receivedAction.buttonKeyInput)) {
@@ -439,60 +465,36 @@ class NotificationsController {
 
   static Future<void> receiveButtonInputText(
       ReceivedAction receivedAction) async {
-    logger.i("Notifications Controller ",'Input Button Message: "${receivedAction.buttonKeyInput}"');
+    logger.i("Notifications Controller ",
+        'Input Button Message: "${receivedAction.buttonKeyInput}"');
     Fluttertoast.showToast(
         msg: 'Msg: ${receivedAction.buttonKeyInput}',
-        backgroundColor: App.mainColor,
+        backgroundColor: kLightTheme.primaryColor,
         textColor: Colors.white);
   }
 
   static Future<void> receiveStandardNotificationAction(
       ReceivedAction receivedAction) async {
-    loadSingletonPage(App.navigatorKey.currentState,
-        targetPage: PAGE_NOTIFICATION_DETAILS, receivedAction: receivedAction);
-  }
-
-  static Future<void> receiveMediaNotificationAction(
-      ReceivedAction receivedAction) async {
-    switch (receivedAction.buttonKeyPressed) {
-      case 'MEDIA_CLOSE':
-        MediaPlayerCentral.stop();
-        break;
-
-      case 'MEDIA_PLAY':
-      case 'MEDIA_PAUSE':
-        MediaPlayerCentral.playPause();
-        break;
-
-      case 'MEDIA_PREV':
-        MediaPlayerCentral.previousMedia();
-        break;
-
-      case 'MEDIA_NEXT':
-        MediaPlayerCentral.nextMedia();
-        break;
-
-      default:
-        loadSingletonPage(App.navigatorKey.currentState,
-            targetPage: PAGE_MEDIA_DETAILS, receivedAction: receivedAction);
-        break;
-    }
+    loadSingletonPage(NavigationService().navigatorKey.currentState,
+        targetPage: '/chat', receivedAction: receivedAction);
   }
 
   static Future<void> receiveChatNotificationAction(
       ReceivedAction receivedAction) async {
     if (receivedAction.buttonKeyPressed == 'REPLY') {
+      await AnyChatUser.addMessageToConversation(receivedAction.buttonKeyInput,
+          conversationId: receivedAction.groupKey);
       await NotificationUtils.createMessagingNotification(
         channelKey: 'chats',
-        groupKey: AnyChatAuth.currentUser.id,
+        groupKey: receivedAction.groupKey ?? '',
         chatName: 'New Message',
-        username: 'You',
-        largeIcon: 'asset://assets/images/rock-disc.jpg',
+        username: AnyChatAuth.currentUser.displayName,
+        largeIcon: AnyChatAuth.currentUser.photoUrl,
         message: receivedAction.buttonKeyInput,
       );
     } else {
-      loadSingletonPage(App.navigatorKey.currentState,
-          targetPage: PAGE_NOTIFICATION_DETAILS, receivedAction: receivedAction);
+      loadSingletonPage(NavigationService().navigatorKey.currentState,
+          targetPage: '/chat', receivedAction: receivedAction);
     }
   }
 
@@ -514,23 +516,132 @@ class NotificationsController {
         break;
 
       case 'ACCEPT':
-        loadSingletonPage(App.navigatorKey.currentState,
-            targetPage: PAGE_PHONE_CALL, receivedAction: receivedAction);
-        break;
-
       default:
-        loadSingletonPage(App.navigatorKey.currentState,
-            targetPage: PAGE_PHONE_CALL, receivedAction: receivedAction);
+        AnyChatAuth.currentConversation =
+            await Conversation.getConversationById(
+                receivedAction.payload?['conversationId'] ?? '');
+        loadSingletonPage(Utilities().globalKey.currentState,
+            targetPage: '/call', receivedAction: receivedAction);
         break;
     }
   }
 
-  static Future<void> interceptInitialCallActionRequest() async {
-    ReceivedAction? receivedAction = await AwesomeNotifications()
-        .getInitialNotificationAction();
+  Future<void> interceptInitialCallActionRequest() async {
+    ReceivedAction? receivedAction =
+        await AwesomeNotifications().getInitialNotificationAction();
 
-    if(receivedAction?.channelKey == 'call_channel') {
-      initialCallAction = receivedAction;
+    if (receivedAction?.channelKey == 'call_channel') {
+      initialAction = receivedAction;
     }
+  }
+
+  // static Future<void> initializeRemoteNotifications() async {
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  //   await AwesomeNotificationsFcm().initialize(
+  //     onFcmTokenHandle: NotificationsController.myFcmTokenHandle,
+  //     onNativeTokenHandle: NotificationsController.myNativeTokenHandle,
+  //     onFcmSilentDataHandle: NotificationsController.mySilentDataHandle,
+  //     licenseKeys:
+  //         // On this example app, the app ID / Bundle Id are different
+  //         // for each platform, so i used the main Bundle ID + 1 variation
+  //         [
+  //       // me.carda.awesomeNotificationsFcmExample
+  //       '2024-01-02==kZDwJQkSR7mrjEgDk7afWDSrqYCiqW6Ao/7wn/w6v5OKOgAnoEWt'
+  //           'gqO0ELI1BxWNzSde2gbaW+9Ki6Tx94pU2gQRJuJxXGsvcmCRla1mB/0U/rPh'
+  //           'f77bxgPRG+PHn9+p9sQ5nfvY6Ytw9IvDn4NjH3ccbjoXFRrs7R/ou9aapq2a'
+  //           'jRHqXlIzDR1ihyQHC91Wvkviw2qTOEYDhR5hE4T2l1iHsTTpeXOqWk0XmgnC'
+  //           'gO18e4Hv0P5WKICCull+PCh+OXQYTK5x0UwQPNOGN20rQu5zR9C0ph0hFQxk'
+  //           'WLa/ft206pBZmWDf4HiyAawXPoR1AMWAh/t0cjh8gRTTNfHeog==',
+  //
+  //       // me.carda.awesome_notifications_fcm_example
+  //       '2024-01-02==lYUBqt9kKmObnP7UzWd2KK9FOTOySkVATX/j/CGEzSlSKsQx5y5S9'
+  //           'RKHG1lP1TZ5KHO6+wwkNbzxmni4uJ418WM3ywTY199bHAp5MHWxZEEgvMMG4/'
+  //           '/V2W0acFhSgxH6GL/6XNYvhS2RwaX7X/z4NX7Z4dgZVOn0VW3GRyg7I/zLcgl'
+  //           'Dhh+n9obRuGnZI+Xakw2id97PSG4QZOCw15A0LzE1lip/Fzj0cMRsqpvcAW2K'
+  //           'VWYZm5ZmK2yKVcop1kxiq1faZGL1fBteJCQ8YeQKpqS+aaVmexdJXmB7sJVl0'
+  //           '5o87ORRfijpO+Q6gmTYfjYxoiQMismHUx6NAnoB/txaLw=='
+  //     ],
+  //   );
+  // }
+
+  static getInitialNotificationAction() async {
+    await AwesomeNotifications()
+        .getInitialNotificationAction(removeFromActionEvents: false);
+  }
+
+  ///  *********************************************
+  ///     REMOTE NOTIFICATION EVENTS
+  ///  *********************************************
+
+  /// Use this method to execute on background when a silent data arrives
+  /// (even while terminated)
+  @pragma("vm:entry-point")
+  static Future<void> mySilentDataHandle(/*FcmSilentData silentData*/) async {
+    Fluttertoast.showToast(
+        msg: 'Silent data received',
+        backgroundColor: Colors.blueAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+
+    // print('"SilentData": ${silentData.toString()}');
+
+    //  if (silentData.createdLifeCycle != NotificationLifeCycle.Foreground) {
+    //   print("bg");
+    // } else {
+    //   print("FOREGROUND");
+    // }
+
+    print('mySilentDataHandle received a FcmSilentData execution');
+    await executeLongTaskInBackground();
+  }
+
+  /// Use this method to detect when a new fcm token is received
+  @pragma("vm:entry-point")
+  static Future<void> myFcmTokenHandle(String token) async {
+    if (token.isNotEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Fcm token received',
+          backgroundColor: Colors.blueAccent,
+          textColor: Colors.white,
+          fontSize: 16);
+
+      debugPrint('Firebase Token:"$token"');
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Fcm token deleted',
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16);
+
+      debugPrint('Firebase Token deleted');
+    }
+
+    _instance._firebaseToken = token;
+    _instance.notifyListeners();
+  }
+
+  /// Use this method to detect when a new native token is received
+  @pragma("vm:entry-point")
+  static Future<void> myNativeTokenHandle(String token) async {
+    Fluttertoast.showToast(
+        msg: 'Native token received',
+        backgroundColor: Colors.blueAccent,
+        textColor: Colors.white,
+        fontSize: 16);
+    debugPrint('Native Token:"$token"');
+
+    _instance._nativeToken = token;
+    _instance.notifyListeners();
+  }
+
+  static Future<void> executeLongTaskInBackground() async {
+    logger.d("starting long task");
+    await Future.delayed(const Duration(seconds: 4));
+    final url = Uri.parse("http://google.com");
+    final re = await http.get(url);
+    logger.d(re.body);
+    logger.d("long task done");
   }
 }

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_message.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_message.dart';
+import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
