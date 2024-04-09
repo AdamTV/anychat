@@ -16,7 +16,6 @@ import 'package:awesome_notifications/awesome_notifications.dart'
     hide AwesomeDateUtils;
 import 'package:awesome_notifications/awesome_notifications.dart' as utils
     show AwesomeDateUtils;
-import 'package:anychat/services/notifications/media_model.dart';
 import 'package:anychat/services/notifications/utils/common_functions.dart'
     if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
 import 'package:anychat/services/notifications/utils/media_player_central.dart';
@@ -205,7 +204,7 @@ class NotificationUtils {
           builder: (context) => AlertDialog(
                 backgroundColor: const Color(0xfffbfbfb),
                 title: const Text(
-                  'Awesome Notificaitons needs your permission',
+                  'AnyChat needs your permission',
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
@@ -1555,101 +1554,101 @@ class NotificationUtils {
       MEDIA CONTROLLER NOTIFICATIONS
   ************************************************ */
 
-  static void updateNotificationMediaPlayer(
-    int id,
-    MediaModel? mediaNow,
-    Duration currentTrackPosition,
-    dynamic,
-  ) {
-    if (mediaNow == null) {
-      cancelNotification(id);
-      return;
-    }
-
-    AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: id,
-            channelKey: 'media_player',
-            category: NotificationCategory.Transport,
-            title: mediaNow.bandName,
-            body: mediaNow.trackName,
-            timeoutAfter: mediaNow.trackSize,
-            progress: (currentTrackPosition.inMilliseconds /
-                    mediaNow.trackSize.inMilliseconds *
-                    100)
-                .round(),
-            summary: MediaPlayerCentral.isPlaying ? 'Now playing' : '',
-            notificationLayout: NotificationLayout.MediaPlayer,
-            largeIcon: mediaNow.diskImagePath,
-            color: Colors.purple.shade700,
-            autoDismissible: false,
-            showWhen: false),
-        actionButtons: [
-          NotificationActionButton(
-              key: 'MEDIA_PREV',
-              icon:
-                  'resource://drawable/res_ic_prev${MediaPlayerCentral.hasPreviousMedia ? '' : '_disabled'}',
-              label: 'Previous',
-              autoDismissible: false,
-              showInCompactView: false,
-              enabled: MediaPlayerCentral.hasPreviousMedia,
-              actionType: ActionType.KeepOnTop),
-          MediaPlayerCentral.isPlaying
-              ? NotificationActionButton(
-                  key: 'MEDIA_PAUSE',
-                  icon: 'resource://drawable/res_ic_pause',
-                  label: 'Pause',
-                  autoDismissible: false,
-                  showInCompactView: true,
-                  actionType: ActionType.KeepOnTop)
-              : NotificationActionButton(
-                  key: 'MEDIA_PLAY',
-                  icon:
-                      'resource://drawable/res_ic_play${MediaPlayerCentral.hasAnyMedia ? '' : '_disabled'}',
-                  label: 'Play',
-                  autoDismissible: false,
-                  showInCompactView: true,
-                  enabled: MediaPlayerCentral.hasAnyMedia,
-                  actionType: ActionType.KeepOnTop),
-          NotificationActionButton(
-              key: 'MEDIA_NEXT',
-              icon:
-                  'resource://drawable/res_ic_next${MediaPlayerCentral.hasNextMedia ? '' : '_disabled'}',
-              label: 'Previous',
-              showInCompactView: true,
-              enabled: MediaPlayerCentral.hasNextMedia,
-              actionType: ActionType.KeepOnTop),
-          NotificationActionButton(
-              key: 'MEDIA_CLOSE',
-              icon: 'resource://drawable/res_ic_close',
-              label: 'Close',
-              autoDismissible: true,
-              showInCompactView: true,
-              actionType: ActionType.KeepOnTop)
-        ]);
-  }
-
-  static int _messageIncrement = 0;
-  static Future<void> simulateChatConversation(
-      {required String groupKey}) async {
-    _messageIncrement++ % 4 < 2
-        ? createMessagingNotification(
-            channelKey: 'chats',
-            groupKey: groupKey,
-            chatName: 'Jhonny\'s Group',
-            username: 'Jhonny',
-            largeIcon: 'asset://assets/images/80s-disc.jpg',
-            message: 'Jhonny\'s message $_messageIncrement',
-          )
-        : createMessagingNotification(
-            channelKey: 'chats',
-            groupKey: 'jhonny_group',
-            chatName: 'Jhonny\'s Group',
-            username: 'Michael',
-            largeIcon: 'asset://assets/images/dj-disc.jpg',
-            message: 'Michael\'s message $_messageIncrement',
-          );
-  }
+  // static void updateNotificationMediaPlayer(
+  //   int id,
+  //   MediaModel? mediaNow,
+  //   Duration currentTrackPosition,
+  //   dynamic,
+  // ) {
+  //   if (mediaNow == null) {
+  //     cancelNotification(id);
+  //     return;
+  //   }
+  //
+  //   AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: id,
+  //           channelKey: 'media_player',
+  //           category: NotificationCategory.Transport,
+  //           title: mediaNow.bandName,
+  //           body: mediaNow.trackName,
+  //           timeoutAfter: mediaNow.trackSize,
+  //           progress: (currentTrackPosition.inMilliseconds /
+  //                   mediaNow.trackSize.inMilliseconds *
+  //                   100)
+  //               .round(),
+  //           summary: MediaPlayerCentral.isPlaying ? 'Now playing' : '',
+  //           notificationLayout: NotificationLayout.MediaPlayer,
+  //           largeIcon: mediaNow.diskImagePath,
+  //           color: Colors.purple.shade700,
+  //           autoDismissible: false,
+  //           showWhen: false),
+  //       actionButtons: [
+  //         NotificationActionButton(
+  //             key: 'MEDIA_PREV',
+  //             icon:
+  //                 'resource://drawable/res_ic_prev${MediaPlayerCentral.hasPreviousMedia ? '' : '_disabled'}',
+  //             label: 'Previous',
+  //             autoDismissible: false,
+  //             showInCompactView: false,
+  //             enabled: MediaPlayerCentral.hasPreviousMedia,
+  //             actionType: ActionType.KeepOnTop),
+  //         MediaPlayerCentral.isPlaying
+  //             ? NotificationActionButton(
+  //                 key: 'MEDIA_PAUSE',
+  //                 icon: 'resource://drawable/res_ic_pause',
+  //                 label: 'Pause',
+  //                 autoDismissible: false,
+  //                 showInCompactView: true,
+  //                 actionType: ActionType.KeepOnTop)
+  //             : NotificationActionButton(
+  //                 key: 'MEDIA_PLAY',
+  //                 icon:
+  //                     'resource://drawable/res_ic_play${MediaPlayerCentral.hasAnyMedia ? '' : '_disabled'}',
+  //                 label: 'Play',
+  //                 autoDismissible: false,
+  //                 showInCompactView: true,
+  //                 enabled: MediaPlayerCentral.hasAnyMedia,
+  //                 actionType: ActionType.KeepOnTop),
+  //         NotificationActionButton(
+  //             key: 'MEDIA_NEXT',
+  //             icon:
+  //                 'resource://drawable/res_ic_next${MediaPlayerCentral.hasNextMedia ? '' : '_disabled'}',
+  //             label: 'Previous',
+  //             showInCompactView: true,
+  //             enabled: MediaPlayerCentral.hasNextMedia,
+  //             actionType: ActionType.KeepOnTop),
+  //         NotificationActionButton(
+  //             key: 'MEDIA_CLOSE',
+  //             icon: 'resource://drawable/res_ic_close',
+  //             label: 'Close',
+  //             autoDismissible: true,
+  //             showInCompactView: true,
+  //             actionType: ActionType.KeepOnTop)
+  //       ]);
+  // }
+  //
+  // static int _messageIncrement = 0;
+  // static Future<void> simulateChatConversation(
+  //     {required String groupKey}) async {
+  //   _messageIncrement++ % 4 < 2
+  //       ? createMessagingNotification(
+  //           channelKey: 'chats',
+  //           groupKey: groupKey,
+  //           chatName: 'Jhonny\'s Group',
+  //           username: 'Jhonny',
+  //           largeIcon: 'asset://assets/images/80s-disc.jpg',
+  //           message: 'Jhonny\'s message $_messageIncrement',
+  //         )
+  //       : createMessagingNotification(
+  //           channelKey: 'chats',
+  //           groupKey: 'jhonny_group',
+  //           chatName: 'Jhonny\'s Group',
+  //           username: 'Michael',
+  //           largeIcon: 'asset://assets/images/dj-disc.jpg',
+  //           message: 'Michael\'s message $_messageIncrement',
+  //         );
+  // }
 
   static Future<void> createMessagingNotification(
       {required String channelKey,
@@ -1691,478 +1690,478 @@ class NotificationUtils {
       INBOX NOTIFICATIONS
   ************************************************ */
 
-  static Future<void> showInboxNotification(int id) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: id,
-          channelKey: "inbox",
-          title: '5 New mails from tester@gmail.com',
-          category: NotificationCategory.Email,
-          body:
-              '<b>You are our 10.000 visitor! Congratz!</b> You just won our prize'
-              '\n'
-              '<b>Want to loose weight?</b> Are you tired from false advertisements? '
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!'
-              '\n'
-              '<b>READ MY MESSAGE</b> Stop to ignore me!',
-          summary: 'E-mail inbox',
-          largeIcon:
-              'https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/366-mj-7703-fon-jj.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=d144b28b5ebf828b7d2a1bb5b31efdb6',
-          notificationLayout: NotificationLayout.Inbox,
-          payload: {'uuid': 'uuid-test'},
-        ),
-        actionButtons: [
-          NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction,
-              autoDismissible: true,
-              icon: 'resource://drawable/res_ic_close'),
-          NotificationActionButton(
-            key: 'READ',
-            label: 'Mark as read',
-            autoDismissible: true,
-            //icon: 'resources://drawable/res_ic_close'
-          )
-        ]);
-  }
-
-  /* *********************************************
-      INBOX NOTIFICATIONS
-  ************************************************ */
-
-  static Future<void> showGroupedNotifications(String channelKey) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 1,
-            channelKey: channelKey,
-            title: 'Little Jhonny',
-            body: 'Hey dude! Look what i found!'));
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 2, channelKey: 'grouped', title: 'Cyclano', body: 'What?'));
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 3,
-            channelKey: channelKey,
-            title: 'Little Jhonny',
-            body: 'This push notifications plugin is amazing!'));
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 4,
-            channelKey: channelKey,
-            title: 'Little Jhonny',
-            body: 'Its perfect!'));
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 5,
-            channelKey: channelKey,
-            title: 'Little Jhonny',
-            body: 'I gonna contribute with the project! For sure!'));
-  }
-
-  /* *********************************************
-      LIST SCHEDULED NOTIFICATIONS
-  ************************************************ */
-
-  static Future<void> listScheduledNotifications(BuildContext context) async {
-    List<NotificationModel> activeSchedules =
-        await AwesomeNotifications().listScheduledNotifications();
-
-    for (NotificationModel schedule in activeSchedules) {
-      debugPrint('pending notification: ['
-          'id: ${schedule.content!.id}, '
-          'title: ${schedule.content!.titleWithoutHtml}, '
-          'schedule: ${schedule.schedule.toString()}'
-          ']');
-    }
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text('${activeSchedules.length} schedules founded'),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                NavigationService().pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  static Future<DateTime?> pickScheduleDate(BuildContext context,
-      {required bool isUtc}) async {
-    TimeOfDay? timeOfDay;
-    DateTime now = isUtc ? DateTime.now().toUtc() : DateTime.now();
-    DateTime? newDate = await showDatePicker(
-        context: context,
-        initialDate: now,
-        firstDate: now,
-        lastDate: now.add(const Duration(days: 365)));
-
-    if (newDate != null) {
-      timeOfDay = await showTimePicker(
-        context: context,
-        initialTime:
-            TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1))),
-      );
-
-      if (timeOfDay != null) {
-        return isUtc
-            ? DateTime.utc(newDate.year, newDate.month, newDate.day,
-                timeOfDay.hour, timeOfDay.minute)
-            : DateTime(newDate.year, newDate.month, newDate.day, timeOfDay.hour,
-                timeOfDay.minute);
-      }
-    }
-    return null;
-  }
-
-  static Future<void> getNextValidMonday(BuildContext context) async {
-    DateTime? referenceDate = await pickScheduleDate(context, isUtc: false);
-
-    NotificationSchedule schedule = NotificationCalendar(
-        weekday: DateTime.monday,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        timeZone: AwesomeNotifications.localTimeZoneIdentifier);
-    //NotificationCalendar.fromDate(date: expectedDate);
-
-    DateTime? nextValidDate = await AwesomeNotifications()
-        .getNextDate(schedule, fixedDate: referenceDate);
-
-    late String response;
-    if (nextValidDate == null) {
-      response = 'There is no more valid date for this schedule';
-    } else {
-      response = utils.AwesomeDateUtils.parseDateToString(nextValidDate.toUtc(),
-          format: 'dd/MM/yyyy')!;
-    }
-
-    showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: const Text("Next valid schedule"),
-              content:
-                  SizedBox(height: 50, child: Center(child: Text(response))),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    Navigator.of(context).pop(null);
-                  },
-                )
-              ],
-            ));
-  }
-
-  static Future<String> getCurrentTimeZone() {
-    return AwesomeNotifications().getLocalTimeZoneIdentifier();
-  }
-
-  static Future<String> getUtcTimeZone() {
-    return AwesomeNotifications().getUtcTimeZoneIdentifier();
-  }
-
-  static Future<void> repeatMinuteNotification() async {
-    String localTimeZone =
-        await AwesomeNotifications().getLocalTimeZoneIdentifier();
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: -1,
-            channelKey: 'scheduled',
-            title: 'Notification at every single minute',
-            body:
-                'This notification was schedule to repeat at every single minute.',
-            notificationLayout: NotificationLayout.BigPicture,
-            bigPicture: 'asset://assets/images/melted-clock.png',
-            category: NotificationCategory.Reminder),
-        schedule: NotificationInterval(
-            interval: 60,
-            timeZone: localTimeZone,
-            repeats: true,
-            preciseAlarm: true));
-  }
-
-  static Future<void> repeatMultiple5Crontab() async {
-    var nowDate = DateTime.now();
-    String localTimeZone =
-        await AwesomeNotifications().getLocalTimeZoneIdentifier();
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: -1,
-            channelKey: 'scheduled',
-            title: 'Notification at every 5 seconds for 1 minute',
-            body:
-                'This notification was schedule to repeat at every 5 seconds.'),
-        schedule: NotificationAndroidCrontab(
-            initialDateTime:
-                nowDate.copyWith().add(const Duration(seconds: 10)).toUtc(),
-            expirationDateTime: nowDate
-                .copyWith()
-                .add(const Duration(seconds: 10, minutes: 1))
-                .toUtc(),
-            crontabExpression: '/5 * * * * ? *',
-            timeZone: localTimeZone,
-            repeats: true,
-            preciseAlarm: true));
-  }
-
-  static Future<void> repeatPreciseThreeTimes() async {
-    var nowDate = DateTime.now();
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: -1,
-            channelKey: 'scheduled',
-            title: 'Notification scheduled to play precisely 3 times',
-            body: 'This notification was schedule to play precisely 3 times.',
-            notificationLayout: NotificationLayout.BigPicture,
-            category: NotificationCategory.Alarm,
-            bigPicture: 'asset://assets/images/melted-clock.png'),
-        schedule: NotificationAndroidCrontab(preciseSchedules: [
-          nowDate.copyWith().add(const Duration(seconds: 1)).toUtc(),
-          nowDate.copyWith().add(const Duration(seconds: 25)).toUtc(),
-          nowDate.copyWith().add(const Duration(seconds: 45)).toUtc()
-        ], repeats: true, preciseAlarm: true));
-  }
-
-  static Future<void> repeatMinuteNotificationOClock() async {
-    String localTimeZone =
-        await AwesomeNotifications().getLocalTimeZoneIdentifier();
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: -1,
-            channelKey: 'scheduled',
-            title: 'Notification at exactly every single minute',
-            body:
-                'This notification was schedule to repeat at every single minute at clock.',
-            notificationLayout: NotificationLayout.BigPicture,
-            bigPicture: 'asset://assets/images/melted-clock.png'),
-        schedule: NotificationCalendar(
-            second: 0, millisecond: 0, timeZone: localTimeZone, repeats: true));
-  }
-
-  static Future<void> showNotificationAtSchedulePreciseDate(
-      DateTime scheduleTime) async {
-    String timeZoneIdentifier = AwesomeNotifications.localTimeZoneIdentifier;
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: -1,
-          channelKey: 'scheduled',
-          title: 'Just in time!',
-          body:
-              'This notification was schedule to shows at ${utils.AwesomeDateUtils.parseDateToString(scheduleTime.toLocal()) ?? '?'} $timeZoneIdentifier (${utils.AwesomeDateUtils.parseDateToString(scheduleTime.toUtc()) ?? '?'} utc)',
-          notificationLayout: NotificationLayout.BigPicture,
-          bigPicture: 'asset://assets/images/delivery.jpeg',
-          payload: {'uuid': 'uuid-test'},
-          autoDismissible: false,
-        ),
-        schedule: NotificationCalendar.fromDate(
-            date: scheduleTime, preciseAlarm: true));
-  }
-
-  static Future<void> showNotificationWithNoBadge(int id) async {
-    AwesomeNotifications().setChannel(NotificationChannel(
-        channelKey: 'no_badge',
-        channelName: 'No Badge Notifications',
-        channelDescription: 'Notifications with no badge',
-        channelShowBadge: false));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: id,
-            channelKey: 'no_badge',
-            title: 'no badge title',
-            body: 'no badge body',
-            payload: {'uuid': 'uuid-test'}));
-  }
-
-  static int currentStep = 0;
-  static Timer? udpateNotificationAfter1Second;
-  static Future<void> showProgressNotification(int id) async {
-    int maxStep = 10;
-    int fragmentation = 4;
-    for (var simulatedStep = 1;
-        simulatedStep <= maxStep * fragmentation + 1;
-        simulatedStep++) {
-      currentStep = simulatedStep;
-      await Future.delayed(Duration(milliseconds: 1000 ~/ fragmentation));
-      if (udpateNotificationAfter1Second != null) continue;
-      udpateNotificationAfter1Second = Timer(const Duration(seconds: 1), () {
-        _updateCurrentProgressBar(
-            id: id,
-            simulatedStep: currentStep,
-            maxStep: maxStep * fragmentation);
-        udpateNotificationAfter1Second?.cancel();
-        udpateNotificationAfter1Second = null;
-      });
-    }
-  }
-
-  static void _updateCurrentProgressBar({
-    required int id,
-    required int simulatedStep,
-    required int maxStep,
-  }) {
-    if (simulatedStep < maxStep) {
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: id,
-              channelKey: 'progress_bar',
-              title: 'Download finished',
-              body: 'filename.txt',
-              category: NotificationCategory.Progress,
-              payload: {
-                'file': 'filename.txt',
-                'path': '-rmdir c://ruwindows/system32/huehuehue'
-              },
-              locked: false));
-    } else {
-      double progress = min(simulatedStep / maxStep * 100, 100);
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: id,
-              channelKey: 'progress_bar',
-              title: 'Downloading fake file in progress ($progress%)',
-              body: 'filename.txt',
-              category: NotificationCategory.Progress,
-              payload: {
-                'file': 'filename.txt',
-                'path': '-rmdir c://ruwindows/system32/huehuehue'
-              },
-              notificationLayout: NotificationLayout.ProgressBar,
-              progress: progress.round(),
-              locked: true));
-    }
-  }
-
-  static Future<void> showIndeterminateProgressNotification(int id) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: id,
-            channelKey: 'progress_bar',
-            title: 'Downloading fake file...',
-            body: 'filename.txt',
-            category: NotificationCategory.Progress,
-            payload: {
-              'file': 'filename.txt',
-              'path': '-rmdir c://ruwindows/system32/huehuehue'
-            },
-            notificationLayout: NotificationLayout.ProgressBar,
-            progress: null,
-            locked: true));
-  }
-
-  static Future<void> showNotificationWithUpdatedChannelDescription(
-      int id) async {
-    AwesomeNotifications().setChannel(NotificationChannel(
-        channelGroupKey: 'channel_tests',
-        channelKey: 'updated_channel',
-        channelName: 'Channel to update (updated)',
-        channelDescription: 'Notifications with updated channel'));
-
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: id,
-            channelKey: 'updated_channel',
-            title: 'updated notification channel',
-            body: 'check settings to see updated channel description',
-            category: NotificationCategory.Status,
-            payload: {'uuid': '0123456789'}));
-  }
-
-  static Future<void> removeChannel() async {
-    AwesomeNotifications().removeChannel('updated_channel');
-  }
-
-  static Future<void> dismissNotification(int id) async {
-    await AwesomeNotifications().dismiss(id);
-  }
-
-  static Future<void> cancelSchedule(int id) async {
-    await AwesomeNotifications().cancelSchedule(id);
-  }
-
-  static Future<void> cancelNotification(int id) async {
-    await AwesomeNotifications().cancel(id);
-  }
-
-  static Future<void> dismissNotificationsByChannelKey(
-      String channelKey) async {
-    await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
-  }
-
-  static Future<void> dismissNotificationsByGroupKey(String groupKey) async {
-    await AwesomeNotifications().dismissNotificationsByGroupKey(groupKey);
-  }
-
-  static Future<void> cancelSchedulesByChannelKey(String channelKey) async {
-    await AwesomeNotifications().cancelSchedulesByChannelKey(channelKey);
-  }
-
-  static Future<void> cancelSchedulesByGroupKey(String groupKey) async {
-    await AwesomeNotifications().cancelSchedulesByGroupKey(groupKey);
-  }
-
-  static Future<void> cancelNotificationsByChannelKey(String channelKey) async {
-    await AwesomeNotifications().cancelNotificationsByChannelKey(channelKey);
-  }
-
-  static Future<void> cancelNotificationsByGroupKey(String groupKey) async {
-    await AwesomeNotifications().cancelNotificationsByGroupKey(groupKey);
-  }
-
-  static Future<void> dismissAllNotifications() async {
-    await AwesomeNotifications().dismissAllNotifications();
-  }
-
-  static Future<void> cancelAllSchedules() async {
-    await AwesomeNotifications().cancelAllSchedules();
-  }
-
-  static Future<void> cancelAllNotifications() async {
-    await AwesomeNotifications().cancelAll();
-  }
-
-  String toTwoDigitString(int value) {
-    return value.toString().padLeft(2, '0');
-  }
+  // static Future<void> showInboxNotification(int id) async {
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //         id: id,
+  //         channelKey: "inbox",
+  //         title: '5 New mails from tester@gmail.com',
+  //         category: NotificationCategory.Email,
+  //         body:
+  //             '<b>You are our 10.000 visitor! Congratz!</b> You just won our prize'
+  //             '\n'
+  //             '<b>Want to loose weight?</b> Are you tired from false advertisements? '
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!'
+  //             '\n'
+  //             '<b>READ MY MESSAGE</b> Stop to ignore me!',
+  //         summary: 'E-mail inbox',
+  //         largeIcon:
+  //             'https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/366-mj-7703-fon-jj.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=d144b28b5ebf828b7d2a1bb5b31efdb6',
+  //         notificationLayout: NotificationLayout.Inbox,
+  //         payload: {'uuid': 'uuid-test'},
+  //       ),
+  //       actionButtons: [
+  //         NotificationActionButton(
+  //             key: 'DISMISS',
+  //             label: 'Dismiss',
+  //             actionType: ActionType.DismissAction,
+  //             autoDismissible: true,
+  //             icon: 'resource://drawable/res_ic_close'),
+  //         NotificationActionButton(
+  //           key: 'READ',
+  //           label: 'Mark as read',
+  //           autoDismissible: true,
+  //           //icon: 'resources://drawable/res_ic_close'
+  //         )
+  //       ]);
+  // }
+  //
+  // /* *********************************************
+  //     INBOX NOTIFICATIONS
+  // ************************************************ */
+  //
+  // static Future<void> showGroupedNotifications(String channelKey) async {
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: 1,
+  //           channelKey: channelKey,
+  //           title: 'Little Jhonny',
+  //           body: 'Hey dude! Look what i found!'));
+  //
+  //   await Future.delayed(const Duration(seconds: 2));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: 2, channelKey: 'grouped', title: 'Cyclano', body: 'What?'));
+  //
+  //   await Future.delayed(const Duration(seconds: 2));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: 3,
+  //           channelKey: channelKey,
+  //           title: 'Little Jhonny',
+  //           body: 'This push notifications plugin is amazing!'));
+  //
+  //   await Future.delayed(const Duration(seconds: 2));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: 4,
+  //           channelKey: channelKey,
+  //           title: 'Little Jhonny',
+  //           body: 'Its perfect!'));
+  //
+  //   await Future.delayed(const Duration(seconds: 2));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: 5,
+  //           channelKey: channelKey,
+  //           title: 'Little Jhonny',
+  //           body: 'I gonna contribute with the project! For sure!'));
+  // }
+  //
+  // /* *********************************************
+  //     LIST SCHEDULED NOTIFICATIONS
+  // ************************************************ */
+  //
+  // static Future<void> listScheduledNotifications(BuildContext context) async {
+  //   List<NotificationModel> activeSchedules =
+  //       await AwesomeNotifications().listScheduledNotifications();
+  //
+  //   for (NotificationModel schedule in activeSchedules) {
+  //     debugPrint('pending notification: ['
+  //         'id: ${schedule.content!.id}, '
+  //         'title: ${schedule.content!.titleWithoutHtml}, '
+  //         'schedule: ${schedule.schedule.toString()}'
+  //         ']');
+  //   }
+  //   return showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: Text('${activeSchedules.length} schedules founded'),
+  //         actions: [
+  //           TextButton(
+  //             child: const Text('OK'),
+  //             onPressed: () {
+  //               NavigationService().pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+  //
+  // static Future<DateTime?> pickScheduleDate(BuildContext context,
+  //     {required bool isUtc}) async {
+  //   TimeOfDay? timeOfDay;
+  //   DateTime now = isUtc ? DateTime.now().toUtc() : DateTime.now();
+  //   DateTime? newDate = await showDatePicker(
+  //       context: context,
+  //       initialDate: now,
+  //       firstDate: now,
+  //       lastDate: now.add(const Duration(days: 365)));
+  //
+  //   if (newDate != null) {
+  //     timeOfDay = await showTimePicker(
+  //       context: context,
+  //       initialTime:
+  //           TimeOfDay.fromDateTime(now.add(const Duration(minutes: 1))),
+  //     );
+  //
+  //     if (timeOfDay != null) {
+  //       return isUtc
+  //           ? DateTime.utc(newDate.year, newDate.month, newDate.day,
+  //               timeOfDay.hour, timeOfDay.minute)
+  //           : DateTime(newDate.year, newDate.month, newDate.day, timeOfDay.hour,
+  //               timeOfDay.minute);
+  //     }
+  //   }
+  //   return null;
+  // }
+  //
+  // static Future<void> getNextValidMonday(BuildContext context) async {
+  //   DateTime? referenceDate = await pickScheduleDate(context, isUtc: false);
+  //
+  //   NotificationSchedule schedule = NotificationCalendar(
+  //       weekday: DateTime.monday,
+  //       hour: 0,
+  //       minute: 0,
+  //       second: 0,
+  //       timeZone: AwesomeNotifications.localTimeZoneIdentifier);
+  //   //NotificationCalendar.fromDate(date: expectedDate);
+  //
+  //   DateTime? nextValidDate = await AwesomeNotifications()
+  //       .getNextDate(schedule, fixedDate: referenceDate);
+  //
+  //   late String response;
+  //   if (nextValidDate == null) {
+  //     response = 'There is no more valid date for this schedule';
+  //   } else {
+  //     response = utils.AwesomeDateUtils.parseDateToString(nextValidDate.toUtc(),
+  //         format: 'dd/MM/yyyy')!;
+  //   }
+  //
+  //   showDialog(
+  //       context: context,
+  //       builder: (_) => AlertDialog(
+  //             title: const Text("Next valid schedule"),
+  //             content:
+  //                 SizedBox(height: 50, child: Center(child: Text(response))),
+  //             actions: [
+  //               TextButton(
+  //                 child: const Text("OK"),
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop(null);
+  //                 },
+  //               )
+  //             ],
+  //           ));
+  // }
+  //
+  // static Future<String> getCurrentTimeZone() {
+  //   return AwesomeNotifications().getLocalTimeZoneIdentifier();
+  // }
+  //
+  // static Future<String> getUtcTimeZone() {
+  //   return AwesomeNotifications().getUtcTimeZoneIdentifier();
+  // }
+  //
+  // static Future<void> repeatMinuteNotification() async {
+  //   String localTimeZone =
+  //       await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: -1,
+  //           channelKey: 'scheduled',
+  //           title: 'Notification at every single minute',
+  //           body:
+  //               'This notification was schedule to repeat at every single minute.',
+  //           notificationLayout: NotificationLayout.BigPicture,
+  //           bigPicture: 'asset://assets/images/melted-clock.png',
+  //           category: NotificationCategory.Reminder),
+  //       schedule: NotificationInterval(
+  //           interval: 60,
+  //           timeZone: localTimeZone,
+  //           repeats: true,
+  //           preciseAlarm: true));
+  // }
+  //
+  // static Future<void> repeatMultiple5Crontab() async {
+  //   var nowDate = DateTime.now();
+  //   String localTimeZone =
+  //       await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: -1,
+  //           channelKey: 'scheduled',
+  //           title: 'Notification at every 5 seconds for 1 minute',
+  //           body:
+  //               'This notification was schedule to repeat at every 5 seconds.'),
+  //       schedule: NotificationAndroidCrontab(
+  //           initialDateTime:
+  //               nowDate.copyWith().add(const Duration(seconds: 10)).toUtc(),
+  //           expirationDateTime: nowDate
+  //               .copyWith()
+  //               .add(const Duration(seconds: 10, minutes: 1))
+  //               .toUtc(),
+  //           crontabExpression: '/5 * * * * ? *',
+  //           timeZone: localTimeZone,
+  //           repeats: true,
+  //           preciseAlarm: true));
+  // }
+  //
+  // static Future<void> repeatPreciseThreeTimes() async {
+  //   var nowDate = DateTime.now();
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: -1,
+  //           channelKey: 'scheduled',
+  //           title: 'Notification scheduled to play precisely 3 times',
+  //           body: 'This notification was schedule to play precisely 3 times.',
+  //           notificationLayout: NotificationLayout.BigPicture,
+  //           category: NotificationCategory.Alarm,
+  //           bigPicture: 'asset://assets/images/melted-clock.png'),
+  //       schedule: NotificationAndroidCrontab(preciseSchedules: [
+  //         nowDate.copyWith().add(const Duration(seconds: 1)).toUtc(),
+  //         nowDate.copyWith().add(const Duration(seconds: 25)).toUtc(),
+  //         nowDate.copyWith().add(const Duration(seconds: 45)).toUtc()
+  //       ], repeats: true, preciseAlarm: true));
+  // }
+  //
+  // static Future<void> repeatMinuteNotificationOClock() async {
+  //   String localTimeZone =
+  //       await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: -1,
+  //           channelKey: 'scheduled',
+  //           title: 'Notification at exactly every single minute',
+  //           body:
+  //               'This notification was schedule to repeat at every single minute at clock.',
+  //           notificationLayout: NotificationLayout.BigPicture,
+  //           bigPicture: 'asset://assets/images/melted-clock.png'),
+  //       schedule: NotificationCalendar(
+  //           second: 0, millisecond: 0, timeZone: localTimeZone, repeats: true));
+  // }
+  //
+  // static Future<void> showNotificationAtSchedulePreciseDate(
+  //     DateTime scheduleTime) async {
+  //   String timeZoneIdentifier = AwesomeNotifications.localTimeZoneIdentifier;
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //         id: -1,
+  //         channelKey: 'scheduled',
+  //         title: 'Just in time!',
+  //         body:
+  //             'This notification was schedule to shows at ${utils.AwesomeDateUtils.parseDateToString(scheduleTime.toLocal()) ?? '?'} $timeZoneIdentifier (${utils.AwesomeDateUtils.parseDateToString(scheduleTime.toUtc()) ?? '?'} utc)',
+  //         notificationLayout: NotificationLayout.BigPicture,
+  //         bigPicture: 'asset://assets/images/delivery.jpeg',
+  //         payload: {'uuid': 'uuid-test'},
+  //         autoDismissible: false,
+  //       ),
+  //       schedule: NotificationCalendar.fromDate(
+  //           date: scheduleTime, preciseAlarm: true));
+  // }
+  //
+  // static Future<void> showNotificationWithNoBadge(int id) async {
+  //   AwesomeNotifications().setChannel(NotificationChannel(
+  //       channelKey: 'no_badge',
+  //       channelName: 'No Badge Notifications',
+  //       channelDescription: 'Notifications with no badge',
+  //       channelShowBadge: false));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: id,
+  //           channelKey: 'no_badge',
+  //           title: 'no badge title',
+  //           body: 'no badge body',
+  //           payload: {'uuid': 'uuid-test'}));
+  // }
+  //
+  // static int currentStep = 0;
+  // static Timer? udpateNotificationAfter1Second;
+  // static Future<void> showProgressNotification(int id) async {
+  //   int maxStep = 10;
+  //   int fragmentation = 4;
+  //   for (var simulatedStep = 1;
+  //       simulatedStep <= maxStep * fragmentation + 1;
+  //       simulatedStep++) {
+  //     currentStep = simulatedStep;
+  //     await Future.delayed(Duration(milliseconds: 1000 ~/ fragmentation));
+  //     if (udpateNotificationAfter1Second != null) continue;
+  //     udpateNotificationAfter1Second = Timer(const Duration(seconds: 1), () {
+  //       _updateCurrentProgressBar(
+  //           id: id,
+  //           simulatedStep: currentStep,
+  //           maxStep: maxStep * fragmentation);
+  //       udpateNotificationAfter1Second?.cancel();
+  //       udpateNotificationAfter1Second = null;
+  //     });
+  //   }
+  // }
+  //
+  // static void _updateCurrentProgressBar({
+  //   required int id,
+  //   required int simulatedStep,
+  //   required int maxStep,
+  // }) {
+  //   if (simulatedStep < maxStep) {
+  //     AwesomeNotifications().createNotification(
+  //         content: NotificationContent(
+  //             id: id,
+  //             channelKey: 'progress_bar',
+  //             title: 'Download finished',
+  //             body: 'filename.txt',
+  //             category: NotificationCategory.Progress,
+  //             payload: {
+  //               'file': 'filename.txt',
+  //               'path': '-rmdir c://ruwindows/system32/huehuehue'
+  //             },
+  //             locked: false));
+  //   } else {
+  //     double progress = min(simulatedStep / maxStep * 100, 100);
+  //     AwesomeNotifications().createNotification(
+  //         content: NotificationContent(
+  //             id: id,
+  //             channelKey: 'progress_bar',
+  //             title: 'Downloading fake file in progress ($progress%)',
+  //             body: 'filename.txt',
+  //             category: NotificationCategory.Progress,
+  //             payload: {
+  //               'file': 'filename.txt',
+  //               'path': '-rmdir c://ruwindows/system32/huehuehue'
+  //             },
+  //             notificationLayout: NotificationLayout.ProgressBar,
+  //             progress: progress.round(),
+  //             locked: true));
+  //   }
+  // }
+  //
+  // static Future<void> showIndeterminateProgressNotification(int id) async {
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: id,
+  //           channelKey: 'progress_bar',
+  //           title: 'Downloading fake file...',
+  //           body: 'filename.txt',
+  //           category: NotificationCategory.Progress,
+  //           payload: {
+  //             'file': 'filename.txt',
+  //             'path': '-rmdir c://ruwindows/system32/huehuehue'
+  //           },
+  //           notificationLayout: NotificationLayout.ProgressBar,
+  //           progress: null,
+  //           locked: true));
+  // }
+  //
+  // static Future<void> showNotificationWithUpdatedChannelDescription(
+  //     int id) async {
+  //   AwesomeNotifications().setChannel(NotificationChannel(
+  //       channelGroupKey: 'channel_tests',
+  //       channelKey: 'updated_channel',
+  //       channelName: 'Channel to update (updated)',
+  //       channelDescription: 'Notifications with updated channel'));
+  //
+  //   await AwesomeNotifications().createNotification(
+  //       content: NotificationContent(
+  //           id: id,
+  //           channelKey: 'updated_channel',
+  //           title: 'updated notification channel',
+  //           body: 'check settings to see updated channel description',
+  //           category: NotificationCategory.Status,
+  //           payload: {'uuid': '0123456789'}));
+  // }
+  //
+  // static Future<void> removeChannel() async {
+  //   AwesomeNotifications().removeChannel('updated_channel');
+  // }
+  //
+  // static Future<void> dismissNotification(int id) async {
+  //   await AwesomeNotifications().dismiss(id);
+  // }
+  //
+  // static Future<void> cancelSchedule(int id) async {
+  //   await AwesomeNotifications().cancelSchedule(id);
+  // }
+  //
+  // static Future<void> cancelNotification(int id) async {
+  //   await AwesomeNotifications().cancel(id);
+  // }
+  //
+  // static Future<void> dismissNotificationsByChannelKey(
+  //     String channelKey) async {
+  //   await AwesomeNotifications().dismissNotificationsByChannelKey(channelKey);
+  // }
+  //
+  // static Future<void> dismissNotificationsByGroupKey(String groupKey) async {
+  //   await AwesomeNotifications().dismissNotificationsByGroupKey(groupKey);
+  // }
+  //
+  // static Future<void> cancelSchedulesByChannelKey(String channelKey) async {
+  //   await AwesomeNotifications().cancelSchedulesByChannelKey(channelKey);
+  // }
+  //
+  // static Future<void> cancelSchedulesByGroupKey(String groupKey) async {
+  //   await AwesomeNotifications().cancelSchedulesByGroupKey(groupKey);
+  // }
+  //
+  // static Future<void> cancelNotificationsByChannelKey(String channelKey) async {
+  //   await AwesomeNotifications().cancelNotificationsByChannelKey(channelKey);
+  // }
+  //
+  // static Future<void> cancelNotificationsByGroupKey(String groupKey) async {
+  //   await AwesomeNotifications().cancelNotificationsByGroupKey(groupKey);
+  // }
+  //
+  // static Future<void> dismissAllNotifications() async {
+  //   await AwesomeNotifications().dismissAllNotifications();
+  // }
+  //
+  // static Future<void> cancelAllSchedules() async {
+  //   await AwesomeNotifications().cancelAllSchedules();
+  // }
+  //
+  // static Future<void> cancelAllNotifications() async {
+  //   await AwesomeNotifications().cancelAll();
+  // }
+  //
+  // String toTwoDigitString(int value) {
+  //   return value.toString().padLeft(2, '0');
+  // }
 }
