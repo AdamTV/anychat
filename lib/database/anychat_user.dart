@@ -45,7 +45,7 @@ class AnyChatUser {
     final data = snapshot.data();
     if (data != null) {
       displayName = (snapshot.data() as Map<String, dynamic>)['displayName'];
-      email = (snapshot.data() as Map<String, dynamic>)['email'];
+      email = (snapshot.data() as Map<String, dynamic>)['email'] ?? "";
       photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'] ?? '';
       language = (snapshot.data() as Map<String, dynamic>)['language'];
       blockedAccounts = List.castFrom<dynamic, String>(
@@ -175,13 +175,13 @@ class AnyChatUser {
     }
   }
 
-  static Future<void> addMessageToConversation(String text) async {
+  static Future<void> addMessageToConversation(String text, {String? conversationId}) async {
     return await FirebaseFirestore.instance
         .runTransaction((Transaction transaction) {
       return transaction
           .get(FirebaseFirestore.instance
               .collection("conversations")
-              .doc(AnyChatAuth.currentConversation!.id))
+              .doc(conversationId ?? AnyChatAuth.currentConversation?.id))
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
         transaction.update(
@@ -598,9 +598,9 @@ class AnyChatUser {
         });
       });
       AnyChatAuth.currentUser = deletedUser('0');
-      Navigator.pushReplacementNamed(Utilities().globalKey.currentContext!, '/');
+      NavigationService().pushReplacementNamed('/');
       Utilities().showToast(
-          localizationOf(Utilities().globalKey.currentContext!)!
+          localizationOf(Utilities().globalKey.currentContext!)
               .accountDeleted);
       await FirebaseAuth.instance.currentUser?.delete();
     } catch (e) {
@@ -612,9 +612,7 @@ class AnyChatUser {
             localizationOf(Utilities().globalKey.currentContext).approve,
             'Please verify your account by logging in, and then try again.');
         await AnyChatAuth.signOut();
-        Navigator.pushNamed(
-            Utilities().globalKey.currentContext!,
-            "/login");
+        NavigationService().pushNamed("/login");
         return;
       }
     }
