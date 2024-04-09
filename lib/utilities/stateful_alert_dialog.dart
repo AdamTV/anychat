@@ -37,7 +37,7 @@ class _StatefulAlertDialogState extends State<StatefulAlertDialog> {
               setState(() {
                 dropdownValueTranscribe = newValue;
                 LiveTranslatorScreen.isoCodeTranscribedWords =
-                    getLocaleCodeByEndonym(newValue ?? 'en');
+                    getLocaleCodeByEndonym(newValue ?? localeName);
               });
             },
             items: getLanguageDropdownMenuItems(context),
@@ -51,7 +51,7 @@ class _StatefulAlertDialogState extends State<StatefulAlertDialog> {
               setState(() {
                 dropdownValueTranslate = newValue;
                 LiveTranslatorScreen.isoCodeTranslatedWords =
-                    getLocaleCodeByEndonym(newValue ?? 'en');
+                    getLocaleCodeByEndonym(newValue ?? localeName);
               });
             },
             items: getLanguageDropdownMenuItems(context),

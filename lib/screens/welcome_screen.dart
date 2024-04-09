@@ -94,12 +94,16 @@ class WelcomeBackground extends StatelessWidget {
     });
     // }
     children.add(child);
-    return SizedBox(
-      height: size.height,
-      width: size.width,
-      child: Stack(
-        alignment: Alignment.center,
-        children: children,
+    return Container(
+      color: Theme.of(context).colorScheme.background,
+      child: SizedBox(
+        height: size.height,
+        width: size.width,
+
+        child: Stack(
+          alignment: Alignment.center,
+          children: children,
+        ),
       ),
     );
   }

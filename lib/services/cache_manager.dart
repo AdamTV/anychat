@@ -99,8 +99,8 @@ class CacheManager {
         return userData?.locale ?? await Devicelocale.currentAsLocale;
       }
     } catch (e) {
-      logger.e("Unable to load theme from cache: ", e);
-      return UserData.localeFromString('en');
+      logger.e("Unable to load locale from cache: ", e);
+      return UserData.localeFromString(localeName);
     }
   }
 

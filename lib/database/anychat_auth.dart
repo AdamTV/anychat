@@ -77,7 +77,7 @@ class AnyChatAuth {
     } else {
       if (await AnyChatUser.findUserByEmail(firebaseUser.email) == null) {
         var locale = await Devicelocale.currentAsLocale;
-        String localeStr = locale?.languageCode ?? 'en';
+        String localeStr = locale?.languageCode ?? localeName;
         var currentUser = AnyChatUser(
             firebaseUser.uid,
             '${appleIdCredential.givenName ?? ""} ${appleIdCredential.familyName ?? ""}',
@@ -143,7 +143,7 @@ class AnyChatAuth {
         return currentUser;
       } else {
         var locale = await Devicelocale.currentAsLocale;
-        String localeStr = locale?.languageCode ?? 'en';
+        String localeStr = locale?.languageCode ?? localeName;
         currentUser = AnyChatUser(
             authResult.user!.uid,
             googleSignInAccount!.displayName ?? "",
@@ -174,7 +174,7 @@ class AnyChatAuth {
 
       logger.d('signInWithGoogle succeeded: $user');
       var locale = await Devicelocale.currentAsLocale;
-      String localeStr = locale?.languageCode ?? 'en';
+      String localeStr = locale?.languageCode ?? localeName;
       currentUser = AnyChatUser(
           authResult.user!.uid,
           user.displayName ?? "",
@@ -252,7 +252,7 @@ class AnyChatAuth {
           displayName = result.email;
         }
         var locale = await Devicelocale.currentAsLocale;
-        String localeStr = locale?.languageCode ?? 'en';
+        String localeStr = locale?.languageCode ?? localeName;
         currentUser = AnyChatUser(
             result.uid,
             displayName ?? "",
@@ -319,7 +319,7 @@ class AnyChatAuth {
         final userData = await FacebookAuth.instance.getUserData();
         var url = userData['picture']['data']['url'];
         var locale = await Devicelocale.currentAsLocale;
-        String localeStr = locale?.languageCode ?? 'en';
+        String localeStr = locale?.languageCode ?? localeName;
         currentUser = AnyChatUser(
             user.uid,
             user.displayName ?? "",

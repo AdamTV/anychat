@@ -41,7 +41,9 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                NavigationService().goBack();
+                NavigationService().pushNamedAndRemoveUntil('/settings',
+                    predicate: (Route<dynamic> route) =>
+                        route.settings.name == '/conversations');
               },
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             );
@@ -65,28 +67,34 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
     await AnyChatUser.updateLanguage(endonymRetrievalMap.keys.elementAt(index));
     setState(() {
       languageIndex = index;
-      NavigationService().goBack();
+      NavigationService().pushNamedAndRemoveUntil('/settings',
+          predicate: (Route<dynamic> route) =>
+          route.settings.name == '/conversations');
     });
   }
 
   List<SettingsTile> getLanguageTiles() {
-
     List<SettingsTile> tiles = [];
     for (var element in endonymRetrievalMap.values) {
       List<String> localizedLanguages = [];
-      for (var element in endonymRetrievalMap.values) { localizedLanguages.add(element(localizationOf(context))); }
+      for (var element in endonymRetrievalMap.values) {
+        localizedLanguages.add(element(localizationOf(context)));
+      }
       tiles.add(SettingsTile(
           title: Text(element(localizationOf(context))),
-          trailing: trailingWidget(localizedLanguages.indexOf(element(localizationOf(context)))),
-          onPressed: (BuildContext context) {
-            changeLanguage(localizedLanguages.indexOf(element(localizationOf(context))));
+          trailing: trailingWidget(
+              localizedLanguages.indexOf(element(localizationOf(context)))),
+          onPressed: (BuildContext context) async {
+            await changeLanguage(
+                localizedLanguages.indexOf(element(localizationOf(context))));
           }));
     }
     return tiles;
   }
 
-  Future<void> getUserLanguage() async{
-    var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+  Future<void> getUserLanguage() async {
+    var user =
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     setState(() {
       userLanguage = user.locale.languageCode;
     });

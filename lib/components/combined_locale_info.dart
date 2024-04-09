@@ -2,6 +2,7 @@ import 'package:anychat/components/utilities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:devicelocale/devicelocale.dart';
 
 List<Locale> getSupportedLocales() {
   List<Locale> supportedLocales = [];
@@ -26,6 +27,7 @@ AppLocalizations localizationOf(BuildContext? context) {
   if (context?.mounted ?? false) {
     return AppLocalizations.of(context!)!;
   } else {
+
     return AppLocalizations.of(Utilities().globalKey.currentContext!)!;
   }
 }
@@ -67,7 +69,6 @@ Map<String, String> getAllEndonyms(AppLocalizations localizations) {
 
   return endonymsToCodes;
 }
-
 Map<String, String Function(AppLocalizations)> endonymRetrievalMap = {
   'af': (localizations) => localizations.endonym_af,
   'sq': (localizations) => localizations.endonym_sq,

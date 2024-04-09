@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/cache_manager.dart';
@@ -140,7 +139,7 @@ class Utilities {
     if (users.length == 1) {
       ret = users[0].displayName;
     } else if (users.length > 1) {
-      ret = 'Group Chat';
+      ret = localizationOf(null).groupChat;
     }
     return ret;
   }
