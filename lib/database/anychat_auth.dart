@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:anychat/components/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/register_screen.dart';
