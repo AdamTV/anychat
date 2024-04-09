@@ -120,7 +120,7 @@ class NotificationObserver with WidgetsBindingObserver, Disposable {
           await NotificationUtils.createMessagingNotification(
             channelKey: 'chats',
             groupKey: conversation.id,
-            chatName: 'New Message',
+            chatName: localizationOf(null).newMessage,
             username: sender.displayName,
             largeIcon: sender.photoUrl,
             message: message.text,
@@ -174,7 +174,7 @@ class NotificationObserver with WidgetsBindingObserver, Disposable {
           }
           final text = conversation.participants.contains(message.senderId)
               ? "$truncatedText\n\n"
-                  "${await Utilities().getGoogleTranslation(language ?? 'en', truncatedText)}"
+                  "${await Utilities().getGoogleTranslation(language ?? localeName, truncatedText)}"
               : localizationOf(Utilities().globalKey.currentContext)
                   .thisPersonHasLeftConversation;
 

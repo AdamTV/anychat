@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.1+221
+version: 3.0.0+221
 
 environment:
   sdk: ">=3.0.0 <3.19.0"
@@ -68,7 +68,7 @@ dependencies:
   flutter_social_button: ^1.1.4+1
   awesome_notifications_core: ^0.9.3
   awesome_notifications: any
-#  awesome_notifications_fcm: any
+  #  awesome_notifications_fcm: any
   palette_generator: ^0.3.3+3
   device_info_plus: ^10.0.1
   google_fonts: ^6.2.1
@@ -124,7 +124,6 @@ flutter:
     - assets/anychat-c414a-7669166c30f5.json
     - assets/anychat-c414a-c304e57544ef.json
     - assets/images/animated-bell.gif
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

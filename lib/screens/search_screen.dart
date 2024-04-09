@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anychat/components/combined_locale_info.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/services/navigation_service.dart';
@@ -114,7 +115,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(left: 20, bottom: 5),
-                labelText: 'Search',
+                labelText: localizationOf(context).search,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
                 ),

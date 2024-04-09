@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             _validateEmail(value), // Validate the email
                         decoration: InputDecoration(
                           labelText: localizationOf(context).email,
-                          hintText: 'Enter your email',
+                          hintText: localizationOf(context).enterYourEmail,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -82,9 +82,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             .onUserInteraction, // Enable live validation
                         validator: (value) =>
                             _validatePassword(value), // Validate the password
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
+                        decoration: InputDecoration(
+                          labelText: localizationOf(context).password,
+                          hintText: localizationOf(context).enterYourPassword,
                         ),
                         obscureText: true, // Hide the input
                       ),
@@ -95,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               isUserAgreeToTerms()) {
                             // If the form is valid, display a Snackbar.
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Loading')));
+                                SnackBar(content: Text(localizationOf(context).register)));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -230,9 +230,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     if (value == null || value.isEmpty) {
-      return 'Email cannot be empty';
+      return localizationOf(context).emailMustNotBeEmpty;
     } else if (!regex.hasMatch(value)) {
-      return 'Enter a valid email address';
+      return localizationOf(context).entterValidEmail;
     }
     return null;
   }
@@ -242,20 +242,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
     );
     if (value == null || value.length < 8) {
-      return 'Password must be at least 8 characters';
+      return localizationOf(context).passwordMustBeAtLeast8Chars;
     } else if (!regex.hasMatch(value)) {
-      return 'Password must contain a:\n'
-          'Upper case letter\n'
-          'Lower case letter\n'
-          'Number\n'
-          'Special character (~!@#\$%^&*()_)';
+      return '${localizationOf(context).passwordMustContainA}\n'
+          '${localizationOf(context).upperCaseLetter}\n'
+          '${localizationOf(context).lowerCaseLetter}\n'
+          '${localizationOf(context).number}\n'
+          '${localizationOf(context).specialCharacter} (~!@#\$%^&*()_)';
     } else {
       Map<String, int> charCounts = {};
       for (int i = 0; i < value.length; i++) {
         charCounts[value[i]] = (charCounts[value[i]] ?? 0) + 1;
         if (charCounts[value[i]]! > 2) {
-          return "Characters must not \n"
-              "repeat more than twice."; // Found a character that repeats more than twice
+          return "${localizationOf(context).charactersMustNot}\n${localizationOf(context).repeatMoreThanTwice}"; // Found a character that repeats more than twice
         }
       }
     }

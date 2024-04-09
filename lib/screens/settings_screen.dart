@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:core';
-// import 'dart:js_interop';
-
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/theme_option.dart';
@@ -57,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> initUserData() async {
-    final userData =
+    var userData =
         await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     var options =
         themeOptions(mounted ? context : Utilities().globalKey.currentContext!);
@@ -91,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ];
   }
 
-  late final Future init;
+  late Future<void> init;
 
   @override
   Widget build(BuildContext context) {
@@ -140,10 +138,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   tiles: [
                     SettingsTile(
                       title: Text(localizationOf(context).displayName),
-                      description: Text(AnyChatAuth.currentUser.displayName),
+                      description: Text(displayName),
                       leading: const Icon(Icons.drive_file_rename_outline),
-                      onPressed: (BuildContext context) {
-                        showDialog(
+                      onPressed: (BuildContext context) async {
+                        await showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
@@ -154,23 +152,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     children: <Widget>[
                                       TextField(
                                           controller: _displayNameController,
-                                          onChanged: (value) =>
-                                              {displayName = value}),
+                                          onChanged: (value) => setState(() {
+                                                displayName = value;
+                                              })),
                                     ],
                                   ),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text(localizationOf(context).save),
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (displayName.isEmpty) {
                                         Utilities().showToast(
                                             localizationOf(context)
                                                 .enterYourName);
-                                        return;
+                                      } else {
+                                        await AnyChatUser.updateDisplayName(
+                                            displayName);
+                                        // setState(() {
+                                        //
+                                        // });
                                       }
-                                      AnyChatUser.updateDisplayName(
-                                          displayName);
                                     },
                                   ),
                                 ],
@@ -308,21 +310,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       leading: isNotificationsEnabled
                           ? const Icon(FontAwesomeIcons.solidBell)
                           : const Icon(FontAwesomeIcons.solidBellSlash),
-                      onToggle: (value) async {
-                        bool isAllowed = false;
-                        if (value == true) {
-                          isAllowed = await NotificationUtils
-                              .requestBasicPermissionToSendNotifications(
-                                  context);
-                          if (!isAllowed) return;
-                        } else {
-                          isAllowed = await NotificationUtils
-                              .redirectToPermissionsPage();
-                        }
-                        isNotificationsEnabled = await AwesomeNotifications().isNotificationAllowed();
+                      onToggle: (value) {
                         setState(() {
-                          isNotificationsEnabled = isNotificationsEnabled;
+                          isNotificationsEnabled = value;
                         });
+                        if (value == true) {
+                          NotificationUtils
+                                  .requestBasicPermissionToSendNotifications(
+                                      context)
+                              .then((isAllowed) => {
+                                    setState(() {
+                                      isNotificationsEnabled = isAllowed;
+                                    })
+                                  });
+                        } else {
+                          NotificationUtils.redirectToPermissionsPage();
+                        }
 
                         // await AnyChatUser.updateNotifications(
                         //     value);
@@ -333,10 +336,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       initialValue: isNotificationsEnabled,
                     ),
                     SettingsTile(
-                      title: Text('Manage notifications in device settings'),
+                      title: Text(localizationOf(context)
+                          .manageNotificationsInDeviceSettings),
                       leading: const Icon(FontAwesomeIcons.gear),
-                      onPressed: (_) =>
-                          NotificationUtils.redirectToPermissionsPage(),
+                      onPressed: (_) async =>
+                          await NotificationUtils.redirectToPermissionsPage(),
                     )
                   ],
                 ),
@@ -360,16 +364,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(localizationOf(context).dangerZone),
                   tiles: [
                     SettingsTile(
-                        title: const Text("Blocked"),
+                        title: Text(localizationOf(context).blocked),
                         leading: const Icon(Icons.block),
                         onPressed: (ctx) => {
-                          NavigationService()
+                              NavigationService()
                                   .pushReplacement(MaterialPageRoute(
                                 builder: (_) => const BlockedUsersScreen(),
                               ))
                             }),
                     SettingsTile(
-                        title: const Text("Flag Content"),
+                        title: Text(localizationOf(context).flagContent),
                         leading: const Icon(Icons.flag),
                         onPressed: (ctx) async => {await launchMailto()}),
                     SettingsTile(

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:anychat/components/combined_locale_info.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
@@ -78,7 +79,7 @@ class NotificationUtils {
   static Future<bool> requestBasicPermissionToSendNotifications(
       BuildContext context) async {
     bool ret = false;
-    AwesomeNotifications()
+    await AwesomeNotifications()
         .isNotificationAllowed()
         .then((isAllowed) async => {
               ret = isAllowed,
@@ -89,29 +90,29 @@ class NotificationUtils {
                       builder: (context) => AlertDialog(
                             backgroundColor:
                                 Theme.of(context).dialogBackgroundColor,
-                            title: const Text('Notifications',
+                            title: Text(localizationOf(null).notifications,
                                 maxLines: 2,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.w600)),
-                            content: const Column(
+                            content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Allow us to send you notifications.',
+                                  localizationOf(null).allowUsToSendYouNotifications,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
-                                Divider(thickness: 0),
+                                const Divider(thickness: 0),
                                 Text(
-                                  'Get notified when somebody messages or calls you.',
+                                  localizationOf(null).getNotifiedWhenSomebodyMessagesOrCalls,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
-                                Divider(thickness: 0),
+                                const Divider(thickness: 0),
                                 Text(
-                                  'This can always be controlled from your device settings',
+                                  localizationOf(null).thisCanAlwaysBeControlledFromDeviceSettings,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
@@ -122,20 +123,21 @@ class NotificationUtils {
                                   onPressed: () {
                                     NavigationService().pop();
                                   },
-                                  child: const Text(
-                                    'Later',
-                                    style: TextStyle(
+                                  child: Text(
+                                    localizationOf(null).later,
+                                    style: const TextStyle(
                                         color: Colors.grey, fontSize: 18),
                                   )),
                               TextButton(
                                 onPressed: () async {
+                                  ret = true;
                                   isAllowed = await AwesomeNotifications()
                                       .requestPermissionToSendNotifications();
                                   NavigationService().pop();
                                 },
-                                child: const Text(
-                                  'Allow',
-                                  style: TextStyle(
+                                child: Text(
+                                  localizationOf(null).allow,
+                                  style: const TextStyle(
                                       color: Colors.deepPurple,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
@@ -203,11 +205,11 @@ class NotificationUtils {
           context: context,
           builder: (context) => AlertDialog(
                 backgroundColor: const Color(0xfffbfbfb),
-                title: const Text(
-                  'AnyChat needs your permission',
+                title: Text(
+                  'AnyChat ${localizationOf(null).needsYourPermission}',
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -342,9 +344,9 @@ class NotificationUtils {
               title: 'Simple Notification',
               body: 'Simple body'));
 
-      debugPrint(success ? 'Notification created successfully' : '');
+      // debugPrint(success ? 'Notification created successfully' : '');
     } on PlatformException catch (exception) {
-      debugPrint('$exception');
+      // debugPrint('$exception');
     }
   }
 
@@ -748,7 +750,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
               key: 'REPLY',
-              label: 'Reply',
+              label: localizationOf(null).reply,
               autoDismissible: true,
               requireInputText: true),
           NotificationActionButton(
@@ -774,10 +776,10 @@ class NotificationUtils {
       content: NotificationContent(
           id: id,
           channelKey: 'call_channel',
-          title: 'Incoming Call',
+          title: localizationOf(null).incomingCall,
           body: body,
           category: NotificationCategory.Call,
-          largeIcon: 'asset://assets/images/girl-phonecall.jpg',
+          // largeIcon: 'asset://assets/images/girl-phonecall.jpg',
           wakeUpScreen: true,
           fullScreenIntent: true,
           autoDismissible: false,
@@ -788,13 +790,13 @@ class NotificationUtils {
       actionButtons: [
         NotificationActionButton(
             key: 'ACCEPT',
-            label: 'Accept Call',
+            label: localizationOf(null).acceptCall,
             actionType: ActionType.Default,
             color: Colors.green,
             autoDismissible: true),
         NotificationActionButton(
             key: 'REJECT',
-            label: 'Reject',
+            label: localizationOf(null).reject,
             actionType: ActionType.SilentAction,
             isDangerousOption: true,
             autoDismissible: true),
@@ -1020,7 +1022,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
             key: 'REPLY',
-            label: 'Reply',
+            label: localizationOf(null).reply,
             autoDismissible: true,
             requireInputText: true,
           ),
@@ -1059,7 +1061,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
               key: 'REPLY',
-              label: 'Reply',
+              label: localizationOf(null).reply,
               autoDismissible: true,
               requireInputText: true),
           NotificationActionButton(
@@ -1095,7 +1097,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
             key: 'REPLY',
-            label: 'Reply',
+            label: localizationOf(null).reply,
             autoDismissible: true,
             requireInputText: true,
           ),
@@ -1134,7 +1136,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
             key: 'REPLY',
-            label: 'Reply',
+            label: localizationOf(null).reply,
             autoDismissible: true,
             requireInputText: true,
           ),
@@ -1173,7 +1175,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
             key: 'REPLY',
-            label: 'Reply',
+            label: localizationOf(null).reply,
             autoDismissible: true,
             requireInputText: true,
           ),
@@ -1454,7 +1456,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
               key: 'REPLY',
-              label: 'Reply',
+              label: localizationOf(null).reply,
               autoDismissible: true,
               requireInputText: true),
           NotificationActionButton(
@@ -1540,7 +1542,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
               key: 'REPLY',
-              label: 'Reply',
+              label: localizationOf(null).reply,
               autoDismissible: true,
               requireInputText: true),
           NotificationActionButton(
@@ -1662,7 +1664,7 @@ class NotificationUtils {
         actionButtons: [
           NotificationActionButton(
             key: 'REPLY',
-            label: 'Reply',
+            label: localizationOf(null).reply,
             requireInputText: true,
             autoDismissible: false,
           ),

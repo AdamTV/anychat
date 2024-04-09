@@ -132,7 +132,7 @@ class AnyChatUser {
     FirebaseAuth.instance;
 
     var locale = await Devicelocale.currentAsLocale;
-    String localeStr = locale?.languageCode ?? 'en';
+    String localeStr = locale?.languageCode ?? localeName;
 
     final users = FirebaseFirestore.instance.collection("users").doc(id);
     checkExist(id).then((value) => {
@@ -307,11 +307,16 @@ class AnyChatUser {
       });
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
-    // await NavigationService().pushReplacementNamed('/settings');
+    var userData =
+    await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    userData.username = displayName!;
+    await CacheManager().cacheUserData(userData);
+    await NavigationService().pushNamedAndRemoveUntil('/settings',
+        predicate: (Route<dynamic> route) => route.settings.name == '/conversations');
   }
 
   static Future<void> updateEmail(String email) async {
-    Utilities().showToast("Please verify your email");
+    Utilities().showToast(localizationOf(null).pleaseVerifyYourEmail);
     var acs = ActionCodeSettings(
         // URL you want to redirect back to. The domain (www.example.com) for this
         // URL must be whitelisted in the Firebase Console.

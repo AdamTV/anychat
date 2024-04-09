@@ -1,6 +1,8 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:anychat/components/combined_locale_info.dart';
+import 'package:anychat/core/localization/generated/l10n.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
@@ -22,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsController extends ChangeNotifier {
@@ -54,8 +57,16 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
             channelGroupKey: 'chat',
             channelKey: 'chats',
-            channelName: 'Chat Messages',
-            channelDescription: 'Chat Messages',
+            channelName: Intl.message(
+              'Chat Messages',
+              name: 'chatMessages',
+              locale: localeName,
+            ),
+            channelDescription: Intl.message(
+              'Chat Messages',
+              name: 'chatMessages',
+              locale: localeName,
+            ),
             channelShowBadge: true,
             importance: NotificationImportance.Max,
             ledColor: Colors.white,
@@ -64,8 +75,16 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
               channelGroupKey: 'call',
               channelKey: 'call_channel',
-              channelName: 'Video Calls',
-              channelDescription: 'Video Calls',
+              channelName: Intl.message(
+                'Video Calls',
+                name: 'videoCalls',
+                locale: localeName,
+              ),
+              channelDescription: Intl.message(
+                'Video Calls',
+                name: 'videoCalls',
+                locale: localeName,
+              ),
               defaultColor: const Color(0xFF9D50DD),
               importance: NotificationImportance.Max,
               ledColor: Colors.white,
@@ -258,9 +277,19 @@ class NotificationsController extends ChangeNotifier {
         ],
         channelGroups: [
           NotificationChannelGroup(
-              channelGroupKey: 'chat', channelGroupName: 'Chat Messages'),
+              channelGroupKey: 'chat',
+              channelGroupName: Intl.message(
+                'Chat Messages',
+                name: 'chatMessages',
+                locale: localeName,
+              )),
           NotificationChannelGroup(
-              channelGroupKey: 'call', channelGroupName: 'Calls')
+              channelGroupKey: 'call',
+              channelGroupName: Intl.message(
+                'Video Calls',
+                name: 'videoCalls',
+                locale: localeName,
+              )),
         ],
         //   NotificationChannelGroup(
         //       channelGroupKey: 'image_tests', channelGroupName: 'Images tests'),
@@ -290,7 +319,7 @@ class NotificationsController extends ChangeNotifier {
         //       channelGroupKey: 'media_player_tests',
         //       channelGroupName: 'Media Player tests')
         // ],
-        debug: true);
+        );
     _instance.initialAction = await AwesomeNotifications()
         .getInitialNotificationAction(removeFromActionEvents: false);
   }
@@ -487,7 +516,7 @@ class NotificationsController extends ChangeNotifier {
       await NotificationUtils.createMessagingNotification(
         channelKey: 'chats',
         groupKey: receivedAction.groupKey ?? '',
-        chatName: 'New Message',
+        chatName: localizationOf(null).newMessage,
         username: AnyChatAuth.currentUser.displayName,
         largeIcon: AnyChatAuth.currentUser.photoUrl,
         message: receivedAction.buttonKeyInput,
@@ -607,7 +636,7 @@ class NotificationsController extends ChangeNotifier {
           textColor: Colors.white,
           fontSize: 16);
 
-      debugPrint('Firebase Token:"$token"');
+      // debugPrint('Firebase Token:"$token"');
     } else {
       Fluttertoast.showToast(
           msg: 'Fcm token deleted',
@@ -615,7 +644,7 @@ class NotificationsController extends ChangeNotifier {
           textColor: Colors.white,
           fontSize: 16);
 
-      debugPrint('Firebase Token deleted');
+      // debugPrint('Firebase Token deleted');
     }
 
     _instance._firebaseToken = token;
@@ -630,7 +659,7 @@ class NotificationsController extends ChangeNotifier {
         backgroundColor: Colors.blueAccent,
         textColor: Colors.white,
         fontSize: 16);
-    debugPrint('Native Token:"$token"');
+    // debugPrint('Native Token:"$token"');
 
     _instance._nativeToken = token;
     _instance.notifyListeners();

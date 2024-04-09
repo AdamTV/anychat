@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class DeivceNotifierService extends ChangeNotifier {
   ThemeData _themeData = kLightTheme; // Default theme
-  Locale? _locale = const Locale('en'); // Default locale
+  Locale? _locale = Locale(localeName); // Default locale
 
   ThemeData get themeData => _themeData;
   Locale? get locale => _locale;

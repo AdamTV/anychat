@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _validateEmail(value), // Validate the email
                         decoration: InputDecoration(
                           labelText: localizationOf(context).email,
-                          hintText: 'Enter your email',
+                          hintText: localizationOf(context).enterYourEmail,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _validatePassword(value), // Validate the password
                         decoration: InputDecoration(
                           labelText: localizationOf(context).password,
-                          hintText: 'Enter your password',
+                          hintText: localizationOf(context).enterYourPassword,
                         ),
                         obscureText: true, // Hide the input
                       ),
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (_formKey.currentState!.validate()) {
                             // If the form is valid, display a Snackbar.
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Loading')));
+                                SnackBar(content: Text(localizationOf(context).login)));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -170,16 +170,16 @@ class _LoginScreenState extends State<LoginScreen> {
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     if (value == null || value.isEmpty) {
-      return 'Email cannot be empty';
+      return localizationOf(context).emailMustNotBeEmpty;
     } else if (!regex.hasMatch(value)) {
-      return 'Enter a valid email address';
+      return localizationOf(context).entterValidEmail;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null) {
-      return 'Password must not be empty';
+      return localizationOf(context).passwordMustNotBeEmpty;
     }
     return null;
   }

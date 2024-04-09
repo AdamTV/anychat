@@ -2,6 +2,7 @@ import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/notifications.dart';
+import 'package:anychat/core/localization/generated/l10n.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/auth_service.dart';
@@ -10,6 +11,7 @@ import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/notifications_controller.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:anychat/services/notifier_service.dart';
+import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +37,12 @@ var logger = Logger(
         ),
     level: Level.info);
 
+String localeName = 'en';
+
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     NotificationObserver().init();
-    await NotificationsController.initializeLocalNotifications();
-    // await NotificationsController.initializeRemoteNotifications();
-    await NotificationsController.initializeIsolateReceivePort();
-    await NotificationsController.getInitialNotificationAction();
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -53,8 +53,15 @@ void main() async {
     await CacheManager().initSharedPrefs();
     ThemeData cachedTheme = await CacheManager().loadThemeFromCache();
     Locale locale =
-        await CacheManager().loadLocaleFromCache() ?? const Locale('en');
+        await CacheManager().loadLocaleFromCache()
+            ?? await Devicelocale.currentAsLocale
+            ?? const Locale('en');
+    localeName = locale.languageCode;
     deviceNotifierService.updateLocale(locale);
+    await NotificationsController.initializeLocalNotifications();
+    // await NotificationsController.initializeRemoteNotifications();
+    await NotificationsController.initializeIsolateReceivePort();
+    await NotificationsController.getInitialNotificationAction();
     deviceNotifierService.updateTheme(cachedTheme);
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -70,7 +77,7 @@ void main() async {
             // 1. Debug provider
             // 2. Safety Net provider
             // 3. Play Integrity provider
-            androidProvider: AndroidProvider.debug,
+            androidProvider: AndroidProvider.playIntegrity,
             // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
             // your preferred provider. Choose from:
             // 1. Debug provider
@@ -99,9 +106,6 @@ void main() async {
 class AnyChat extends StatefulWidget {
   const AnyChat({super.key});
 
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
-
   @override
   State<StatefulWidget> createState() => _AnyChatState();
 }
@@ -125,7 +129,6 @@ class _AnyChatState extends State<AnyChat> {
     return Consumer<DeivceNotifierService>(builder: (context, settings, child) {
       return MaterialApp(
           navigatorKey: NavigationService().navigatorKey,
-          // Use the navigatorKey here
           routes: NavigationService().routes,
           debugShowCheckedModeBanner: false,
           onGenerateTitle: (BuildContext context) =>
