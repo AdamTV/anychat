@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:anychat/database/anychat_auth.dart';
-import 'package:anychat/database/anychat_message.dart';
-import 'package:anychat/database/anychat_user.dart';
+import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/components/anychat_message.dart';
+import 'package:anychat/components/anychat_user.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
@@ -54,7 +54,7 @@ class _CallScreenState extends State<CallScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     _transcribedChatMessageSubscription =
         loadAllTranscribedMessages().listen(_updateCallScreen);
-    }
+  }
 
   @override
   void dispose() {
@@ -230,8 +230,7 @@ class _CallScreenState extends State<CallScreen> {
                     MaterialStateProperty.all<Color>(Colors.redAccent),
                 shape: MaterialStateProperty.all<OutlinedBorder>(
                     const CircleBorder())),
-            child: Icon(Icons.call_end,
-                color: Theme.of(context).primaryColorLight, size: 40),
+            child: Icon(Icons.call_end, color: Colors.white, size: 40),
           ),
           TextButton(
             onPressed: _switchCamera,
@@ -251,35 +250,44 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        AgoraVideoView(
-          controller: VideoViewController(
-            rtcEngine: _engine,
-            canvas: const VideoCanvas(uid: 0),
-            useFlutterTexture: true,
-          ),
-          onAgoraVideoViewCreated: (viewId) {
-            _engine.startPreview();
-          },
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.of(remoteUid.map(
-                (e) => SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: AgoraVideoView(
-                    controller: VideoViewController.remote(
-                      rtcEngine: _engine,
-                      canvas: VideoCanvas(uid: e),
-                      connection: RtcConnection(channelId: channelId),
-                      useFlutterTexture: true,
+        Row(
+          children: remoteUid.isEmpty
+              ? [const Center(child: CircularProgressIndicator())]
+              : List.of(remoteUid.map(
+                  (e) => SizedBox(
+                    width: MediaQuery.of(context).size.width / remoteUid.length,
+                    height:
+                        MediaQuery.of(context).size.height / remoteUid.length,
+                    // width: 120,
+                    // height: 120,
+                    child: AgoraVideoView(
+                      controller: VideoViewController.remote(
+                        rtcEngine: _engine,
+                        canvas: VideoCanvas(uid: e),
+                        connection: RtcConnection(channelId: channelId),
+                        useFlutterTexture: true,
+                      ),
                     ),
                   ),
+                )),
+        ),
+        Container(
+          constraints: BoxConstraints.tight(MediaQuery.of(context).size),
+          alignment: Alignment.bottomLeft,
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: AgoraVideoView(
+                controller: VideoViewController(
+                  rtcEngine: _engine,
+                  canvas: const VideoCanvas(uid: 0),
+                  useFlutterTexture: true,
                 ),
-              )),
+                onAgoraVideoViewCreated: (viewId) {
+                  _engine.startPreview();
+                },
+              ),
             ),
           ),
         ),
