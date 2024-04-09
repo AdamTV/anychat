@@ -1,4 +1,4 @@
-import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;

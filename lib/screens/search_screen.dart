@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -28,17 +28,19 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
   bool get blockUser => super.widget.blockUser;
 
   _onSearchChanged() {
+    Timer(const Duration(milliseconds: 250), (){
     _searchSubscription?.cancel();
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      _searchSubscription = searchUsersDynamically(_searchController.text)
-          ?.listen((QuerySnapshot snapshot) {
-        final List<AnyChatUser> newUsers =
-            snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
-        setState(() {
-          _users = newUsers;
-        });
+        // if (_debounce?.isActive ?? false) _debounce?.cancel();
+        // _debounce = Timer(const Duration(milliseconds: 500), () {
+        _searchSubscription = searchUsersDynamically(_searchController.text)
+        ?.listen((QuerySnapshot snapshot) {
+      final List<AnyChatUser> newUsers =
+      snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
+      setState(() {
+        _users = newUsers;
       });
+      // });
+    });
     });
   }
 

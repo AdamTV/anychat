@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_auth.dart';
-import 'combined_locale_info.dart';
+import '../components/combined_locale_info.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
 

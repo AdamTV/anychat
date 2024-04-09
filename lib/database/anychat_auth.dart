@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:anychat/components/conversation_info.dart';
+import 'package:anychat/database/conversation_info.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/register_screen.dart';
@@ -18,7 +18,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:twitter_login/twitter_login.dart';
 
 import 'anychat_user.dart';
-import 'combined_locale_info.dart';
+import '../components/combined_locale_info.dart';
 import 'conversation.dart';
 
 class AnyChatAuth {

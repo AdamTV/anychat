@@ -1,14 +1,20 @@
-import 'package:anychat/components/anychat_auth.dart';
+import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/utilities/stateful_alert_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/combined_locale_info.dart';
 
 class LiveTranslatorScreen extends StatefulWidget {
+  static String? isoCodeTranscribedWords = AnyChatAuth.currentUser.language;
+  static String? isoCodeTranslatedWords = AnyChatAuth.currentUser.language;
+
   const LiveTranslatorScreen({super.key});
 
   @override
@@ -16,9 +22,6 @@ class LiveTranslatorScreen extends StatefulWidget {
 }
 
 class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
-  String? isoCode = AnyChatAuth.currentUser.language;
-  String? dropdownValue =
-  getEndonymByLocaleCode(AnyChatAuth.currentUser.language);
   bool recognizing = false;
   bool recognizeFinished = false;
 
@@ -29,9 +32,15 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   @override
   void initState() {
     super.initState();
-    longRunningRecognize();
+    SchedulerBinding.instance.addPostFrameCallback((d) async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => _buildPopupDialog(context),
+      );
+      longRunningRecognize();
+      showAudioRecordingToast();
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,10 +52,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               icon: const Icon(Icons.settings),
               tooltip: localizationOf(context).language,
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => _buildPopupDialog(context),
-                );
+                SchedulerBinding.instance.addPostFrameCallback((d) async {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) => _buildPopupDialog(context),
+                  );
+                  longRunningRecognize();
+                  showAudioRecordingToast();
+                });
               },
             ),
             // IconButton(
@@ -59,18 +72,17 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
             //     })
           ],
           bottom: PreferredSize(
-            preferredSize: const Size(320, 48),
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
-                child: IconButton(
-                    icon: const Icon(Icons.clear),
-                    tooltip: localizationOf(context).clear,
+              preferredSize: const Size(320, 48),
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(6, 0, 6, 4),
+                  child: TextButton(
                     onPressed: () {
                       setState(() {
                         text = "";
                       });
-                    })),
-          ),
+                    },
+                    child: Text(localizationOf(context).clear),
+                  ))),
         ),
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -90,19 +102,18 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 ),
               ),
               ListTile(
-                  title: Text(localizationOf(context).back),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                  title: Text(localizationOf(context).backToConversations),
+                  onTap: () async {
+                    await stopRecording();
+                    NavigationService()
+                        .popUntil((p0) => p0.settings.name == '/conversations');
+                    NavigationService().pop();
                   }),
               ListTile(
                   title: Text(localizationOf(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    if (context.mounted) {
-                      Navigator.pushNamed(context, "/welcome");
-                    }
+                    NavigationService().pushNamed("/welcome");
                   }),
             ],
           ),
@@ -112,79 +123,105 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           child: Text(text ?? "", style: const TextStyle(fontSize: 32)),
         ),
         floatingActionButton: ElevatedButton(
-            onPressed: recognizing ? stopRecording : longRunningRecognize,
+            onPressed: () async => {
+                  recognizing
+                      ? await stopRecording()
+                      : await longRunningRecognize(),
+                },
             child: recognizing
                 ? Text(localizationOf(context).stopStreaming)
                 : Text(localizationOf(context).startStreaming)));
   }
 
-  void stopRecording() async {
+  Future<void> stopRecording() async {
     await audioTranscriber.stopRecording();
     setState(() {
       recognizing = false;
     });
-    showAudioRecordingToast();
+    // showAudioRecordingToast();
   }
 
   Widget _buildPopupDialog(BuildContext context) {
-    return AlertDialog(
-      title: Text(localizationOf(context).selectLanguage),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          DropdownButton<String>(
-            value: dropdownValue,
-            icon: const Icon(Icons.language),
-            iconSize: 24,
-            elevation: 16,
-            onChanged: (String? newValue) {
-              setState(() {
-                dropdownValue = newValue;
-              });
-              // isoCode = endonymRetrievalMap.isoMap[newValue!];
-              logger.d(isoCode);
-              longRunningRecognize();
-              Navigator.pop(context);
-            },
-            items: getLanguageDropdownMenuItems(context),
-
-
-
-            // endonymRetrievalMap.values.
-            //     .map<DropdownMenuItem<String>>((String value) {
-            //   return DropdownMenuItem<String>(
-            //     value: value,
-            //     child: Text(value),
-            //   );
-          ),
-          // ElevatedButton(
-          //     child: Text(localizationOf(context).saveCaps),
-          //     onPressed: () {
-          //       NavigationService().goBack();
-          //     }),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            NavigationService().goBack();
-          },
-          style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).primaryColor,
-          ),
-          child: Text(localizationOf(context).close),
-        ),
-      ],
-    );
+    return const StatefulAlertDialog();
+    // return AlertDialog(
+    //   title: Text(localizationOf(context).selectLanguage),
+    //   content: Column(
+    //     mainAxisSize: MainAxisSize.min,
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: <Widget>[
+    //       DropdownButton<String>(
+    //         value: dropdownValueTranscribe,
+    //         icon: const Icon(Icons.transcribe),
+    //         iconSize: 24,
+    //         elevation: 16,
+    //         onChanged: (String? newValue) {
+    //           setState(() {
+    //             dropdownValueTranscribe = newValue;
+    //             isoCodeTranscribedWords =
+    //                 getLocaleCodeByEndonym(newValue ?? 'en');
+    //           });
+    //           // isoCode = endonymRetrievalMap.isoMap[newValue!];
+    //           logger.d(isoCodeTranscribedWords);
+    //           // NavigationService().pop();
+    //         },
+    //         items: getLanguageDropdownMenuItems(context),
+    //
+    //         // endonymRetrievalMap.values.
+    //         //     .map<DropdownMenuItem<String>>((String value) {
+    //         //   return DropdownMenuItem<String>(
+    //         //     value: value,
+    //         //     child: Text(value),
+    //         //   );
+    //       ),
+    //       DropdownButton<String>(
+    //         value: dropdownValueTranslate,
+    //         icon: const Icon(Icons.translate),
+    //         iconSize: 24,
+    //         elevation: 16,
+    //         onChanged: (String? newValue) {
+    //           setState(() {
+    //             dropdownValueTranslate = newValue;
+    //             isoCodeTranscribedWords =
+    //                 getLocaleCodeByEndonym(newValue ?? 'en');
+    //           });
+    //           // isoCode = endonymRetrievalMap.isoMap[newValue!];
+    //           logger.d(isoCodeTranscribedWords);
+    //           // NavigationService().pop();
+    //         },
+    //         items: getLanguageDropdownMenuItems(context),
+    //
+    //         // endonymRetrievalMap.values.
+    //         //     .map<DropdownMenuItem<String>>((String value) {
+    //         //   return DropdownMenuItem<String>(
+    //         //     value: value,
+    //         //     child: Text(value),
+    //         //   );
+    //       ),
+    //       // ElevatedButton(
+    //       //     child: Text(localizationOf(context).saveCaps),
+    //       //     onPressed: () {
+    //       //       NavigationService().goBack();
+    //       //     }),
+    //     ],
+    //   ),
+    //   actions: <Widget>[
+    //     TextButton(
+    //       onPressed: () {
+    //         NavigationService().goBack();
+    //       },
+    //       child: Text(localizationOf(context).close),
+    //     ),
+    //   ],
+    // );
   }
 
-  void longRunningRecognize() async {
+  Future<void> longRunningRecognize() async {
     String responseText = "";
 
-    var responseStream = await audioTranscriber.getResponseStream(isoCode);
+    var responseStream =
+        await audioTranscriber.getResponseStream(LiveTranslatorScreen.isoCodeTranscribedWords);
 
-    if (!recognizing) showAudioRecordingToast();
+    // if (!recognizing) showAudioRecordingToast();
 
     setState(() {
       recognizeFinished = false;
@@ -192,13 +229,15 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     });
 
     responseStream.listen((data) async {
+      if (!recognizing) return;
       final currentText =
           data.results.map((e) => e.alternatives.first.transcript).join('\n');
       // ignore: sdk_version_since
       var newData = data.results.firstOrNull;
       var isData = newData != null;
+      if (!isData) return;
       final newText = await Utilities()
-          .getGoogleTranslation(AnyChatAuth.currentUser.language, currentText);
+          .getGoogleTranslation(LiveTranslatorScreen.isoCodeTranslatedWords, currentText);
       if (mounted) {
         if (isData && newData.isFinal) {
           responseText += '\n$newText';
@@ -217,7 +256,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       logger.d(e);
       await audioTranscriber.stopRecording();
       if (mounted && recognizing) {
-        longRunningRecognize();
+        await longRunningRecognize();
       }
     }, onDone: () {
       if (mounted) {
@@ -252,11 +291,9 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   }
 
   void showAudioRecordingToast() {
-    Utilities().showToast((recognizing
-        ? localizationOf(context).listeningToMicrophoneLiveAudio
-        : localizationOf(context)
-            .noLongerListeningToMicrophoneLiveAudio));
+    Utilities().showToast('Speak into the microphone to translate your words.');
+    // Utilities().showToast((recognizing
+    //     ? localizationOf(context).listeningToMicrophoneLiveAudio
+    //     : localizationOf(context).noLongerListeningToMicrophoneLiveAudio));
   }
-
-
 }

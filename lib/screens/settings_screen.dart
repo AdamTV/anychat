@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:core';
 // import 'dart:js_interop';
 
-import 'package:anychat/components/anychat_auth.dart';
-import 'package:anychat/components/anychat_user.dart';
+import 'package:anychat/database/anychat_auth.dart';
+import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/theme_option.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
@@ -130,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           isoCode, localizationOf(context))),
                       leading: const Icon(Icons.language),
                       onPressed: (BuildContext context) {
-                        Navigator.of(context).pushNamed('/languages');
+                        NavigationService().pushNamed('/languages');
                       },
                     ),
                   ],
@@ -363,7 +363,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: const Text("Blocked"),
                         leading: const Icon(Icons.block),
                         onPressed: (ctx) => {
-                              Navigator.of(context)
+                          NavigationService()
                                   .pushReplacement(MaterialPageRoute(
                                 builder: (_) => const BlockedUsersScreen(),
                               ))
