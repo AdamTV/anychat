@@ -250,44 +250,35 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Row(
-          children: remoteUid.isEmpty
-              ? [const Center(child: CircularProgressIndicator())]
-              : List.of(remoteUid.map(
-                  (e) => SizedBox(
-                    width: MediaQuery.of(context).size.width / remoteUid.length,
-                    height:
-                        MediaQuery.of(context).size.height / remoteUid.length,
-                    // width: 120,
-                    // height: 120,
-                    child: AgoraVideoView(
-                      controller: VideoViewController.remote(
-                        rtcEngine: _engine,
-                        canvas: VideoCanvas(uid: e),
-                        connection: RtcConnection(channelId: channelId),
-                        useFlutterTexture: true,
-                      ),
+        AgoraVideoView(
+          controller: VideoViewController(
+            rtcEngine: _engine,
+            canvas: const VideoCanvas(uid: 0),
+            useFlutterTexture: true,
+          ),
+          onAgoraVideoViewCreated: (viewId) {
+            _engine.startPreview();
+          },
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.of(remoteUid.map(
+                    (e) => SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: AgoraVideoView(
+                    controller: VideoViewController.remote(
+                      rtcEngine: _engine,
+                      canvas: VideoCanvas(uid: e),
+                      connection: RtcConnection(channelId: channelId),
+                      useFlutterTexture: true,
                     ),
                   ),
-                )),
-        ),
-        Container(
-          constraints: BoxConstraints.tight(MediaQuery.of(context).size),
-          alignment: Alignment.bottomLeft,
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: AgoraVideoView(
-                controller: VideoViewController(
-                  rtcEngine: _engine,
-                  canvas: const VideoCanvas(uid: 0),
-                  useFlutterTexture: true,
                 ),
-                onAgoraVideoViewCreated: (viewId) {
-                  _engine.startPreview();
-                },
-              ),
+              )),
             ),
           ),
         ),

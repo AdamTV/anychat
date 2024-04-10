@@ -2,7 +2,6 @@ import 'package:anychat/components/ads.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/notifications.dart';
-import 'package:anychat/core/localization/generated/l10n.dart';
 // import 'package:anychat/screens/contacts_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/auth_service.dart';

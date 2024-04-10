@@ -2,7 +2,6 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:anychat/components/combined_locale_info.dart';
-import 'package:anychat/core/localization/generated/l10n.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
