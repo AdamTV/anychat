@@ -2,12 +2,11 @@ import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/components/audio_transcriber.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
+import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/utilities/stateful_alert_dialog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/combined_locale_info.dart';
 
@@ -113,7 +112,10 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                   title: Text(localizationOf(context).logout),
                   onTap: () async {
                     await AnyChatAuth.signOut();
-                    NavigationService().pushNamed("/welcome");
+
+                    await NavigationService().pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const WelcomeScreen()), (p0)=>p0.isFirst);
+                    await AnyChatAuth.signOut();
                   }),
             ],
           ),
@@ -200,14 +202,14 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
     //       // ElevatedButton(
     //       //     child: Text(localizationOf(context).saveCaps),
     //       //     onPressed: () {
-    //       //       NavigationService().goBack();
+    //       //       NavigationService().pop();
     //       //     }),
     //     ],
     //   ),
     //   actions: <Widget>[
     //     TextButton(
     //       onPressed: () {
-    //         NavigationService().goBack();
+    //         NavigationService().pop();
     //       },
     //       child: Text(localizationOf(context).close),
     //     ),

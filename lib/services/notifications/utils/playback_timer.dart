@@ -1,7 +1,7 @@
 import 'dart:async';
 
 class PlaybackTimer {
-  Duration _clockTic = Duration(seconds: 1);
+  final Duration _clockTic = const Duration(seconds: 1);
   Duration? _totalTime;
 
   bool _isPlaying = false;
@@ -9,8 +9,8 @@ class PlaybackTimer {
   Timer? _timer;
   Duration _now = Duration.zero;
 
-  Function(Duration duration)? _onDone;
-  Function(Duration duration)? _onData;
+  final Function(Duration duration)? _onDone;
+  final Function(Duration duration)? _onData;
 
   PlaybackTimer({
     Function(Duration duration)? onDone,

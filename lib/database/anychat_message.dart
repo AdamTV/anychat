@@ -4,7 +4,7 @@ class AnyChatMessage {
   final String? id;
   final Timestamp timestamp;
   final String senderId;
-  final String text;
+  late final String text;
 
   final DocumentReference? reference;
 

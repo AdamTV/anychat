@@ -1,4 +1,7 @@
+import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'anychat_message.dart';
 
 class Conversation {
   final String id;
@@ -27,5 +30,17 @@ class Conversation {
         .collection('conversations')
         .doc(id)
         .get());
+  }
+  static Future<AnyChatMessage?> getLatestMessageByConversationId(String id) async {
+   return await FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(id)
+        .collection('messages')
+        .orderBy('timestamp', descending: false)
+        .get().then((value) {return value.docs.isEmpty ? null : AnyChatMessage.fromSnapshot(value.docs.last);})
+   .onError((error, stackTrace) {
+     logger.e('error getting chat messages: ', error);
+     throw error!;
+   });
   }
 }

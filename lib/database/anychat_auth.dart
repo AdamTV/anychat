@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:anychat/database/conversation_info.dart';
+import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/register_screen.dart';
@@ -10,9 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:twitter_login/twitter_login.dart';
@@ -26,6 +24,7 @@ class AnyChatAuth {
   static String? linkedAccountPhotoUrl;
   static Conversation? currentConversation;
   static List<AnyChatUser> currentChatters = <AnyChatUser>[];
+  // static String? currentMessage;
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -195,9 +194,11 @@ class AnyChatAuth {
 
   static Future<void> signOut() async {
     try {
+      await CacheManager().clearUserData();
+      await RemoteNotificationObserver().cancelSubscriptions();
+
       await FirebaseAuth.instance.signOut();
       await _googleSignIn.signOut();
-      await CacheManager().clearUserData();
       // await _facebookAuth.logOut();
       // currently apple signin method uses firebase auth, so no need to sign out
     } on Error catch (e) {
@@ -222,18 +223,6 @@ class AnyChatAuth {
           : await FirebaseAuth.instance.signInWithEmailAndPassword(
               email: email.trim(), password: password);
       var result = userCredential.user!;
-      var acs = ActionCodeSettings(
-          // URL you want to redirect back to. The domain (www.example.com) for this
-          // URL must be whitelisted in the Firebase Console.
-          url: 'https://app.anychat.ca/__/auth/action',
-          // This must be true
-          handleCodeInApp: true,
-          iOSBundleId: 'ca.alphatech.anychat',
-          androidPackageName: 'ca.alphatech.anychat',
-          // installIfNotAvailable
-          androidInstallApp: true,
-          // minimumVersion
-          androidMinimumVersion: '12');
       // FirebaseAuth.instance
       //     .s(email: result.email!, actionCodeSettings: acs);
       // Utilities().showToast("Please verify your email.");
@@ -275,7 +264,7 @@ class AnyChatAuth {
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         Utilities().showToast(
-            localizationOf(Utilities().globalKey.currentContext!)!
+            localizationOf(Utilities().globalKey.currentContext!)
                 .pleaseLoginInstead);
         throw Exception('The account already exists for that email.');
       }

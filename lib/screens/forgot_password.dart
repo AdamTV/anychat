@@ -1,11 +1,9 @@
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/screens/login_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/combined_locale_info.dart';
 

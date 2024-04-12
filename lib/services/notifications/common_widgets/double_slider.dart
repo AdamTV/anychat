@@ -52,8 +52,7 @@ class DoubleSliderToConfirm extends StatefulWidget {
   /// Stick the slider to the end
   final bool stickToEnd;
 
-  const DoubleSliderToConfirm({
-    Key? key,
+  const DoubleSliderToConfirm({super.key,
     this.height = 70,
     this.width = 300,
     this.backgroundColor = Colors.white,
@@ -149,7 +148,7 @@ class _DoubleSliderToConfirmState extends State<DoubleSliderToConfirm> {
   Widget build(BuildContext context) {
     BoxShadow shadow;
     if (widget.shadow == null) {
-      shadow = BoxShadow(
+      shadow = const BoxShadow(
         color: Colors.black38,
         offset: Offset(0, 2),
         blurRadius: 2,
@@ -161,7 +160,7 @@ class _DoubleSliderToConfirmState extends State<DoubleSliderToConfirm> {
 
     TextStyle style;
     if (widget.textStyle == null) {
-      style = TextStyle(
+      style = const TextStyle(
         color: Colors.black26,
         fontWeight: FontWeight.bold,
       );
@@ -174,12 +173,12 @@ class _DoubleSliderToConfirmState extends State<DoubleSliderToConfirm> {
       curve: Curves.ease,
       height: widget.height,
       width: widget.width,
-      padding: EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: widget.backgroundShape ??
             BorderRadius.all(Radius.circular(widget.height)),
         color: widget.backgroundColorEnd != null
-            ? this.calculateBackground()
+            ? calculateBackground()
             : widget.backgroundColor,
         boxShadow: <BoxShadow>[shadow],
       ),

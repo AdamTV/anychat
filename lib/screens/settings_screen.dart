@@ -12,7 +12,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -109,9 +108,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      NavigationService()
-                          .pushNamedAndRemoveUntil('/conversations');
-                    },
+                      NavigationService().pop();
+                                              },
                     tooltip:
                         MaterialLocalizations.of(context).backButtonTooltip,
                   );
@@ -215,7 +213,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         return;
                                       }
                                       await AnyChatUser.updateEmail(email);
-                                      NavigationService().goBack();
+                                      NavigationService().pop();
                                     },
                                   ),
                                 ],
@@ -279,7 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                 dropdownValue = newValue;
                                                 AnyChatUser.updateTheme(
                                                     newValue.themeMode);
-                                                NavigationService().goBack();
+                                                NavigationService().pop();
                                               });
                                             }
                                           },
@@ -479,7 +477,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     localizationOf(Utilities().globalKey.currentContext!)
                         .cancel),
                 onPressed: () {
-                  NavigationService().goBack();
+                  NavigationService().pop();
                 },
               ),
               TextButton(

@@ -3,13 +3,11 @@ import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/database/have_account_check.dart';
 import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
-import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -109,7 +107,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 await AnyChatUser.updateNotifications(
                                     await NotificationUtils
                                         .requestBasicPermissionToSendNotifications(
-                                            context));
+                                            mounted
+                                    ? context
+                                                : Utilities().globalKey.currentContext!));
                                 Navigator.pushNamed(
                                     mounted
                                         ? context
@@ -275,7 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextButton(
                     child: Text(localizationOf(context).cancel),
                     onPressed: () {
-                      NavigationService().goBack();
+                      NavigationService().pop();
                       Utilities().showToast(localizationOf(context).cancelled);
                     },
                   )

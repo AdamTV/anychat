@@ -281,7 +281,7 @@
 //         : IconButton(
 //             icon: const Icon(Icons.arrow_back),
 //             onPressed: () {
-//               NavigationService().goBack();
+//               NavigationService().pop();
 //             },
 //             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
 //           );

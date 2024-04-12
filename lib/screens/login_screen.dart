@@ -6,7 +6,6 @@ import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 
 import '../components/combined_locale_info.dart';

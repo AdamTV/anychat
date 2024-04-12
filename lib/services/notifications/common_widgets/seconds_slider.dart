@@ -11,13 +11,13 @@ class SecondsSlider extends StatefulWidget {
   final ValueChanged<double> onChanged;
 
   const SecondsSlider({
-    Key? key,
+    super.key,
     required this.onChanged,
     this.initialValue = 5,
     this.minValue = 5,
     this.maxValue = 60,
     this.steps = 5,
-  }) : super(key: key);
+  });
 
   @override
   State<SecondsSlider> createState() => _SecondsSliderState();
