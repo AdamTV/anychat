@@ -13,8 +13,6 @@ import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../components/combined_locale_info.dart';
 
@@ -183,7 +181,9 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               ),
               TextSpan(
                   text:
-                      "\n${localizationOf(context).translation}: ",
+                      "\n${localizationOf(mounted ?
+                      context
+                      : Utilities().globalKey.currentContext!).translation}: ",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: translatedMap[language]!.removeLast()),
             ],
@@ -242,12 +242,16 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           children: <TextSpan>[
             TextSpan(
                 text:
-                    "${localizationOf(context).typed}: ",
+                    "${localizationOf(mounted ?
+                    context
+                        : Utilities().globalKey.currentContext!).typed}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: "${message.text}\n\n"),
             TextSpan(
                 text:
-                    "${localizationOf(context).translation}: ",
+                    "${localizationOf(mounted ?
+                    context
+                        : Utilities().globalKey.currentContext!).translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
                 text: await Utilities()
@@ -419,14 +423,14 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ListTile(
                 title: Text(localizationOf(context).backToConversations),
                 onTap: () {
-                  NavigationService().pushNamedAndRemoveUntil("/conversations",
-                      predicate: (Route<dynamic> route) => route.isFirst);
+                  NavigationService().popUntil((p0) => p0.settings.name == "/conversations");
                 }),
             ListTile(
                 title: Text(localizationOf(context).logout),
                 onTap: () async {
+                  await NavigationService().pushNamedAndRemoveUntil('/welcome',
+                      predicate: (p0) => p0.isFirst);
                   await AnyChatAuth.signOut();
-                  NavigationService().pushNamed("/welcome");
                 }),
           ],
         ),
@@ -582,7 +586,7 @@ class MessageWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: AnyChatUser.getAvatar(sender!)),
                       Text(sender!.displayName,
                           style: Theme.of(context).textTheme.headlineSmall),
@@ -599,7 +603,7 @@ class MessageWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: EdgeInsets.only(right:8, top:50),
+                        padding: const EdgeInsets.only(right:8, top:50),
                           child: Icon(sender!.id == AnyChatAuth.currentUser.id
                               ? Icons.keyboard
                               : Icons.translate)

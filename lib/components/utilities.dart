@@ -5,7 +5,6 @@ import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
@@ -102,7 +101,7 @@ class Utilities {
             TextButton(
               child: Text(localizationOf(context).approve),
               onPressed: () {
-                NavigationService().goBack();
+                NavigationService().pop();
               },
             ),
           ],
@@ -117,10 +116,9 @@ class Utilities {
         .collection("users")
         .doc(value.id)
         .get()
-        .then((value) => AnyChatUser.fromSnapshot(value))
+        .then((value) => AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(value))
         .then((AnyChatUser user) => {
-              NavigationService().pushNamedAndRemoveUntil("/conversations",
-                  predicate: (Route<dynamic> route) => route.isFirst)
+              NavigationService().pushNamed("/conversations")
             })
         .catchError((e) => {
               NavigationService().pushNamedAndRemoveUntil("/conversations",
@@ -136,9 +134,9 @@ class Utilities {
 
   String getChatterDisplayNameString(List<AnyChatUser> users) {
     var ret = "";
-    if (users.length == 1) {
+    if (users.length < 3) {
       ret = users[0].displayName;
-    } else if (users.length > 1) {
+    } else if (users.length > 2) {
       ret = localizationOf(null).groupChat;
     }
     return ret;
@@ -157,10 +155,10 @@ class Utilities {
     var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     var newPref = user.theme.brightness;
     if (newValue ==
-        localizationOf(Utilities().globalKey.currentContext!)!.light) {
+        localizationOf(Utilities().globalKey.currentContext!).light) {
       newPref = Brightness.light;
     } else if (newValue ==
-        localizationOf(Utilities().globalKey.currentContext!)!.dark) {
+        localizationOf(Utilities().globalKey.currentContext!).dark) {
       newPref = Brightness.dark;
     }
     user.theme = user.theme.copyWith(brightness: newPref);

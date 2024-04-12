@@ -5,7 +5,6 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/screens/search_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 class BlockedUsersScreen extends StatefulWidget {
@@ -30,7 +29,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
             return IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                NavigationService().goBack();
+                NavigationService().pop();
               },
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             );
@@ -48,7 +47,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
   Future<void> getBlockedAccountNames() async {
     tiles.clear();
     tiles.add(SettingsTile(
-        title: Text(localizationOf(Utilities().globalKey.currentContext!)!
+        title: Text(localizationOf(Utilities().globalKey.currentContext!)
             .blockAccount),
         leading: const Icon(Icons.add),
         onPressed: (ctx) {

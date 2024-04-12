@@ -8,10 +8,8 @@ import 'package:anychat/main.dart';
 import 'package:anychat/services/notifier_service.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CacheManager {
   late final SharedPreferences prefs;
@@ -83,7 +81,7 @@ class CacheManager {
         return userData!.theme;
       }
     } catch (e) {
-      logger.e("Unable to load theme from cache: ", e.toString());
+      logger.d("UserData has not been cached yet.", e.toString());
       return kLightTheme;
     }
   }

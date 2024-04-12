@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'anychat_auth.dart';
 import '../components/combined_locale_info.dart';
@@ -31,14 +30,12 @@ class AnyChatUser {
   static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
         uid,
-        localizationOf(Utilities().globalKey.currentContext!)
-            .accountDeleted,
+        localizationOf(Utilities().globalKey.currentContext!).accountDeleted,
         "",
         "",
         "",
         "",
-        false,
-        []);
+        false, []);
   }
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot) : id = snapshot.id {
@@ -67,7 +64,7 @@ class AnyChatUser {
 
     if (user.id == AnyChatAuth.currentUser.id) {
       Utilities().showToast(
-          localizationOf(Utilities().globalKey.currentContext!)!
+          localizationOf(Utilities().globalKey.currentContext!)
               .canNotCreateConvoWithSelf);
       return null;
     }
@@ -149,7 +146,7 @@ class AnyChatUser {
           else
             {
               Utilities().showToast(
-                  localizationOf(Utilities().globalKey.currentContext!)!
+                  localizationOf(Utilities().globalKey.currentContext!)
                       .pleaseLoginInstead)
             }
         });
@@ -175,7 +172,8 @@ class AnyChatUser {
     }
   }
 
-  static Future<void> addMessageToConversation(String text, {String? conversationId}) async {
+  static Future<void> addMessageToConversation(String text,
+      {String? conversationId}) async {
     return await FirebaseFirestore.instance
         .runTransaction((Transaction transaction) {
       return transaction
@@ -250,7 +248,7 @@ class AnyChatUser {
           transaction.set(newMessage, {
             'timestamp': FieldValue.serverTimestamp(),
             'senderId': AnyChatAuth.currentUser.id,
-            'text': localizationOf(Utilities().globalKey.currentContext!)!
+            'text': localizationOf(Utilities().globalKey.currentContext!)
                 .thisPersonHasLeftConversation,
           });
         });
@@ -308,11 +306,12 @@ class AnyChatUser {
     });
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
     var userData =
-    await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     userData.username = displayName!;
     await CacheManager().cacheUserData(userData);
     await NavigationService().pushNamedAndRemoveUntil('/settings',
-        predicate: (Route<dynamic> route) => route.settings.name == '/conversations');
+        predicate: (Route<dynamic> route) =>
+            route.settings.name == '/conversations');
   }
 
   static Future<void> updateEmail(String email) async {
@@ -454,7 +453,7 @@ class AnyChatUser {
           'timestamp': FieldValue.serverTimestamp(),
           'senderId': AnyChatAuth.currentUser.id,
           'text':
-              "${AnyChatAuth.currentUser.displayName} ${localizationOf(Utilities().globalKey.currentContext!).hasAdded} ${user.displayName} ${AppLocalizations.of(Utilities().globalKey.currentContext!)!.toTheConversation}",
+              "${AnyChatAuth.currentUser.displayName} ${localizationOf(Utilities().globalKey.currentContext!).hasAdded} ${user.displayName} ${localizationOf(Utilities().globalKey.currentContext!).toTheConversation}",
         });
       });
     });
@@ -497,7 +496,7 @@ class AnyChatUser {
             TextButton(
               child: Text(localizationOf(context).cancel),
               onPressed: () {
-                NavigationService().goBack();
+                NavigationService().pop();
                 Utilities().showToast(localizationOf(context).cancelled);
               },
             ),
@@ -506,7 +505,7 @@ class AnyChatUser {
               onPressed: () {
                 AnyChatAuth.currentUser.conversations
                     .removeWhere((element) => element.id == id);
-                NavigationService().goBack();
+                NavigationService().pop();
                 AnyChatAuth.currentConversation = null;
                 AnyChatAuth.currentUser.leaveConversation(id);
                 Utilities().showToast(
@@ -594,7 +593,8 @@ class AnyChatUser {
       final user = FirebaseFirestore.instance
           .collection("users")
           .doc(AnyChatAuth.currentUser.id);
-      await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+      await FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) {
         return transaction
             .get(user)
             .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
@@ -605,19 +605,19 @@ class AnyChatUser {
       AnyChatAuth.currentUser = deletedUser('0');
       NavigationService().pushReplacementNamed('/');
       Utilities().showToast(
-          localizationOf(Utilities().globalKey.currentContext!)
-              .accountDeleted);
+          localizationOf(Utilities().globalKey.currentContext!).accountDeleted);
       await FirebaseAuth.instance.currentUser?.delete();
     } catch (e) {
-      if (e.runtimeType == FirebaseAuthException){
+      if (e.runtimeType == FirebaseAuthException) {
         var a = e as FirebaseAuthException;
         a.code == 'requires-recent-login';
         Utilities().showAlertDialog(
             null,
             localizationOf(Utilities().globalKey.currentContext).approve,
             'Please verify your account by logging in, and then try again.');
+        NavigationService().popUntil((p0)=>p0.isFirst && p0.isCurrent);
+        await NavigationService().pushReplacementNamed('/welcome');
         await AnyChatAuth.signOut();
-        NavigationService().pushNamed("/login");
         return;
       }
     }
@@ -687,7 +687,6 @@ class AnyChatUser {
   }
 
   static Future<void> updateNotifications(bool value) async {
-
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
@@ -714,21 +713,23 @@ class AnyChatUser {
             width: avatarRadius,
             child: user.photoUrl.isEmpty
                 ? user.displayName.isEmpty
-                ? const CircleAvatar()
-                : CircleAvatar(
-                child: Text(user.displayName.characters.first))
+                    ? const CircleAvatar()
+                    : CircleAvatar(
+                        child: Text(user.displayName.characters.first))
                 : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl))));
   }
+
   static CircleAvatar getAvatar(AnyChatUser sender) {
     return sender.photoUrl != ''
         ? CircleAvatar(
-      backgroundImage: NetworkImage(sender.photoUrl),
-      backgroundColor: Colors.transparent,
-    )
+            backgroundImage: NetworkImage(sender.photoUrl),
+            backgroundColor: Colors.transparent,
+          )
         : CircleAvatar(
-      backgroundColor: Theme.of(Utilities().globalKey.currentContext!).secondaryHeaderColor,
-      child: Text(sender.displayName.characters.first),
-    );
+            backgroundColor: Theme.of(Utilities().globalKey.currentContext!)
+                .secondaryHeaderColor,
+            child: Text(sender.displayName.characters.first),
+          );
   }
 
   // void addSubscription(

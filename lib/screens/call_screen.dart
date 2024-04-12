@@ -157,7 +157,7 @@ class _CallScreenState extends State<CallScreen> {
     setState(() {
       muted = false;
     });
-    NavigationService().goBack();
+    NavigationService().pop();
   }
 
   Future<void> _switchCamera() async {
@@ -230,7 +230,7 @@ class _CallScreenState extends State<CallScreen> {
                     MaterialStateProperty.all<Color>(Colors.redAccent),
                 shape: MaterialStateProperty.all<OutlinedBorder>(
                     const CircleBorder())),
-            child: Icon(Icons.call_end, color: Colors.white, size: 40),
+            child: const Icon(Icons.call_end, color: Colors.white, size: 40),
           ),
           TextButton(
             onPressed: _switchCamera,

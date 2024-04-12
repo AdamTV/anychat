@@ -5,7 +5,7 @@ class RemarkableText extends StatelessWidget {
   final String text;
   final Color? color;
 
-  const RemarkableText({Key? key, required this.text, this.color}) : super(key: key);
+  const RemarkableText({super.key, required this.text, this.color});
 
   @override
   Widget build(BuildContext context) {

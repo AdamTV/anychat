@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:anychat/components/combined_locale_info.dart';
+import 'package:anychat/components/utilities.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
@@ -15,13 +16,9 @@ import 'package:flutter/material.dart';
 // TO AVOID CONFLICT WITH MATERIAL DATE UTILS CLASS
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide AwesomeDateUtils;
-import 'package:awesome_notifications/awesome_notifications.dart' as utils
-    show AwesomeDateUtils;
 import 'package:anychat/services/notifications/utils/common_functions.dart'
     if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
-import 'package:anychat/services/notifications/utils/media_player_central.dart';
 import 'package:flutter/services.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /* *********************************************
@@ -44,7 +41,7 @@ Future<void> externalUrl(String url) async {
 }
 
 int createUniqueID(int maxValue) {
-  Random random = new Random();
+  Random random = Random();
   return random.nextInt(maxValue);
 }
 
@@ -178,8 +175,9 @@ class NotificationUtils {
             channelKey: channelKey, permissions: permissionList);
 
     // If all permissions are allowed, there is nothing to do
-    if (permissionsAllowed.length == permissionList.length)
+    if (permissionsAllowed.length == permissionList.length) {
       return permissionsAllowed;
+    }
 
     // Refresh the permission list with only the disallowed permissions
     List<NotificationPermission> permissionsNeeded =
@@ -202,7 +200,9 @@ class NotificationUtils {
     } else {
       // If you need to show a rationale to educate the user to conceed the permission, show it
       await showDialog(
-          context: context,
+          context: context.mounted ?
+          context
+              : Utilities().globalKey.currentContext!,
           builder: (context) => AlertDialog(
                 backgroundColor: const Color(0xfffbfbfb),
                 title: Text(
@@ -220,11 +220,9 @@ class NotificationUtils {
                       fit: BoxFit.fitWidth,
                     ),
                     Text(
-                      'To proceed, you need to enable the permissions above' +
-                          (channelKey?.isEmpty ?? true
+                      'To proceed, you need to enable the permissions above${channelKey?.isEmpty ?? true
                               ? ''
-                              : ' on channel $channelKey') +
-                          ':',
+                              : ' on channel $channelKey'}:',
                       maxLines: 2,
                       textAlign: TextAlign.center,
                     ),
@@ -344,8 +342,8 @@ class NotificationUtils {
               title: 'Simple Notification',
               body: 'Simple body'));
 
-      // debugPrint(success ? 'Notification created successfully' : '');
-    } on PlatformException catch (exception) {
+      logger.d(success ? 'Notification created successfully' : '');
+    } on PlatformException {
       // debugPrint('$exception');
     }
   }
@@ -873,9 +871,9 @@ class NotificationUtils {
   static Future<void> showNotificationImportance(
       int id, NotificationImportance importance) async {
     String importanceKey = importance.toString().toLowerCase().split('.').last;
-    String channelKey = 'importance_' + importanceKey + '_channel';
-    String title = 'Importance levels (' + importanceKey + ')';
-    String body = 'Test of importance levels to ' + importanceKey;
+    String channelKey = 'importance_${importanceKey}_channel';
+    String title = 'Importance levels ($importanceKey)';
+    String body = 'Test of importance levels to $importanceKey';
 
     await AwesomeNotifications().setChannel(NotificationChannel(
         channelKey: channelKey,
@@ -912,7 +910,7 @@ class NotificationUtils {
     await AwesomeNotifications().setChannel(NotificationChannel(
         channelGroupKey: 'channel_tests',
         channelKey: channelName.toLowerCase().replaceAll(' ', '_'),
-        channelName: channelName + " (updated)",
+        channelName: "$channelName (updated)",
         channelDescription: "This channel was successfuly updated."));
   }
 

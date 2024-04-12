@@ -3,7 +3,6 @@ import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/live_translator_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StatefulAlertDialog extends StatefulWidget {
@@ -61,7 +60,7 @@ class _StatefulAlertDialogState extends State<StatefulAlertDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            NavigationService().goBack();
+            NavigationService().pop();
           },
           child: Text(localizationOf(context).close),
         ),

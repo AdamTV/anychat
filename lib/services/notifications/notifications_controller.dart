@@ -7,21 +7,16 @@ import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/database/conversation.dart';
-import 'package:anychat/firebase_options.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/utils/common_functions.dart'
     if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
-import 'package:anychat/services/notifications/utils/media_player_central.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:bloc/bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_speech/generated/google/protobuf/any.pb.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,16 +51,8 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
             channelGroupKey: 'chat',
             channelKey: 'chats',
-            channelName: Intl.message(
-              'Chat Messages',
-              name: 'chatMessages',
-              locale: localeName,
-            ),
-            channelDescription: Intl.message(
-              'Chat Messages',
-              name: 'chatMessages',
-              locale: localeName,
-            ),
+            channelName: Intl.withLocale(localeName, () => chatMessages()),
+            channelDescription: Intl.withLocale(localeName, () => chatMessages()),
             channelShowBadge: true,
             importance: NotificationImportance.Max,
             ledColor: Colors.white,
@@ -74,16 +61,8 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
               channelGroupKey: 'call',
               channelKey: 'call_channel',
-              channelName: Intl.message(
-                'Video Calls',
-                name: 'videoCalls',
-                locale: localeName,
-              ),
-              channelDescription: Intl.message(
-                'Video Calls',
-                name: 'videoCalls',
-                locale: localeName,
-              ),
+              channelName: Intl.withLocale(localeName, () => videoCalls()),
+              channelDescription:Intl.withLocale(localeName, () => videoCalls()),
               defaultColor: const Color(0xFF9D50DD),
               importance: NotificationImportance.Max,
               ledColor: Colors.white,
@@ -277,18 +256,10 @@ class NotificationsController extends ChangeNotifier {
         channelGroups: [
           NotificationChannelGroup(
               channelGroupKey: 'chat',
-              channelGroupName: Intl.message(
-                'Chat Messages',
-                name: 'chatMessages',
-                locale: localeName,
-              )),
+              channelGroupName: Intl.withLocale(localeName, () => chatMessages())),
           NotificationChannelGroup(
               channelGroupKey: 'call',
-              channelGroupName: Intl.message(
-                'Video Calls',
-                name: 'videoCalls',
-                locale: localeName,
-              )),
+              channelGroupName: Intl.withLocale(localeName, () => videoCalls())),
         ],
         //   NotificationChannelGroup(
         //       channelGroupKey: 'image_tests', channelGroupName: 'Images tests'),
@@ -621,7 +592,7 @@ class NotificationsController extends ChangeNotifier {
     //   print("FOREGROUND");
     // }
 
-    print('mySilentDataHandle received a FcmSilentData execution');
+    logger.d('mySilentDataHandle received a FcmSilentData execution');
     await executeLongTaskInBackground();
   }
 

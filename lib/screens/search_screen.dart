@@ -103,7 +103,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
           // padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            NavigationService().goBack();
+            NavigationService().pop();
           },
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),

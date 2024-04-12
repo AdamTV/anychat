@@ -12,7 +12,7 @@ import 'package:anychat/screens/settings_screen.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-class NavigationService {
+class NavigationService extends Navigator {
   static final NavigationService _instance = NavigationService._internal();
 
   factory NavigationService() {
@@ -31,7 +31,7 @@ class NavigationService {
         '/call': (context) => const CallScreen(),
         '/chat': (context) => const ChatScreen(),
         // '/contacts': (context) => const ContactsScreen(),
-        '/conversations': (context) => ConversationsScreen(),
+        '/conversations': (context) => const ConversationsScreen(),
         '/languages': (context) => const LanguagesScreen(),
         '/liveTranslator': (context) => const LiveTranslatorScreen(),
         '/login': (context) => const LoginScreen(),
@@ -39,7 +39,7 @@ class NavigationService {
         '/searchChatter': (context) => const SearchChatterScreen(false, false),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
-        '/forgotPassword': (context) => const ForgotPassword(),
+    '/forgotPassword': (context) => const ForgotPassword(),
       };
 
   Future<dynamic> navigateTo(String routeName) {
