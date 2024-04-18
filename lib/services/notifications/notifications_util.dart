@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide AwesomeDateUtils;
 import 'package:anychat/services/notifications/utils/common_functions.dart'
-    if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
+    if (dart.library.html) 'package:awesome_notifications/utils/common_web_functions.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 

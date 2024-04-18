@@ -51,3 +51,4 @@ app.*.map.json
 build
 drs-policy.yaml
 /lib/generated
+/node_modules
