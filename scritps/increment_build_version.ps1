@@ -3,7 +3,7 @@ $path_to_pubspec = "D:\source\repos\flutter\anychat\pubspec.yaml"
 $current_version = $matches[1]
 $current_version_without_build = $current_version -replace '\+.*'
 $gitcount = (git log | Select-String -Pattern '^commit' | Measure-Object).Count
-$new_version = "$current_version_without_build+$gitcount"
+$new_version = "$current_version_without_build+$([int]$gitcount + 11)"
 Write-Output "Setting pubspec.yaml version $current_version to $new_version"
 #(Get-Content $path_to_pubspec) -replace "version: $current_version", "version: $new_version" | Set-Content $path_to_pubspec
 

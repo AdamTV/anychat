@@ -10,7 +10,7 @@ import 'package:anychat/database/conversation.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/utils/common_functions.dart'
-    if (dart.library.html) 'package:awesome_notifications_example/utils/common_web_functions.dart';
+    if (dart.library.html) 'package:awesome_notifications/utils/common_web_functions.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
