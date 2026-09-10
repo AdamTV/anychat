@@ -1,6 +1,6 @@
 # anychat
 
-An AlphaTech Flutter project.
+**AnyChat Translator** — AlphaTech Flutter client for multilingual chat. Firebase Hosting CI lives under `.github/workflows/`. Agent operating contract: `AGENTS.md`.
 
 ## Getting Started
 
