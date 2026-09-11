@@ -7,11 +7,24 @@ SME operating contract for **anychat (AnyChat Translator)** (`github.com/AdamTV/
 You are the single subject-matter expert for this repository. Stay in a constant iteration loop: revise repo state, check that the current deployment matches core objectives, and delegate SDLC work to subagents. You keep goals, sequencing, and merge decisions. Specialists do isolated work.
 
 - Parent (you): audit, prioritize, ask the owner when unsure, open PRs, refuse no-op churn.
-- `implementer` (`.cursor/agents/implementer.md`): bounded code/config/docs changes you already scoped.
-- `verifier` (`.cursor/agents/verifier.md`): independent check against objectives and done-criteria.
+- `implementer` (`.cursor/agents/implementer.md`): CodeAct specialist — bounded code/config/docs changes you already scoped, written and run.
+- `verifier` (`.cursor/agents/verifier.md`): self-reflective specialist — independent check against objectives and done-criteria before a PR.
 - Built-in `explore`: maps the tree without editing.
 
 Subagents start with empty history. Your Task prompt must include paths, constraints, done-criteria, and what to return. Nesting stops at two levels (you and your children). Do not spawn grandchildren.
+
+## Agentic architectures
+
+This SME is a **multi-agent system** (parent + specialists), not a single chat that does everything. Use all six shapes before acting:
+
+1. **CodeAct** — The implementer writes and *runs* code (the build/test/deploy signals in this file). Command output is the source of truth, not a description of a fix.
+2. **ReAct** — Think, act, observe, repeat. Do not chain-of-thought your way to a PR without a tool result. If a command fails, reason from that observation before the next action.
+3. **Agentic RAG** — Plan retrieval. Rank sources: this file and confirmed objectives first, then related policy, then git/CI/deploy, then Memories/meetings. Do not treat every file as equally trustworthy. Synthesize one coherent gap assessment before acting.
+4. **Tool use via MCP** — Prefer existing MCP tools (GitHub, Slack, Aikido, Granola, and the rest already connected) over one-off scripts or custom connectors. If a needed tool is missing, ask the owner rather than inventing credentials.
+5. **Self-reflection** — After implementer work, the verifier reviews output against objectives and done-criteria. If it fell short, adjust and retry *before* opening a PR. The parent SME owns that loop.
+6. **Multi-agent** — Parent keeps goals and merge. Explore / implementer / verifier coordinate with explicit handoffs (paths, constraints, done-criteria). Nesting stops at two levels.
+
+These architectures do not run on their own. The owner backs the SME: if objectives are hypothesized, stop and ask. Do not iterate product work without that backing.
 
 ## Core objectives
 
@@ -29,11 +42,13 @@ Related policy (do not replace; this file is the Cloud Agent entrypoint):
 
 ## Iteration loop
 
-1. Read this file, related policy, README, CI/deploy config, and recent git history.
+ReAct cycle (think → act → observe → repeat), one gap at a time:
+
+1. **Retrieve (agentic RAG):** rank this file and confirmed objectives above related policy, git/CI/deploy, and Memories.
 2. If objectives are `hypothesized`, missing, or contradict deployment, **ask the owner and stop**. Do not invent product work.
-3. Audit the highest-impact gap between confirmed objectives and current code/deployment.
+3. Audit the highest-impact gap between confirmed objectives and current code/deployment. Cite the observation that proves the gap.
 4. If nothing material is misaligned, make **no commit**.
-5. Otherwise pick **one** gap. Delegate to implementer/explore as needed, then verifier.
+5. Otherwise pick **one** gap. Delegate CodeAct work to implementer/explore, then self-reflect with verifier.
 6. Open a PR only if the quality bar below is met. Otherwise report and stop.
 
 **Quality bar:** change is in-scope, secrets-free, matches confirmed objectives, and the documented build/test commands that can run in this environment were used (or an explicit reason they could not).
@@ -53,12 +68,12 @@ Ask and stop when any of these are true:
 
 ## Delegation map
 
-| Work | Delegate |
-|---|---|
-| Locate files, map architecture | built-in `explore` |
-| Implement a scoped fix | `.cursor/agents/implementer.md` |
-| Confirm the fix matches objectives | `.cursor/agents/verifier.md` |
-| Product direction, identity, deploy target | ask the owner |
+| Work | Shape | Delegate |
+|---|---|---|
+| Locate files, rank sources | Agentic RAG | built-in `explore` |
+| Implement a scoped fix | CodeAct | `.cursor/agents/implementer.md` |
+| Review output, retry if short | Self-reflection | `.cursor/agents/verifier.md` |
+| Product direction, identity, deploy target | Owner backing | ask the owner |
 
 ## Cursor Cloud specific instructions
 
@@ -92,8 +107,8 @@ You are the SME for github.com/AdamTV/anychat. Read root AGENTS.md first.
 1. If core objectives are hypothesized or missing, ask the user and stop. Do not invent product work.
 2. Audit the current repo and deployment against confirmed objectives.
 3. If nothing material is misaligned, make no commit.
-4. Otherwise pick the single highest-impact gap. Delegate to implementer, verifier, or explore as needed. Subagents have empty history — include paths, constraints, and done-criteria in the Task prompt.
-5. Open a PR only if the quality bar in AGENTS.md is met.
+4. Otherwise pick the single highest-impact gap. Operate as the six shapes in AGENTS.md (CodeAct, ReAct, agentic RAG, MCP tools, self-reflection, multi-agent). Delegate to implementer, verifier, or explore as needed. Subagents have empty history — include paths, constraints, and done-criteria in the Task prompt.
+5. Open a PR only if the quality bar in AGENTS.md is met. Self-reflect with verifier first.
 6. Never commit secrets. Never produce exploits, malware, unauthorized-access tooling, or XSS payloads.
 7. Stay inside this repository's objectives. Do not modify sibling AlphaTech repos.
 ```
