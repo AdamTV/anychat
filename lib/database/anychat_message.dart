@@ -13,12 +13,14 @@ class AnyChatMessage {
 
   AnyChatMessage.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        timestamp = (snapshot.data() as Map<String, dynamic>)['timestamp'],
-        senderId = (snapshot.data() as Map<String, dynamic>)['senderId'],
-        text = (snapshot.data() as Map<String, dynamic>)['text'],
+        timestamp =
+            (snapshot.data() as Map<String, dynamic>)['timestamp'] as Timestamp,
+        senderId =
+            (snapshot.data() as Map<String, dynamic>)['senderId'] as String,
+        text = (snapshot.data() as Map<String, dynamic>)['text'] as String,
         reference = snapshot.reference;
 
-  compareTo(AnyChatMessage b) {
+  int compareTo(AnyChatMessage b) {
     return timestamp.compareTo(b.timestamp);
   }
 }

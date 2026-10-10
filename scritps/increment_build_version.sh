@@ -1,5 +1,6 @@
 #!/bin/bash
-path_to_pubspec="/mnt/d/source/repos/flutter/anychat/pubspec.yaml";
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+path_to_pubspec="$script_dir/../pubspec.yaml";
 dos2unix $path_to_pubspec
 current_version=$(awk '/^version:/ {print $2}' $path_to_pubspec);
 current_version_without_build=$(echo "$current_version" | sed 's/\+.*//');

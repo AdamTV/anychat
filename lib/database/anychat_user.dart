@@ -12,6 +12,7 @@ import 'anychat_auth.dart';
 import '../components/combined_locale_info.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
+import 'firestore_batch.dart';
 
 class AnyChatUser {
   late String id;
@@ -39,24 +40,49 @@ class AnyChatUser {
   }
 
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot) : id = snapshot.id {
-    final data = snapshot.data();
+    final data = snapshot.data() as Map<String, dynamic>?;
     if (data != null) {
-      displayName = (snapshot.data() as Map<String, dynamic>)['displayName'];
-      email = (snapshot.data() as Map<String, dynamic>)['email'] ?? "";
-      photoUrl = (snapshot.data() as Map<String, dynamic>)['photoUrl'] ?? '';
-      language = (snapshot.data() as Map<String, dynamic>)['language'];
-      blockedAccounts = List.castFrom<dynamic, String>(
-          (snapshot.data() as Map<String, dynamic>)['blockedAccounts'] ?? []);
-      theme = (snapshot.data() as Map<String, dynamic>)['theme'] ?? 'system';
-      notificationsEnabled =
-          (snapshot.data() as Map<String, dynamic>)['notificationsEnabled'] ??
-              false;
+      displayName = data['displayName'] as String? ?? '';
+      email = data['email'] as String? ?? '';
+      photoUrl = data['photoUrl'] as String? ?? '';
+      language = data['language'] as String? ?? 'en';
+      blockedAccounts = List<String>.from(
+          data['blockedAccounts'] as List<dynamic>? ?? const <dynamic>[]);
+      theme = data['theme'] as String? ?? 'system';
+      notificationsEnabled = data['notificationsEnabled'] as bool? ?? false;
+    } else {
+      displayName = '';
+      email = '';
+      photoUrl = '';
+      language = 'en';
+      blockedAccounts = [];
+      theme = 'system';
+      notificationsEnabled = false;
     }
   }
 
   static Future<AnyChatUser> getUserById(String? id) async {
     return AnyChatUser.fromSnapshot(
         await FirebaseFirestore.instance.collection("users").doc(id).get());
+  }
+
+  /// Fetches users with bounded `whereIn` queries rather than one document
+  /// read per ID.
+  static Future<List<AnyChatUser>> getUsersByIds(Iterable<String> ids) async {
+    final uniqueIds = ids.toSet();
+    if (uniqueIds.isEmpty) {
+      return <AnyChatUser>[];
+    }
+
+    final users = <AnyChatUser>[];
+    for (final idBatch in chunkForFirestoreInQuery(uniqueIds)) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: idBatch)
+          .get();
+      users.addAll(snapshot.docs.map(AnyChatUser.fromSnapshot));
+    }
+    return users;
   }
 
   static Future<Conversation?> createConversation(AnyChatUser user) async {
@@ -112,20 +138,15 @@ class AnyChatUser {
 
     AnyChatAuth.currentConversation =
         Conversation.fromSnapshot(await conversation.get());
-    List<AnyChatUser> temp = <AnyChatUser>[];
-    for (var id in AnyChatAuth.currentConversation!.participants) {
-      if (id != AnyChatAuth.currentUser.id) {
-        temp.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-            .collection('users')
-            .doc(id)
-            .get()));
-      }
-      AnyChatAuth.currentChatters = temp;
-    }
+    final currentUserId = AnyChatAuth.currentUser.id;
+    AnyChatAuth.currentChatters = await getUsersByIds(
+      AnyChatAuth.currentConversation!.participants
+          .where((participantId) => participantId != currentUserId),
+    );
     return AnyChatAuth.currentConversation!;
   }
 
-  addUserToFirestore() async {
+  Future<void> addUserToFirestore() async {
     FirebaseAuth.instance;
 
     var locale = await Devicelocale.currentAsLocale;
@@ -225,10 +246,10 @@ class AnyChatUser {
     //     transaction.update(message, {'participants': fresh.participants});
     //   });
     // });
-    await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
+    await FirebaseFirestore.instance
+        .runTransaction((Transaction transaction) async {
       transaction.delete(userConversation);
-      return;
-    } as Future Function(Transaction));
+    });
     try {
       await FirebaseFirestore.instance
           .runTransaction((Transaction transaction) {
@@ -477,7 +498,7 @@ class AnyChatUser {
     return true;
   }
 
-  static deleteConversation(BuildContext context, String id) {
+  static void deleteConversation(BuildContext context, String id) {
     showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -657,7 +678,7 @@ class AnyChatUser {
     AnyChatAuth.currentUser = await getUserById(AnyChatAuth.currentUser.id);
   }
 
-  static updateTheme(ThemeMode newValue) async {
+  static Future<void> updateTheme(ThemeMode newValue) async {
     final user = FirebaseFirestore.instance
         .collection("users")
         .doc(AnyChatAuth.currentUser.id);
@@ -704,32 +725,6 @@ class AnyChatUser {
     userData.notificationsEnabled = value;
     await CacheManager().cacheUserData(userData);
     // await NavigationService().pushReplacementNamed('/settings');
-  }
-
-  static getAvatarInContainer(double avatarRadius, AnyChatUser user) {
-    return Expanded(
-        child: SizedBox(
-            height: avatarRadius,
-            width: avatarRadius,
-            child: user.photoUrl.isEmpty
-                ? user.displayName.isEmpty
-                    ? const CircleAvatar()
-                    : CircleAvatar(
-                        child: Text(user.displayName.characters.first))
-                : CircleAvatar(backgroundImage: NetworkImage(user.photoUrl))));
-  }
-
-  static CircleAvatar getAvatar(AnyChatUser sender) {
-    return sender.photoUrl != ''
-        ? CircleAvatar(
-            backgroundImage: NetworkImage(sender.photoUrl),
-            backgroundColor: Colors.transparent,
-          )
-        : CircleAvatar(
-            backgroundColor: Theme.of(Utilities().globalKey.currentContext!)
-                .secondaryHeaderColor,
-            child: Text(sender.displayName.characters.first),
-          );
   }
 
   // void addSubscription(

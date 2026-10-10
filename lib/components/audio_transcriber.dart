@@ -23,8 +23,8 @@ class AudioTranscriber {
   static BehaviorSubject<List<int>> _audioStream = BehaviorSubject<List<int>>();
   static String? isoCode;
   final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
-  StreamSubscription? _mRecordingDataSubscription;
-  late StreamController<Food> recordingDataController;
+  StreamSubscription<Uint8List>? _mRecordingDataSubscription;
+  late StreamController<Uint8List> recordingDataController;
 
   Future<Stream<g_speech_gen.StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
@@ -34,12 +34,10 @@ class AudioTranscriber {
     _audioStream = BehaviorSubject<List<int>>();
 
     // Create recording stream
-    recordingDataController = StreamController<Food>();
+    recordingDataController = StreamController<Uint8List>();
     _mRecordingDataSubscription =
         recordingDataController.stream.listen((buffer) {
-      if (buffer is FoodData) {
-        _audioStream.add(buffer.data!);
-      }
+      _audioStream.add(buffer);
     }, onDone: () {
       recordingDataController.close();
     });
@@ -60,8 +58,8 @@ class AudioTranscriber {
         )
         .onError((error, stackTrace) => logger.e(
             "Error Starting Recorder for Audio Transcriber",
-            error,
-            stackTrace));
+            error: error,
+            stackTrace: stackTrace));
 
     final serviceAccount = ServiceAccount.fromString((await rootBundle
         .loadString('assets/anychat-c414a-c304e57544ef.json')));

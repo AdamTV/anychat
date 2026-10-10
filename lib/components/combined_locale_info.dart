@@ -10,7 +10,8 @@ List<Locale> getSupportedLocales() {
   return supportedLocales;
 }
 
-List<DropdownMenuItem<String>>? getLanguageDropdownMenuItems(context) {
+List<DropdownMenuItem<String>>? getLanguageDropdownMenuItems(
+    BuildContext? context) {
   List<DropdownMenuItem<String>>? menuItems = [];
   for (var endonym in endonymRetrievalMap.values) {
     menuItems.add(DropdownMenuItem<String>(

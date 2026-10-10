@@ -51,7 +51,7 @@ android {
 
     defaultConfig {
         applicationId "ca.alphatech.anychat"
-        minSdkVersion 21
+        minSdkVersion 24
 //        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

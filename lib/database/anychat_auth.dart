@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
-import 'package:anychat/screens/register_screen.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devicelocale/devicelocale.dart';
@@ -119,14 +118,14 @@ class AnyChatAuth {
             idToken: googleKey.idToken,
           );
           authResult = await auth.signInWithCredential(credential);
-        }).catchError((e) {
-          logger.e("Error", e, e.stackTrace);
+        }).catchError((Object e) {
+          logger.e("Error", error: e);
 
           // logger.e(err.message.toString(),
           //     time: DateTime.now(), error: err, stackTrace: err.stackTrace);
         });
-      }).catchError((e) {
-        logger.e("Error", e, e.stackTrace);
+      }).catchError((Object e) {
+        logger.e("Error", error: e);
 
         // logger.e(err.message.toString(),
         //     time: DateTime.now(), error: err, stackTrace: err.stackTrace);
@@ -202,7 +201,7 @@ class AnyChatAuth {
       // await _facebookAuth.logOut();
       // currently apple signin method uses firebase auth, so no need to sign out
     } on Error catch (e) {
-      logger.e("Error", e, e.stackTrace);
+      logger.e("Error", error: e, stackTrace: e.stackTrace);
       // logger.e(e.toString(),
       // time: DateTime.now(), error: e, stackTrace: e.stackTrace);
     }
@@ -306,7 +305,9 @@ class AnyChatAuth {
         return currentUser;
       } else {
         final userData = await FacebookAuth.instance.getUserData();
-        var url = userData['picture']['data']['url'];
+        final picture = userData['picture'] as Map<String, dynamic>;
+        final pictureData = picture['data'] as Map<String, dynamic>;
+        final url = pictureData['url'] as String;
         var locale = await Devicelocale.currentAsLocale;
         String localeStr = locale?.languageCode ?? localeName;
         currentUser = AnyChatUser(
@@ -327,11 +328,12 @@ class AnyChatAuth {
     return null;
   }
 
-  static flutterSocialButton(BuildContext context, ButtonType buttonType) {
+  static Widget flutterSocialButton(
+      BuildContext context, ButtonType buttonType,
+      {bool Function()? canContinue}) {
     return FlutterSocialButton(
       onTap: () async {
-        if (ModalRoute.of(context)!.settings.name == "/register" &&
-            !RegisterScreen.isUserAgreeToTerms()) return;
+        if (canContinue != null && !canContinue()) return;
         try {
           var user = await AnyChatAuth.socialSignIn(buttonType);
           if (user != null) {
@@ -374,7 +376,7 @@ class AnyChatAuth {
   //   );
   // }
 
-  static showAlertDialogFailedSocialLogin(
+  static Future<void> showAlertDialogFailedSocialLogin(
       BuildContext context, ButtonType buttonType) async {
     String errorMessage = switch (buttonType) {
       ButtonType.google => ModalRoute.of(context)!.settings.name == "/login"
@@ -390,17 +392,17 @@ class AnyChatAuth {
           ? localizationOf(context).errorLoggingInTwitter
           : localizationOf(context).unableRegisterTwitter,
 
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for LinkedIn.
       ButtonType.linkedin => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for WhatsApp.
       ButtonType.whatsapp => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for GitHub.
       ButtonType.github => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for Yahoo.
       ButtonType.yahoo => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for phone auth.
       ButtonType.phone => throw UnimplementedError(),
-      // TODO: Handle this case.
+      // TODO(TD-001): Add a supported-provider error message for email auth.
       ButtonType.email => throw UnimplementedError(),
     };
     return await Utilities().showAlertDialog(

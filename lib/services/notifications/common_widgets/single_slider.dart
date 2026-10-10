@@ -2,6 +2,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+// TODO(TD-002): Vendored Awesome Notifications copy duplicates sibling files;
+// tracked in TECH_DEBT.md and grandfathered in .jscpd-baseline.json.
+
 class SingleSliderToConfirm extends StatefulWidget {
   /// Height of the slider. Defaults to 70.
   final double height;
@@ -95,7 +98,7 @@ class SingleSliderToConfirmState extends State<SingleSliderToConfirm> {
     }
   }
 
-  void updatePosition(details) {
+  void updatePosition(Object details) {
     if (details is DragEndDetails) {
       setState(() {
         _duration = 600;
@@ -113,7 +116,7 @@ class SingleSliderToConfirmState extends State<SingleSliderToConfirm> {
     }
   }
 
-  void sliderReleased(details) {
+  void sliderReleased(Object details) {
     if (_position > widget.width - widget.height) {
       widget.onConfirmation();
     }

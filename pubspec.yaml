@@ -31,8 +31,6 @@ dependencies:
   firebase_auth: ^4.17.5
   firebase_storage: ^11.6.5
   cloud_firestore: ^4.15.4
-  firebase_analytics: ^10.8.6
-  firebase_crashlytics: ^3.4.15
   firebase_app_check: ^0.2.1+14
   devicelocale: ^0.7.0
   google_sign_in: ^6.2.1
@@ -46,36 +44,35 @@ dependencies:
   url_launcher: ^6.0.4
   settings_ui: ^2.0.2
   image_picker: ^1.0.7
-  cupertino_icons: ^1.0.3
-  flutter_svg: ^2.0.9
   sign_in_with_apple: ^6.0.0
-  flutter_ringtone_player: ^4.0.0+2
   disposables: ^1.0.0
   flutter_facebook_auth: ^6.1.0
   # twitter_login: ^4.4.2
   mailto: ^2.0.0
   http: ^1.2.0
-  logger: ^1.4.0
+  logger: ^2.0.2
   flutter_sound: ^9.2.13
   html: ^0.15.4
   agora_rtc_engine: ^6.3.0
-  bloc: ^8.1.3
-  keep_screen_on: ^3.0.0
   #  flutter_hooks: ^0.21.0
   async: ^2.11.0
   provider: ^6.1.2
   flutter_social_button: ^1.1.4+1
-  awesome_notifications_core: ^0.9.3
   awesome_notifications: any
   #  awesome_notifications_fcm: any
-  palette_generator: ^0.3.3+3
   device_info_plus: ^10.0.1
-  google_fonts: ^6.2.1
-  feather_icons: ^1.2.0
-  vibration: ^1.8.4
   universal_io: ^2.2.2
-  numberpicker: ^2.1.2
   path_provider: any
+
+dev_dependencies:
+  analyzer: ^6.4.0
+  dependency_validator: ^4.1.3
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
 #dev_dependencies:
 
 #  flutter_launcher_icons: any

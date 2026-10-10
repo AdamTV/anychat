@@ -25,7 +25,7 @@ class NavigationService extends Navigator {
 
   // get textDirection => navigatorKey.
 
-  get routes => {
+  Map<String, WidgetBuilder> get routes => {
         // '/addChatter': (context) => const AddChatterScreen(),
         '/blockedUsers': (context) => const BlockedUsersScreen(),
         '/call': (context) => const CallScreen(),

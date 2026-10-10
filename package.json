@@ -1,5 +1,16 @@
 {
-  "dependencies": {
-    "firebase": "^10.11.0"
+  "scripts": {
+    "check:file-size": "node scritps/check_file_size.js",
+    "check:architecture": "node scritps/check_module_boundaries.js",
+    "check:firestore-batches": "node scritps/check_firestore_batch_reads.js",
+    "check:tech-debt": "node scritps/check_tech_debt.js",
+    "check:dependency-drift": "node scritps/check_dependency_drift.js",
+    "check:duplication": "jscpd lib functions --min-lines 12 --threshold 5 --baseline .jscpd-baseline.json --fail-on-new-clones --format dart,javascript --ignore \"**/node_modules/**,**/coverage/**,**/.dart_tool/**,**/build/**\" --reporters console",
+    "check:complexity": "dart run tool/check_complexity.dart lib",
+    "setup:hooks": "bash scritps/setup_hooks.sh",
+    "check:quality": "npm run check:file-size && npm run check:architecture && npm run check:firestore-batches && npm run check:tech-debt && npm run check:dependency-drift && npm run check:duplication"
+  },
+  "devDependencies": {
+    "jscpd": "^5.4.1"
   }
 }

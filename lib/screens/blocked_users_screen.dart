@@ -45,29 +45,39 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
 
   List<SettingsTile> tiles = [];
   Future<void> getBlockedAccountNames() async {
-    tiles.clear();
-    tiles.add(SettingsTile(
-        title: Text(localizationOf(Utilities().globalKey.currentContext!)
-            .blockAccount),
-        leading: const Icon(Icons.add),
-        onPressed: (ctx) {
-          NavigationService().pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) {
-            return const SearchChatterScreen(false, true);
-          }));
-        }));
+    final blockedIds = AnyChatAuth.currentUser.blockedAccounts;
+    final blockedUsers = await AnyChatUser.getUsersByIds(blockedIds);
+    final usersById = {for (final user in blockedUsers) user.id: user};
+    for (final id in blockedIds) {
+      usersById.putIfAbsent(id, () => AnyChatUser.deletedUser(id));
+    }
+    if (!mounted) {
+      return;
+    }
 
-    for (int i = 0; i < AnyChatAuth.currentUser.blockedAccounts.length; i++) {
-      var user = await AnyChatUser.getUserById(
-          AnyChatAuth.currentUser.blockedAccounts[i]);
-      setState(() {
+    setState(() {
+      tiles
+        ..clear()
+        ..add(SettingsTile(
+          title: Text(localizationOf(Utilities().globalKey.currentContext!)
+              .blockAccount),
+          leading: const Icon(Icons.add),
+          onPressed: (ctx) {
+            NavigationService().pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return const SearchChatterScreen(false, true);
+            }));
+          },
+        ));
+      for (final id in blockedIds) {
+        final user = usersById[id]!;
         tiles.add(SettingsTile(
             title: Text(user.displayName),
             onPressed: (BuildContext context) async {
               await AnyChatAuth.currentUser.unblockAccount(user.id);
-              getBlockedAccountNames();
+              await getBlockedAccountNames();
             }));
-      });
-    }
+      }
+    });
   }
 }

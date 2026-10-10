@@ -2,6 +2,7 @@ import 'package:anychat/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'anychat_message.dart';
+import 'firestore_batch.dart';
 
 class Conversation {
   final String id;
@@ -18,11 +19,14 @@ class Conversation {
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
         participants = List.castFrom<dynamic, String>(
-            (snapshot.data() as Map<String, dynamic>)['participants']),
+            (snapshot.data() as Map<String, dynamic>)['participants']
+                as List<dynamic>),
         // messages = ((snapshot.data() as Map<String, dynamic>)['messages']),
         transcribedMessages =
-            ((snapshot.data() as Map<String, dynamic>)['transcribedMessages']),
-        timestamp = (snapshot.data() as Map<String, dynamic>)['timestamp'],
+            ((snapshot.data() as Map<String, dynamic>)['transcribedMessages']
+                as List<dynamic>?),
+        timestamp =
+            (snapshot.data() as Map<String, dynamic>)['timestamp'] as Timestamp?,
         reference = snapshot.reference;
 
   static Future<Conversation> getConversationById(String id) async {
@@ -31,16 +35,42 @@ class Conversation {
         .doc(id)
         .get());
   }
-  static Future<AnyChatMessage?> getLatestMessageByConversationId(String id) async {
-   return await FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(id)
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .get().then((value) {return value.docs.isEmpty ? null : AnyChatMessage.fromSnapshot(value.docs.last);})
-   .onError((error, stackTrace) {
-     logger.e('error getting chat messages: ', error);
-     throw error!;
-   });
+
+  static Future<List<Conversation>> getConversationsByIds(
+      Iterable<String> ids) async {
+    final uniqueIds = ids.toSet();
+    if (uniqueIds.isEmpty) {
+      return <Conversation>[];
+    }
+
+    final conversations = <Conversation>[];
+    for (final idBatch in chunkForFirestoreInQuery(uniqueIds)) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('conversations')
+          .where(FieldPath.documentId, whereIn: idBatch)
+          .get();
+      conversations.addAll(snapshot.docs.map(Conversation.fromSnapshot));
+    }
+    return conversations;
+  }
+
+  static Future<AnyChatMessage?> getLatestMessageByConversationId(
+      String id) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('conversations')
+          .doc(id)
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
+      return snapshot.docs.isEmpty
+          ? null
+          : AnyChatMessage.fromSnapshot(snapshot.docs.first);
+    } catch (error, stackTrace) {
+      logger.e('error getting chat messages: ',
+          error: error, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 }

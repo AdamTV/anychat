@@ -24,7 +24,7 @@ class CacheManager {
     return _instance;
   }
 
-  initSharedPrefs() async {
+  Future<void> initSharedPrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
 
@@ -42,7 +42,7 @@ class CacheManager {
   UserData? _getCachedUserData() {
     String? serializedData = prefs.getString('user_data');
     return serializedData != null && serializedData.isNotEmpty
-        ? UserData.fromJson(jsonDecode(serializedData))
+        ? UserData.fromJson(jsonDecode(serializedData) as Map<String, dynamic>)
         : null;
   }
 
@@ -81,7 +81,7 @@ class CacheManager {
         return userData!.theme;
       }
     } catch (e) {
-      logger.d("UserData has not been cached yet.", e.toString());
+      logger.d("UserData has not been cached yet.", error: e.toString());
       return kLightTheme;
     }
   }
@@ -97,12 +97,12 @@ class CacheManager {
         return userData?.locale ?? await Devicelocale.currentAsLocale;
       }
     } catch (e) {
-      logger.e("Unable to load locale from cache: ", e);
+      logger.e("Unable to load locale from cache: ", error: e);
       return UserData.localeFromString(localeName);
     }
   }
 
-  clearUserData() async {
+  Future<void> clearUserData() async {
     await prefs.setString("user_data", "");
   }
 }
@@ -169,11 +169,11 @@ class UserData {
 
   // Constructs a UserData object from a Map object
   factory UserData.fromJson(Map<String, dynamic> json) {
-    String id = json['id'];
-    String username = json['username'];
-    String email = json['email'];
-    ThemeData theme = UserData.themeFromString(json['theme']);
-    Locale locale = UserData.localeFromString(json['locale']);
+    String id = json['id'] as String;
+    String username = json['username'] as String;
+    String email = json['email'] as String;
+    ThemeData theme = UserData.themeFromString(json['theme'] as String);
+    Locale locale = UserData.localeFromString(json['locale'] as String);
     bool notificationsEnabled = json['notificationsEnabled'] == 'true';
     return UserData(
       id: id,

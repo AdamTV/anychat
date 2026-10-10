@@ -43,7 +43,7 @@ class _CallScreenState extends State<CallScreen> {
 
   String text = "";
 
-  get shape => null;
+  Object? get shape => null;
 
   @override
   void initState() {
@@ -174,7 +174,7 @@ class _CallScreenState extends State<CallScreen> {
   //   });
   // }
 
-  _muteLocalAudioStream() async {
+  Future<void> _muteLocalAudioStream() async {
     await _engine.muteLocalAudioStream(!muted);
     setState(() {
       muted = !muted;
@@ -371,9 +371,9 @@ class _CallScreenState extends State<CallScreen> {
         lastMessage = transcribedText;
         await AnyChatUser.addTranscribedMessage(lastMessage);
       }
-    }, onError: (e) async {
+    }, onError: (Object e) async {
       // await responseStream.drain();
-      logger.e("CallScreen.streamingRecognize", e);
+      logger.e("CallScreen.streamingRecognize", error: e);
       await audioTranscriber.stopRecording();
       if (mounted) {
         streamingRecognize();

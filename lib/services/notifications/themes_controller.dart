@@ -69,7 +69,7 @@ class ThemesController {
   }
 
   /// Sets theme and notifies listeners about change.
-  setTheme(Themes theme) async {
+  Future<void> setTheme(Themes theme) async {
     _currentTheme = appThemeData[theme];
 
     // Here we notify listeners that theme changed

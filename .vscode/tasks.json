@@ -5,13 +5,13 @@
 			"label": "increment_build_version",
 			"detail": "run increment_build_version script",
 			"type": "shell",
-			// "linux": {
-			// "command": "/bin/bash /mnt/d/source/repos/flutter/anychat/scritps/increment_build_version.sh",
-			// },
-			// "windows": {
-			"command": "D:\\source\\repos\\flutter\\anychat\\scripts\\increment_build_version.ps1",s
-			// },
-			"group": "build",
+			"linux": {
+				"command": "/bin/bash ${workspaceFolder}/scritps/increment_build_version.sh"
+			},
+			"windows": {
+				"command": "powershell ${workspaceFolder}\\scritps\\increment_build_version.ps1"
+			},
+			"group": "build"
 		},
 		{
 			"type": "flutter",

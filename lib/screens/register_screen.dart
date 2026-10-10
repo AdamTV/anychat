@@ -5,6 +5,8 @@ import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
+import 'package:anychat/widgets/auth_background.dart';
+import 'package:anychat/widgets/auth_form_fields.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -60,31 +62,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment
                         .center, // Center the content vertically
                     children: <Widget>[
-                      TextFormField(
-                        controller:
-                            _emailController, // Attach the email controller here
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction, // Enable live validation
-                        validator: (value) =>
-                            _validateEmail(value), // Validate the email
-                        decoration: InputDecoration(
-                          labelText: localizationOf(context).email,
-                          hintText: localizationOf(context).enterYourEmail,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller:
-                            _passwordController, // Attach the password controller here
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction, // Enable live validation
-                        validator: (value) =>
-                            _validatePassword(value), // Validate the password
-                        decoration: InputDecoration(
-                          labelText: localizationOf(context).password,
-                          hintText: localizationOf(context).enterYourPassword,
-                        ),
-                        obscureText: true, // Hide the input
+                      AuthFormFields(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        validateEmail: _validateEmail,
+                        validatePassword: _validatePassword,
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -205,8 +187,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                AnyChatAuth.flutterSocialButton(context, ButtonType.google),
-                AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
+                AnyChatAuth.flutterSocialButton(
+                  context,
+                  ButtonType.google,
+                  canContinue: RegisterScreen.isUserAgreeToTerms,
+                ),
+                AnyChatAuth.flutterSocialButton(
+                  context,
+                  ButtonType.apple,
+                  canContinue: RegisterScreen.isUserAgreeToTerms,
+                ),
                 // AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
                 // AnyChatAuth.twitterIcon(context),
               ],
@@ -225,17 +215,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    final regex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    if (value == null || value.isEmpty) {
-      return localizationOf(context).emailMustNotBeEmpty;
-    } else if (!regex.hasMatch(value)) {
-      return localizationOf(context).entterValidEmail;
-    }
-    return null;
-  }
+  String? _validateEmail(String? value) =>
+      validateEmailInput(value, localizationOf(context));
 
   String? _validatePassword(String? value) {
     final regex = RegExp(
@@ -298,35 +279,26 @@ class SignupBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    var children = <Widget>[];
-    children.addAll({
-      Positioned(
-        top: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
-        left: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
-        child: Image.asset(
-          "assets/images/signup_top.png",
-          width: size.width * 0.35,
+    return AuthBackground(
+      child: child,
+      images: (size) => <Widget>[
+        Positioned(
+          top: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -200 : size.width * -0.05) : 0,
+          child: Image.asset(
+            "assets/images/signup_top.png",
+            width: size.width * 0.35,
+          ),
         ),
-      ),
-      Positioned(
-        bottom: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.1) : 0,
-        left: size.width >= 750 ? (kIsWeb ? -175 : size.width * -0.05) : 0,
-        child: Image.asset(
-          "assets/images/main_bottom.png",
-          width: size.width * 0.25,
+        Positioned(
+          bottom: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.1) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -175 : size.width * -0.05) : 0,
+          child: Image.asset(
+            "assets/images/main_bottom.png",
+            width: size.width * 0.25,
+          ),
         ),
-      )
-    });
-    children.add(child);
-    return SizedBox(
-      height: size.height,
-      width: double.infinity,
-      // Here i can use size.width but use double.infinity because both work as a same
-      child: Stack(
-        alignment: Alignment.center,
-        children: children,
-      ),
+      ],
     );
   }
 }

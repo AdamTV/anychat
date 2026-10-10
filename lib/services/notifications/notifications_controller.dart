@@ -51,8 +51,10 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
             channelGroupKey: 'chat',
             channelKey: 'chats',
-            channelName: Intl.withLocale(localeName, () => chatMessages()),
-            channelDescription: Intl.withLocale(localeName, () => chatMessages()),
+            channelName:
+                Intl.withLocale(localeName, () => chatMessages()) as String,
+            channelDescription:
+                Intl.withLocale(localeName, () => chatMessages()) as String,
             channelShowBadge: true,
             importance: NotificationImportance.Max,
             ledColor: Colors.white,
@@ -61,8 +63,10 @@ class NotificationsController extends ChangeNotifier {
           NotificationChannel(
               channelGroupKey: 'call',
               channelKey: 'call_channel',
-              channelName: Intl.withLocale(localeName, () => videoCalls()),
-              channelDescription:Intl.withLocale(localeName, () => videoCalls()),
+              channelName:
+                  Intl.withLocale(localeName, () => videoCalls()) as String,
+              channelDescription:
+                  Intl.withLocale(localeName, () => videoCalls()) as String,
               defaultColor: const Color(0xFF9D50DD),
               importance: NotificationImportance.Max,
               ledColor: Colors.white,
@@ -256,10 +260,12 @@ class NotificationsController extends ChangeNotifier {
         channelGroups: [
           NotificationChannelGroup(
               channelGroupKey: 'chat',
-              channelGroupName: Intl.withLocale(localeName, () => chatMessages())),
+              channelGroupName:
+                  Intl.withLocale(localeName, () => chatMessages()) as String),
           NotificationChannelGroup(
               channelGroupKey: 'call',
-              channelGroupName: Intl.withLocale(localeName, () => videoCalls())),
+              channelGroupName:
+                  Intl.withLocale(localeName, () => videoCalls()) as String),
         ],
         //   NotificationChannelGroup(
         //       channelGroupKey: 'image_tests', channelGroupName: 'Images tests'),
@@ -314,7 +320,8 @@ class NotificationsController extends ChangeNotifier {
   static Future<void> initializeIsolateReceivePort() async {
     receivePort = ReceivePort('Notification action port in main isolate');
     receivePort!.listen((serializedData) {
-      final receivedAction = ReceivedAction().fromMap(serializedData);
+      final receivedAction = ReceivedAction()
+          .fromMap(serializedData as Map<String, dynamic>);
       onActionReceivedMethodImpl(receivedAction);
     });
 
@@ -333,7 +340,7 @@ class NotificationsController extends ChangeNotifier {
       ReceivedNotification receivedNotification) async {
     var message =
         'Notification created on ${receivedNotification.createdLifeCycle?.name}';
-    logger.i("Notifications Controller ", message);
+    logger.i("Notifications Controller ", error: message);
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -350,8 +357,8 @@ class NotificationsController extends ChangeNotifier {
     var message2 =
         'Notification displayed at ${receivedNotification.displayedDate}';
 
-    logger.i("Notifications Controller ", message1);
-    logger.i("Notifications Controller ", message2);
+    logger.i("Notifications Controller ", error: message1);
+    logger.i("Notifications Controller ", error: message2);
     Fluttertoast.showToast(
         msg: message1,
         toastLength: Toast.LENGTH_SHORT,
@@ -380,13 +387,13 @@ class NotificationsController extends ChangeNotifier {
       await onActionReceivedMethodImpl(receivedAction);
     } else {
       logger.i("Notifications Controller ",
-          'onActionReceivedMethod was called inside a parallel dart isolate, where receivePort was never initialized.');
+          error: 'onActionReceivedMethod was called inside a parallel dart isolate, where receivePort was never initialized.');
       SendPort? sendPort =
           IsolateNameServer.lookupPortByName('notification_action_port');
 
       if (sendPort != null) {
         logger.i("Notifications Controller ",
-            'Redirecting the execution to main isolate process in listening...');
+            error: 'Redirecting the execution to main isolate process in listening...');
         dynamic serializedData = receivedAction.toMap();
         sendPort.send(serializedData);
       }
@@ -397,7 +404,7 @@ class NotificationsController extends ChangeNotifier {
       ReceivedAction receivedAction) async {
     var message =
         'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}';
-    logger.i("Notifications Controller ", message);
+    logger.i("Notifications Controller ", error: message);
 
     // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
@@ -440,13 +447,13 @@ class NotificationsController extends ChangeNotifier {
 
       default:
         if (isSilentAction) {
-          logger.i("Notifications Controller ", receivedAction.toString());
-          logger.i("Notifications Controller ", "start");
-          await Future.delayed(const Duration(seconds: 4));
+          logger.i("Notifications Controller ", error: receivedAction.toString());
+          logger.i("Notifications Controller ", error: "start");
+          await Future<void>.delayed(const Duration(seconds: 4));
           final url = Uri.parse("http://google.com");
           final re = await http.get(url);
-          logger.i("Notifications Controller ", re.body);
-          logger.i("Notifications Controller ", "long task done");
+          logger.i("Notifications Controller ", error: re.body);
+          logger.i("Notifications Controller ", error: "long task done");
           break;
         }
         if (!AwesomeStringUtils.isNullOrEmpty(receivedAction.buttonKeyInput)) {
@@ -465,7 +472,7 @@ class NotificationsController extends ChangeNotifier {
   static Future<void> receiveButtonInputText(
       ReceivedAction receivedAction) async {
     logger.i("Notifications Controller ",
-        'Input Button Message: "${receivedAction.buttonKeyInput}"');
+        error: 'Input Button Message: "${receivedAction.buttonKeyInput}"');
     Fluttertoast.showToast(
         msg: 'Msg: ${receivedAction.buttonKeyInput}',
         backgroundColor: kLightTheme.primaryColor,
@@ -565,7 +572,7 @@ class NotificationsController extends ChangeNotifier {
   //   );
   // }
 
-  static getInitialNotificationAction() async {
+  static Future<void> getInitialNotificationAction() async {
     await AwesomeNotifications()
         .getInitialNotificationAction(removeFromActionEvents: false);
   }
@@ -637,7 +644,7 @@ class NotificationsController extends ChangeNotifier {
 
   static Future<void> executeLongTaskInBackground() async {
     logger.d("starting long task");
-    await Future.delayed(const Duration(seconds: 4));
+    await Future<void>.delayed(const Duration(seconds: 4));
     final url = Uri.parse("http://google.com");
     final re = await http.get(url);
     logger.d(re.body);

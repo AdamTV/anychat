@@ -9,12 +9,12 @@ class PlaybackTimer {
   Timer? _timer;
   Duration _now = Duration.zero;
 
-  final Function(Duration duration)? _onDone;
-  final Function(Duration duration)? _onData;
+  final void Function(Duration duration)? _onDone;
+  final void Function(Duration duration)? _onData;
 
   PlaybackTimer({
-    Function(Duration duration)? onDone,
-    Function(Duration duration)? onData,
+    void Function(Duration duration)? onDone,
+    void Function(Duration duration)? onData,
   })  : _onDone = onDone,
         _onData = onData;
 

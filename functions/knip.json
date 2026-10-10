@@ -1,0 +1,9 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "assessment.js",
+    "test/**/*.test.js"
+  ],
+  "project": ["**/*.js"],
+  "ignoreBinaries": ["firebase"]
+}

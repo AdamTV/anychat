@@ -10,7 +10,7 @@ class Ads {
   //   },
   // );
 
-  static init() {
+  static void init() {
     // Admob.initialize();
     // Admob.initialize(testDeviceIds: [
     //   'ee20dbf2-4928-4348-876e-c731bd0d5daf', // Pexel 3a

@@ -1,0 +1,3 @@
+ignore:
+  # Flutter generates this package from l10n.yaml; it is not a pub dependency.
+  - flutter_gen

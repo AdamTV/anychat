@@ -1,0 +1,73 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  flutter-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          # Pinned to the SDK version the pubspec.lock was resolved with
+          # (pubspec caps the Dart SDK at <3.19.0).
+          flutter-version: '3.19.6'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Analyze (strict, zero-issue policy)
+        run: flutter analyze
+      - name: Enforce per-function complexity limit
+        run: dart run tool/check_complexity.dart lib
+      - name: Run unit and widget tests with coverage
+        run: flutter test --coverage --file-reporter json:test-results/flutter-test-results.json
+      - name: Enforce coverage floor
+        run: bash scritps/check_test_coverage.sh 4
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-test-results
+          path: |
+            test-results/
+            coverage/
+
+  functions-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Run tests with coverage gate
+        run: npm run coverage
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: functions-test-results
+          path: functions/coverage/
+
+  quality-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install root tooling
+        run: npm ci
+      - name: Run static quality gates
+        run: npm run check:quality

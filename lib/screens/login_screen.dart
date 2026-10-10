@@ -4,6 +4,8 @@ import 'package:anychat/components/or_divider.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/widgets/auth_background.dart';
+import 'package:anychat/widgets/auth_form_fields.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
@@ -48,31 +50,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment
                         .center, // Center the content vertically
                     children: <Widget>[
-                      TextFormField(
-                        controller:
-                            _emailController, // Attach the email controller here
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction, // Enable live validation
-                        validator: (value) =>
-                            _validateEmail(value), // Validate the email
-                        decoration: InputDecoration(
-                          labelText: localizationOf(context).email,
-                          hintText: localizationOf(context).enterYourEmail,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller:
-                            _passwordController, // Attach the password controller here
-                        autovalidateMode: AutovalidateMode
-                            .onUserInteraction, // Enable live validation
-                        validator: (value) =>
-                            _validatePassword(value), // Validate the password
-                        decoration: InputDecoration(
-                          labelText: localizationOf(context).password,
-                          hintText: localizationOf(context).enterYourPassword,
-                        ),
-                        obscureText: true, // Hide the input
+                      AuthFormFields(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        validateEmail: _validateEmail,
+                        validatePassword: _validatePassword,
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -106,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             } on Error catch (e) {
                               // logger.e("Error", time: DateTime.now(), error: e, stackTrace: e.stackTrace);
-                              logger.e("Error", e, e.stackTrace);
+                              logger.e("Error", error: e, stackTrace: e.stackTrace);
                               if (context.mounted) {
                                 Utilities().showAlertDialog(
                                     context,
@@ -164,17 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    final regex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    if (value == null || value.isEmpty) {
-      return localizationOf(context).emailMustNotBeEmpty;
-    } else if (!regex.hasMatch(value)) {
-      return localizationOf(context).entterValidEmail;
-    }
-    return null;
-  }
+  String? _validateEmail(String? value) =>
+      validateEmailInput(value, localizationOf(context));
 
   String? _validatePassword(String? value) {
     if (value == null) {
@@ -194,34 +167,26 @@ class LoginBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    var children = <Widget>[];
-    children.addAll({
-      Positioned(
-        top: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.06) : 0,
-        left: size.width >= 750 ? (kIsWeb ? -225 : size.width * -0.05) : 0,
-        child: Image.asset(
-          "assets/images/main_top.png",
-          width: size.width * 0.35,
+    return AuthBackground(
+      child: child,
+      images: (size) => <Widget>[
+        Positioned(
+          top: size.width >= 750 ? (kIsWeb ? -250 : size.width * -0.06) : 0,
+          left: size.width >= 750 ? (kIsWeb ? -225 : size.width * -0.05) : 0,
+          child: Image.asset(
+            "assets/images/main_top.png",
+            width: size.width * 0.35,
+          ),
         ),
-      ),
-      Positioned(
-        bottom: size.width >= 750 ? (kIsWeb ? -100 : size.width * -0.05) : 0,
-        right: size.width >= 750 ? (kIsWeb ? -150 : size.width * -0.05) : 0,
-        child: Image.asset(
-          "assets/images/login_bottom.png",
-          width: size.width * 0.3,
+        Positioned(
+          bottom: size.width >= 750 ? (kIsWeb ? -100 : size.width * -0.05) : 0,
+          right: size.width >= 750 ? (kIsWeb ? -150 : size.width * -0.05) : 0,
+          child: Image.asset(
+            "assets/images/login_bottom.png",
+            width: size.width * 0.3,
+          ),
         ),
-      ),
-    });
-    children.add(child);
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: Stack(
-        alignment: Alignment.center,
-        children: children,
-      ),
+      ],
     );
   }
 }

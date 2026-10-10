@@ -66,7 +66,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     ));
   }
 
-  _passwordReset() async {
+  Future<void> _passwordReset() async {
     try {
       final auth = FirebaseAuth.instance;
       _formKey.currentState!.save();

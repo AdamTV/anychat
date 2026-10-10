@@ -82,7 +82,7 @@ class NotificationUtils {
               ret = isAllowed,
               if (!isAllowed)
                 {
-                  await showDialog(
+                  await showDialog<void>(
                       context: context,
                       builder: (context) => AlertDialog(
                             backgroundColor:
@@ -199,7 +199,7 @@ class NotificationUtils {
           channelKey: channelKey, permissions: permissionsNeeded);
     } else {
       // If you need to show a rationale to educate the user to conceed the permission, show it
-      await showDialog(
+      await showDialog<void>(
           context: context.mounted ?
           context
               : Utilities().globalKey.currentContext!,
@@ -652,7 +652,7 @@ class NotificationUtils {
   // }
 
   static Future<void> setLocalizationForNotification(
-      {required languageCode}) async {
+      {required String languageCode}) async {
     await AwesomeNotifications().setLocalization(languageCode: languageCode);
   }
 

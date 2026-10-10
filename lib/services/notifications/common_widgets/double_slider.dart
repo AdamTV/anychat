@@ -95,7 +95,7 @@ class _DoubleSliderToConfirmState extends State<DoubleSliderToConfirm> {
     }
   }
 
-  void updatePosition(details) {
+  void updatePosition(Object details) {
     if (details is DragEndDetails) {
       setState(() {
         _duration = 600;
@@ -113,7 +113,7 @@ class _DoubleSliderToConfirmState extends State<DoubleSliderToConfirm> {
     }
   }
 
-  void sliderReleased(details) {
+  void sliderReleased(Object details) {
     if (_position > widget.width - widget.height) {
       widget.onConfirmation();
     }

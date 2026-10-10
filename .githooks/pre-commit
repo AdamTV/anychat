@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Fast local quality gates before a commit is created.
+# Enable once per clone with: npm run setup:hooks
+# The full test suites still run in CI.
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+echo "pre-commit: static quality gates"
+node scritps/check_file_size.js
+node scritps/check_module_boundaries.js
+node scritps/check_firestore_batch_reads.js
+node scritps/check_tech_debt.js
+node scritps/check_dependency_drift.js
+npm run --silent check:duplication
+
+if command -v dart >/dev/null 2>&1 && [ -d .dart_tool ]; then
+  dart run tool/check_complexity.dart lib
+fi
+
+if git diff --cached --name-only --diff-filter=ACMR | grep -qE '\.dart$'; then
+  if command -v flutter >/dev/null 2>&1; then
+    flutter analyze
+  else
+    echo "pre-commit: flutter not on PATH, skipping analyzer (CI will run it)" >&2
+  fi
+fi

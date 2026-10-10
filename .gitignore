@@ -31,6 +31,10 @@
 .pub/
 /build/
 
+# Test output
+/coverage/
+/test-results/
+
 # Web related (can't include for CI/CD)
 /anychat/
 # Symbolication related

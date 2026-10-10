@@ -28,7 +28,7 @@ var logger = Logger(
         lineLength: 120, // Width of the output
         colors: true, // Colorful log messages
         printEmojis: true, // Print an emoji for each log message
-        printTime: true // Should each log print contain a timestamp
+        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart // Should each log print contain a timestamp
         ),
     level: Level.info);
 
@@ -77,7 +77,7 @@ void main() async {
       await NotificationsController.initializeIsolateReceivePort();
       await NotificationsController.getInitialNotificationAction();
     } catch (e) {
-      logger.e('awesome error:', e);
+      logger.e('awesome error:', error: e);
     }
 
     // Ads.init(),
@@ -92,7 +92,7 @@ void main() async {
       ),
     );
   } on Exception catch (e, s) {
-    logger.e("Error in main 1", e, s);
+    logger.e("Error in main 1", error: e, stackTrace: s);
   }
 }
 

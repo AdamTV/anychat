@@ -5,6 +5,7 @@ import 'package:anychat/main.dart';
 import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/utilities/stateful_alert_dialog.dart';
+import 'package:anychat/widgets/anychat_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -32,7 +33,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((d) async {
-      await showDialog(
+      await showDialog<void>(
         context: context,
         builder: (BuildContext context) => _buildPopupDialog(context),
       );
@@ -52,7 +53,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
               tooltip: localizationOf(context).language,
               onPressed: () {
                 SchedulerBinding.instance.addPostFrameCallback((d) async {
-                  await showDialog(
+                  await showDialog<void>(
                     context: context,
                     builder: (BuildContext context) => _buildPopupDialog(context),
                   );
@@ -83,43 +84,29 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                     child: Text(localizationOf(context).clear),
                   ))),
         ),
-        drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Text(
-                  localizationOf(context).title,
-                  style: TextStyle(color: Theme.of(context).primaryColorLight),
-                ),
-              ),
-              ListTile(
-                  title: Text(localizationOf(context).backToConversations),
-                  onTap: () async {
-                    await stopRecording();
-                    NavigationService()
-                        .popUntil((p0) => p0.settings.name == '/conversations');
-                    NavigationService().pop();
-                  }),
-              ListTile(
-                  title: Text(localizationOf(context).logout),
-                  onTap: () async {
-                    await AnyChatAuth.signOut();
-
-                    await NavigationService().pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const WelcomeScreen()), (p0)=>p0.isFirst);
-                    await AnyChatAuth.signOut();
-                  }),
-            ],
+        drawer: AnyChatDrawer(entries: [
+          AnyChatDrawerEntry(
+            title: localizationOf(context).backToConversations,
+            onTap: () async {
+              await stopRecording();
+              NavigationService()
+                  .popUntil((p0) => p0.settings.name == '/conversations');
+              NavigationService().pop();
+            },
           ),
-        ),
+          AnyChatDrawerEntry(
+            title: localizationOf(context).logout,
+            onTap: () async {
+              await AnyChatAuth.signOut();
+
+              await NavigationService().pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => const WelcomeScreen()),
+                  (p0) => p0.isFirst);
+              await AnyChatAuth.signOut();
+            },
+          ),
+        ]),
         body: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           child: Text(text ?? "", style: const TextStyle(fontSize: 32)),
@@ -254,7 +241,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
           });
         }
       }
-    }, onError: (e) async {
+    }, onError: (Object e) async {
       logger.d(e);
       await audioTranscriber.stopRecording();
       if (mounted && recognizing) {

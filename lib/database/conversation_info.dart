@@ -15,10 +15,12 @@ class ConversationInfo {
       : id = snapshot.id,
         incomingLanguage = (snapshot.data() as Map<String, dynamic>?) == null
             ? null
-            : (snapshot.data() as Map<String, dynamic>)['incomingLanguage'],
+            : (snapshot.data() as Map<String, dynamic>)['incomingLanguage']
+                as String?,
         outgoingLanguage = (snapshot.data() as Map<String, dynamic>?) == null
             ? null
-            : (snapshot.data() as Map<String, dynamic>)['outgoingLanguage'];
+            : (snapshot.data() as Map<String, dynamic>)['outgoingLanguage']
+                as String?;
 
   static Future<List<ConversationInfo>> getAllConversationInfo(
       String? id) async {
@@ -34,7 +36,7 @@ class ConversationInfo {
         ret.add(ConversationInfo.fromSnapshot(doc));
       }
     } catch (e) {
-      logger.e("Error getting conversation info: ", e);
+      logger.e("Error getting conversation info: ", error: e);
     }
     return ret;
   }

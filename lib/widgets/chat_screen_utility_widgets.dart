@@ -6,7 +6,7 @@ import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/database/conversation.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/navigation_service.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:anychat/widgets/user_avatar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -146,14 +146,14 @@ Widget getChatterWidgetList(List<AnyChatUser> chatters) {
         chatters.removeWhere((element) => element.id == AnyChatAuth.currentUser.id);
       }
         topWidgets
-          .add(AnyChatUser.getAvatarInContainer(containerRadius, chatters[i]));
+          .add(buildUserAvatarInContainer(containerRadius, chatters[i]));
     }else {
-      topWidgets.add(AnyChatUser.getAvatarInContainer(avatarRadius, chatters[i]));
+      topWidgets.add(buildUserAvatarInContainer(avatarRadius, chatters[i]));
     }
   }
   for (int i = 1; i < chatters.length; i += 2) {
     bottomWidgets
-        .add(AnyChatUser.getAvatarInContainer(avatarRadius, chatters[i]));
+        .add(buildUserAvatarInContainer(avatarRadius, chatters[i]));
   }
   Column column;
   switch (chatters.length) {

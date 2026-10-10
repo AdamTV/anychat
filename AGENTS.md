@@ -83,9 +83,51 @@ Requires Flutter SDK. Android/iOS trees live under `android/` and `ios/`. Fireba
 
 - `flutter pub get`
 - `flutter analyze`
-- `flutter test`
+- `flutter test` (unit/widget) and `flutter test --coverage`
+- `flutter test integration_test/app_test.dart -d <device-id>` (integration, needs a device/emulator)
+- `cd functions && npm install && npm test` (Node >= 18) and `npm run coverage`
 - `flutter build apk` / `flutter build web` when the change touches those surfaces
 - Firebase Hosting workflows under `.github/workflows/`
+- `Tests` workflow (`.github/workflows/test.yml`) runs both suites on push/PR, enforces coverage floors, and uploads test reports
+
+### Testing conventions
+
+- **Flutter unit/widget tests** live in `test/` and must be named `*_test.dart`; the `flutter test` runner only collects the `_test.dart` suffix. Generate coverage with `flutter test --coverage`.
+- **Flutter integration tests** live in `integration_test/` and are named `*_test.dart`. `test_driver/integration_test.dart` remains as the legacy `flutter drive` entry point.
+- **Functions tests** live in `functions/test/` and must be named `*.test.js`. They use the built-in Node.js test runner and must pass `npm run lint` (ESLint, Google style, double quotes).
+- **Isolation:** `flutter test` runs each test file in its own isolate and `node --test` runs each test file in its own child process, so files run in parallel; tests must not share state.
+- **Coverage gates:** CI enforces minimum coverage — the Flutter line floor via `scritps/check_test_coverage.sh` (currently 4%, a ratchet floor to raise as coverage improves) and the functions floor via `c8 --check-coverage` in `npm run coverage`. Test durations appear in CI logs and reports are uploaded as artifacts (`test-results/`, `coverage/`).
+
+### Quality gates
+
+These gates run in CI (the `Tests` workflow) and most of them also run in the pre-commit hook enabled by `npm run setup:hooks`. A red gate blocks the merge.
+
+- **Strict analysis:** `flutter analyze` with a zero-issue policy (`strict-casts`, `strict-inference`, `strict-raw-types` in `analysis_options.yaml`).
+- **Complexity (Dart):** `dart run tool/check_complexity.dart lib` caps per-function cyclomatic complexity at 20.
+- **Complexity (Functions):** ESLint `complexity` rule capped at 10 in `functions/.eslintrc.js`; runs with `cd functions && npm run lint`, along with `npm run typecheck` (TypeScript `checkJs` over the JSDoc-annotated sources).
+- **File size:** `npm run check:file-size` caps source files at 800 lines (documented exceptions live in `scritps/check_file_size.js`).
+- **Duplication:** `npm run check:duplication` runs jscpd (min 12 lines) over `lib` and `functions` with a 5% budget and fails on any clone not in the committed `.jscpd-baseline.json`. Regenerating the baseline requires a PR justification plus a `TECH_DEBT.md` entry.
+- **Module boundaries:** `npm run check:architecture` keeps `lib/database` free of UI imports; shared widgets live in `lib/widgets/`.
+- **Firestore N+1 guard:** `npm run check:firestore-batches` forbids per-document reads inside loops; batch reads through `lib/database/firestore_batch.dart`.
+- **Debt markers:** every `TODO`/`FIXME`/`HACK`/`XXX` in source needs a `TD-###` id registered in `TECH_DEBT.md`; `npm run check:tech-debt` checks both directions.
+- **Dependency hygiene:** `flutter pub run dependency_validator` and `cd functions && npm run check:deps` detect unused dependencies; `npm run check:dependency-drift` detects version drift between npm manifests.
+- **Hooks:** run `npm run setup:hooks` once per clone to enable `.githooks/pre-commit` (repo-local `core.hooksPath`; no global git config is touched).
+
+### Interactive QA
+
+**Flutter client (repo root):**
+
+1. Install the Flutter SDK and run `flutter pub get`.
+2. Launch the app on an Android emulator with `flutter run -d <device-id>` (or `.devcontainer/flutter-android-emulator.sh`, which boots the emulator and runs the app). Alternatively `flutter run -d web-server --web-port 8080` serves the app at http://localhost:8080 — note that web builds need Flutter >= 3.22, because the locked `web` 0.5.1 package does not compile on older SDKs.
+3. The welcome screen shows LOGIN and REGISTER.
+4. Auth: register a throwaway QA account on the REGISTER screen (email + password); do not use personal accounts. Reuse it via LOGIN.
+5. Drive the app: after registering you land on the conversations screen; verify the app title, conversations list, and navigation to the live translator. `integration_test/app_test.dart` automates the welcome → login path (`flutter test integration_test/app_test.dart -d <device-id>`).
+
+**Functions (`functions/`):**
+
+1. `cd functions && npm install`.
+2. Start the emulator with `npm run serve` (`firebase emulators:start --only functions`). If a recent firebase-tools reports that the `webframeworks` experiment is not enabled (the repo's Hosting config uses `frameworksBackend`), run `firebase experiments:enable webframeworks` once, then retry.
+3. Wait for "All emulators ready", then verify the deployment answers: `curl http://localhost:5001/anychat-c414a/us-central1/health` — expect HTTP 200 with `{"status":"ok"}`. The health endpoint requires no auth.
 
 ## Cursor Automation
 

@@ -7,6 +7,7 @@ import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/services/cache_manager.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/widgets/user_avatar.dart';
 import 'package:anychat/services/notifications/notifications_util.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -139,7 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       description: Text(displayName),
                       leading: const Icon(Icons.drive_file_rename_outline),
                       onPressed: (BuildContext context) async {
-                        await showDialog(
+                        await showDialog<void>(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
@@ -186,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       description: Text(AnyChatAuth.currentUser.email),
                       leading: const Icon(Icons.email),
                       onPressed: (BuildContext context) {
-                        showDialog(
+                        showDialog<void>(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
@@ -246,7 +247,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // enabled: changeProfilePictureEnabled,
                         leading: const Icon(Icons.photo),
                         trailing:
-                            AnyChatUser.getAvatar(AnyChatAuth.currentUser))
+                            buildUserAvatar(AnyChatAuth.currentUser,
+                                context: context))
                   ],
                 ),
                 SettingsSection(
@@ -257,7 +259,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         description: Text(dropdownValue.name),
                         leading: const Icon(Icons.palette),
                         onPressed: (BuildContext context) {
-                          showDialog(
+                          showDialog<void>(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
@@ -412,7 +414,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 //     List<File> _images = [];
   late File _image; // Used only if you need a single picture
 
-  Future getImage(bool gallery) async {
+  Future<void> getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
     XFile? pickedFile;
     // Let user select photo from gallery
@@ -435,7 +437,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         uploadFile(_image)
             .then((value) => {AnyChatUser.updatePhotoUrl(value)})
             .onError((error, stackTrace) {
-          logger.e("Error changing user profile image.", error, stackTrace);
+          logger.e("Error changing user profile image.", error: error, stackTrace: stackTrace);
           return {};
         });
       } else {
@@ -458,8 +460,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return returnURL;
   }
 
-  _deleteAccount() {
-    showDialog(
+  void _deleteAccount() {
+    showDialog<void>(
         context: Utilities().globalKey.currentContext!,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -493,11 +495,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
   }
 
-  _launchPrivacyPolicy() async {
+  Future<void> _launchPrivacyPolicy() async {
     await launchUrlString("https://anychat.ca/privacy-policy");
   }
 
-  _launchEula() async {
+  Future<void> _launchEula() async {
     await launchUrlString("https://anychat.ca/eula");
   }
 }

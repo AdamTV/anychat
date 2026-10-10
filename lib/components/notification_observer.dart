@@ -120,77 +120,23 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
         await snapshot.docs.last.reference.parent.parent!.get());
     logger.i(
         'user ${AnyChatAuth.currentUser.id} received notification for ${conversation.id} while applicationLifeCycle = $_notification');
-    List<AnyChatUser> chatters = [];
-
-    for(var chatter in conversation.participants) {
-        chatters.add(await AnyChatUser.getUserById(chatter));
+    final userIds = <String>{...conversation.participants, message.senderId};
+    final loadedUsers = await AnyChatUser.getUsersByIds(userIds);
+    final usersById = {for (final user in loadedUsers) user.id: user};
+    for (final userId in userIds) {
+      usersById.putIfAbsent(userId, () => AnyChatUser.deletedUser(userId));
     }
-     var sender = await AnyChatUser.getUserById(message.senderId);
-      var text = conversation.participants.contains(message.senderId)
-          ? "${message.text}\n\n"
-              "${await Utilities().getGoogleTranslation(AnyChatAuth.currentUser.language, message.text)}"
-          : localizationOf(Utilities().globalKey.currentContext!)
-              .thisPersonHasLeftConversation;
+    final chatters = conversation.participants
+        .map((userId) => usersById[userId]!)
+        .toList();
+    final sender = usersById[message.senderId]!;
+    _conversationWidgets
+        .add(AnyChatConversationWidget(chatters, conversation, message));
+    notifyListeners();
 
-      _conversationWidgets.add(AnyChatConversationWidget(chatters, conversation, message));
-      notifyListeners();
-      await handleDbUpdates(conversation, message);
-
-
-      if (message.senderId != AnyChatAuth.currentUser.id && _notification != AppLifecycleState.resumed) {
-       _sendNotification(conversation, sender, message.text);
-      }
-  }
-
-  Future<void> handleDbUpdates(
-      Conversation conversation, AnyChatMessage message) async {
-    if (AnyChatAuth.currentUser.conversations
-        .any((element) => element.id == conversation.id)) {
-      var chatters = <AnyChatUser>[];
-      if (conversation.participants.length == 1) {
-        try {
-          chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-              .collection("users")
-              .doc(message.senderId)
-              .get()));
-        } catch (e) {
-          chatters.add(AnyChatUser.deletedUser(message.senderId));
-        }
-        // }
-      } else {
-        var chatterIds = conversation.participants
-            .where((element) => element != AnyChatAuth.currentUser.id);
-        for (var id in chatterIds) {
-          if (chatters.where((element) => element.id == id).isEmpty) {
-            try {
-              chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore
-                  .instance
-                  .collection("users")
-                  .doc(id)
-                  .get()));
-            } catch (e) {
-              chatters.add(AnyChatUser.deletedUser(message.senderId));
-            }
-          }
-        }
-        // if (AnyChatAuth.currentUser.conversations
-        //     .any((element) => element.id == conversation.id)) {
-        //   var info = AnyChatAuth.currentUser.conversations
-        //       .firstWhere((element) => element.id == conversation.id);
-        //   final language = message.senderId == AnyChatAuth.currentUser.id
-        //       ? info.outgoingLanguage
-        //       : info.incomingLanguage;
-        //   var truncatedText = message.text;
-        //   if (truncatedText.length > 20) {
-        //     truncatedText = "${truncatedText.substring(0, 19)}...";
-        //   }
-        //   final text = conversation.participants.contains(message.senderId)
-        //       ? "$truncatedText\n\n"
-        //           "${await Utilities().getGoogleTranslation(language ?? localeName, truncatedText)}"
-        //       : localizationOf(Utilities().globalKey.currentContext)
-        //           .thisPersonHasLeftConversation;
-        // }
-      }
+    if (message.senderId != AnyChatAuth.currentUser.id &&
+        _notification != AppLifecycleState.resumed) {
+      _sendNotification(conversation, sender, message.text);
     }
   }
 
@@ -200,207 +146,111 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
   }
 
   Future<void> loadConversations() async {
-    var ids = <String>[];
     AnyChatAuth.currentUser.conversations =
-    await ConversationInfo.getAllConversationInfo(
-        AnyChatAuth.currentUser.id);
-    for (var conversation in AnyChatAuth.currentUser.conversations){
-      Conversation temp;
-      temp = Conversation.fromSnapshot(await FirebaseFirestore.instance
-          .collection("conversations")
-          .doc(conversation.id)
-          .get());
-    AnyChatMessage? message;
-      if (!ids.contains(temp.id)) {
-        logger.d(temp.id);
-        ids.add(temp.id);
-        List<String?> users = temp.participants;
-        logger.d(AnyChatAuth.currentUser.id);
-        var chatters = <AnyChatUser>[];
-        String? text;
-        var snapshot = await FirebaseFirestore.instance
-            .collection("conversations")
-            .doc(temp.id)
-            .collection("messages")
-            .orderBy('timestamp', descending: false)
-            .get();
-        for (var i = 0; i < temp.participants.length; i++) {
-          if (users[i] != AnyChatAuth.currentUser.id) {
-            try {
-              var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore
-                  .instance
-                  .collection("users")
-                  .doc(users[i])
-                  .get());
-              if (chatters
-                  .where((element) => element.id == chatter.id).isEmpty) {
-                chatters.add(chatter);
-              }
-            } catch (e) {
-              logger.d(e);
-            }
-            AnyChatMessage message;
-            try {
-              message = snapshot.docs.map((DocumentSnapshot doc) {
-                return AnyChatMessage.fromSnapshot(doc);
-              }).last;
-              var info = AnyChatAuth.currentUser.conversations.firstWhere(
-                      (element) =>
-                  element.id == AnyChatAuth.currentConversation!.id);
-              final language = message.senderId == AnyChatAuth.currentUser.id
-                  ? info.outgoingLanguage
-                  : info.incomingLanguage;
-              text = "${message.text}\n\n"
-                  "${await Utilities().getGoogleTranslation(language, message.text)}";
-            } catch (e) {
-              logger.d(e);
-            }
-            logger.d('adding conversation: ${temp.id}');
-          }
-          logger.d('test widget added');
-        }
-        // conversationWidgets
-        //     .removeWhere((element) => element.key == Key(temp.id));
-        // if (chatters.length == 1) {
-        //   var messages = snapshot.docs.map((DocumentSnapshot doc) {
-        //     return AnyChatMessage.fromSnapshot(doc);
-        //   });
-        //   var message = messages.lastWhere((element) =>
-        //   element.text.compareTo(
-        //       AppLocalizations.of(context).thisPersonHasLeftConversation) ==
-        //       0);
-        //   chatters.clear();
-        //   chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-        //       .collection("users")
-        //       .doc(message.senderId)
-        //       .get()));
-        //   text = message.text;
-        // }
-        if (chatters.isNotEmpty && temp.timestamp != null) {
-          message?.text;
-          _conversationWidgets.add(AnyChatConversationWidget(chatters, temp, message!));
-          notifyListeners();
-        }
+        await ConversationInfo.getAllConversationInfo(
+            AnyChatAuth.currentUser.id);
+    final conversations = await Conversation.getConversationsByIds(
+      AnyChatAuth.currentUser.conversations.map((info) => info.id),
+    );
+    final conversationsById = {
+      for (final conversation in conversations) conversation.id: conversation,
+    };
+    final orderedConversations = AnyChatAuth.currentUser.conversations
+        .map((info) => conversationsById[info.id])
+        .whereType<Conversation>()
+        .toList();
+    final currentUserId = AnyChatAuth.currentUser.id;
+    final userIds = orderedConversations
+        .expand((conversation) => conversation.participants)
+        .where((id) => id != currentUserId)
+        .toSet();
+
+    final loadedUsers = await AnyChatUser.getUsersByIds(userIds);
+    final usersById = {for (final user in loadedUsers) user.id: user};
+    for (final userId in userIds) {
+      usersById.putIfAbsent(userId, () => AnyChatUser.deletedUser(userId));
+    }
+
+    var addedConversation = false;
+    for (final conversation in orderedConversations) {
+      final chatters = conversation.participants
+          .where((id) => id != currentUserId)
+          .map((id) => usersById[id]!)
+          .toList();
+      if (chatters.isEmpty || conversation.timestamp == null) {
+        continue;
       }
+
+      final message =
+          await Conversation.getLatestMessageByConversationId(conversation.id);
+      if (message == null) {
+        continue;
+      }
+      _conversationWidgets
+          .add(AnyChatConversationWidget(chatters, conversation, message));
+      addedConversation = true;
+    }
+    if (addedConversation) {
+      notifyListeners();
     }
   }
 
+  /// Loads the chatters of [conversation] (participants other than the
+  /// current user) in one batched read; unknown users become placeholder
+  /// records.
+  static Future<List<AnyChatUser>> loadChatters(Conversation conversation) async {
+    final currentUserId = AnyChatAuth.currentUser.id;
+    final chatterIds =
+        conversation.participants.where((id) => id != currentUserId).toSet();
+    final loadedUsers = await AnyChatUser.getUsersByIds(chatterIds);
+    final usersById = {for (final user in loadedUsers) user.id: user};
+    for (final id in chatterIds) {
+      usersById.putIfAbsent(id, () => AnyChatUser.deletedUser(id));
+    }
+    return chatterIds.map((id) => usersById[id]!).toList();
+  }
+
   Future<void> _updateConversations(QuerySnapshot snapshot) async {
-    var conversations = getConversationsFromQuery(snapshot);
-    logger.d('in _updateConversations');
+    final conversations = getConversationsFromQuery(snapshot);
     if (conversations.isEmpty) {
-      logger.d('conversation snapshot was empty');
       return;
     }
-    Conversation conversation = conversations.last;
-    AnyChatUser? firstChatter = AnyChatAuth.currentUser;
-    try {
-      firstChatter = await AnyChatUser.getUserById(conversation.participants
-          .firstWhere((element) => element != AnyChatAuth.currentUser.id));
-    } catch (e) {
-      logger.e(e);
+    final conversation = conversations.last;
+    final currentUserId = AnyChatAuth.currentUser.id;
+    if (!conversation.participants.contains(currentUserId)) {
+      logger.d('conversation does not include current user $currentUserId');
+      return;
     }
-    if (AnyChatAuth.currentConversation == null) {
 
-    }
+    final chatters = await loadChatters(conversation);
+    final firstChatter =
+        chatters.isEmpty ? AnyChatAuth.currentUser : chatters.first;
+
     if (!AnyChatAuth.currentUser.conversations
         .any((element) => element.id == conversation.id)) {
-      if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
-        AnyChatAuth.currentUser.conversations.add(ConversationInfo(
-            conversation.id,
-            AnyChatAuth.currentUser.language,
-            firstChatter!.language));
-      } else {
-        logger
-            .d('none of currentUser conversations ID are ${conversation.id}.');
-        return;
-      }
+      AnyChatAuth.currentUser.conversations.add(ConversationInfo(
+        conversation.id,
+        AnyChatAuth.currentUser.language,
+        firstChatter.language,
+      ));
     }
-    if (!conversation.participants.contains(AnyChatAuth.currentUser.id)) {
-      logger.d(
-          'conversation participants does not contain ${AnyChatAuth.currentUser.id}');
-      return;
-    }
-    String? text;
-    List<String?> users = conversation.participants;
-    var chatters = <AnyChatUser>[];
-    AnyChatMessage? message;
-    for (var i = 0; i < conversation.participants.length; i++) {
-      logger.d(AnyChatAuth.currentUser.id);
-      if (users[i] != AnyChatAuth.currentUser.id) {
-        var chatter = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-            .collection("users")
-            .doc(users[i])
-            .get());
-        if (chatters.where((element) => element.id == chatter.id).isEmpty) {
-          chatters.add(chatter);
-        }
-        var msgSnapshot = await FirebaseFirestore.instance
-            .collection("conversations")
-            .doc(conversation.id)
-            .collection("messages")
-            .orderBy('timestamp', descending: false)
-            .get();
-        // try {
-        if (msgSnapshot.docs.isNotEmpty) {
-          message = AnyChatMessage.fromSnapshot(msgSnapshot.docs.last);
-        } else {
-          await RemoteNotificationObserver().initChatSubscriptions();
-          message = AnyChatMessage("", Timestamp.now(), chatter.id,
-              localizationOf(Utilities().globalKey.currentContext).newConversation, null);
-        }
-        try {
-          var info = AnyChatAuth.currentUser.conversations
-              .firstWhere((element) => element.id == conversation.id);
-          final language = message.senderId == AnyChatAuth.currentUser.id
-              ? info.outgoingLanguage
-              : info.incomingLanguage;
-          var truncatedText = message.text;
-          if (truncatedText.length > 20) {
-            truncatedText = "${truncatedText.substring(0, 19)}...";
-          }
-          text = "$truncatedText\n\n"
-              "${await Utilities().getGoogleTranslation(language, truncatedText)}";
-        } catch (e) {
-          logger.d("New Conversation: $conversation.id");
-          text = localizationOf(
-              Utilities().globalKey.currentContext!)
-              .newConversation;
-        }
-        // } catch (e) {
-        //   throw e;
-        // }
-      }
-    }
-    // if (AnyChatAuth.currentUser.conversations != null &&
-    //     !AnyChatAuth.currentUser.conversations
-    //         .any((element) => element.id == conversation.id)) {
-    //   if (conversation.participants.contains(AnyChatAuth.currentUser.id)) {
-    //     AnyChatAuth.currentUser.conversations.add(ConversationInfo.fromSnapshot(
-    //         await FirebaseFirestore.instance
-    //             .collection("users")
-    //             .doc(AnyChatAuth.currentUser.id)
-    //             .collection('conversations')
-    //             .doc(conversation.id)
-    //             .get()));
-    //   }
-    // }
 
-    // if (chatters.length == 1) {
-    //   var message = messages.lastWhere((element) =>
-    //       element.text.compareTo(
-    //           AppLocalizations.of(context).thisPersonHasLeftConversation) ==
-    //       0);
-    //   chatters.clear();
-    //   chatters.add(AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-    //       .collection("users")
-    //       .doc(message.senderId)
-    //       .get()));
-    // }
+    var message =
+        await Conversation.getLatestMessageByConversationId(conversation.id);
+    if (message == null) {
+      await RemoteNotificationObserver().initChatSubscriptions();
+      message = AnyChatMessage(
+        '',
+        Timestamp.now(),
+        firstChatter.id,
+        localizationOf(Utilities().globalKey.currentContext).newConversation,
+        null,
+      );
+    }
 
-    if (chatters.isNotEmpty && conversation.timestamp != null && text != null) {
+    if (chatters.isNotEmpty && conversation.timestamp != null) {
       _conversationWidgets.add(AnyChatConversationWidget(
-          chatters, conversation, message!));
+          chatters, conversation, message));
       notifyListeners();
     }
   }

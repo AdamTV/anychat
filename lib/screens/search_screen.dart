@@ -4,6 +4,7 @@ import 'package:anychat/components/combined_locale_info.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/services/navigation_service.dart';
+import 'package:anychat/widgets/user_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
   bool get addToConvo => super.widget.addToConvo;
   bool get blockUser => super.widget.blockUser;
 
-  _onSearchChanged() {
+  void _onSearchChanged() {
     Timer(const Duration(milliseconds: 250), (){
     _searchSubscription?.cancel();
         // if (_debounce?.isActive ?? false) _debounce?.cancel();
@@ -139,7 +140,7 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
                   leading: SizedBox(
                     height: avatarRadius,
                     width: avatarRadius,
-                    child: AnyChatUser.getAvatar(user),
+                    child: buildUserAvatar(user, context: context),
                   ),
                   onTap: () async {
                     if (blockUser) {

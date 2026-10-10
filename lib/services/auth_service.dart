@@ -11,21 +11,20 @@ import 'package:flutter/material.dart';
 
 
 class AuthService {
-  static Widget initState(user) {
-    dynamic value;
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .get()
-        .then((value) => {
-              AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(value),
-            });
-
-    if (value.exists) {
-      return const ConversationsScreen();
-    } else {
+  static Future<Widget> initState(User? user) async {
+    if (user == null) {
       return const WelcomeScreen();
     }
+    final snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .get();
+
+    if (!snapshot.exists) {
+      return const WelcomeScreen();
+    }
+    AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(snapshot);
+    return const ConversationsScreen();
   }
 
   static Future<void> listenToAuthChanges() async {

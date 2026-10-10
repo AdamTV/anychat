@@ -4,7 +4,7 @@ import '../components/combined_locale_info.dart';
 
 class HaveAccountCheck extends StatelessWidget {
   final bool login;
-  final Function()? press;
+  final void Function()? press;
 
   const HaveAccountCheck({
     super.key,
