@@ -21,7 +21,7 @@ const SPEECH_TOKEN_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"];
  * Firebase Auth identity of a signed-in caller.
  *
  * @typedef {Object} AuthIdentity
- * @property {string} uid The caller's user ID.
+ * @property {string=} uid The caller's user ID.
  */
 
 /**
@@ -57,7 +57,8 @@ const SPEECH_TOKEN_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"];
  * @param {SpeechTokenOptions} options Token minting strategy, typically
  *   backed by Application Default Credentials.
  * @return {function} The callable handler: rejects unauthenticated callers
- *   and resolves with a SpeechTokenPayload.
+ *   and resolves with a SpeechTokenPayload. Wrap it with
+ *   functions.https.onCall before exporting it.
  */
 function createGetSpeechAccessToken({getAccessToken}) {
   return async (/** @type {Object} */ data,

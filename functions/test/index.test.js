@@ -42,4 +42,8 @@ test("index.js exposes the speech token callable", () => {
   const index = require("../index.js");
 
   assert.equal(typeof index.getSpeechAccessToken, "function");
+  assert.ok(
+      index.getSpeechAccessToken.__trigger,
+      "getSpeechAccessToken must be wrapped in functions.https.onCall",
+  );
 });

@@ -49,5 +49,6 @@ exports.health = functions.https.onRequest((req, res) => {
  * Speech-to-Text access tokens for signed-in app users. The app used to
  * bundle a service-account key; it now calls this endpoint instead.
  */
-exports.getSpeechAccessToken = createGetSpeechAccessToken(
-    {getAccessToken: mintAccessToken});
+exports.getSpeechAccessToken = functions.https.onCall(
+    /** @type {(d: Object, c: Object) => Promise<Object>} */
+    (createGetSpeechAccessToken({getAccessToken: mintAccessToken})));
