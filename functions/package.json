@@ -20,7 +20,8 @@
   "dependencies": {
     "@google-cloud/recaptcha-enterprise": "^5.5.0",
     "firebase-admin": "^12.7.0",
-    "firebase-functions": "^4.9.0"
+    "firebase-functions": "^4.9.0",
+    "google-auth-library": "^9.15.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

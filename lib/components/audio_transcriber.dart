@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../main.dart';
+import '../services/speech_credentials.dart';
 
 const int kAudioSampleRate = 16000;
 const int kAudioNumChannels = 1;
@@ -61,10 +62,13 @@ class AudioTranscriber {
             error: error,
             stackTrace: stackTrace));
 
-    final serviceAccount = ServiceAccount.fromString((await rootBundle
-        .loadString('assets/anychat-c414a-c304e57544ef.json')));
-    final speechToText = EndlessStreamingService.viaServiceAccount(
-      serviceAccount,
+    // Speech-to-Text now authenticates with short-lived access tokens
+    // minted by the getSpeechAccessToken Cloud Function, so no
+    // service-account key ships inside the app bundle.
+    final speechToText = EndlessStreamingService.viaThirdPartyAuthenticator(
+      ThirdPartyAuthenticator(
+        obtainCredentialsFromThirdParty: fetchSpeechCredentials,
+      ),
     );
     final config = _getConfig();
     final responseStream = speechToText.endlessStream;

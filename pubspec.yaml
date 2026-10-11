@@ -32,10 +32,12 @@ dependencies:
   firebase_storage: ^11.6.5
   cloud_firestore: ^4.15.4
   firebase_app_check: ^0.2.1+14
+  cloud_functions: ^4.5.4
   devicelocale: ^0.7.0
   google_sign_in: ^6.2.1
   permission_handler: ^11.3.0
   google_speech: ^5.1.0
+  googleapis_auth: ^1.6.0
   rxdart: ^0.27.0
   shared_preferences: ^2.0.6
   flutter_slidable: ^3.0.1
@@ -109,8 +111,6 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/sounds/
-    - assets/anychat-c414a-7669166c30f5.json
-    - assets/anychat-c414a-c304e57544ef.json
     - assets/images/animated-bell.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -48,7 +48,7 @@ for (const file of collectFiles(libRoot, ".dart")) {
 }
 
 const functionsRoot = path.join(root, "functions");
-for (const file of ["index.js", "assessment.js"]) {
+for (const file of ["index.js", "assessment.js", "speech_token.js"]) {
   const source = fs.readFileSync(path.join(functionsRoot, file), "utf8");
   const imports = source.matchAll(
       /(?:require\s*\(\s*|from\s+|import\s*\(\s*)['"]([^'"]+)['"]/g);
@@ -56,8 +56,8 @@ for (const file of ["index.js", "assessment.js"]) {
     if (target.startsWith("./test/") || target.startsWith("../test/")) {
       violations.push(`functions/${file}: production code cannot depend on tests (${target})`);
     }
-    if (file === "assessment.js" && target === "./index") {
-      violations.push("functions/assessment.js: domain code cannot depend on the Functions entrypoint");
+    if (file !== "index.js" && target === "./index") {
+      violations.push(`functions/${file}: domain code cannot depend on the Functions entrypoint`);
     }
   }
 }

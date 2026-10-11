@@ -56,3 +56,11 @@ build
 drs-policy.yaml
 /lib/generated
 /node_modules
+
+# Firebase service-account keys must never be committed. Speech-to-Text
+# tokens are minted at runtime by the getSpeechAccessToken Cloud Function.
+assets/anychat-c414a-*.json
+**/*-firebase-adminsdk-*.json
+
+# Firebase CLI deploy cache
+.firebase/

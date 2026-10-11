@@ -37,3 +37,9 @@ test("health endpoint responds 200 with an ok status", async () => {
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.body, {status: "ok"});
 });
+
+test("index.js exposes the speech token callable", () => {
+  const index = require("../index.js");
+
+  assert.equal(typeof index.getSpeechAccessToken, "function");
+});

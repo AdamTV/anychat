@@ -129,6 +129,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.11.1"
+  cloud_functions:
+    dependency: "direct main"
+    description:
+      name: cloud_functions
+      sha256: "3f7fff2225ed46976dee89d902d0216ca64a8401d0bc875dba8d12ad1d2588d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.7.1"
+  cloud_functions_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_functions_platform_interface
+      sha256: "5685ae2d33c0f2f9f2ba26f49828830628fa2dce36898f971370aeed57f5ff03"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.23"
+  cloud_functions_web:
+    dependency: transitive
+    description:
+      name: cloud_functions_web
+      sha256: fe5f813461b70eeb4d058d72853b8bf096a124b8d351749f39deddfcdf22e9b9
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.9.1"
   collection:
     dependency: transitive
     description:
@@ -616,7 +640,7 @@ packages:
     source: hosted
     version: "5.2.0+1"
   googleapis_auth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: googleapis_auth
       sha256: befd71383a955535060acde8792e7efc11d2fccd03dd1d3ec434e85b68775938
