@@ -103,6 +103,7 @@ Requires Flutter SDK. Android/iOS trees live under `android/` and `ios/`. Fireba
 These gates run in CI (the `Tests` workflow) and most of them also run in the pre-commit hook enabled by `npm run setup:hooks`. A red gate blocks the merge.
 
 - **Strict analysis:** `flutter analyze` with a zero-issue policy (`strict-casts`, `strict-inference`, `strict-raw-types` in `analysis_options.yaml`).
+- **Format (Dart):** `npm run check:format` runs `dart format --set-exit-if-changed` over `lib`, `tool`, `test`, `integration_test`, and `test_driver`; enforced in CI and the pre-commit hook.
 - **Complexity (Dart):** `dart run tool/check_complexity.dart lib` caps per-function cyclomatic complexity at 20.
 - **Complexity (Functions):** ESLint `complexity` rule capped at 10 in `functions/.eslintrc.js`; runs with `cd functions && npm run lint`, along with `npm run typecheck` (TypeScript `checkJs` over the JSDoc-annotated sources).
 - **File size:** `npm run check:file-size` caps source files at 800 lines (documented exceptions live in `scritps/check_file_size.js`).

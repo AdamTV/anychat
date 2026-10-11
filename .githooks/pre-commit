@@ -18,6 +18,11 @@ if command -v dart >/dev/null 2>&1 && [ -d .dart_tool ]; then
   dart run tool/check_complexity.dart lib
 fi
 
+if command -v dart >/dev/null 2>&1; then
+  echo "pre-commit: dart format check"
+  dart format --output=none --set-exit-if-changed lib tool test integration_test test_driver
+fi
+
 if git diff --cached --name-only --diff-filter=ACMR | grep -qE '\.dart$'; then
   if command -v flutter >/dev/null 2>&1; then
     flutter analyze

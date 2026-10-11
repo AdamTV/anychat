@@ -7,6 +7,7 @@
     "check:dependency-drift": "node scritps/check_dependency_drift.js",
     "check:duplication": "jscpd lib functions --min-lines 12 --threshold 5 --baseline .jscpd-baseline.json --fail-on-new-clones --format dart,javascript --ignore \"**/node_modules/**,**/coverage/**,**/.dart_tool/**,**/build/**\" --reporters console",
     "check:complexity": "dart run tool/check_complexity.dart lib",
+    "check:format": "dart format --output=none --set-exit-if-changed lib tool test integration_test test_driver",
     "setup:hooks": "bash scritps/setup_hooks.sh",
     "check:quality": "npm run check:file-size && npm run check:architecture && npm run check:firestore-batches && npm run check:tech-debt && npm run check:dependency-drift && npm run check:duplication"
   },

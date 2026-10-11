@@ -20,6 +20,8 @@ jobs:
         run: flutter pub get
       - name: Analyze (strict, zero-issue policy)
         run: flutter analyze
+      - name: Enforce dart format
+        run: dart format --output=none --set-exit-if-changed lib tool test integration_test test_driver
       - name: Enforce per-function complexity limit
         run: dart run tool/check_complexity.dart lib
       - name: Run unit and widget tests with coverage
