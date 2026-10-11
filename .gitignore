@@ -64,3 +64,9 @@ assets/anychat-c414a-*.json
 
 # Firebase CLI deploy cache
 .firebase/
+
+# Legacy AnyChatTranslator v2 Windows build artifacts (no longer shipped)
+AnyChatTranslator/
+
+# Android emulator crash dumps
+bugreport-*.zip
