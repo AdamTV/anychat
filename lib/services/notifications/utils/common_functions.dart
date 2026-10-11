@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -67,11 +66,9 @@ void loadSingletonPage(NavigatorState? navigatorState,
     {required String targetPage, required ReceivedAction receivedAction}) {
   // Avoid to open the notification details page over another details page already opened
   // Navigate into pages, avoiding to open the notification details page over another details page already opened
-  navigatorState?.pushNamedAndRemoveUntil(targetPage,
-      (route) {
-        return (route.settings.name != targetPage) || route.isFirst;
-      },
-      arguments: receivedAction);
+  navigatorState?.pushNamedAndRemoveUntil(targetPage, (route) {
+    return (route.settings.name != targetPage) || route.isFirst;
+  }, arguments: receivedAction);
 }
 
 Future<String> downloadAndSaveImageOnDisk(String url, String fileName) async {

@@ -110,7 +110,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
                       NavigationService().pop();
-                                              },
+                    },
                     tooltip:
                         MaterialLocalizations.of(context).backButtonTooltip,
                   );
@@ -246,9 +246,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: Text(localizationOf(context).changePicture),
                         // enabled: changeProfilePictureEnabled,
                         leading: const Icon(Icons.photo),
-                        trailing:
-                            buildUserAvatar(AnyChatAuth.currentUser,
-                                context: context))
+                        trailing: buildUserAvatar(AnyChatAuth.currentUser,
+                            context: context))
                   ],
                 ),
                 SettingsSection(
@@ -437,7 +436,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         uploadFile(_image)
             .then((value) => {AnyChatUser.updatePhotoUrl(value)})
             .onError((error, stackTrace) {
-          logger.e("Error changing user profile image.", error: error, stackTrace: stackTrace);
+          logger.e("Error changing user profile image.",
+              error: error, stackTrace: stackTrace);
           return {};
         });
       } else {

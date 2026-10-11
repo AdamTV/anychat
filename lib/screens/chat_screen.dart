@@ -129,7 +129,10 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           text: TextSpan(
             // Note: Styles for TextSpans must be explicitly defined.
             // Child text spans will inherit styles from parent
-            style: Theme.of(Utilities().globalKey.currentContext!).textTheme.bodyLarge?.copyWith(
+            style: Theme.of(Utilities().globalKey.currentContext!)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(
                     color: Theme.of(Utilities().globalKey.currentContext!)
                         .colorScheme
                         .onPrimaryContainer),
@@ -148,9 +151,17 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               TextSpan(text: "${_chatMessages[i].text}\n"),
               WidgetSpan(
                 child: Divider(
-                  indent: MediaQuery.of(Utilities().globalKey.currentContext!).size.width * 0.01,
-                  endIndent: MediaQuery.of(Utilities().globalKey.currentContext!).size.width * 0.01,
-                  color: Theme.of(Utilities().globalKey.currentContext!).primaryColor,
+                  indent: MediaQuery.of(Utilities().globalKey.currentContext!)
+                          .size
+                          .width *
+                      0.01,
+                  endIndent:
+                      MediaQuery.of(Utilities().globalKey.currentContext!)
+                              .size
+                              .width *
+                          0.01,
+                  color: Theme.of(Utilities().globalKey.currentContext!)
+                      .primaryColor,
                 ),
               ),
               TextSpan(
@@ -206,14 +217,18 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
         text: TextSpan(
           // Note: Styles for TextSpans must be explicitly defined.
           // Child text spans will inherit styles from parent
-          style: Theme.of(Utilities().globalKey.currentContext!).textTheme.bodyLarge,
+          style: Theme.of(Utilities().globalKey.currentContext!)
+              .textTheme
+              .bodyLarge,
           children: <TextSpan>[
             TextSpan(
-                text: "${localizationOf(Utilities().globalKey.currentContext!).typed}: ",
+                text:
+                    "${localizationOf(Utilities().globalKey.currentContext!).typed}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(text: "${message.text}\n\n"),
             TextSpan(
-                text: "${localizationOf(Utilities().globalKey.currentContext!).translation}: ",
+                text:
+                    "${localizationOf(Utilities().globalKey.currentContext!).translation}: ",
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             TextSpan(
                 text: await Utilities()
@@ -307,8 +322,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       tooltip: localizationOf(context).call,
       onPressed: () async {
         await AnyChatUser.addMessageToConversation(
-            "${AnyChatAuth.currentUser.displayName} ${localizationOf(context)
-                    .isCallingYouOnAnyChat}");
+            "${AnyChatAuth.currentUser.displayName} ${localizationOf(context).isCallingYouOnAnyChat}");
         await NavigationService().pushNamed("/call");
       },
     ));

@@ -26,7 +26,6 @@ AppLocalizations localizationOf(BuildContext? context) {
   if (context?.mounted ?? false) {
     return AppLocalizations.of(context!)!;
   } else {
-
     return AppLocalizations.of(Utilities().globalKey.currentContext!)!;
   }
 }
@@ -43,17 +42,15 @@ String getEndonymByLocaleCode(String code, [AppLocalizations? localizations]) {
 
 String getLocaleCodeByEndonym(String endonym,
     [AppLocalizations? localizations]) {
-  var allEndonyms = getAllEndonyms(localizations ??
-      localizationOf(Utilities()
-          .globalKey
-          .currentContext));
+  var allEndonyms = getAllEndonyms(
+      localizations ?? localizationOf(Utilities().globalKey.currentContext));
 
   // Attempt to find the locale code by endonym
   var item = allEndonyms.entries.firstWhere(
-        (k) => k.key.trim().toLowerCase() == endonym.trim().toLowerCase(),
+    (k) => k.key.trim().toLowerCase() == endonym.trim().toLowerCase(),
     orElse: () => const MapEntry('English', 'en'),
   );
-return item.value;
+  return item.value;
 }
 
 Map<String, String> getAllEndonyms(AppLocalizations localizations) {
@@ -68,6 +65,7 @@ Map<String, String> getAllEndonyms(AppLocalizations localizations) {
 
   return endonymsToCodes;
 }
+
 Map<String, String Function(AppLocalizations)> endonymRetrievalMap = {
   'af': (localizations) => localizations.endonym_af,
   'sq': (localizations) => localizations.endonym_sq,

@@ -14,16 +14,16 @@ import '../database/anychat_user.dart';
 import 'combined_locale_info.dart';
 import '../database/conversation_info.dart';
 
-class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObserver, Disposable {
-
+class RemoteNotificationObserver extends ChangeNotifier
+    with WidgetsBindingObserver, Disposable {
   final List<AnyChatConversationWidget> _conversationWidgets = [];
 
-  UnmodifiableListView<AnyChatConversationWidget> get conversationWidgets => UnmodifiableListView(_conversationWidgets);
+  UnmodifiableListView<AnyChatConversationWidget> get conversationWidgets =>
+      UnmodifiableListView(_conversationWidgets);
 
   AppLifecycleState _notification = AppLifecycleState.resumed;
 
-  StreamSubscription<QuerySnapshot>?
-  _conversationSubscription;
+  StreamSubscription<QuerySnapshot>? _conversationSubscription;
 
   final Map<String, StreamSubscription<QuerySnapshot>?>
       _chatMessageSubscriptions = {};
@@ -42,17 +42,19 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
 
   Future<void> cancelSubscriptions() async {
     await _conversationSubscription?.cancel();
-    _chatMessageSubscriptions.forEach((key, value) async { await value?.cancel();});
+    _chatMessageSubscriptions.forEach((key, value) async {
+      await value?.cancel();
+    });
   }
 
   @override
   void dispose() {
     logger.i('Disposing NotificationObserver');
     cancelSubscriptions().then((value) => {
-    WidgetsBinding.instance.removeObserver(this),
-        isDisposed = true,
-        super.dispose()
-    });
+          WidgetsBinding.instance.removeObserver(this),
+          isDisposed = true,
+          super.dispose()
+        });
   }
 
   @override
@@ -104,7 +106,6 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
             AnyChatAuth.currentUser.id);
   }
 
-
   Future<void> _updateChatMessages(QuerySnapshot snapshot) async {
     var messages = snapshot.docs.map((DocumentSnapshot doc) {
       return AnyChatMessage.fromSnapshot(doc);
@@ -126,9 +127,8 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
     for (final userId in userIds) {
       usersById.putIfAbsent(userId, () => AnyChatUser.deletedUser(userId));
     }
-    final chatters = conversation.participants
-        .map((userId) => usersById[userId]!)
-        .toList();
+    final chatters =
+        conversation.participants.map((userId) => usersById[userId]!).toList();
     final sender = usersById[message.senderId]!;
     _conversationWidgets
         .add(AnyChatConversationWidget(chatters, conversation, message));
@@ -198,7 +198,8 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
   /// Loads the chatters of [conversation] (participants other than the
   /// current user) in one batched read; unknown users become placeholder
   /// records.
-  static Future<List<AnyChatUser>> loadChatters(Conversation conversation) async {
+  static Future<List<AnyChatUser>> loadChatters(
+      Conversation conversation) async {
     final currentUserId = AnyChatAuth.currentUser.id;
     final chatterIds =
         conversation.participants.where((id) => id != currentUserId).toSet();
@@ -249,8 +250,8 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
     }
 
     if (chatters.isNotEmpty && conversation.timestamp != null) {
-      _conversationWidgets.add(AnyChatConversationWidget(
-          chatters, conversation, message));
+      _conversationWidgets
+          .add(AnyChatConversationWidget(chatters, conversation, message));
       notifyListeners();
     }
   }
@@ -260,12 +261,13 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
       return Conversation.fromSnapshot(doc);
     }).toList();
   }
-  void _sendNotification(Conversation conversation, AnyChatUser sender, String text) async {
+
+  void _sendNotification(
+      Conversation conversation, AnyChatUser sender, String text) async {
     if (text.contains(localizationOf(Utilities().globalKey.currentContext!)
         .isCallingYouOnAnyChat)) {
       await NotificationUtils.showCallNotification(
-          text,
-          conversation.id.hashCode, 42, conversation.id);
+          text, conversation.id.hashCode, 42, conversation.id);
     } else {
       await NotificationUtils.createMessagingNotification(
         channelKey: 'chats',
@@ -277,6 +279,4 @@ class RemoteNotificationObserver extends ChangeNotifier with WidgetsBindingObser
       );
     }
   }
-
 }
-

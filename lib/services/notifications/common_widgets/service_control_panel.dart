@@ -37,7 +37,8 @@ class ServiceControlPanel extends StatelessWidget {
                             color: statusControl
                                 ? Colors.green
                                 : Colors.redAccent),
-                        text: '${statusControl ? 'Available' : 'Unavailable'}\n'),
+                        text:
+                            '${statusControl ? 'Available' : 'Unavailable'}\n'),
                     WidgetSpan(child: LedLight(statusControl))
                   ]),
             ),

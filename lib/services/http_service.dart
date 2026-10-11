@@ -3,7 +3,6 @@ import 'package:anychat/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
-
 Future<String> agoraAuth() async {
   final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
   final uid = AnyChatAuth.currentUser.id.hashCode;

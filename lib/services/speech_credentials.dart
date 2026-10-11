@@ -47,8 +47,7 @@ AccessCredentials speechCredentialsFromCallableResult(Object? data) {
         'Speech token response does not carry a Bearer token: $data');
   }
   if (expirationTime is! String) {
-    throw FormatException(
-        'Speech token response has no expirationTime: $data');
+    throw FormatException('Speech token response has no expirationTime: $data');
   }
   final expiry = DateTime.tryParse(expirationTime);
   if (expiry == null) {

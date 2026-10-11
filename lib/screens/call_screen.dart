@@ -266,7 +266,7 @@ class _CallScreenState extends State<CallScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: List.of(remoteUid.map(
-                    (e) => SizedBox(
+                (e) => SizedBox(
                   width: 120,
                   height: 120,
                   child: AgoraVideoView(

@@ -30,19 +30,19 @@ class SearchChatterScreenState extends State<SearchChatterScreen> {
   bool get blockUser => super.widget.blockUser;
 
   void _onSearchChanged() {
-    Timer(const Duration(milliseconds: 250), (){
-    _searchSubscription?.cancel();
-        // if (_debounce?.isActive ?? false) _debounce?.cancel();
-        // _debounce = Timer(const Duration(milliseconds: 500), () {
-        _searchSubscription = searchUsersDynamically(_searchController.text)
-        ?.listen((QuerySnapshot snapshot) {
-      final List<AnyChatUser> newUsers =
-      snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
-      setState(() {
-        _users = newUsers;
+    Timer(const Duration(milliseconds: 250), () {
+      _searchSubscription?.cancel();
+      // if (_debounce?.isActive ?? false) _debounce?.cancel();
+      // _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchSubscription = searchUsersDynamically(_searchController.text)
+          ?.listen((QuerySnapshot snapshot) {
+        final List<AnyChatUser> newUsers =
+            snapshot.docs.map((doc) => AnyChatUser.fromSnapshot(doc)).toList();
+        setState(() {
+          _users = newUsers;
+        });
+        // });
       });
-      // });
-    });
     });
   }
 

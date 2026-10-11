@@ -38,12 +38,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   void createConversations() {
     if (RemoteNotificationObserver().conversationWidgets.isEmpty) return;
     var mostRecentState = RemoteNotificationObserver().conversationWidgets.last;
-    setState((){
-      insertSorted(
-        mostRecentState);
+    setState(() {
+      insertSorted(mostRecentState);
       _isLoadedConversations = true;
-      });
-    }
+    });
+  }
 
   Future<void> readConversations() async {
     await RemoteNotificationObserver().initChatSubscriptions();
@@ -65,9 +64,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       logger.d('conversation participants do not contain $currentUserId');
       return;
     }
-    final chatterIds = conversation.participants
-        .where((id) => id != currentUserId)
-        .toSet();
+    final chatterIds =
+        conversation.participants.where((id) => id != currentUserId).toSet();
     final loadedUsers = await AnyChatUser.getUsersByIds(chatterIds);
     final usersById = {for (final user in loadedUsers) user.id: user};
     for (final id in chatterIds) {
@@ -149,8 +147,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           title: localizationOf(context).logout,
           onTap: () async {
             await NavigationService().pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const WelcomeScreen()),
+                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
                 (p0) => p0.isFirst);
             await AnyChatAuth.signOut();
           },
@@ -212,9 +209,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
     final refreshedWidgets = <AnyChatConversationWidget>[];
     for (final conversation in loadedConversations) {
-      final chatters = conversation.participants
-          .map((id) => usersById[id]!)
-          .toList();
+      final chatters =
+          conversation.participants.map((id) => usersById[id]!).toList();
       final message =
           await Conversation.getLatestMessageByConversationId(conversation.id);
       if (message == null) {
@@ -256,16 +252,18 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
 
   Map<String, Timestamp?> convoTimes = {};
   void insertSorted(AnyChatConversationWidget state) {
-    convoTimes.putIfAbsent(state.conversation.id.toString(), () => state.message.timestamp);
+    convoTimes.putIfAbsent(
+        state.conversation.id.toString(), () => state.message.timestamp);
     final sortedTimes = convoTimes.keys.toList(growable: false)
       ..sort((k1, k2) => convoTimes[k2]!.compareTo(convoTimes[k1]!));
     logger.d(sortedTimes);
     var index = sortedTimes.indexOf(state.conversation.id);
-    conversationWidgets.removeWhere((element) => element.key == state.getSlidable().key);
+    conversationWidgets
+        .removeWhere((element) => element.key == state.getSlidable().key);
     if (!state.conversation.participants.any((element) =>
         AnyChatAuth.currentUser.blockedAccounts.contains(element))) {
-        _isLoadedConversations = true;
-        conversationWidgets.insert(index, state.getSlidable());
+      _isLoadedConversations = true;
+      conversationWidgets.insert(index, state.getSlidable());
     }
   }
 

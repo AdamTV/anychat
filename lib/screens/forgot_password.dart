@@ -36,7 +36,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             TextField(
               // icon: Icons.mail,
-              decoration: InputDecoration.collapsed(hintText: localizationOf(context).email),
+              decoration: InputDecoration.collapsed(
+                  hintText: localizationOf(context).email),
               onChanged: (value) {
                 _email = value;
               },
@@ -46,12 +47,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             //   height: size.height * 0.45,
             // ),
             ElevatedButton(
-              child:
-                  Text("${localizationOf(context).send} ${localizationOf(context).email}"),
+              child: Text(
+                  "${localizationOf(context).send} ${localizationOf(context).email}"),
               onPressed: () async {
                 await _passwordReset();
                 logger.d(_email);
-                  NavigationService().pushNamed('/login');
+                NavigationService().pushNamed('/login');
               },
             ),
             ElevatedButton(
@@ -72,8 +73,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       _formKey.currentState!.save();
       await auth.sendPasswordResetEmail(email: _email!);
       if (mounted) {
-        Utilities()
-            .showToast(localizationOf(context).emailSentToResetPassword);
+        Utilities().showToast(localizationOf(context).emailSentToResetPassword);
       }
     } catch (e) {
       if ((e is FirebaseException) && e.message != null) {

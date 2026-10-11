@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LedLight extends StatelessWidget {
-
   final bool isOn;
 
   const LedLight(this.isOn, {super.key});
@@ -11,7 +10,7 @@ class LedLight extends StatelessWidget {
     Color lightColor = isOn ? Colors.green : Colors.redAccent;
 
     return Padding(
-      padding: const EdgeInsets.only( top: 15.0, bottom: 10.0 ),
+      padding: const EdgeInsets.only(top: 15.0, bottom: 10.0),
       child: Container(
           width: 15.0,
           height: 15.0,
@@ -21,8 +20,7 @@ class LedLight extends StatelessWidget {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)
-              ),
+                  bottomRight: Radius.circular(10)),
               boxShadow: [
                 BoxShadow(
                   color: lightColor.withOpacity(0.5),
@@ -30,9 +28,7 @@ class LedLight extends StatelessWidget {
                   blurRadius: 7,
                   offset: const Offset(0, 1), // changes position of shadow
                 ),
-              ]
-          )
-      ),
+              ])),
     );
   }
 }

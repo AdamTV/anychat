@@ -17,8 +17,7 @@ class ThemesController {
           elevation: 0,
           iconTheme: IconThemeData(
             color: kLightTheme.primaryColor,
-          )
-      ),
+          )),
 
       // Define the default TextTheme. Use this to specify the default
       // text styling for headlines, titles, bodies of text, and more.
@@ -39,7 +38,8 @@ class ThemesController {
             TextStyle(fontSize: 18.0, height: 1.5, color: Colors.black54),
         titleSmall:
             TextStyle(fontSize: 12.0, height: 1.5, color: Colors.black54),
-        labelLarge: TextStyle(fontSize: 16.0, height: 1.5, color: Colors.black54),
+        labelLarge:
+            TextStyle(fontSize: 16.0, height: 1.5, color: Colors.black54),
         bodyLarge: TextStyle(fontSize: 16.0, height: 1.5),
         bodyMedium: TextStyle(fontSize: 16.0, height: 1.5),
       ),
@@ -50,9 +50,12 @@ class ThemesController {
             borderRadius: BorderRadius.all(Radius.circular(5))),
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         textTheme: ButtonTextTheme.accent,
-      ), colorScheme: const ColorScheme.light().copyWith(
-        secondary: Colors.blueGrey,
-      ).copyWith(background: Colors.blueGrey.shade400),
+      ),
+      colorScheme: const ColorScheme.light()
+          .copyWith(
+            secondary: Colors.blueGrey,
+          )
+          .copyWith(background: Colors.blueGrey.shade400),
     )
   };
 

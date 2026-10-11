@@ -636,7 +636,7 @@ class AnyChatUser {
             null,
             localizationOf(Utilities().globalKey.currentContext).approve,
             'Please verify your account by logging in, and then try again.');
-        NavigationService().popUntil((p0)=>p0.isFirst && p0.isCurrent);
+        NavigationService().popUntil((p0) => p0.isFirst && p0.isCurrent);
         await NavigationService().pushReplacementNamed('/welcome');
         await AnyChatAuth.signOut();
         return;

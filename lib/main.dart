@@ -28,18 +28,19 @@ var logger = Logger(
         lineLength: 120, // Width of the output
         colors: true, // Colorful log messages
         printEmojis: true, // Print an emoji for each log message
-        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart // Should each log print contain a timestamp
+        dateTimeFormat: DateTimeFormat
+            .onlyTimeAndSinceStart // Should each log print contain a timestamp
         ),
     level: Level.info);
 
 String chatMessages() => Intl.message(
-  'Chat Messages',
-  name: 'chatMessages',
-);
+      'Chat Messages',
+      name: 'chatMessages',
+    );
 String videoCalls() => Intl.message(
-'Video Calls',
-name: 'videoCalls',
-);
+      'Video Calls',
+      name: 'videoCalls',
+    );
 String localeName = 'en';
 ThemeData? cachedTheme;
 
@@ -64,13 +65,14 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     await FirebaseAppCheck.instance.activate(
-      webProvider: ReCaptchaV3Provider('6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO'),
+      webProvider:
+          ReCaptchaV3Provider('6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO'),
       androidProvider: AndroidProvider.debug,
       appleProvider: AppleProvider.debug,
     );
     AuthService.listenToAuthChanges();
 
-    try{
+    try {
       // Notifications Initialization
       await NotificationsController.initializeLocalNotifications();
       // await NotificationsController.initializeRemoteNotifications();
@@ -85,8 +87,10 @@ void main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => DeivceNotifierService()),
-          ChangeNotifierProvider(create: (context) => RemoteNotificationObserver()),
-          ChangeNotifierProvider(create: (context) => NotificationsController()),
+          ChangeNotifierProvider(
+              create: (context) => RemoteNotificationObserver()),
+          ChangeNotifierProvider(
+              create: (context) => NotificationsController()),
         ],
         child: const AnyChat(),
       ),
@@ -101,12 +105,14 @@ class AnyChat extends StatefulWidget {
   @override
   State<AnyChat> createState() => _AnyChatState();
 }
+
 class _AnyChatState extends State<AnyChat> {
   @override
   void initState() {
     super.initState();
     NotificationsController.initializeNotificationsEventListeners();
   }
+
   @override
   Widget build(BuildContext context) {
     final notifier = Provider.of<DeivceNotifierService>(context);

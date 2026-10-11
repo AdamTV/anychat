@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     projectId: 'anychat-c414a',
     databaseURL: 'https://anychat-c414a-default-rtdb.firebaseio.com',
     storageBucket: 'anychat-c414a.appspot.com',
-    androidClientId: '682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com',
-    iosClientId: '682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com',
+    androidClientId:
+        '682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com',
+    iosClientId:
+        '682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com',
     iosBundleId: 'ca.alphatech.anychat',
   );
 
@@ -82,8 +84,10 @@ class DefaultFirebaseOptions {
     projectId: 'anychat-c414a',
     databaseURL: 'https://anychat-c414a-default-rtdb.firebaseio.com',
     storageBucket: 'anychat-c414a.appspot.com',
-    androidClientId: '682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com',
-    iosClientId: '682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com',
+    androidClientId:
+        '682283241991-6afn9g0v1eatgrkea98kcp70uaga3mj6.apps.googleusercontent.com',
+    iosClientId:
+        '682283241991-iuarauj18pl568ftrhrduioqhpibp17a.apps.googleusercontent.com',
     iosBundleId: 'ca.alphatech.anychat',
   );
 }

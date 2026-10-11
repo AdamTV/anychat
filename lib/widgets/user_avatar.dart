@@ -15,7 +15,8 @@ Widget buildUserAvatar(AnyChatUser user, {BuildContext? context}) {
   final avatarContext = context ?? Utilities().globalKey.currentContext!;
   return CircleAvatar(
     backgroundColor: Theme.of(avatarContext).secondaryHeaderColor,
-    child: Text(user.displayName.isEmpty ? '?' : user.displayName.characters.first),
+    child: Text(
+        user.displayName.isEmpty ? '?' : user.displayName.characters.first),
   );
 }
 

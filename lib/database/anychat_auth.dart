@@ -92,8 +92,7 @@ class AnyChatAuth {
         return currentUser;
       } else {
         Utilities().showToast(
-            localizationOf(Utilities().globalKey.currentContext!)
-                .emailInUse);
+            localizationOf(Utilities().globalKey.currentContext!).emailInUse);
         return null;
       }
     }
@@ -328,8 +327,7 @@ class AnyChatAuth {
     return null;
   }
 
-  static Widget flutterSocialButton(
-      BuildContext context, ButtonType buttonType,
+  static Widget flutterSocialButton(BuildContext context, ButtonType buttonType,
       {bool Function()? canContinue}) {
     return FlutterSocialButton(
       onTap: () async {
@@ -347,9 +345,7 @@ class AnyChatAuth {
           }
         } catch (e) {
           await showAlertDialogFailedSocialLogin(
-              context.mounted
-                  ? context
-                  : Utilities().globalKey.currentContext!,
+              context.mounted ? context : Utilities().globalKey.currentContext!,
               buttonType);
         }
       },
@@ -405,8 +401,8 @@ class AnyChatAuth {
       // TODO(TD-001): Add a supported-provider error message for email auth.
       ButtonType.email => throw UnimplementedError(),
     };
-    return await Utilities().showAlertDialog(
-        context, localizationOf(context).error, errorMessage);
+    return await Utilities()
+        .showAlertDialog(context, localizationOf(context).error, errorMessage);
   }
 
   // static SocialIcon googleIcon(BuildContext context) {

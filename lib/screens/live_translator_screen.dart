@@ -41,6 +41,7 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       showAudioRecordingToast();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +56,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
                 SchedulerBinding.instance.addPostFrameCallback((d) async {
                   await showDialog<void>(
                     context: context,
-                    builder: (BuildContext context) => _buildPopupDialog(context),
+                    builder: (BuildContext context) =>
+                        _buildPopupDialog(context),
                   );
                   longRunningRecognize();
                   showAudioRecordingToast();
@@ -207,8 +209,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
   Future<void> longRunningRecognize() async {
     String responseText = "";
 
-    var responseStream =
-        await audioTranscriber.getResponseStream(LiveTranslatorScreen.isoCodeTranscribedWords);
+    var responseStream = await audioTranscriber
+        .getResponseStream(LiveTranslatorScreen.isoCodeTranscribedWords);
 
     // if (!recognizing) showAudioRecordingToast();
 
@@ -225,8 +227,8 @@ class _LiveTranslatorScreenState extends State<LiveTranslatorScreen> {
       var newData = data.results.firstOrNull;
       var isData = newData != null;
       if (!isData) return;
-      final newText = await Utilities()
-          .getGoogleTranslation(LiveTranslatorScreen.isoCodeTranslatedWords, currentText);
+      final newText = await Utilities().getGoogleTranslation(
+          LiveTranslatorScreen.isoCodeTranslatedWords, currentText);
       if (mounted) {
         if (isData && newData.isFinal) {
           responseText += '\n$newText';

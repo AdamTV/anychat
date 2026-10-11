@@ -24,8 +24,10 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => DeivceNotifierService()),
-          ChangeNotifierProvider(create: (context) => RemoteNotificationObserver()),
-          ChangeNotifierProvider(create: (context) => NotificationsController()),
+          ChangeNotifierProvider(
+              create: (context) => RemoteNotificationObserver()),
+          ChangeNotifierProvider(
+              create: (context) => NotificationsController()),
         ],
         child: const AnyChat(),
       ),

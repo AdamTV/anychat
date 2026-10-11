@@ -116,10 +116,10 @@ class Utilities {
         .collection("users")
         .doc(value.id)
         .get()
-        .then((value) => AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(value))
-        .then((AnyChatUser user) => {
-              NavigationService().pushNamed("/conversations")
-            })
+        .then((value) =>
+            AnyChatAuth.currentUser = AnyChatUser.fromSnapshot(value))
+        .then((AnyChatUser user) =>
+            {NavigationService().pushNamed("/conversations")})
         .catchError((e) => {
               NavigationService().pushNamedAndRemoveUntil("/conversations",
                   predicate: (Route<dynamic> route) => route.isFirst)
@@ -152,7 +152,8 @@ class Utilities {
   }
 
   void setThemeFromDropdownValue(String? newValue) async {
-    var user = await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
+    var user =
+        await CacheManager().getUserDataWithCache(AnyChatAuth.currentUser.id);
     var newPref = user.theme.brightness;
     if (newValue ==
         localizationOf(Utilities().globalKey.currentContext!).light) {

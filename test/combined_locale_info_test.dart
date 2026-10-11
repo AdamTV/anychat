@@ -33,8 +33,8 @@ void main() {
     });
 
     test('getEndonymByLocaleCode reports unknown codes', () {
-      expect(getEndonymByLocaleCode('xx', localizations),
-          'Unknown Locale (xx)');
+      expect(
+          getEndonymByLocaleCode('xx', localizations), 'Unknown Locale (xx)');
     });
 
     test('getLocaleCodeByEndonym resolves an endonym back to its code', () {

@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 class AuthService {
   static Future<Widget> initState(User? user) async {
     if (user == null) {
@@ -40,14 +39,15 @@ class AuthService {
         // await RemoteNotificationObserver().initConversationSubscriptions();
         var user = await CacheManager()
             .getUserDataWithCache(AnyChatAuth.currentUser.id);
-          user.id = AnyChatAuth.currentUser.id;
-          user.username = AnyChatAuth.currentUser.displayName;
-          user.email = AnyChatAuth.currentUser.email;
-          user.notificationsEnabled = AnyChatAuth.currentUser.notificationsEnabled;
-          user.theme = UserData.themeFromString(AnyChatAuth.currentUser.theme);
-          user.locale =
-              UserData.localeFromString(AnyChatAuth.currentUser.language);
-          await CacheManager().cacheUserData(user);
+        user.id = AnyChatAuth.currentUser.id;
+        user.username = AnyChatAuth.currentUser.displayName;
+        user.email = AnyChatAuth.currentUser.email;
+        user.notificationsEnabled =
+            AnyChatAuth.currentUser.notificationsEnabled;
+        user.theme = UserData.themeFromString(AnyChatAuth.currentUser.theme);
+        user.locale =
+            UserData.localeFromString(AnyChatAuth.currentUser.language);
+        await CacheManager().cacheUserData(user);
         // }
 
         await NavigationService().pushNamedAndRemoveUntil('/conversations',

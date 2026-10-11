@@ -74,8 +74,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (_formKey.currentState!.validate() &&
                               isUserAgreeToTerms()) {
                             // If the form is valid, display a Snackbar.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(localizationOf(context).register)));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text(localizationOf(context).register)));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -90,8 +91,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     await NotificationUtils
                                         .requestBasicPermissionToSendNotifications(
                                             mounted
-                                    ? context
-                                                : Utilities().globalKey.currentContext!));
+                                                ? context
+                                                : Utilities()
+                                                    .globalKey
+                                                    .currentContext!));
                                 Navigator.pushNamed(
                                     mounted
                                         ? context

@@ -18,19 +18,20 @@ class HaveAccountCheck extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          login
-              ? "${localizationOf(context).doNotHaveAccount} "
-              : "${localizationOf(context).haveAccount} ",
-          style: Theme.of(context).textTheme.bodyLarge
-        ),
-          TextButton(
-    onPressed: press,
-    child: Text(
             login
-                ? localizationOf(context).register
-                : localizationOf(context).login,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
-            )),
+                ? "${localizationOf(context).doNotHaveAccount} "
+                : "${localizationOf(context).haveAccount} ",
+            style: Theme.of(context).textTheme.bodyLarge),
+        TextButton(
+            onPressed: press,
+            child: Text(
+                login
+                    ? localizationOf(context).register
+                    : localizationOf(context).login,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.bold))),
       ],
     );
   }

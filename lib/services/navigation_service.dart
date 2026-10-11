@@ -39,7 +39,7 @@ class NavigationService extends Navigator {
         '/searchChatter': (context) => const SearchChatterScreen(false, false),
         '/settings': (context) => const SettingsScreen(),
         '/welcome': (context) => const WelcomeScreen(),
-    '/forgotPassword': (context) => const ForgotPassword(),
+        '/forgotPassword': (context) => const ForgotPassword(),
       };
 
   Future<dynamic> navigateTo(String routeName) {
@@ -55,8 +55,7 @@ class NavigationService extends Navigator {
   }
 
   Future<dynamic> pushNamed(String routeName) {
-    return navigatorKey.currentState!.pushNamed(
-        routeName);
+    return navigatorKey.currentState!.pushNamed(routeName);
   }
 
   Future<dynamic> pushNamedAndRemoveUntil(String routeName,
@@ -72,13 +71,17 @@ class NavigationService extends Navigator {
   Future<dynamic> pushReplacement(Route<dynamic> newRoute, {dynamic result}) {
     return navigatorKey.currentState!.pushReplacement(newRoute, result: result);
   }
-  Future<dynamic> pushAndRemoveUntil(Route<dynamic> newRoute, bool Function(Route<dynamic>) predicate){
+
+  Future<dynamic> pushAndRemoveUntil(
+      Route<dynamic> newRoute, bool Function(Route<dynamic>) predicate) {
     return navigatorKey.currentState!.pushAndRemoveUntil(newRoute, predicate);
   }
+
   void pop() {
     return navigatorKey.currentState!.pop();
   }
-  void popUntil(bool Function(Route<dynamic>) predicate){
+
+  void popUntil(bool Function(Route<dynamic>) predicate) {
     return navigatorKey.currentState!.popUntil(predicate);
   }
 }

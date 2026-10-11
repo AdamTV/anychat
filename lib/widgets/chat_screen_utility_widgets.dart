@@ -142,18 +142,17 @@ Widget getChatterWidgetList(List<AnyChatUser> chatters) {
   var bottomWidgets = <Widget>[];
   for (int i = 0; i < chatters.length; i += 2) {
     if (chatters.length < 3) {
-      if(chatters.length == 2){
-        chatters.removeWhere((element) => element.id == AnyChatAuth.currentUser.id);
+      if (chatters.length == 2) {
+        chatters
+            .removeWhere((element) => element.id == AnyChatAuth.currentUser.id);
       }
-        topWidgets
-          .add(buildUserAvatarInContainer(containerRadius, chatters[i]));
-    }else {
+      topWidgets.add(buildUserAvatarInContainer(containerRadius, chatters[i]));
+    } else {
       topWidgets.add(buildUserAvatarInContainer(avatarRadius, chatters[i]));
     }
   }
   for (int i = 1; i < chatters.length; i += 2) {
-    bottomWidgets
-        .add(buildUserAvatarInContainer(avatarRadius, chatters[i]));
+    bottomWidgets.add(buildUserAvatarInContainer(avatarRadius, chatters[i]));
   }
   Column column;
   switch (chatters.length) {
@@ -284,4 +283,3 @@ Widget getChatterWidgetList(List<AnyChatUser> chatters) {
 // }
 // return widgets;
 }
-

@@ -21,7 +21,8 @@ class OrDivider extends StatelessWidget {
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
-                  fontSize: Theme.of(context).textTheme.headlineLarge?.fontSize),
+                  fontSize:
+                      Theme.of(context).textTheme.headlineLarge?.fontSize),
             ),
           ),
           buildDivider(),

@@ -9,10 +9,10 @@ class ThemeOption {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ThemeOption &&
-              runtimeType == other.runtimeType &&
-              name == other.name &&
-              themeMode == other.themeMode;
+      other is ThemeOption &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          themeMode == other.themeMode;
 
   @override
   int get hashCode => name.hashCode ^ themeMode.hashCode;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class RemarkableText extends StatelessWidget {
-
   final String text;
   final Color? color;
 
@@ -16,8 +15,8 @@ class RemarkableText extends StatelessWidget {
           textAlign: TextAlign.center,
           text: TextSpan(
               text: text,
-              style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 18)
-          ),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: color, fontSize: 18)),
         ),
       ),
     );

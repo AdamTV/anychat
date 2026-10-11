@@ -67,7 +67,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
       languageIndex = index;
       NavigationService().pushNamedAndRemoveUntil('/settings',
           predicate: (Route<dynamic> route) =>
-          route.settings.name == '/conversations');
+              route.settings.name == '/conversations');
     });
   }
 

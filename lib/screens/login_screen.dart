@@ -61,8 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             // If the form is valid, display a Snackbar.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(localizationOf(context).login)));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(localizationOf(context).login)));
                             try {
                               var user = await AnyChatAuth.signInEmail(
                                   _emailController.text,
@@ -76,8 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? context
                                         : Utilities().globalKey.currentContext!,
                                     localizationOf(Utilities()
-                                                .globalKey
-                                                .currentContext!)
+                                            .globalKey
+                                            .currentContext!)
                                         .error,
                                     localizationOf(mounted
                                             ? context
@@ -88,13 +88,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             } on Error catch (e) {
                               // logger.e("Error", time: DateTime.now(), error: e, stackTrace: e.stackTrace);
-                              logger.e("Error", error: e, stackTrace: e.stackTrace);
+                              logger.e("Error",
+                                  error: e, stackTrace: e.stackTrace);
                               if (context.mounted) {
                                 Utilities().showAlertDialog(
                                     context,
                                     localizationOf(context).error,
-                                    localizationOf(context)
-                                        .errorLoggingIn);
+                                    localizationOf(context).errorLoggingIn);
                               }
                             }
                           }
@@ -114,8 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 localizationOf(context).forgotPassword,
-                style:  Theme.of(context).textTheme.bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             HaveAccountCheck(

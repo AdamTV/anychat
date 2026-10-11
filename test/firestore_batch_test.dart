@@ -14,8 +14,7 @@ void main() {
     });
 
     test('splits larger inputs without losing or reordering values', () {
-      final values =
-          List<int>.generate(firestoreInQueryLimit + 1, (i) => i);
+      final values = List<int>.generate(firestoreInQueryLimit + 1, (i) => i);
       final chunks = chunkForFirestoreInQuery(values);
 
       expect(chunks.map((chunk) => chunk.length), [30, 1]);

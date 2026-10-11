@@ -36,8 +36,7 @@ class MessageWidget extends StatelessWidget {
       ),
       axisAlignment: 0,
       child: Align(
-        alignment:
-            isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+        alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,

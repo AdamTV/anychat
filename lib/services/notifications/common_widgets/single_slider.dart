@@ -55,7 +55,8 @@ class SingleSliderToConfirm extends StatefulWidget {
   /// Stick the slider to the end
   final bool stickToEnd;
 
-  const SingleSliderToConfirm({super.key, 
+  const SingleSliderToConfirm({
+    super.key,
     this.height = 70,
     this.width = 300,
     this.backgroundColor = Colors.white,

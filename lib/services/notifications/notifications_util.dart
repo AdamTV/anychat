@@ -97,19 +97,22 @@ class NotificationUtils {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  localizationOf(null).allowUsToSendYouNotifications,
+                                  localizationOf(null)
+                                      .allowUsToSendYouNotifications,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
                                 const Divider(thickness: 0),
                                 Text(
-                                  localizationOf(null).getNotifiedWhenSomebodyMessagesOrCalls,
+                                  localizationOf(null)
+                                      .getNotifiedWhenSomebodyMessagesOrCalls,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
                                 const Divider(thickness: 0),
                                 Text(
-                                  localizationOf(null).thisCanAlwaysBeControlledFromDeviceSettings,
+                                  localizationOf(null)
+                                      .thisCanAlwaysBeControlledFromDeviceSettings,
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
@@ -200,16 +203,16 @@ class NotificationUtils {
     } else {
       // If you need to show a rationale to educate the user to conceed the permission, show it
       await showDialog<void>(
-          context: context.mounted ?
-          context
-              : Utilities().globalKey.currentContext!,
+          context:
+              context.mounted ? context : Utilities().globalKey.currentContext!,
           builder: (context) => AlertDialog(
                 backgroundColor: const Color(0xfffbfbfb),
                 title: Text(
                   'AnyChat ${localizationOf(null).needsYourPermission}',
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -220,9 +223,7 @@ class NotificationUtils {
                       fit: BoxFit.fitWidth,
                     ),
                     Text(
-                      'To proceed, you need to enable the permissions above${channelKey?.isEmpty ?? true
-                              ? ''
-                              : ' on channel $channelKey'}:',
+                      'To proceed, you need to enable the permissions above${channelKey?.isEmpty ?? true ? '' : ' on channel $channelKey'}:',
                       maxLines: 2,
                       textAlign: TextAlign.center,
                     ),

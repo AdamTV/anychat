@@ -18,15 +18,13 @@ class Conversation {
 
   Conversation.fromSnapshot(DocumentSnapshot snapshot)
       : id = snapshot.id,
-        participants = List.castFrom<dynamic, String>(
-            (snapshot.data() as Map<String, dynamic>)['participants']
-                as List<dynamic>),
+        participants = List.castFrom<dynamic, String>((snapshot.data()
+            as Map<String, dynamic>)['participants'] as List<dynamic>),
         // messages = ((snapshot.data() as Map<String, dynamic>)['messages']),
-        transcribedMessages =
-            ((snapshot.data() as Map<String, dynamic>)['transcribedMessages']
-                as List<dynamic>?),
-        timestamp =
-            (snapshot.data() as Map<String, dynamic>)['timestamp'] as Timestamp?,
+        transcribedMessages = ((snapshot.data()
+            as Map<String, dynamic>)['transcribedMessages'] as List<dynamic>?),
+        timestamp = (snapshot.data() as Map<String, dynamic>)['timestamp']
+            as Timestamp?,
         reference = snapshot.reference;
 
   static Future<Conversation> getConversationById(String id) async {
