@@ -1,0 +1,6 @@
+# Known-flaky tests quarantined from flaky-test failure reporting.
+#
+# One test name per line (the full test name as reported by `flutter test`).
+# scritps/flaky_test_detector.js never retries tests listed here and reports
+# them separately. Remove a test from this list once it is fixed; the detector
+# also flags quarantined tests that pass on the first run.

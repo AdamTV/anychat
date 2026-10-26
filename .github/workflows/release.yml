@@ -1,0 +1,77 @@
+# Publishes a GitHub release with generated release notes whenever a version
+# tag (v*) is pushed. Notes are grouped by conventional-commit type by
+# scritps/generate_release_notes.sh, and CHANGELOG.md is refreshed on main.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve tag range
+        id: range
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          prev=$(git describe --tags --abbrev=0 "${tag}^" 2>/dev/null || true)
+          if [ -z "$prev" ]; then
+            # First tag in the repository: diff against the root commit.
+            prev=$(git rev-list --max-parents=0 HEAD | tail -1)
+          fi
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "prev=${prev}" >> "$GITHUB_OUTPUT"
+      - name: Generate release notes
+        run: |
+          mkdir -p release-notes
+          bash scritps/generate_release_notes.sh \
+            "${{ steps.range.outputs.prev }}" \
+            "${{ steps.range.outputs.tag }}" \
+            "release-notes/${{ steps.range.outputs.tag }}.md"
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ steps.range.outputs.tag }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --notes-file "release-notes/${tag}.md"
+          else
+            gh release create "$tag" \
+              --title "$tag" \
+              --notes-file "release-notes/${tag}.md"
+          fi
+      - name: Refresh CHANGELOG.md on the default branch
+        continue-on-error: true
+        run: |
+          tag="${{ steps.range.outputs.tag }}"
+          prev="${{ steps.range.outputs.prev }}"
+          git fetch origin main
+          git checkout -B changelog-refresh origin/main
+          bash scritps/generate_release_notes.sh "$prev" "$tag" /tmp/release-notes.md
+          sed '1s/^# /## /' /tmp/release-notes.md > /tmp/release-section.md
+          {
+            cat /tmp/release-section.md
+            echo
+            cat CHANGELOG.md
+          } > CHANGELOG.md.new
+          mv CHANGELOG.md.new CHANGELOG.md
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: add ${tag} release notes to changelog"
+          git push origin changelog-refresh:main
+      - name: Upload release notes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release-notes/
+          retention-days: 365

@@ -16,18 +16,25 @@ jobs:
           # Pinned to the SDK version the pubspec.lock was resolved with
           # (pubspec caps the Dart SDK at <3.19.0).
           flutter-version: '3.19.6'
+      - name: Cache pub packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-pub-
       - name: Install dependencies
-        run: flutter pub get
+        run: bash scritps/time_step.sh "flutter pub get" flutter pub get
       - name: Analyze (strict, zero-issue policy)
-        run: flutter analyze
+        run: bash scritps/time_step.sh "flutter analyze" flutter analyze
       - name: Enforce dart format
-        run: dart format --output=none --set-exit-if-changed lib tool test integration_test test_driver
+        run: bash scritps/time_step.sh "dart format check" dart format --output=none --set-exit-if-changed lib tool test integration_test test_driver
       - name: Enforce per-function complexity limit
-        run: dart run tool/check_complexity.dart lib
+        run: bash scritps/time_step.sh "complexity check" dart run tool/check_complexity.dart lib
       - name: Run unit and widget tests with coverage
-        run: flutter test --coverage --file-reporter json:test-results/flutter-test-results.json
+        run: bash scritps/time_step.sh "flutter test --coverage" flutter test --coverage --file-reporter json:test-results/flutter-test-results.json
       - name: Enforce coverage floor
-        run: bash scritps/check_test_coverage.sh 4
+        run: bash scritps/time_step.sh "coverage floor" bash scritps/check_test_coverage.sh 4
       - name: Upload test results and coverage
         if: always()
         uses: actions/upload-artifact@v4
@@ -36,6 +43,13 @@ jobs:
           path: |
             test-results/
             coverage/
+      - name: Upload build metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-metrics-flutter-tests
+          path: build-metrics/timings.jsonl
+          retention-days: 90
 
   functions-tests:
     runs-on: ubuntu-latest
@@ -47,20 +61,29 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
       - name: Install dependencies
-        run: npm ci
+        run: bash ../scritps/time_step.sh "npm ci" npm ci
       - name: Lint
-        run: npm run lint
+        run: bash ../scritps/time_step.sh "npm run lint" npm run lint
       - name: Type-check
-        run: npm run typecheck
+        run: bash ../scritps/time_step.sh "npm run typecheck" npm run typecheck
       - name: Run tests with coverage gate
-        run: npm run coverage
+        run: bash ../scritps/time_step.sh "npm run coverage" npm run coverage
       - name: Upload test results and coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: functions-test-results
           path: functions/coverage/
+      - name: Upload build metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-metrics-functions-tests
+          path: build-metrics/timings.jsonl
+          retention-days: 90
 
   quality-gates:
     runs-on: ubuntu-latest
@@ -69,7 +92,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
       - name: Install root tooling
-        run: npm ci
+        run: bash scritps/time_step.sh "npm ci" npm ci
       - name: Run static quality gates
-        run: npm run check:quality
+        run: bash scritps/time_step.sh "npm run check:quality" npm run check:quality
+      - name: Upload build metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-metrics-quality-gates
+          path: build-metrics/timings.jsonl
+          retention-days: 90

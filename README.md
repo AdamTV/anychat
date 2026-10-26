@@ -67,6 +67,30 @@ cd functions && npm test
 CI (`.github/workflows/test.yml`) runs strict analysis, format checks, both
 test suites, and coverage floors on every push and pull request.
 
+## CI/CD automation
+
+- **Dependency updates** — Dependabot (`.github/dependabot.yml`) opens weekly
+  update PRs for Dart (`pub`), Cloud Functions (`npm`), Android (`gradle`),
+  and GitHub Actions.
+- **PR review** — the `Droid Auto Review` workflow posts automated code and
+  security review comments on every pull request (requires the
+  `FACTORY_API_KEY` repository secret; generate one at
+  https://app.factory.ai/settings/api-keys).
+- **Build performance** — the `Tests` and deploy workflows time every step,
+  cache pub/npm dependencies, and upload `build-metrics/timings.jsonl`
+  artifacts with per-step durations.
+- **Releases** — pushing a `v*` tag runs the `Release` workflow, which
+  generates grouped release notes (`scritps/generate_release_notes.sh`),
+  publishes a GitHub release, and prepends the section to `CHANGELOG.md`.
+- **Rollback** — the `Rollback` workflow (Actions > Rollback > Run workflow)
+  redeploys Hosting and functions from any previous git ref; see
+  [docs/ROLLBACK.md](docs/ROLLBACK.md).
+- **Flaky tests** — the weekly `Flaky Test Detection` workflow re-runs failed
+  tests and reports flaky ones (`scritps/flaky_test_detector.js`); run it
+  locally with `npm run check:flaky`.
+- **Alerts** — the `Alerts` workflow posts to Slack when CI, deploys, releases,
+  or rollbacks fail; see [docs/ALERTING.md](docs/ALERTING.md).
+
 ## Project structure
 
 - `lib/` — application code (screens, services, database, widgets)

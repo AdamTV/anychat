@@ -1,0 +1,47 @@
+# One-click rollback: redeploys Firebase Hosting (including the functions
+# backend built via frameworksBackend) from a previous git ref.
+# Run it from Actions > Rollback > Run workflow. See docs/ROLLBACK.md.
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Git ref to roll back to (tag, commit SHA, or branch expression such as main~1). Leave empty to roll back to the commit before the current main HEAD.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Resolve and check out the rollback target
+        run: |
+          ref="${{ inputs.target_ref }}"
+          if [ -z "$ref" ]; then
+            ref="main~1"
+          fi
+          git checkout "$ref"
+          echo "Working tree rolled back to $(git rev-parse HEAD) (${ref})"
+          echo "target_sha=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANYCHAT_C414A }}'
+          channelId: live
+          projectId: anychat-c414a
+      - name: Rollback summary
+        if: always()
+        run: |
+          {
+            echo "### Rollback deployed"
+            echo "- Target: \`${{ inputs.target_ref }}\`"
+            echo "- Commit: \`${{ env.target_sha }}\``"
+            echo "- Project: anychat-c414a (hosting channel: live)"
+          } >> "$GITHUB_STEP_SUMMARY"

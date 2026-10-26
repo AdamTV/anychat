@@ -11,9 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Mark deploy start
+        run: date +%s > /tmp/deploy_start
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ANYCHAT_C414A }}'
           channelId: live
           projectId: anychat-c414a
+      - name: Record deploy duration
+        if: always()
+        run: |
+          end=$(date +%s)
+          start=$(cat /tmp/deploy_start 2>/dev/null || date +%s)
+          seconds=$((end - start))
+          mkdir -p build-metrics
+          printf '{"step":"firebase hosting deploy","seconds":%s,"commit":"%s","run":"%s"}\n' \
+            "$seconds" "${GITHUB_SHA:-unknown}" "${GITHUB_RUN_ID:-unknown}" \
+            >> build-metrics/timings.jsonl
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            printf '### Build performance\n\n| Step | Duration |\n| --- | --- |\n| firebase hosting deploy | %ss |\n' \
+              "$seconds" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload build metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-metrics-hosting-deploy
+          path: build-metrics/timings.jsonl
+          retention-days: 90

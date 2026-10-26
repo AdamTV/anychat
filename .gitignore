@@ -35,6 +35,10 @@
 /coverage/
 /test-results/
 
+# CI-generated build metrics and release notes
+/build-metrics/
+/release-notes/
+
 # Web related (can't include for CI/CD)
 /anychat/
 # Symbolication related

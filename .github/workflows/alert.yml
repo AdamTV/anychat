@@ -1,0 +1,45 @@
+# Alerts on CI and deploy failures. Posts to Slack when the
+# SLACK_WEBHOOK_URL repository secret is configured; see docs/ALERTING.md.
+name: Alerts
+
+on:
+  workflow_run:
+    workflows:
+      - Tests
+      - Deploy to Firebase Hosting on merge
+      - Release
+      - Rollback
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+env:
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  notify-on-failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Slack alert
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        run: |
+          message=$(jq -n \
+            --arg workflow "${{ github.event.workflow_run.name }}" \
+            --arg conclusion "${{ github.event.workflow_run.conclusion }}" \
+            --arg repo "${{ github.repository }}" \
+            --arg run_url "${{ github.event.workflow_run.html_url }}" \
+            --arg branch "${{ github.event.workflow_run.head_branch }}" \
+            --arg sha "${{ github.event.workflow_run.head_sha }}" \
+            --arg actor "${{ github.event.workflow_run.actor.login }}" \
+            --arg now "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            '{text: (":red_circle: *CI alert* - `\($workflow)` failed (\($conclusion)) in `\($repo)`\n* Branch: `\($branch)`\n* Commit: `\($sha)`\n* Run: \($run_url)\n* Triggered by: \($actor) at \($now)")}')
+          curl -fsS -X POST -H 'Content-type: application/json' \
+            --data "$message" "$SLACK_WEBHOOK_URL"
+      - name: Log alert without webhook
+        if: ${{ env.SLACK_WEBHOOK_URL == '' }}
+        run: |
+          echo "Alert fired for '${{ github.event.workflow_run.name }}' but SLACK_WEBHOOK_URL is not set; see docs/ALERTING.md."
+          echo "Run: ${{ github.event.workflow_run.html_url }}"

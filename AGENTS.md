@@ -87,8 +87,8 @@ Requires Flutter SDK. Android/iOS trees live under `android/` and `ios/`. Fireba
 - `flutter test integration_test/app_test.dart -d <device-id>` (integration, needs a device/emulator)
 - `cd functions && npm install && npm test` (Node >= 18) and `npm run coverage`
 - `flutter build apk` / `flutter build web` when the change touches those surfaces
-- Firebase Hosting workflows under `.github/workflows/`
-- `Tests` workflow (`.github/workflows/test.yml`) runs both suites on push/PR, enforces coverage floors, and uploads test reports
+- Firebase Hosting workflows under `.github/workflows/` (merge + PR deploys), plus automation workflows: `droid-review.yml` (automated PR code/security review), `release.yml` (tag-triggered release notes + `CHANGELOG.md`), `rollback.yml` (manual rollback redeploy, runbook in `docs/ROLLBACK.md`), `flaky-tests.yml` (weekly flaky-test detection via `scritps/flaky_test_detector.js`), and `alert.yml` (Slack alerts on CI/deploy failure, setup in `docs/ALERTING.md`)
+- `Tests` workflow (`.github/workflows/test.yml`) runs both suites on push/PR, enforces coverage floors, times every step for build-performance tracking, and uploads test reports plus `build-metrics/timings.jsonl` artifacts
 
 ### Testing conventions
 
