@@ -1,2 +1,5 @@
 node_modules/
 coverage/
+
+# Runtime configuration for the SMS bridge secrets; never commit.
+.env*

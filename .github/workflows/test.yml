@@ -85,6 +85,49 @@ jobs:
           path: build-metrics/timings.jsonl
           retention-days: 90
 
+  firestore-rules-tests:
+    # Firestore security rules against the local emulator. Uses the
+    # "demo-anychat-*" demo projects: no Firebase project or credentials.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rules-tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: rules-tests/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          # The Firestore emulator in firebase-tools 15 requires Java 21+.
+          distribution: temurin
+          java-version: '21'
+      - name: Cache Firebase emulator binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('rules-tests/package-lock.json') }}
+      - name: Install dependencies
+        run: bash ../scritps/time_step.sh "rules npm ci" npm ci
+      - name: Run Firestore rules tests on the emulator
+        run: bash ../scritps/time_step.sh "firestore rules tests" npm test
+      - name: Upload emulator log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firestore-emulator-log
+          path: rules-tests/firestore-debug.log
+          if-no-files-found: ignore
+      - name: Upload build metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-metrics-firestore-rules-tests
+          path: build-metrics/timings.jsonl
+          retention-days: 90
+
   quality-gates:
     runs-on: ubuntu-latest
     steps:

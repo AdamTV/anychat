@@ -5,6 +5,7 @@ import 'package:anychat/database/anychat_message.dart';
 import 'package:anychat/database/anychat_user.dart';
 import 'package:anychat/database/conversation.dart';
 import 'package:anychat/database/conversation_info.dart';
+import 'package:anychat/database/sms_conversation.dart';
 import 'package:anychat/components/utilities.dart';
 import 'package:anychat/main.dart';
 import 'package:anychat/screens/search_screen.dart';
@@ -317,15 +318,19 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               context: context,
               builder: (BuildContext context) => _buildPopupDialog(context));
         }));
-    widgets.add(IconButton(
-      icon: const Icon(Icons.video_call_rounded),
-      tooltip: localizationOf(context).call,
-      onPressed: () async {
-        await AnyChatUser.addMessageToConversation(
-            "${AnyChatAuth.currentUser.displayName} ${localizationOf(context).isCallingYouOnAnyChat}");
-        await NavigationService().pushNamed("/call");
-      },
-    ));
+    // The alpha-text bridge is SMS-only: a call would text the contact
+    // "is calling you" and open a call screen nobody can join.
+    if (!isSmsConversationId(AnyChatAuth.currentConversation?.id)) {
+      widgets.add(IconButton(
+        icon: const Icon(Icons.video_call_rounded),
+        tooltip: localizationOf(context).call,
+        onPressed: () async {
+          await AnyChatUser.addMessageToConversation(
+              "${AnyChatAuth.currentUser.displayName} ${localizationOf(context).isCallingYouOnAnyChat}");
+          await NavigationService().pushNamed("/call");
+        },
+      ));
+    }
     SizedBox container = SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Column(

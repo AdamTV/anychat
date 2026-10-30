@@ -1,8 +1,242 @@
 rules_version = '2';
+
+// Access model:
+// - users/{uid}: any signed-in user may read profiles (people search lists
+//   the collection); only the owner may write their own profile.
+// - users/{uid}/conversations/{cid}: per-user language settings. The owner
+//   manages their own; another member may only *create* the doc for a peer
+//   while starting or growing a normal (non-SMS) conversation they share.
+// - conversations/{cid} and nested messages: members only.
+// - SMS threads (id "sms-<uid>-<digits>") are owned by exactly one user, are
+//   bound to one canonical E.164 contact, and only accept outbound messages
+//   marked channel "sms" / smsStatus "pending". Inbound messages, provider
+//   ids and delivery status are written by the Admin SDK (Cloud Functions),
+//   which bypasses these rules.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function conversationPath(cid) {
+      return /databases/$(database)/documents/conversations/$(cid);
+    }
+
+    function isSmsConversationId(cid) {
+      return cid.matches('sms-.*');
+    }
+
+    function isSmsParticipantId(id) {
+      return id is string && id.matches('sms:.*');
+    }
+
+    function isCanonicalSmsContact(contact) {
+      return contact is string && contact.matches('[+][1-9][0-9]{6,14}');
+    }
+
+    function smsConversationIdFor(uid, contact) {
+      return 'sms-' + uid + '-' + contact.replace('[+]', '');
+    }
+
+    // True for conversation data that belongs to the SMS bridge, whatever
+    // id it lives under.
+    function isSmsConversation(cid, data) {
+      return isSmsConversationId(cid) ||
+          'smsOwner' in data || 'smsContact' in data;
+    }
+
+    function isMember(cid) {
+      return signedIn() && exists(conversationPath(cid)) &&
+          request.auth.uid in get(conversationPath(cid)).data.participants;
+    }
+
+    function isServerTimestamp(value) {
+      return value == request.time;
+    }
+
+    // ----- users -------------------------------------------------------
+
+    function profileFields() {
+      return ['displayName', 'email', 'photoUrl', 'language',
+          'blockedAccounts', 'theme', 'notificationsEnabled', 'emailVerified'];
+    }
+
+    function isValidConversationInfo(data) {
+      return data.keys().hasOnly(['incomingLanguage', 'outgoingLanguage']) &&
+          (!('incomingLanguage' in data) ||
+              (data.incomingLanguage is string &&
+                  data.incomingLanguage.size() <= 35)) &&
+          (!('outgoingLanguage' in data) ||
+              (data.outgoingLanguage is string &&
+                  data.outgoingLanguage.size() <= 35));
+    }
+
+    // The owner may only keep settings for a conversation they are in once
+    // this write (and any batch/transaction it belongs to) is applied.
+    function isOwnInfoWrite(uid, cid) {
+      return isSelf(uid) &&
+          existsAfter(conversationPath(cid)) &&
+          uid in getAfter(conversationPath(cid)).data.participants;
+    }
+
+    // A member initializing a peer's settings for a normal conversation
+    // they both belong to (createConversation / addUserToConversation).
+    function isPeerInfoInit(uid, cid) {
+      return signedIn() && request.auth.uid != uid &&
+          exists(conversationPath(cid)) &&
+          !isSmsConversation(cid, get(conversationPath(cid)).data) &&
+          request.auth.uid in get(conversationPath(cid)).data.participants &&
+          uid in get(conversationPath(cid)).data.participants;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isSelf(uid) &&
+          request.resource.data.keys().hasOnly(profileFields());
+      allow update: if isSelf(uid) &&
+          request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(profileFields());
+      allow delete: if isSelf(uid);
+
+      match /conversations/{cid} {
+        // Peers may read (not list) the doc they are about to initialize.
+        allow get: if isSelf(uid) || isPeerInfoInit(uid, cid);
+        allow list: if isSelf(uid);
+        allow create: if isValidConversationInfo(request.resource.data) &&
+            (isOwnInfoWrite(uid, cid) || isPeerInfoInit(uid, cid));
+        allow update: if isSelf(uid) &&
+            isValidConversationInfo(request.resource.data);
+        allow delete: if isSelf(uid);
+      }
+    }
+
+    // ----- conversations ----------------------------------------------
+
+    function isValidNewDirectConversation(cid) {
+      let data = request.resource.data;
+      let participants = data.participants;
+      return !isSmsConversationId(cid) &&
+          data.keys().hasOnly(['participants', 'timestamp']) &&
+          data.keys().hasAll(['participants', 'timestamp']) &&
+          participants is list && participants.size() == 2 &&
+          participants[0] is string && participants[1] is string &&
+          participants[0] != participants[1] &&
+          request.auth.uid in participants &&
+          !isSmsParticipantId(participants[0]) &&
+          !isSmsParticipantId(participants[1]) &&
+          isServerTimestamp(data.timestamp);
+    }
+
+    function isValidNewSmsConversation(cid) {
+      let data = request.resource.data;
+      return data.keys().hasOnly(
+              ['participants', 'smsOwner', 'smsContact', 'timestamp']) &&
+          data.keys().hasAll(
+              ['participants', 'smsOwner', 'smsContact', 'timestamp']) &&
+          data.smsOwner == request.auth.uid &&
+          isCanonicalSmsContact(data.smsContact) &&
+          cid == smsConversationIdFor(request.auth.uid, data.smsContact) &&
+          data.participants == [request.auth.uid, 'sms:' + data.smsContact] &&
+          isServerTimestamp(data.timestamp);
+    }
+
+    function changedConversationKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function isTimestampBump() {
+      return changedConversationKeys().hasOnly(['timestamp']) &&
+          isServerTimestamp(request.resource.data.timestamp);
+    }
+
+    function isLeaving() {
+      let before = resource.data.participants;
+      let after = request.resource.data.participants;
+      return changedConversationKeys().hasOnly(['participants']) &&
+          after is list && after.size() > 0 &&
+          after == before.removeAll([request.auth.uid]);
+    }
+
+    function isAddingOneMember() {
+      let before = resource.data.participants;
+      let after = request.resource.data.participants;
+      let added = after.removeAll(before);
+      return changedConversationKeys().hasOnly(['participants']) &&
+          after is list && after.size() == before.size() + 1 &&
+          after.size() <= 100 && after.hasAll(before) &&
+          added.size() == 1 && added[0] is string &&
+          !isSmsParticipantId(added[0]);
+    }
+
+    function isSmsOwner() {
+      return resource.data.get('smsOwner', null) == request.auth.uid;
+    }
+
+    match /conversations/{cid} {
+      allow read: if signedIn() &&
+          request.auth.uid in resource.data.participants;
+      allow create: if signedIn() &&
+          (isValidNewDirectConversation(cid) ||
+              isValidNewSmsConversation(cid));
+      allow update: if signedIn() &&
+          request.auth.uid in resource.data.participants &&
+          ((isSmsConversation(cid, resource.data) && isSmsOwner() &&
+                  isTimestampBump()) ||
+              (!isSmsConversation(cid, resource.data) &&
+                  !isSmsConversation(cid, request.resource.data) &&
+                  (isTimestampBump() || isLeaving() || isAddingOneMember())));
+      allow delete: if signedIn() &&
+          ((isSmsConversation(cid, resource.data) && isSmsOwner()) ||
+              (!isSmsConversation(cid, resource.data) &&
+                  resource.data.participants == [request.auth.uid]));
+
+      function isValidNewMessage(cid) {
+        let data = request.resource.data;
+        let conversation = get(conversationPath(cid)).data;
+        return data.senderId == request.auth.uid &&
+            data.text is string &&
+            isServerTimestamp(data.timestamp) &&
+            ((isSmsConversation(cid, conversation) &&
+                    conversation.get('smsOwner', null) == request.auth.uid &&
+                    data.keys().hasOnly(['timestamp', 'senderId', 'text',
+                        'channel', 'smsStatus']) &&
+                    data.keys().hasAll(['timestamp', 'senderId', 'text',
+                        'channel', 'smsStatus']) &&
+                    data.channel == 'sms' && data.smsStatus == 'pending' &&
+                    data.text.size() > 0 && data.text.size() <= 1600) ||
+                (!isSmsConversation(cid, conversation) &&
+                    data.keys().hasOnly(['timestamp', 'senderId', 'text']) &&
+                    data.keys().hasAll(['timestamp', 'senderId', 'text']) &&
+                    data.text.size() <= 10000));
+      }
+
+      match /messages/{messageId} {
+        allow read: if isMember(cid);
+        allow create: if isMember(cid) && isValidNewMessage(cid);
+        // Delivery status and inbound messages are Admin SDK writes.
+        allow update, delete: if false;
+      }
+
+      match /transcribedMessages/{messageId} {
+        allow read: if isMember(cid);
+        allow create: if isMember(cid) &&
+            request.resource.data.keys()
+                .hasOnly(['timestamp', 'senderId', 'text']) &&
+            request.resource.data.keys()
+                .hasAll(['timestamp', 'senderId', 'text']) &&
+            request.resource.data.senderId == request.auth.uid &&
+            request.resource.data.text is string &&
+            request.resource.data.text.size() <= 10000 &&
+            isServerTimestamp(request.resource.data.timestamp);
+        // The live translator's "clear" removes the whole transcript.
+        allow delete: if isMember(cid);
+        allow update: if false;
+      }
     }
   }
 }

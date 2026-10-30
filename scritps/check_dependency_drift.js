@@ -4,7 +4,11 @@
 const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
-const manifests = ["package.json", "functions/package.json"];
+const manifests = [
+  "package.json",
+  "functions/package.json",
+  "rules-tests/package.json",
+];
 const versionsByPackage = new Map();
 
 for (const relative of manifests) {

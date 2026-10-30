@@ -86,9 +86,10 @@ Requires Flutter SDK. Android/iOS trees live under `android/` and `ios/`. Fireba
 - `flutter test` (unit/widget) and `flutter test --coverage`
 - `flutter test integration_test/app_test.dart -d <device-id>` (integration, needs a device/emulator)
 - `cd functions && npm install && npm test` (Node >= 18) and `npm run coverage`
+- `cd rules-tests && npm ci && npm test` — Firestore security rules tests on the local Firestore emulator (`firebase emulators:exec`, `demo-anychat` project, no credentials). Requires Node >= 22 and Java 21+ on `PATH`/`JAVA_HOME`. With an emulator already on port 8181: `FIRESTORE_EMULATOR_HOST=127.0.0.1:8181 npm run test:only`. CI runs this as the `firestore-rules-tests` job.
 - `flutter build apk` / `flutter build web` when the change touches those surfaces
 - Firebase Hosting workflows under `.github/workflows/` (merge + PR deploys), plus automation workflows: `droid-review.yml` (automated PR code/security review), `release.yml` (tag-triggered release notes + `CHANGELOG.md`), `rollback.yml` (manual rollback redeploy, runbook in `docs/ROLLBACK.md`), `flaky-tests.yml` (weekly flaky-test detection via `scritps/flaky_test_detector.js`), and `alert.yml` (Slack alerts on CI/deploy failure, setup in `docs/ALERTING.md`)
-- `Tests` workflow (`.github/workflows/test.yml`) runs both suites on push/PR, enforces coverage floors, times every step for build-performance tracking, and uploads test reports plus `build-metrics/timings.jsonl` artifacts
+- `Tests` workflow (`.github/workflows/test.yml`) runs the Flutter, Functions, and Firestore rules suites on push/PR, enforces coverage floors, times every step for build-performance tracking, and uploads test reports plus `build-metrics/timings.jsonl` artifacts
 
 ### Testing conventions
 

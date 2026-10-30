@@ -9,6 +9,7 @@ import 'package:anychat/screens/welcome_screen.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/widgets/anychat_drawer.dart';
 import 'package:anychat/widgets/chat_screen_utility_widgets.dart';
+import 'package:anychat/widgets/new_sms_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -117,6 +118,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       appBar: AppBar(
         title: Text(localizationOf(context).title),
         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.sms),
+            tooltip: 'New SMS to a phone number',
+            onPressed: () => showNewSmsDialog(context),
+          ),
           if (conversationWidgets.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.add),

@@ -10,6 +10,10 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  # firebase-tools (installed for the Firestore rules tests) ships Dart
+  # templates that are not part of this app.
+  exclude:
+    - rules-tests/node_modules/**
   # Strict typing: surface implicit casts, raw generic types, and missing
   # type annotations during `flutter analyze` (enforced in CI, see
   # AGENTS.md "Code quality gates").

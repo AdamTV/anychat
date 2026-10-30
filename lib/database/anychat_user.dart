@@ -13,6 +13,7 @@ import '../components/combined_locale_info.dart';
 import 'conversation.dart';
 import 'conversation_info.dart';
 import 'firestore_batch.dart';
+import 'sms_conversation.dart';
 
 class AnyChatUser {
   late String id;
@@ -39,6 +40,8 @@ class AnyChatUser {
         false, []);
   }
 
+  // TODO(TD-004): firestore.rules does not type-check profile fields, so a
+  // malformed profile written by its owner can make these casts throw.
   AnyChatUser.fromSnapshot(DocumentSnapshot snapshot) : id = snapshot.id {
     final data = snapshot.data() as Map<String, dynamic>?;
     if (data != null) {
@@ -195,30 +198,34 @@ class AnyChatUser {
 
   static Future<void> addMessageToConversation(String text,
       {String? conversationId}) async {
+    // SMS threads (see sms_conversation.dart) mark their outbound messages
+    // with channel "sms" so the relaySmsMessage trigger forwards them
+    // through alpha-text; the trigger stamps smsStatus sent/failed.
+    // Notification replies pass the conversation they came from, which may
+    // differ from the one open on screen; every read and write below must
+    // target the same resolved conversation.
+    final targetId = conversationId ?? AnyChatAuth.currentConversation?.id;
+    if (targetId == null) {
+      throw StateError('No conversation to add the message to');
+    }
+    final isSms = isSmsConversationId(targetId);
+    final conversationRef =
+        FirebaseFirestore.instance.collection("conversations").doc(targetId);
     return await FirebaseFirestore.instance
         .runTransaction((Transaction transaction) {
       return transaction
-          .get(FirebaseFirestore.instance
-              .collection("conversations")
-              .doc(conversationId ?? AnyChatAuth.currentConversation?.id))
+          .get(conversationRef)
           .then((DocumentSnapshot doc) => Conversation.fromSnapshot(doc))
           .then((Conversation fresh) async {
         transaction.update(
-            FirebaseFirestore.instance
-                .collection("conversations")
-                .doc(AnyChatAuth.currentConversation!.id),
-            {'timestamp': FieldValue.serverTimestamp()});
-        transaction.set(
-            FirebaseFirestore.instance
-                .collection("conversations")
-                .doc(AnyChatAuth.currentConversation!.id)
-                .collection('messages')
-                .doc(),
-            {
-              'timestamp': FieldValue.serverTimestamp(),
-              'senderId': AnyChatAuth.currentUser.id,
-              'text': text,
-            });
+            conversationRef, {'timestamp': FieldValue.serverTimestamp()});
+        transaction.set(conversationRef.collection('messages').doc(), {
+          'timestamp': FieldValue.serverTimestamp(),
+          'senderId': AnyChatAuth.currentUser.id,
+          'text': text,
+          if (isSms) 'channel': 'sms',
+          if (isSms) 'smsStatus': 'pending',
+        });
       });
     });
   }
@@ -235,6 +242,14 @@ class AnyChatUser {
         .doc(id)
         .collection("conversations")
         .doc(conversationId);
+    // An SMS thread has a single owner, so leaving deletes it outright. Its
+    // participants are immutable under the Firestore rules; inbound SMS from
+    // the contact recreates the thread through the bridge.
+    if (isSmsConversationId(conversationId)) {
+      await userConversation.delete();
+      await conversation.delete();
+      return;
+    }
     // await FirebaseFirestore.instance.runTransaction((Transaction transaction) {
     //   return transaction
     //       .get(message)
@@ -452,6 +467,10 @@ class AnyChatUser {
   }
 
   static Future<bool> addUserToConversation(AnyChatUser user) async {
+    // SMS threads are one owner and one phone contact; rules reject members.
+    if (isSmsConversationId(AnyChatAuth.currentConversation?.id)) {
+      return false;
+    }
     final conversationRef = FirebaseFirestore.instance
         .collection('conversations')
         .doc(AnyChatAuth.currentConversation!.id);
@@ -541,6 +560,8 @@ class AnyChatUser {
     );
   }
 
+  // TODO(TD-003): profile emails are self-asserted, so a match here does not
+  // prove the address belongs to that account.
   static Future<AnyChatUser?> findUserByEmail(String? email) async {
     AnyChatUser? user;
     await FirebaseFirestore.instance
