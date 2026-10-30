@@ -29,15 +29,20 @@ class AnyChatUser {
   AnyChatUser(this.id, this.displayName, this.email, this.photoUrl, this.theme,
       this.language, this.notificationsEnabled, this.blockedAccounts);
 
+  /// Placeholder for a participant with no users/{id} doc. SMS phone
+  /// contacts never have one, so they are labelled with their number.
   static AnyChatUser deletedUser(String uid) {
     return AnyChatUser(
         uid,
-        localizationOf(Utilities().globalKey.currentContext!).accountDeleted,
+        smsContactFromParticipantId(uid) ??
+            localizationOf(Utilities().globalKey.currentContext!)
+                .accountDeleted,
         "",
         "",
         "",
         "",
-        false, []);
+        false,
+        []);
   }
 
   // TODO(TD-004): firestore.rules does not type-check profile fields, so a

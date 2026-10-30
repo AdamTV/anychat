@@ -181,7 +181,9 @@ exports.relaySmsMessage = functions.firestore
  * Inbound endpoint: POST /inboundSms with Bearer ANYCHAT_BRIDGE_SECRET
  * carrying alpha-text's MessageRow JSON.
  */
-exports.inboundSms = functions.https.onRequest(
+// Public at the IAM layer: alpha-text cannot mint Google identity tokens, so
+// the bearer bridge secret is the only gate.
+exports.inboundSms = functions.runWith({invoker: "public"}).https.onRequest(
     /** @type {(req: *, res: *) => Promise<void>} */
     (createInboundSmsHandler({
       config: smsBridgeConfig(),

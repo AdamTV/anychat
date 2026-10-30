@@ -24,6 +24,11 @@ String smsConversationId(String uid, String contact) =>
 /// placeholder sender for unknown ids.
 String smsContactParticipantId(String contact) => 'sms:+${smsDigits(contact)}';
 
+/// The phone number behind an [smsContactParticipantId], or null when
+/// [participantId] is not a phone contact.
+String? smsContactFromParticipantId(String participantId) =>
+    participantId.startsWith('sms:+') ? participantId.substring(4) : null;
+
 /// True when [conversationId] names an SMS thread. The "sms-" prefix is
 /// unambiguous because Firestore auto-generated ids never contain "-".
 bool isSmsConversationId(String? conversationId) =>

@@ -14,6 +14,17 @@ void main() {
     });
   });
 
+  group('smsContactFromParticipantId', () {
+    test('recovers the phone number of an SMS participant', () {
+      expect(smsContactFromParticipantId(smsContactParticipantId('+15550100')),
+          '+15550100');
+    });
+
+    test('ignores ordinary user ids', () {
+      expect(smsContactFromParticipantId('AbC123uid'), isNull);
+    });
+  });
+
   group('canonicalSmsContact', () {
     test('keeps canonical E.164 numbers', () {
       expect(canonicalSmsContact('+15550100'), '+15550100');
