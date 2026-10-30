@@ -5,6 +5,7 @@
 const functions = require("firebase-functions");
 
 const admin = require("firebase-admin");
+const {FieldValue} = require("firebase-admin/firestore");
 admin.initializeApp(functions.config().firebase);
 
 const {GoogleAuth} = require("google-auth-library");
@@ -126,7 +127,7 @@ async function resolveSmsConversation(row) {
     conversation: db.collection("conversations").doc(conversationId),
     info: user.collection("conversations").doc(conversationId),
     user,
-  }, row, admin.firestore.FieldValue.serverTimestamp()));
+  }, row, FieldValue.serverTimestamp()));
 }
 
 /**
@@ -147,7 +148,7 @@ async function writeSmsMessage(row) {
       .set({
         senderId: smsContactParticipantId(row.contact),
         text: row.text,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: FieldValue.serverTimestamp(),
         channel: SMS_INBOUND_CHANNEL,
         smsProviderId: row.providerId,
         smsReceivedAt: row.receivedAt,
