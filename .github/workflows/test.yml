@@ -10,7 +10,7 @@ jobs:
   flutter-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           # Pinned to the SDK version the pubspec.lock was resolved with
@@ -57,7 +57,7 @@ jobs:
       run:
         working-directory: functions
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -88,7 +88,7 @@ jobs:
   quality-gates:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
