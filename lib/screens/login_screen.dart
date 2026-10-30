@@ -131,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 AnyChatAuth.flutterSocialButton(context, ButtonType.google),
                 AnyChatAuth.flutterSocialButton(context, ButtonType.apple),
+                AnyChatAuth.flutterSocialButton(context, ButtonType.phone),
                 // AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
               ],
             )

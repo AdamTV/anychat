@@ -200,6 +200,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ButtonType.apple,
                   canContinue: RegisterScreen.isUserAgreeToTerms,
                 ),
+                AnyChatAuth.flutterSocialButton(
+                  context,
+                  ButtonType.phone,
+                  canContinue: RegisterScreen.isUserAgreeToTerms,
+                ),
                 // AnyChatAuth.flutterSocialButton(context, ButtonType.facebook),
                 // AnyChatAuth.twitterIcon(context),
               ],

@@ -8,6 +8,15 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+
+    // Fix for "Namespace not specified" in older plugins (like flutter_sound)
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            if (project.android.namespace == null) {
+                project.android.namespace = project.group
+            }
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(':app')

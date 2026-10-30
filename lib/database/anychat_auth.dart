@@ -14,6 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 // import 'package:twitter_login/twitter_login.dart';
 
+import 'anychat_phone_auth.dart';
 import 'anychat_user.dart';
 import '../components/combined_locale_info.dart';
 import 'conversation.dart';
@@ -206,6 +207,32 @@ class AnyChatAuth {
     }
   }
 
+  /// Loads the Firestore profile for [user], creating `users/{uid}` on first
+  /// sign-in.
+  static Future<AnyChatUser> loadOrCreateUser(User user,
+      {String? displayName}) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    linkedAccountPhotoUrl = user.photoURL;
+    if (snapshot.exists) {
+      currentUser = AnyChatUser.fromSnapshot(snapshot);
+      return currentUser;
+    }
+    final locale = await Devicelocale.currentAsLocale;
+    currentUser = AnyChatUser(
+        user.uid,
+        displayName ?? user.displayName ?? "",
+        user.email ?? "",
+        user.photoURL ?? "",
+        UserData.themeToString(Theme.of(Utilities().globalKey.currentContext!)),
+        locale?.languageCode ?? localeName,
+        true, []);
+    currentUser.addUserToFirestore();
+    return currentUser;
+  }
+
   static Future<AnyChatUser?> signInEmail(
       String? email, String? password, bool isSignUp) async {
     if (email == null ||
@@ -224,36 +251,8 @@ class AnyChatAuth {
       // FirebaseAuth.instance
       //     .s(email: result.email!, actionCodeSettings: acs);
       // Utilities().showToast("Please verify your email.");
-      var snapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(result.uid)
-          .get();
-      if (snapshot.exists) {
-        currentUser = AnyChatUser.fromSnapshot(snapshot);
-
-        linkedAccountPhotoUrl = result.photoURL;
-        return currentUser;
-      } else {
-        String? displayName = result.displayName;
-        if (result.displayName == null) {
-          displayName = result.email;
-        }
-        var locale = await Devicelocale.currentAsLocale;
-        String localeStr = locale?.languageCode ?? localeName;
-        currentUser = AnyChatUser(
-            result.uid,
-            displayName ?? "",
-            result.email ?? "",
-            result.photoURL ?? "",
-            UserData.themeToString(
-                Theme.of(Utilities().globalKey.currentContext!)),
-            localeStr,
-            true,
-            []);
-
-        currentUser.addUserToFirestore();
-        return currentUser;
-      }
+      return await loadOrCreateUser(result,
+          displayName: result.displayName ?? result.email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Utilities().showToast(
@@ -343,6 +342,8 @@ class AnyChatAuth {
                     : Utilities().globalKey.currentContext!,
                 buttonType);
           }
+        } on SignInCancelledException {
+          return;
         } catch (e) {
           await showAlertDialogFailedSocialLogin(
               context.mounted ? context : Utilities().globalKey.currentContext!,
@@ -387,19 +388,10 @@ class AnyChatAuth {
       ButtonType.twitter => ModalRoute.of(context)!.settings.name == "/login"
           ? localizationOf(context).errorLoggingInTwitter
           : localizationOf(context).unableRegisterTwitter,
-
-      // TODO(TD-001): Add a supported-provider error message for LinkedIn.
-      ButtonType.linkedin => throw UnimplementedError(),
-      // TODO(TD-001): Add a supported-provider error message for WhatsApp.
-      ButtonType.whatsapp => throw UnimplementedError(),
-      // TODO(TD-001): Add a supported-provider error message for GitHub.
-      ButtonType.github => throw UnimplementedError(),
-      // TODO(TD-001): Add a supported-provider error message for Yahoo.
-      ButtonType.yahoo => throw UnimplementedError(),
-      // TODO(TD-001): Add a supported-provider error message for phone auth.
-      ButtonType.phone => throw UnimplementedError(),
-      // TODO(TD-001): Add a supported-provider error message for email auth.
-      ButtonType.email => throw UnimplementedError(),
+      ButtonType.phone => ModalRoute.of(context)!.settings.name == "/login"
+          ? localizationOf(context).errorLoggingInPhone
+          : localizationOf(context).unableRegisterPhone,
+      _ => localizationOf(context).error,
     };
     return await Utilities()
         .showAlertDialog(context, localizationOf(context).error, errorMessage);
@@ -624,6 +616,8 @@ class AnyChatAuth {
         return await AnyChatAuth.signInFacebook();
       case ButtonType.twitter:
         return await AnyChatAuth.signInTwitter();
+      case ButtonType.phone:
+        return await AnyChatPhoneAuth.signIn();
       default:
         return null;
     }

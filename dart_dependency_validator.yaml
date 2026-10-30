@@ -1,3 +1,6 @@
 ignore:
   # Flutter generates this package from l10n.yaml; it is not a pub dependency.
   - flutter_gen
+  # Intentional compatibility pin for the existing recorder API and web build.
+  # Keep 9.2.13 until an audio migration is validated; do not allow all pins.
+  - flutter_sound

@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "ca.alphatech.anychat"
-    compileSdkVersion flutter.compileSdkVersion.toInteger()
+    compileSdkVersion 35
     ndkVersion "25.1.8937393"
 
     compileOptions {

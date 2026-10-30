@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_sound/flutter_sound.dart' as fs;
 import 'package:google_speech/generated/google/cloud/speech/v1/cloud_speech.pb.dart'
     as g_speech_gen;
 import 'package:google_speech/endless_streaming_service.dart';
@@ -15,108 +15,97 @@ import '../services/speech_credentials.dart';
 const int kAudioSampleRate = 16000;
 const int kAudioNumChannels = 1;
 
-// const int tSampleRate = 44000;
-
 class AudioTranscriber {
   bool recognizing = false;
   bool recognizeFinished = false;
   StreamSubscription<List<int>>? _audioStreamSubscription;
   static BehaviorSubject<List<int>> _audioStream = BehaviorSubject<List<int>>();
   static String? isoCode;
-  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
-  StreamSubscription<Uint8List>? _mRecordingDataSubscription;
-  late StreamController<Uint8List> recordingDataController;
+
+  // The recorder is only initialized for non-web platforms
+  final fs.FlutterSoundRecorder? _recorder =
+      kIsWeb ? null : fs.FlutterSoundRecorder();
+
+  StreamSubscription<fs.Food>? _mRecordingDataSubscription;
+  late StreamController<fs.Food> recordingDataController;
 
   Future<Stream<g_speech_gen.StreamingRecognizeResponse>> getResponseStream(
       String? isoCode) async {
-    // stopRecording();
-    await _recorder.openRecorder();
-    // Stream to be consumed by speech recognizer
+    final recorder = _recorder;
+    if (recorder != null) {
+      await recorder.openRecorder();
+    }
+
     _audioStream = BehaviorSubject<List<int>>();
+    recordingDataController = StreamController<fs.Food>();
 
-    // Create recording stream
-    recordingDataController = StreamController<Uint8List>();
-    _mRecordingDataSubscription =
-        recordingDataController.stream.listen((buffer) {
-      _audioStream.add(buffer);
-    }, onDone: () {
-      recordingDataController.close();
-    });
+    if (recorder != null) {
+      _mRecordingDataSubscription =
+          recordingDataController.stream.listen((buffer) {
+        if (buffer is fs.FoodData) {
+          final data = buffer.data;
+          if (data != null) {
+            _audioStream.add(data);
+          }
+        }
+      }, onDone: () {
+        recordingDataController.close();
+      });
 
-    // should set state of caller context?
-    recognizing = true;
+      await Permission.microphone.request();
+
+      await recorder
+          .startRecorder(
+            toStream: recordingDataController.sink,
+            codec: fs.Codec.pcm16,
+            numChannels: kAudioNumChannels,
+            sampleRate: kAudioSampleRate,
+          )
+          .onError((error, stackTrace) => logger.e(
+              "Error Starting Recorder for Audio Transcriber",
+              error: error,
+              stackTrace: stackTrace));
+    }
 
     AudioTranscriber.isoCode = isoCode;
-    await Permission.microphone.request();
+    return startResponseStream(_audioStream, isoCode);
+  }
 
-    await _recorder
-        .startRecorder(
-          toStream: recordingDataController.sink,
-          codec: Codec.pcm16,
-          numChannels: kAudioNumChannels,
-          // sampleRate: tSampleRate,
-          sampleRate: kAudioSampleRate,
-        )
-        .onError((error, stackTrace) => logger.e(
-            "Error Starting Recorder for Audio Transcriber",
-            error: error,
-            stackTrace: stackTrace));
-
-    // Speech-to-Text now authenticates with short-lived access tokens
-    // minted by the getSpeechAccessToken Cloud Function, so no
-    // service-account key ships inside the app bundle.
+  /// Starts the shared speech pipeline for native and web audio streams.
+  static Stream<g_speech_gen.StreamingRecognizeResponse> startResponseStream(
+      Stream<List<int>> audioStream, String? languageCode) {
     final speechToText = EndlessStreamingService.viaThirdPartyAuthenticator(
       ThirdPartyAuthenticator(
         obtainCredentialsFromThirdParty: fetchSpeechCredentials,
       ),
     );
-    final config = _getConfig();
+    final config = RecognitionConfig(
+        encoding: AudioEncoding.LINEAR16,
+        model: RecognitionModel.basic,
+        enableAutomaticPunctuation: true,
+        sampleRateHertz: kAudioSampleRate,
+        languageCode: languageCode!);
     final responseStream = speechToText.endlessStream;
     speechToText.endlessStreamingRecognize(
         StreamingRecognitionConfig(config: config, interimResults: true),
-        _audioStream,
+        audioStream,
         restartTime: const Duration(seconds: 60),
         transitionBufferTime: const Duration(seconds: 2));
-    //
-    // _mRecordingDataSubscription =
-    //     recordingDataController.stream.listen((buffer) {
-    //   if (buffer is FoodData) {
-    //     _audioStream.add(buffer.data as List<int>);
-    //   }
-    // });
-    //
-    // _recorder.audioStream.listen((event) {
-    //   _audioStream.add(event);
-    // });
-    //
-    // await _recorder.openAudioSession();
 
     return responseStream;
   }
 
-  RecognitionConfig _getConfig() => RecognitionConfig(
-      encoding: AudioEncoding.LINEAR16,
-      model: RecognitionModel.basic,
-      enableAutomaticPunctuation: true,
-      sampleRateHertz: 16000,
-      languageCode: isoCode!);
-
-  // Future<Stream<List<int>>> _getAudioStream() async {
-  //   const AUDIO_FORMAT = google_speech..ENCODING_PCM_16BIT;
-  //   final stream = await MicStream.microphone(
-  //       audioSource: AudioSource.DEFAULT,
-  //       sampleRate: 16000,
-  //       channelConfig: ChannelConfig.CHANNEL_IN_MONO,
-  //       audioFormat: AUDIO_FORMAT);
-  //   return stream;
-  // }
-
   Future<void> stopRecording() async {
-    await _recorder.stopRecorder();
-    await _audioStreamSubscription?.cancel();
-    await _audioStream.close();
-    await _recorder.stopRecorder();
-    await _mRecordingDataSubscription?.cancel();
-    _recorder.closeRecorder();
+    final recorder = _recorder;
+    if (recorder != null) {
+      await recorder.stopRecorder();
+      await _audioStreamSubscription?.cancel();
+      await _audioStream.close();
+      await recorder.stopRecorder();
+      await _mRecordingDataSubscription?.cancel();
+      recorder.closeRecorder();
+    } else {
+      await _audioStream.close();
+    }
   }
 }

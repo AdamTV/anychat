@@ -151,11 +151,21 @@
     "endonym_zu":"Zulu",
     "enterYourEmail": "Enter your E-mail",
     "enterYourName": "Enter your name",
+    "enterYourPhoneNumber": "Phone number with country code, e.g. +1 555 123 4567",
+    "enterSmsCode": "Enter the code sent to {phoneNumber}",
+    "@enterSmsCode": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            }
+        }
+    },
     "error": "Error",
     "errorLoggingIn": "There was an error logging in.",
     "errorLoggingInApple": "Unable to login through Apple. Please try again.",
     "errorLoggingInFacebook": "Unable to login through Facebook. Please try again.",
     "errorLoggingInGoogle": "Unable to login through Google. Please try again.",
+    "errorLoggingInPhone": "Unable to login with your phone number. Please try again.",
     "errorLoggingInTwitter": "Unable to login through Twitter. Please try again.",
     "eula": "End User Licence Agreement",
     "findSomeoneByEmail": "Find someone by e-mail",
@@ -170,6 +180,8 @@
     "incomingMessages": "Incoming Messages",
     "information": "Information",
     "invalidCredentials": "Invalid Credentials",
+    "invalidPhoneNumber": "That phone number is not valid. Include your country code, e.g. +1.",
+    "invalidVerificationCode": "That code is incorrect or has expired. Please try again.",
     "invite": "Invite",
     "inviteToAnyChat": "Invite to AnyChat",
     "isAlreadyInThisConversation": "is already in this conversation!",
@@ -197,6 +209,7 @@
     "password": "Password",
     "permissionDenied": "PERMISSION_DENIED",
     "permissionDisabled": "PERMISSION_DISABLED",
+    "phoneNumber": "Phone number",
     "picture": "Pictue",
     "pleaseChooseStrongerPassword": "Please choose a stronger password",
     "pleaseLoginInstead": "An account already exists with this information. Please login instead.",
@@ -234,7 +247,9 @@
     "unableRegisterApple": "Unable to register through Apple. Please try again.",
     "unableRegisterFacebook": "Unable to register through Facebook. Please try again.",
     "unableRegisterGoogle": "Unable to register through Google. Please try again.",
+    "unableRegisterPhone": "Unable to register with your phone number. Please try again.",
     "unableRegisterTwitter": "Unable to register through Twitter. Please try again.",
+    "verificationCode": "Verification code",
     "verificationEmailSent": "Verification e-mail sent",
     "yourContacts": "Your Contacts",
     "youWillNotJoinBackUnlessInvited": "You will not be able to join back unless somebody invites you.",

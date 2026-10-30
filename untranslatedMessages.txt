@@ -1,1 +1,1200 @@
-{}
+{
+  "af": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "am": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ar": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "az": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "be": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "bg": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "bn": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "bs": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ca": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ceb": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "co": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "cs": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "cy": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "da": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "de": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "el": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "eo": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "es": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "et": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "eu": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "fa": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "fi": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "fr": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "fy": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ga": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "gd": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "gl": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "gu": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ha": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "haw": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "he": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "hi": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "hmn": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "hr": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ht": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "hu": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "hy": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "id": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ig": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "is": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "it": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ja": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "jv": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ka": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "kk": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "km": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "kn": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ko": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ku": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ky": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "la": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "lb": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "lo": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "lt": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "lv": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mg": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mi": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mk": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ml": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mn": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mr": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ms": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "mt": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "my": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ne": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "nl": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "no": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ny": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "or": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "pa": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "pl": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ps": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "pt": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ro": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ru": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "rw": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sd": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "si": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sk": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sl": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sm": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sn": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "so": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sq": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sr": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "st": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "su": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sv": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "sw": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ta": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "te": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "tg": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "th": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "tk": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "tl": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "tr": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "tt": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ug": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "uk": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "ur": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "uz": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "vi": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "xh": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "yi": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "yo": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "zh": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "zh_CN": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "zh_TW": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ],
+
+  "zu": [
+    "enterYourPhoneNumber",
+    "enterSmsCode",
+    "errorLoggingInPhone",
+    "invalidPhoneNumber",
+    "invalidVerificationCode",
+    "phoneNumber",
+    "unableRegisterPhone",
+    "verificationCode"
+  ]
+}
