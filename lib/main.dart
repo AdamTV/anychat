@@ -16,6 +16,7 @@ import 'package:anychat/components/constants.dart';
 import 'package:anychat/components/notification_observer.dart';
 import 'package:anychat/services/auth_service.dart';
 import 'package:anychat/services/cache_manager.dart';
+import 'package:anychat/services/firebase_emulators.dart';
 import 'package:anychat/services/navigation_service.dart';
 import 'package:anychat/services/notifications/notifications_controller.dart';
 import 'package:anychat/services/notifier_service.dart';
@@ -64,12 +65,17 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseAppCheck.instance.activate(
-      webProvider:
-          ReCaptchaV3Provider('6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO'),
-      androidProvider: AndroidProvider.debug,
-      appleProvider: AppleProvider.debug,
-    );
+    if (useFirebaseEmulators) {
+      // The emulators do not enforce App Check.
+      await connectFirebaseEmulators();
+    } else {
+      await FirebaseAppCheck.instance.activate(
+        webProvider:
+            ReCaptchaV3Provider('6Lfg5JopAAAAAAT0qwf8TLduBu-W_gvJJQ9T-cZO'),
+        androidProvider: AndroidProvider.debug,
+        appleProvider: AppleProvider.debug,
+      );
+    }
     AuthService.listenToAuthChanges();
 
     try {
