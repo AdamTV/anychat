@@ -35,7 +35,7 @@ jobs:
           fi
       - name: Upload build metrics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-metrics-hosting-deploy
           path: build-metrics/timings.jsonl
