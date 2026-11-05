@@ -98,6 +98,16 @@ test suites, and coverage floors on every push and pull request.
 - `test/` — unit and widget tests
 - `integration_test/` — on-device integration tests
 - `.github/workflows/` — CI and Firebase Hosting deploys
+- `docs/` — runbooks and the interactive application flow
+
+### Application flow
+
+[docs/app-flow.canvas.tsx](docs/app-flow.canvas.tsx) maps the user journey
+(launch, sign-in, conversations, chat, calls, live translator), how messages
+and speech get translated, the backend services, and the Firestore layout. It
+is a [Cursor](https://cursor.com) canvas: copy it into
+`~/.cursor/projects/<workspace>/canvases/` and open it beside the chat. Outside
+Cursor, read the `NODES`, `LANES`, and table data in the file directly.
 
 ## Security
 
