@@ -6,7 +6,7 @@
     <application
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/launcher_icon"
-        android:label="AnyChat">
+        android:label="Tandivox">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4494853791237895~4335658619"/>

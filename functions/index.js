@@ -12,6 +12,8 @@ const {GoogleAuth} = require("google-auth-library");
 
 const {createGetSpeechAccessToken} = require("./speech_token");
 
+const {resolveBridgeSecret} = require("./bridge_secret");
+
 // The reCAPTCHA Enterprise assessment sample lives in ./assessment.js and is
 // covered by unit tests (test/assessment.test.js). Require it here and wire it
 // up as an HTTPS callable when the endpoint is needed:
@@ -63,8 +65,9 @@ exports.getSpeechAccessToken = functions.https.onCall(
 // many users, but only one user per contact, so replies are unambiguous).
 //
 //   outbound: the client writes a message doc with channel "sms"; the
-//             trigger below relays it and stamps smsStatus sent/failed.
-//   inbound:  alpha-text POSTs here with Bearer ANYCHAT_BRIDGE_SECRET and
+//             trigger claims it and records sent/failed/unknown.
+//   inbound:  alpha-text POSTs here with Bearer TANDIVOX_BRIDGE_SECRET (legacy
+//             ANYCHAT_BRIDGE_SECRET still accepted) and
 //             the handler writes the message into the same conversation,
 //             so the existing chat UI and translation pipeline pick it up.
 
@@ -72,6 +75,7 @@ const {
   SMS_INBOUND_CHANNEL,
   createInboundSmsHandler,
   createSmsRelay,
+  claimSmsMessage,
   smsContactParticipantId,
   smsConversationId,
   upsertSmsConversation,
@@ -79,7 +83,9 @@ const {
 
 /**
  * Bridge configuration from the functions environment. ALPHA_TEXT_URL and
- * the two secrets come from functions/.env or Secret Manager.
+ * the two secrets come from functions/.env or Secret Manager. The bridge
+ * secret resolves from TANDIVOX_BRIDGE_SECRET, falling back to the legacy
+ * ANYCHAT_BRIDGE_SECRET (see resolveBridgeSecret).
  *
  * @return {{alphaTextUrl: string, alphaTextApiKey: string,
  *   bridgeSecret: string}} Bridge configuration.
@@ -88,7 +94,7 @@ function smsBridgeConfig() {
   return {
     alphaTextUrl: process.env.ALPHA_TEXT_URL || "",
     alphaTextApiKey: process.env.ALPHA_TEXT_API_KEY || "",
-    bridgeSecret: process.env.ANYCHAT_BRIDGE_SECRET || "",
+    bridgeSecret: resolveBridgeSecret(process.env),
   };
 }
 
@@ -157,8 +163,9 @@ async function writeSmsMessage(row) {
 
 /**
  * Outbound relay: message docs marked channel "sms" are POSTed to
- * alpha-text with the writer's uid, then stamped smsStatus sent/failed.
- * Every other message doc returns immediately.
+ * alpha-text with the writer's uid after a transactional pending -> sending
+ * claim, then stamped sent/failed/unknown.
+ * Non-SMS/nonpending docs are untouched.
  */
 exports.relaySmsMessage = functions.firestore
     .document("conversations/{conversationId}/messages/{messageId}")
@@ -168,6 +175,15 @@ exports.relaySmsMessage = functions.firestore
           fetchFn: fetch,
           config: smsBridgeConfig(),
           getConversation: getConversationData,
+          claimMessage: async (
+              /** @type {string} */ conversationId,
+              /** @type {string} */ messageId) => {
+            const db = admin.firestore();
+            const ref = db.doc(
+                `conversations/${conversationId}/messages/${messageId}`);
+            return db.runTransaction((tx) =>
+              claimSmsMessage(tx, ref, FieldValue.serverTimestamp()));
+          },
           updateMessage: async (
               /** @type {string} */ conversationId,
               /** @type {string} */ messageId,
@@ -179,8 +195,9 @@ exports.relaySmsMessage = functions.firestore
         })));
 
 /**
- * Inbound endpoint: POST /inboundSms with Bearer ANYCHAT_BRIDGE_SECRET
- * carrying alpha-text's MessageRow JSON.
+ * Inbound endpoint: POST /inboundSms with Bearer TANDIVOX_BRIDGE_SECRET
+ * (legacy ANYCHAT_BRIDGE_SECRET still accepted) carrying alpha-text's
+ * MessageRow JSON.
  */
 // Public at the IAM layer: alpha-text cannot mint Google identity tokens, so
 // the bearer bridge secret is the only gate.

@@ -1,6 +1,6 @@
 {
-  "name": "AnyChat Translator",
-  "short_name": "AnyChat",
+  "name": "Tandivox",
+  "short_name": "Tandivox",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

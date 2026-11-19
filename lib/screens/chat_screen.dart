@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:anychat/components/composer_guard.dart';
+import 'package:anychat/components/message_reconciler.dart';
 import 'package:anychat/database/anychat_auth.dart';
 import 'package:anychat/database/anychat_message.dart';
 import 'package:anychat/database/anychat_user.dart';
@@ -59,19 +61,26 @@ class ChatWindow extends StatefulWidget {
 }
 
 class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
-  final _textController = TextEditingController();
-  final List<MessageWidget> _messages = [];
+  final _composer = ComposerSendGuard();
+  final _reconciler = MessageReconciler();
+  List<TranslatedMessage> _visibleMessages = [];
+  final Map<String, AnimationController> _animations = {};
+  final Map<String, AnyChatUser> _participantsById = {};
+  late final String _conversationId;
+  late final String _currentUserId;
+  ConversationInfo? _conversationInfo;
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
   StreamSubscription<QuerySnapshot>? _chatMessageSubscription;
 
-  List<AnyChatMessage> _chatMessages = <AnyChatMessage>[];
-
   @override
   void initState() {
     super.initState();
-    _chatMessageSubscription ??=
-        ChatWindow.loadAllChatMessages().listen(_updateChatWindow);
+    _conversationId = AnyChatAuth.currentConversation!.id;
+    _currentUserId = AnyChatAuth.currentUser.id;
+    _chatMessageSubscription ??= ChatWindow.loadAllChatMessages().listen(
+      _updateChatWindow,
+    );
   }
 
   List<AnyChatMessage> getChatMessagesFromQuery(QuerySnapshot snapshot) {
@@ -81,175 +90,138 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   }
 
   Future<void> _updateChatWindow(QuerySnapshot snapshot) async {
-    _chatMessages = getChatMessagesFromQuery(snapshot);
-    if (_messages.isEmpty) {
-      var convo = await Conversation.getConversationById(
-          AnyChatAuth.currentConversation!.id);
-      final userIds = <String>{
-        ...convo.participants,
-        ..._chatMessages.map((message) => message.senderId),
-      };
-      final loadedUsers = await AnyChatUser.getUsersByIds(userIds);
-      final participantsById = {
-        for (final user in loadedUsers) user.id: user,
-      };
-      for (final id in userIds) {
-        participantsById.putIfAbsent(id, () => AnyChatUser.deletedUser(id));
-      }
-      final participants = participantsById.values.toList();
-      AnyChatAuth.currentChatters = participants
-          .where((user) => user.id != AnyChatAuth.currentUser.id)
+    try {
+      final applied = await _reconciler.reconcile(
+        getChatMessagesFromQuery(snapshot),
+        _translateMessages,
+      );
+      if (!mounted || !applied) return;
+      final messages = _reconciler.messages.reversed.toList();
+      final ids = messages.map((entry) => entry.message.id!).toSet();
+      final removed = _animations.keys
+          .where((id) => !ids.contains(id))
           .toList();
-
-      AnyChatAuth.currentUser.conversations =
-          await ConversationInfo.getAllConversationInfo(
-              AnyChatAuth.currentUser.id);
-      var info = AnyChatAuth.currentUser.conversations.firstWhere(
-          (element) => element.id == AnyChatAuth.currentConversation!.id);
-      // divide all chat messages into language for translation -> translate
-      Map<String?, List<String?>> map = {};
-      for (var message in _chatMessages) {
-        final language = message.senderId == AnyChatAuth.currentUser.id
-            ? info.outgoingLanguage
-            : info.incomingLanguage;
-        if (!map.containsKey(language)) {
-          map.putIfAbsent(language, () => <String?>[]);
-        }
-        map[language]!.insert(0, message.text);
+      for (final id in removed) {
+        _animations.remove(id)!.dispose();
       }
-      logger.d("chatMessage size: ${_chatMessages.length}");
-      Map<String?, List<String>> translatedMap =
-          await Utilities().getBatchGoogleTranslation(map);
-      for (int i = 0; i < _chatMessages.length; i++) {
-        final sender = participantsById[_chatMessages[i].senderId]!;
-        final language = _chatMessages[i].senderId == AnyChatAuth.currentUser.id
-            ? info.outgoingLanguage
-            : info.incomingLanguage;
-        if (translatedMap[language]!.isEmpty) break;
-        var text = RichText(
-          text: TextSpan(
-            // Note: Styles for TextSpans must be explicitly defined.
-            // Child text spans will inherit styles from parent
-            style: Theme.of(Utilities().globalKey.currentContext!)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(
-                    color: Theme.of(Utilities().globalKey.currentContext!)
-                        .colorScheme
-                        .onPrimaryContainer),
-            children: <InlineSpan>[
-              TextSpan(
-                  text:
-                      "${localizationOf(Utilities().globalKey.currentContext).typed}: ",
-                  style: Theme.of(Utilities().globalKey.currentContext!)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(
-                          color: Theme.of(Utilities().globalKey.currentContext!)
-                              .colorScheme
-                              .onPrimaryContainer,
-                          fontWeight: FontWeight.bold)),
-              TextSpan(text: "${_chatMessages[i].text}\n"),
-              WidgetSpan(
-                child: Divider(
-                  indent: MediaQuery.of(Utilities().globalKey.currentContext!)
-                          .size
-                          .width *
-                      0.01,
-                  endIndent:
-                      MediaQuery.of(Utilities().globalKey.currentContext!)
-                              .size
-                              .width *
-                          0.01,
-                  color: Theme.of(Utilities().globalKey.currentContext!)
-                      .primaryColor,
-                ),
-              ),
-              TextSpan(
-                  text:
-                      "\n${localizationOf(Utilities().globalKey.currentContext!).translation}: ",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: translatedMap[language]!.removeLast()),
-            ],
-          ),
-        );
-        final chatMessage = MessageWidget(
-          text: text,
-          animationController: AnimationController(
-            duration: const Duration(milliseconds: 0),
+      for (final id in ids) {
+        _animations.putIfAbsent(id, () {
+          final controller = AnimationController(
+            duration: Duration(milliseconds: _isLoading ? 0 : 700),
             vsync: this,
-          ),
-          sender: sender,
-        );
-        _messages.insert(0, chatMessage);
-        chatMessage.animationController.forward();
+          );
+          controller.forward();
+          return controller;
+        });
       }
-
       setState(() {
+        _visibleMessages = messages;
         _isLoading = false;
       });
-    } else if (!_messages
-        .any((element) => element.sender.id == _chatMessages.last.id)) {
-      final message = _chatMessages.last;
-      AnyChatUser sender = AnyChatUser.deletedUser(message.senderId);
-      try {
-        sender = AnyChatUser.fromSnapshot(await FirebaseFirestore.instance
-            .collection("users")
-            .doc(_chatMessages.last.senderId)
-            .get());
-      } catch (e) {
-        sender = AnyChatUser.deletedUser(message.senderId);
-      }
+    } catch (_) {
+      // Translation failures must not leak request URLs/keys into the UI or
+      // prevent later snapshots from being reconciled.
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
+  }
 
-      if (AnyChatAuth.currentUser.conversations.isEmpty) {
-        AnyChatAuth.currentUser.conversations =
-            await ConversationInfo.getAllConversationInfo(
-                AnyChatAuth.currentUser.id);
+  Future<void> _loadChatContext(List<AnyChatMessage> messages) async {
+    if (_conversationInfo == null) {
+      final conversation = await Conversation.getConversationById(
+        _conversationId,
+      );
+      if (!mounted) return;
+      final userIds = {
+        ...conversation.participants,
+        ...messages.map((message) => message.senderId),
+      };
+      final users = await AnyChatUser.getUsersByIds(userIds);
+      if (!mounted) return;
+      _participantsById.addAll({for (final user in users) user.id: user});
+      for (final id in userIds) {
+        _participantsById.putIfAbsent(id, () => AnyChatUser.deletedUser(id));
       }
+      AnyChatAuth.currentChatters = conversation.participants
+          .where((id) => id != _currentUserId)
+          .map((id) => _participantsById[id]!)
+          .toList();
+      final infos = await ConversationInfo.getAllConversationInfo(
+        _currentUserId,
+      );
+      if (!mounted) return;
+      AnyChatAuth.currentUser.conversations = infos;
+      _conversationInfo = infos.firstWhere(
+        (info) => info.id == _conversationId,
+      );
+    }
+    final missingIds = messages
+        .map((message) => message.senderId)
+        .where((id) => !_participantsById.containsKey(id))
+        .toSet();
+    if (missingIds.isEmpty) return;
+    final users = await AnyChatUser.getUsersByIds(missingIds);
+    if (!mounted) return;
+    _participantsById.addAll({for (final user in users) user.id: user});
+    for (final id in missingIds) {
+      _participantsById.putIfAbsent(id, () => AnyChatUser.deletedUser(id));
+    }
+  }
 
-      logger
-          .d("currentConvversation.id: ${AnyChatAuth.currentConversation!.id}");
-      var info = AnyChatAuth.currentUser.conversations.firstWhere(
-          (element) => element.id == AnyChatAuth.currentConversation!.id);
-      final language = _chatMessages.last.senderId == AnyChatAuth.currentUser.id
-          ? info.outgoingLanguage
-          : info.incomingLanguage;
-      var text = RichText(
+  Future<Map<String, String>> _translateMessages(
+    List<AnyChatMessage> messages,
+  ) async {
+    await _loadChatContext(messages);
+    if (!mounted) return {};
+    final info = _conversationInfo!;
+    String? languageOf(AnyChatMessage message) =>
+        message.senderId == _currentUserId
+        ? info.outgoingLanguage
+        : info.incomingLanguage;
+    final grouped = <String?, List<String?>>{};
+    for (final message in messages) {
+      grouped.putIfAbsent(languageOf(message), () => []).add(message.text);
+    }
+    final translated = await Utilities().getBatchGoogleTranslation(grouped);
+    final offsets = <String?, int>{};
+    return {
+      for (final message in messages)
+        message.id!:
+            translated[languageOf(message)]![offsets.update(
+              languageOf(message),
+              (value) => value + 1,
+              ifAbsent: () => 0,
+            )],
+    };
+  }
+
+  Widget _buildMessage(TranslatedMessage entry) {
+    final message = entry.message;
+    return MessageWidget(
+      key: ValueKey(message.id),
+      message: message,
+      sender: _participantsById[message.senderId]!,
+      animationController: _animations[message.id]!,
+      text: RichText(
         text: TextSpan(
-          // Note: Styles for TextSpans must be explicitly defined.
-          // Child text spans will inherit styles from parent
-          style: Theme.of(Utilities().globalKey.currentContext!)
-              .textTheme
-              .bodyLarge,
-          children: <TextSpan>[
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+          children: [
             TextSpan(
-                text:
-                    "${localizationOf(Utilities().globalKey.currentContext!).typed}: ",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: "${message.text}\n\n"),
+              text: '${localizationOf(context).typed}: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: '${message.text}\n\n'),
             TextSpan(
-                text:
-                    "${localizationOf(Utilities().globalKey.currentContext!).translation}: ",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(
-                text: await Utilities()
-                    .getGoogleTranslation(language, message.text)),
+              text: '${localizationOf(context).translation}: ',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: entry.translation),
           ],
         ),
-      );
-      final chatMessage = MessageWidget(
-        text: text,
-        animationController: AnimationController(
-          duration: const Duration(milliseconds: 700),
-          vsync: this,
-        ),
-        sender: sender,
-      );
-      setState(() {
-        _messages.insert(0, chatMessage);
-        chatMessage.animationController.forward();
-      });
-    }
+      ),
+    );
   }
 
   Widget _buildTextComposer() {
@@ -261,7 +233,7 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
           children: [
             Flexible(
               child: TextField(
-                controller: _textController,
+                controller: _composer.controller,
                 onChanged: (String text) {
                   setState(() {
                     _isComposing = text.isNotEmpty;
@@ -269,25 +241,27 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
                 },
                 onSubmitted: _isComposing ? _handleSubmitted : null,
                 decoration: InputDecoration.collapsed(
-                    hintText: localizationOf(context).send_a_messgae),
+                  hintText: localizationOf(context).send_a_messgae,
+                ),
                 focusNode: _focusNode,
               ),
             ),
             Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Theme.of(context).platform == TargetPlatform.iOS
-                    ? CupertinoButton(
-                        onPressed: _isComposing
-                            ? () => _handleSubmitted(_textController.text)
-                            : null,
-                        child: Text(localizationOf(context).send),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: _isComposing
-                            ? () => _handleSubmitted(_textController.text)
-                            : null,
-                      ))
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Theme.of(context).platform == TargetPlatform.iOS
+                  ? CupertinoButton(
+                      onPressed: _isComposing
+                          ? () => _handleSubmitted(_composer.controller.text)
+                          : null,
+                      child: Text(localizationOf(context).send),
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: _isComposing
+                          ? () => _handleSubmitted(_composer.controller.text)
+                          : null,
+                    ),
+            ),
           ],
         ),
       ),
@@ -295,12 +269,17 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   }
 
   Future<void> _handleSubmitted(String text) async {
-    _textController.clear();
-    setState(() {
-      _isComposing = false;
-    });
-    await AnyChatUser.addMessageToConversation(text);
-    _focusNode.requestFocus();
+    // The guard ignores a second submit while the first is in flight, clears
+    // the composer only after the provider accepts it, and restores the draft
+    // on failure so a failed save is never lost as if sent.
+    await _composer.send(
+      text,
+      onError: () {
+        if (!mounted) return;
+        Utilities().showToast(localizationOf(context).unableToSendMessage);
+      },
+    );
+    if (mounted) _focusNode.requestFocus();
   }
 
   bool _isLoading = true;
@@ -310,26 +289,33 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var widgets = <Widget>[];
-    widgets.add(IconButton(
+    widgets.add(
+      IconButton(
         icon: const Icon(Icons.settings),
         tooltip: localizationOf(context).language,
         onPressed: () {
           showDialog<void>(
-              context: context,
-              builder: (BuildContext context) => _buildPopupDialog(context));
-        }));
+            context: context,
+            builder: (BuildContext context) => _buildPopupDialog(context),
+          );
+        },
+      ),
+    );
     // The alpha-text bridge is SMS-only: a call would text the contact
     // "is calling you" and open a call screen nobody can join.
     if (!isSmsConversationId(AnyChatAuth.currentConversation?.id)) {
-      widgets.add(IconButton(
-        icon: const Icon(Icons.video_call_rounded),
-        tooltip: localizationOf(context).call,
-        onPressed: () async {
-          await AnyChatUser.addMessageToConversation(
-              "${AnyChatAuth.currentUser.displayName} ${localizationOf(context).isCallingYouOnAnyChat}");
-          await NavigationService().pushNamed("/call");
-        },
-      ));
+      widgets.add(
+        IconButton(
+          icon: const Icon(Icons.video_call_rounded),
+          tooltip: localizationOf(context).call,
+          onPressed: () async {
+            await AnyChatUser.addMessageToConversation(
+              "${AnyChatAuth.currentUser.displayName} ${localizationOf(context).isCallingYouOnAnyChat}",
+            );
+            await NavigationService().pushNamed("/call");
+          },
+        ),
+      );
     }
     SizedBox container = SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -340,20 +326,21 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
             ? [
                 Center(
                   child: CircularProgressIndicator(
-                      valueColor: ColorTween(
-                              begin: Theme.of(context).colorScheme.secondary,
-                              end: Theme.of(context).colorScheme.secondary)
-                          .animate(AnimationController(vsync: this)),
-                      backgroundColor: Theme.of(context).primaryColor),
-                )
+                    valueColor: AlwaysStoppedAnimation(
+                      Theme.of(context).colorScheme.secondary,
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                ),
               ]
             : [
                 Flexible(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(8.0),
                     reverse: true,
-                    itemBuilder: (_, int index) => _messages[index],
-                    itemCount: _messages.length,
+                    itemBuilder: (_, int index) =>
+                        _buildMessage(_visibleMessages[index]),
+                    itemCount: _visibleMessages.length,
                   ),
                 ),
                 const Divider(height: 1.0),
@@ -366,43 +353,53 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
     );
     return Scaffold(
       appBar: AppBar(
-          title: Text(Utilities()
-              .getChatterDisplayNameString(AnyChatAuth.currentChatters)),
-          elevation:
-              Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-          actions: widgets),
-      drawer: AnyChatDrawer(entries: [
-        AnyChatDrawerEntry(
-          title: localizationOf(context).addSomeoneToConversation,
-          onTap: () {
-            NavigationService().push(MaterialPageRoute(
-              builder: (_) => const SearchChatterScreen(true, false),
-            ));
-          },
+        title: Text(
+          Utilities().getChatterDisplayNameString(AnyChatAuth.currentChatters),
         ),
-        AnyChatDrawerEntry(
-          title: localizationOf(context).leaveConversation,
-          onTap: () {
-            AnyChatUser.deleteConversation(
-                context, AnyChatAuth.currentConversation!.id);
-          },
-        ),
-        AnyChatDrawerEntry(
-          title: localizationOf(context).backToConversations,
-          onTap: () {
-            NavigationService()
-                .popUntil((p0) => p0.settings.name == "/conversations");
-          },
-        ),
-        AnyChatDrawerEntry(
-          title: localizationOf(context).logout,
-          onTap: () async {
-            await NavigationService().pushNamedAndRemoveUntil('/welcome',
-                predicate: (p0) => p0.isFirst);
-            await AnyChatAuth.signOut();
-          },
-        ),
-      ]),
+        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        actions: widgets,
+      ),
+      drawer: AnyChatDrawer(
+        entries: [
+          AnyChatDrawerEntry(
+            title: localizationOf(context).addSomeoneToConversation,
+            onTap: () {
+              NavigationService().push(
+                MaterialPageRoute(
+                  builder: (_) => const SearchChatterScreen(true, false),
+                ),
+              );
+            },
+          ),
+          AnyChatDrawerEntry(
+            title: localizationOf(context).leaveConversation,
+            onTap: () {
+              AnyChatUser.deleteConversation(
+                context,
+                AnyChatAuth.currentConversation!.id,
+              );
+            },
+          ),
+          AnyChatDrawerEntry(
+            title: localizationOf(context).backToConversations,
+            onTap: () {
+              NavigationService().popUntil(
+                (p0) => p0.settings.name == "/conversations",
+              );
+            },
+          ),
+          AnyChatDrawerEntry(
+            title: localizationOf(context).logout,
+            onTap: () async {
+              await NavigationService().pushNamedAndRemoveUntil(
+                '/welcome',
+                predicate: (p0) => p0.isFirst,
+              );
+              await AnyChatAuth.signOut();
+            },
+          ),
+        ],
+      ),
       body: container,
     );
   }
@@ -410,20 +407,29 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
   @override
   void dispose() {
     _chatMessageSubscription?.cancel();
-    for (MessageWidget message in _messages) {
-      message.animationController.dispose();
+    _reconciler.dispose();
+    for (final controller in _animations.values) {
+      controller.dispose();
     }
+    _animations.clear();
+    _composer.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   Widget _buildPopupDialog(BuildContext context) {
     var info = AnyChatAuth.currentUser.conversations.firstWhere(
-        (element) => element.id == AnyChatAuth.currentConversation!.id);
+      (element) => element.id == AnyChatAuth.currentConversation!.id,
+    );
 
-    String? incomingDropdownValue =
-        getEndonymByLocaleCode(info.incomingLanguage!, localizationOf(context));
-    String? outgoingDropdownValue =
-        getEndonymByLocaleCode(info.outgoingLanguage!, localizationOf(context));
+    String? incomingDropdownValue = getEndonymByLocaleCode(
+      info.incomingLanguage!,
+      localizationOf(context),
+    );
+    String? outgoingDropdownValue = getEndonymByLocaleCode(
+      info.outgoingLanguage!,
+      localizationOf(context),
+    );
     logger.d(incomingDropdownValue);
     return AlertDialog(
       title: Text(localizationOf(context).selectLanguage),
@@ -471,10 +477,13 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
       iconSize: 24,
       elevation: 16,
       onChanged: (String? newValue) async {
-        final isoCode =
-            getLocaleCodeByEndonym(newValue!, localizationOf(context));
-        await FirebaseFirestore.instance
-            .runTransaction((Transaction transaction) {
+        final isoCode = getLocaleCodeByEndonym(
+          newValue!,
+          localizationOf(context),
+        );
+        await FirebaseFirestore.instance.runTransaction((
+          Transaction transaction,
+        ) {
           final user = FirebaseFirestore.instance
               .collection('users')
               .doc(AnyChatAuth.currentUser.id);
@@ -485,9 +494,12 @@ class _ChatWindowState extends State<ChatWindow> with TickerProviderStateMixin {
               .get(user)
               .then((DocumentSnapshot doc) => AnyChatUser.fromSnapshot(doc))
               .then((AnyChatUser fresh) async {
-            transaction.update(userConversationInfo, {languageField: isoCode});
-          });
+                transaction.update(userConversationInfo, {
+                  languageField: isoCode,
+                });
+              });
         });
+        if (!mounted) return;
         onSelectionChanged(isoCode, newValue);
         NavigationService().pushNamed("/chat");
       },

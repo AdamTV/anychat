@@ -76,16 +76,16 @@ test("inbound adapters use explicit Firestore timestamp exports", async (t) => {
   t.mock.method(admin, "initializeApp", () => admin.app());
   const modulePath = require.resolve("../index.js");
   const cached = require.cache[modulePath];
-  const previousSecret = process.env.ANYCHAT_BRIDGE_SECRET;
-  process.env.ANYCHAT_BRIDGE_SECRET = "inbound-adapter-test";
+  const previousSecret = process.env.TANDIVOX_BRIDGE_SECRET;
+  process.env.TANDIVOX_BRIDGE_SECRET = "inbound-adapter-test";
   delete require.cache[modulePath];
   t.after(() => {
     delete admin.firestore;
     require.cache[modulePath] = cached;
     if (previousSecret === undefined) {
-      delete process.env.ANYCHAT_BRIDGE_SECRET;
+      delete process.env.TANDIVOX_BRIDGE_SECRET;
     } else {
-      process.env.ANYCHAT_BRIDGE_SECRET = previousSecret;
+      process.env.TANDIVOX_BRIDGE_SECRET = previousSecret;
     }
   });
   const index = require("../index.js");
@@ -134,4 +134,81 @@ test("inbound adapters use explicit Firestore timestamp exports", async (t) => {
       options: {merge: true},
     },
   ]);
+});
+
+test("outbound adapter commits transactional claim before fetch", async (t) => {
+  const {FieldValue} = require("firebase-admin/firestore");
+  const cid = "sms-owner-15551234567";
+  const path = `conversations/${cid}/messages/m1`;
+  let message = {channel: "sms", smsStatus: "pending", senderId: "owner",
+    text: "persisted body"};
+  const events = [];
+  let rejectCommit = true;
+  const doc = (refPath) => ({
+    path: refPath,
+    get: async () => ({exists: true, data: () => ({
+      smsOwner: "owner", smsContact: "+15551234567",
+      participants: ["owner", "sms:+15551234567"],
+    })}),
+    update: async (fields) => {
+      assert.equal(refPath, path);
+      events.push("final-write");
+      message = {...message, ...fields};
+    },
+  });
+  const db = {
+    doc,
+    collection: () => ({doc: (id) => doc(`conversations/${id}`)}),
+    runTransaction: async (callback) => {
+      let queued;
+      const result = await callback({
+        get: async (ref) => {
+          assert.equal(ref.path, path);
+          events.push("transaction-read");
+          return {exists: true, data: () => message};
+        },
+        update: (ref, fields) => {
+          assert.equal(ref.path, path);
+          assert.deepEqual(fields, {smsStatus: "sending",
+            smsClaimedAt: FieldValue.serverTimestamp()});
+          queued = fields;
+        },
+      });
+      if (rejectCommit) throw new Error("commit unavailable");
+      if (queued) message = {...message, ...queued};
+      events.push("commit");
+      return result;
+    },
+  };
+  Object.defineProperty(admin, "firestore", {
+    configurable: true, value: () => db,
+  });
+  t.mock.method(admin, "initializeApp", () => admin.app());
+  t.mock.method(global, "fetch", async (url, init) => {
+    assert.equal(message.smsStatus, "sending");
+    assert.equal(JSON.parse(init.body).body, "persisted body");
+    events.push("fetch");
+    return {ok: true, status: 202};
+  });
+  const modulePath = require.resolve("../index.js");
+  const cached = require.cache[modulePath];
+  delete require.cache[modulePath];
+  t.after(() => {
+    delete admin.firestore;
+    require.cache[modulePath] = cached;
+  });
+  const index = require("../index.js");
+  const invoke = () => index.relaySmsMessage.run(
+      {data: () => ({...message, text: "stale body"})},
+      {params: {conversationId: cid, messageId: "m1"}});
+  await assert.rejects(invoke(), /commit unavailable/);
+  assert.deepEqual(events, ["transaction-read"]);
+  assert.equal(message.smsStatus, "pending");
+  events.length = 0;
+  rejectCommit = false;
+  await invoke();
+  await invoke();
+  assert.deepEqual(events, ["transaction-read", "commit", "fetch",
+    "final-write", "transaction-read", "commit"]);
+  assert.equal(message.smsStatus, "sent");
 });
