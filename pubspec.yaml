@@ -43,7 +43,7 @@ dependencies:
   flutter_slidable: ^3.0.1
   fluttertoast: ^8.0.7
   # contacts_service: ^0.6.1
-  url_launcher: ^6.0.4
+  url_launcher: ^6.3.3
   settings_ui: ^2.0.2
   image_picker: ^1.0.7
   sign_in_with_apple: ^6.0.0
