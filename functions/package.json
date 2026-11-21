@@ -18,7 +18,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@google-cloud/recaptcha-enterprise": "^5.5.0",
+    "@google-cloud/recaptcha-enterprise": "^7.3.0",
     "firebase-admin": "^12.7.0",
     "firebase-functions": "^4.9.0",
     "google-auth-library": "^9.15.1"
